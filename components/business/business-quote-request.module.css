@@ -1,0 +1,33 @@
+.form { display: flex; flex-direction: column; gap: 13px; }
+.lines { display: flex; flex-direction: column; gap: 8px; }
+.line { padding: 11px 12px 9px; border: 1px solid #e0e6dd; background: #fff; }
+.lineTop { display: grid; grid-template-columns: 26px minmax(0, 1fr) 94px 30px; align-items: end; gap: 8px; }
+.lineNumber { align-self: center; color: #7b9078; font: 8px var(--font-mono); }
+.productField, .quantityField, .noteField { display: flex; min-width: 0; flex-direction: column; gap: 6px; color: #68786b; font-size: 8px; }
+.productField select, .quantityField input, .noteField textarea { min-width: 0; height: 35px; padding: 0 9px; color: #304436; border: 1px solid #e2e8e0; outline-color: #8da96d; background: #fbfcfa; font: 9px var(--font-body); }
+.quantityField input { text-align: right; }
+.removeLine { display: grid; width: 29px; height: 33px; place-items: center; color: #8f7062; border: 1px solid #e9e3df; background: #fff; cursor: pointer; }
+.removeLine:disabled { color: #bdc2bb; cursor: not-allowed; }
+.lineFoot { display: flex; justify-content: space-between; gap: 8px; margin: 8px 0 0 34px; color: #9aa49b; font-size: 7px; }
+.lineFoot strong { color: #4b634e; font-size: 8px; }
+.addLine { display: inline-flex; min-height: 30px; align-self: flex-start; align-items: center; gap: 6px; padding: 0 10px; color: #476b40; border: 1px solid #dbe5d6; background: #f5f8f2; font-size: 8px; cursor: pointer; }
+.addLine:disabled { color: #9fa99f; cursor: not-allowed; }
+.noteField textarea { height: auto; min-height: 74px; padding: 8px 9px; resize: vertical; line-height: 1.5; }
+.noteField small { color: #9ba59c; font-size: 7px; }
+.submitRow { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 0 0; border-top: 1px solid #edf0eb; }
+.estimate { display: flex; flex-direction: column; gap: 4px; color: #8e9a90; font-size: 7px; }
+.estimate strong { color: #294331; font: 500 16px var(--font-display); }
+.submitButton { display: inline-flex; min-height: 36px; align-items: center; justify-content: center; gap: 8px; padding: 0 13px; color: #f5f7f1; border: 0; background: #244332; font-size: 9px; font-weight: 600; cursor: pointer; }
+.submitButton:hover { background: #34583f; }
+.submitButton:disabled { color: #a8b0a8; background: #e8ece6; cursor: not-allowed; }
+.helper { margin: -4px 0 0; color: #97a198; font-size: 8px; line-height: 1.5; }
+.empty { margin: 0; padding: 15px; color: #737f75; background: #f6f8f4; font-size: 9px; line-height: 1.6; }
+.empty a { color: #41663d; text-decoration: underline; text-underline-offset: 2px; }
+
+@media (max-width: 560px) {
+  .lineTop { grid-template-columns: 20px minmax(0, 1fr) 72px 28px; gap: 5px; }
+  .productField select { padding: 0 5px; font-size: 8px; }
+  .lineFoot { margin-left: 25px; }
+  .submitRow { align-items: flex-start; flex-direction: column; }
+  .submitButton { width: 100%; }
+}

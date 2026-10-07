@@ -53,26 +53,23 @@ describe("CRM stage mutation integration", () => {
   });
 
   it("writes only a schema-valid stage and reports a missing or failed row", async () => {
-    const maybeSingle = vi.fn().mockResolvedValue({ data: { id: "10000000-0000-4000-8000-000000000099" }, error: null });
-    const select = vi.fn(() => ({ maybeSingle }));
-    const eq = vi.fn(() => ({ select }));
-    const update = vi.fn(() => ({ eq }));
-    const from = vi.fn(() => ({ update }));
-    const supabase = { from };
+    const rpc = vi.fn().mockResolvedValue({ data: "qualified", error: null });
+    const supabase = { rpc };
     crmMock.getAccess.mockResolvedValue({ state: "ready", supabase });
 
     await redirected(() => updateOpportunityStatus(form()), "/backoffice/crm?notice=updated");
-    expect(from).toHaveBeenCalledWith("quote_inquiries");
-    expect(update).toHaveBeenCalledWith({ status: "qualified" });
-    expect(eq).toHaveBeenCalledWith("id", "10000000-0000-4000-8000-000000000099");
+    expect(rpc).toHaveBeenCalledWith("update_quote_inquiry_status", {
+      p_inquiry_id: "10000000-0000-4000-8000-000000000099",
+      p_status: "qualified",
+    });
     expect(crmMock.revalidate).toHaveBeenCalledWith("/backoffice/crm");
 
     crmMock.revalidate.mockReset();
-    maybeSingle.mockResolvedValueOnce({ data: null, error: null });
+    rpc.mockResolvedValueOnce({ data: null, error: null });
     await redirected(() => updateOpportunityStatus(form()), "/backoffice/crm?notice=not-found");
     expect(crmMock.revalidate).not.toHaveBeenCalled();
 
-    maybeSingle.mockResolvedValueOnce({ data: null, error: { code: "XX000" } });
+    rpc.mockResolvedValueOnce({ data: null, error: { code: "XX000" } });
     await redirected(() => updateOpportunityStatus(form()), "/backoffice/crm?notice=error");
     expect(crmMock.revalidate).not.toHaveBeenCalled();
   });

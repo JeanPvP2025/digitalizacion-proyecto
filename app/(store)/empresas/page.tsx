@@ -102,6 +102,9 @@ export default function BusinessPage() {
               <Link className={`${styles.heroPrimaryButton} button button--accent`} href="#solicitar">
                 Solicitar propuesta <ArrowRight aria-hidden="true" size={15} />
               </Link>
+              <Link className={styles.heroTextLink} href="/empresas/portal">
+                Espacio de empresa <ArrowUpRight aria-hidden="true" size={14} />
+              </Link>
               <Link className={styles.heroTextLink} href="/catalogo">
                 Explorar tecnología <ArrowUpRight aria-hidden="true" size={14} />
               </Link>

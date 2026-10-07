@@ -145,6 +145,16 @@ describe("CRM access and workspace integration", () => {
           is_active: true,
           created_at: "2026-10-05T10:00:00.000Z",
         }],
+        crm_activities: [{
+          id: 1,
+          event_key: "lead_received",
+          title: "Nuevo contacto",
+          subject_name: "Ana M.",
+          company_snapshot: "Prisma",
+          created_at: "2026-10-07T10:00:00.000Z",
+          crm_lead_id: "30000000-0000-4000-8000-000000000001",
+          quote_inquiry_id: null,
+        }],
       }),
     });
     supabaseMock.createClient.mockResolvedValueOnce(client);
@@ -159,7 +169,7 @@ describe("CRM access and workspace integration", () => {
       sources: ["lead", "quote-inquiry"],
     })]);
     expect(workspace.organizations[0]).toMatchObject({ name: "Prisma", active: true });
-    expect(workspace.activities[0]?.kind).toBe("lead");
+    expect(workspace.activities[0]).toMatchObject({ kind: "lead", name: "Ana M.", company: "Prisma" });
   });
 });
 

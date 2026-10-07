@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { updateOpportunityStatus } from "@/app/backoffice/crm/actions";
 import { getCrmWorkspace, type CrmOpportunity, type ProspectStatus } from "@/lib/crm/data";
+import { QuoteQueue } from "./quote-queue";
 import styles from "./crm.module.css";
 
 export const metadata: Metadata = {
@@ -60,7 +61,9 @@ function initials(name: string): string {
 function noticeMessage(notice: string): string | null {
   switch (notice) {
     case "updated": return "Etapa actualizada.";
-    case "invalid": return "No se guardó el cambio: revisa la etapa seleccionada.";
+    case "invalid": return "No se guardó el cambio. Comprueba los datos y las transiciones permitidas.";
+    case "quote-claimed": return "Solicitud asignada a tu cola de trabajo.";
+    case "quote-sent": return "Propuesta publicada en el portal de la organización.";
     case "forbidden": return "Tu cuenta no tiene acceso al área de ventas.";
     case "unconfigured": return "No hay conexión Supabase configurada para guardar cambios.";
     case "not-found": return "La solicitud ya no está disponible o no tienes acceso a ella.";
@@ -74,6 +77,17 @@ function matchesSearch(opportunity: CrmOpportunity, query: string): boolean {
   const needle = query.toLocaleLowerCase("es-ES");
   return [opportunity.name, opportunity.email, opportunity.phone ?? "", opportunity.company ?? "", opportunity.message]
     .some((value) => value.toLocaleLowerCase("es-ES").includes(needle));
+}
+
+function allowedNextStatuses(current: ProspectStatus): ProspectStatus[] {
+  const transitions: Record<ProspectStatus, ProspectStatus[]> = {
+    new: ["new", "qualified", "contacted", "closed"],
+    qualified: ["qualified", "contacted", "converted", "closed"],
+    contacted: ["contacted", "qualified", "converted", "closed"],
+    converted: ["converted", "closed"],
+    closed: ["closed"],
+  };
+  return transitions[current];
 }
 
 export default async function CrmPage({ searchParams }: { searchParams: SearchParams }) {
@@ -111,13 +125,13 @@ export default async function CrmPage({ searchParams }: { searchParams: SearchPa
     );
   }
 
-  const { opportunities, contacts, organizations, activities } = workspace;
+  const { opportunities, contacts, organizations, activities, salesQuotes, userId } = workspace;
   const filteredOpportunities = opportunities.filter((opportunity) => {
     return (status === "all" || opportunity.status === status) && matchesSearch(opportunity, query);
   });
   const activeOpportunities = opportunities.filter((opportunity) => ["new", "qualified", "contacted"].includes(opportunity.status)).length;
   const convertedOpportunities = opportunities.filter((opportunity) => opportunity.status === "converted").length;
-  const noticeIsError = !["updated"].includes(firstValue(params.notice));
+  const noticeIsError = !["updated", "quote-claimed", "quote-sent"].includes(firstValue(params.notice));
 
   return (
     <main className={styles.shell}>
@@ -150,12 +164,20 @@ export default async function CrmPage({ searchParams }: { searchParams: SearchPa
             <div>
               <p className={styles.eyebrow}>NODRIA <span>·</span> RELACIÓN COMERCIAL</p>
               <h1>Personas y <em>oportunidades.</em></h1>
-              <p className={styles.introText}>Solicitudes y contactos recibidos, con las etapas disponibles en el flujo comercial actual.</p>
+              <p className={styles.introText}>Contactos recibidos y propuestas empresariales asignadas, con permisos y cambios comprobados en el servidor.</p>
             </div>
             <div className={styles.introStamp}><Handshake size={19} /><span>Conectado a registros reales<small>Actualizado al cargar esta página</small></span></div>
           </section>
 
           {notice && <p className={`${styles.notice} ${noticeIsError ? styles.noticeError : ""}`} role={noticeIsError ? "alert" : "status"}>{notice}</p>}
+
+          <section className={styles.panel} aria-labelledby="business-quotes-title">
+            <div className={styles.panelHeading}>
+              <div><p className={styles.panelEyebrow}>B2B · COLA ASIGNADA POR PERSONA</p><h2 id="business-quotes-title">Propuestas empresariales <span>{salesQuotes.length}</span></h2></div>
+              <span className={styles.panelMeta}>PRECIOS Y ESTADOS EN POSTGRESQL</span>
+            </div>
+            <QuoteQueue currentUserId={userId} quotes={salesQuotes} />
+          </section>
 
           <section className={styles.metrics} aria-label="Resumen del CRM">
             <article className={styles.metricPrimary}><span>SOLICITUDES DE PRESUPUESTO</span><strong>{opportunities.length.toLocaleString("es-ES")}</strong><small>Etapas de oportunidad registradas</small></article>
@@ -194,7 +216,7 @@ export default async function CrmPage({ searchParams }: { searchParams: SearchPa
                           <input type="hidden" name="id" value={opportunity.id} />
                           <label className={styles.srOnly} htmlFor={`stage-${opportunity.id}`}>Cambiar etapa de {opportunity.name}</label>
                           <select id={`stage-${opportunity.id}`} name="status" defaultValue={opportunity.status}>
-                            {statuses.map((stage) => <option value={stage} key={stage}>{statusLabels[stage]}</option>)}
+                            {allowedNextStatuses(opportunity.status).map((stage) => <option value={stage} key={stage}>{statusLabels[stage]}</option>)}
                           </select>
                           <button type="submit">Guardar etapa</button>
                         </form>
@@ -217,7 +239,7 @@ export default async function CrmPage({ searchParams }: { searchParams: SearchPa
 
               <section className={styles.panel} aria-labelledby="organizations-title">
                 <div className={styles.panelHeading}><div><p className={styles.panelEyebrow}>B2B</p><h2 id="organizations-title">Organizaciones <span>{organizations.length}</span></h2></div><Building2 size={17} /></div>
-                {organizations.length ? <ul className={styles.organizationList}>{organizations.slice(0, 5).map((organization) => <li key={organization.id}><span className={`${styles.orgDot} ${organization.active ? "" : styles.orgInactive}`} /><span><strong>{organization.name}</strong><small>{organization.legalName}{organization.email ? ` · ${organization.email}` : ""}</small></span></li>)}</ul> : <p className={styles.compactEmpty}>No hay organizaciones visibles para esta sesión.</p>}
+                {organizations.length ? <ul className={styles.organizationList}>{organizations.slice(0, 5).map((organization) => <li key={organization.id}><span className={`${styles.orgDot} ${organization.active ? "" : styles.orgInactive}`} /><span><strong>{organization.name}</strong><small>{organization.legalName}{organization.email ? ` · ${organization.email}` : ""}</small></span></li>)}</ul> : <p className={styles.compactEmpty}>No hay organizaciones asignadas a esta vista de ventas.</p>}
                 {organizations.length > 5 && <p className={styles.listFoot}>Mostrando 5 de {organizations.length} organizaciones.</p>}
               </section>
             </aside>
@@ -226,7 +248,7 @@ export default async function CrmPage({ searchParams }: { searchParams: SearchPa
           <section className={`${styles.panel} ${styles.activityPanel}`} aria-labelledby="activity-title">
             <div className={styles.panelHeading}><div><p className={styles.panelEyebrow}>ENTRADAS RECIENTES</p><h2 id="activity-title">Actividad comercial</h2></div><CalendarClock size={17} /></div>
             {activities.length ? <ol className={styles.activityList}>{activities.map((activity) => <li key={activity.id}><span className={styles.activityIcon}>{activity.kind === "lead" ? <UserRound size={15} /> : <Handshake size={15} />}</span><span className={styles.activityCopy}><strong>{activity.title}</strong><small>{activity.name}{activity.company ? ` · ${activity.company}` : ""}</small></span><time dateTime={activity.createdAt}>{dateLabel(activity.createdAt)}</time></li>)}</ol> : <p className={styles.compactEmpty}>Todavía no hay actividad comercial registrada.</p>}
-            <p className={styles.activityNote}>Actividad derivada de las fechas de recepción de leads y solicitudes; el esquema actual no guarda un historial de acciones del CRM.</p>
+            <p className={styles.activityNote}>Historial persistido en PostgreSQL. El acceso depende del rol comercial y de la asignación de cada propuesta.</p>
           </section>
 
           <footer className={styles.footer}><span>© NODRIA · CRM</span><span>Solicitudes, contactos y organizaciones leídos según las políticas disponibles.</span></footer>

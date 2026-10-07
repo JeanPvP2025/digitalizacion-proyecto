@@ -39,11 +39,35 @@ export type CrmOrganization = {
 
 export type CrmActivity = {
   id: string;
-  kind: "lead" | "quote-inquiry";
+  kind: "lead" | "quote-inquiry" | "business-quote";
   title: string;
   name: string;
   company: string | null;
   createdAt: string;
+};
+
+export type CrmSalesQuoteLine = {
+  id: string;
+  productName: string;
+  sku: string;
+  variantTitle: string;
+  quantity: number;
+  requestedUnitPrice: number;
+  offeredUnitPrice: number | null;
+  currency: string;
+};
+
+export type CrmSalesQuote = {
+  id: string;
+  number: string;
+  status: "requested" | "in_review";
+  organizationName: string;
+  requesterName: string;
+  requesterEmail: string;
+  requestNote: string;
+  createdAt: string;
+  salesOwnerId: string | null;
+  lines: CrmSalesQuoteLine[];
 };
 
 type QuoteInquiryRow = {
@@ -79,9 +103,40 @@ type OrganizationRow = {
   created_at: string;
 };
 
-function sortNewest<T extends { createdAt: string }>(rows: T[]): T[] {
-  return rows.sort((left, right) => Date.parse(right.createdAt) - Date.parse(left.createdAt));
-}
+type BusinessQuoteRow = {
+  id: string;
+  quote_number: string;
+  status: "requested" | "in_review";
+  organization_name_snapshot: string;
+  requester_name: string;
+  requester_email: string;
+  request_note: string;
+  created_at: string;
+  sales_owner_id: string | null;
+};
+
+type BusinessQuoteLineRow = {
+  id: string;
+  quote_id: string;
+  product_name: string;
+  product_sku: string;
+  variant_title: string;
+  quantity: number;
+  requested_unit_price: number | string;
+  offered_unit_price: number | string | null;
+  currency: string;
+};
+
+type ActivityRow = {
+  id: number;
+  event_key: string;
+  title: string;
+  subject_name: string;
+  company_snapshot: string;
+  created_at: string;
+  crm_lead_id: string | null;
+  quote_inquiry_id: string | null;
+};
 
 function mergeContacts(leads: LeadRow[], inquiries: QuoteInquiryRow[]): CrmContact[] {
   const contacts = new Map<string, CrmContact>();
@@ -117,7 +172,7 @@ export async function getCrmWorkspace() {
   const access = await getCrmAccess();
   if (access.state !== "ready") return access;
 
-  const [inquiryResult, leadResult, organizationResult] = await Promise.all([
+  const [inquiryResult, leadResult, organizationResult, quoteResult, activityResult] = await Promise.all([
     access.supabase
       .from("quote_inquiries")
       .select("id, contact_name, email, phone, company, message, status, source, created_at, updated_at")
@@ -130,15 +185,37 @@ export async function getCrmWorkspace() {
       .from("organizations")
       .select("id, slug, legal_name, display_name, billing_email, is_active, created_at")
       .order("created_at", { ascending: false }),
+    access.supabase
+      .from("quotes")
+      .select("id, quote_number, status, organization_name_snapshot, requester_name, requester_email, request_note, created_at, sales_owner_id")
+      .in("status", ["requested", "in_review"])
+      .order("created_at", { ascending: false })
+      .limit(30),
+    access.supabase
+      .from("crm_activities")
+      .select("id, event_key, title, subject_name, company_snapshot, created_at, crm_lead_id, quote_inquiry_id")
+      .order("created_at", { ascending: false })
+      .limit(8),
   ]);
 
-  if (inquiryResult.error || leadResult.error || organizationResult.error) {
+  if (inquiryResult.error || leadResult.error || organizationResult.error || quoteResult.error || activityResult.error) {
     return { state: "error" } as const;
   }
 
   const inquiries = (inquiryResult.data ?? []) as QuoteInquiryRow[];
   const leads = (leadResult.data ?? []) as LeadRow[];
   const organizationRows = (organizationResult.data ?? []) as OrganizationRow[];
+  const businessQuoteRows = (quoteResult.data ?? []) as BusinessQuoteRow[];
+  const activityRows = (activityResult.data ?? []) as ActivityRow[];
+  const quoteIds = businessQuoteRows.map((quote) => quote.id);
+  const quoteItemsResult = quoteIds.length
+    ? await access.supabase.from("quote_items")
+        .select("id, quote_id, product_name, product_sku, variant_title, quantity, requested_unit_price, offered_unit_price, currency")
+        .in("quote_id", quoteIds)
+        .order("created_at")
+    : { data: [], error: null };
+  if (quoteItemsResult.error) return { state: "error" } as const;
+  const quoteLineRows = (quoteItemsResult.data ?? []) as BusinessQuoteLineRow[];
 
   const opportunities: CrmOpportunity[] = inquiries.map((row) => ({
     id: row.id,
@@ -153,29 +230,43 @@ export async function getCrmWorkspace() {
     updatedAt: row.updated_at,
   }));
 
-  const activities: CrmActivity[] = [
-    ...leads.map((row) => ({
-      id: `lead:${row.id}`,
-      kind: "lead" as const,
-      title: "Nuevo contacto",
-      name: row.contact_name,
-      company: row.company,
-      createdAt: row.created_at,
+  const activities: CrmActivity[] = activityRows.map((row) => ({
+    id: String(row.id),
+    kind: row.crm_lead_id ? "lead" : row.quote_inquiry_id ? "quote-inquiry" : "business-quote",
+    title: row.title,
+    name: row.subject_name,
+    company: row.company_snapshot || null,
+    createdAt: row.created_at,
+  }));
+
+  const salesQuotes: CrmSalesQuote[] = businessQuoteRows.map((quote) => ({
+    id: quote.id,
+    number: quote.quote_number,
+    status: quote.status,
+    organizationName: quote.organization_name_snapshot,
+    requesterName: quote.requester_name,
+    requesterEmail: quote.requester_email,
+    requestNote: quote.request_note,
+    createdAt: quote.created_at,
+    salesOwnerId: quote.sales_owner_id,
+    lines: quoteLineRows.filter((line) => line.quote_id === quote.id).map((line) => ({
+      id: line.id,
+      productName: line.product_name,
+      sku: line.product_sku,
+      variantTitle: line.variant_title,
+      quantity: line.quantity,
+      requestedUnitPrice: Number(line.requested_unit_price),
+      offeredUnitPrice: line.offered_unit_price == null ? null : Number(line.offered_unit_price),
+      currency: line.currency,
     })),
-    ...inquiries.map((row) => ({
-      id: `inquiry:${row.id}`,
-      kind: "quote-inquiry" as const,
-      title: "Solicitud de presupuesto",
-      name: row.contact_name,
-      company: row.company,
-      createdAt: row.created_at,
-    })),
-  ];
+  }));
 
   return {
     state: "ready",
     userEmail: access.user.email ?? "",
+    userId: access.user.id,
     opportunities,
+    salesQuotes,
     contacts: mergeContacts(leads, inquiries),
     organizations: organizationRows.map((row) => ({
       id: row.id,
@@ -186,6 +277,6 @@ export async function getCrmWorkspace() {
       active: row.is_active,
       createdAt: row.created_at,
     })),
-    activities: sortNewest(activities).slice(0, 8),
+    activities,
   } as const;
 }

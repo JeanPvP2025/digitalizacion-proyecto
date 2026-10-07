@@ -27,4 +27,8 @@ La ruta comparte la política server-side de persistencia con checkout y soporte
 
 El endpoint limita el cuerpo a 16 KiB, valida tipos, longitudes, opciones del formulario y consentimiento con Zod, rechaza campos extra y conserva el honeypot `website`. Aplica cuatro intentos por minuto y por IP antes de procesar el cuerpo. El limitador existente guarda contadores en memoria del proceso; en despliegues con varias instancias es solo un control de mejor esfuerzo, no una cuota global.
 
-El endpoint conserva el contrato del honeypot `website`, aunque el formulario actual no renderiza ese campo. La integración de persistencia no cambia `components/business/**` por ownership; CRM o el propietario de la UI debe coordinar la inclusión del input oculto en una unidad de trabajo de interfaz.
+El endpoint conserva el contrato del honeypot `website`, aunque el formulario público actual no renderiza ese campo.
+
+## Cotización estructurada del portal
+
+`POST /api/quotes` sigue siendo la entrada pública de consultas de proyecto y continúa creando `quote_inquiries`. El portal autenticado de empresa crea una cotización con líneas de catálogo mediante `public.create_business_quote`; este flujo no confía en precios, identidad, organización, impuestos ni moneda enviados por el navegador. PostgreSQL comprueba membresía y rol, vuelve a consultar cada variante activa y publicada, y conserva snapshots en `quotes` y `quote_items`. El flujo completo de membresías, estados, permisos, importes y actividad se documenta en [`lib/crm/CONTRACT.md`](../crm/CONTRACT.md).

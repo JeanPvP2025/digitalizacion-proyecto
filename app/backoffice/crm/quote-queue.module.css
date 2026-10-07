@@ -1,0 +1,47 @@
+.queue { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 11px; padding: 14px 16px 16px; }
+.card { min-width: 0; padding: 14px; border: 1px solid #e5eae2; background: #fbfcfa; }
+.cardTop { display: flex; align-items: flex-start; justify-content: space-between; gap: 9px; }
+.number { color: #829085; font: 8px var(--font-mono); letter-spacing: .06em; }
+.cardTop h3 { margin: 5px 0 0; color: #2b4233; font: 500 15px/1.25 var(--font-display); letter-spacing: -.025em; }
+.owned, .unassigned { display: inline-flex; flex: 0 0 auto; align-items: center; gap: 5px; padding: 5px 7px; color: #416341; background: #edf4e9; font: 7px var(--font-mono); }
+.owned i, .unassigned i { width: 5px; height: 5px; border-radius: 50%; background: #6b9b54; }
+.unassigned { color: #725b2e; background: #f6f0e1; }
+.unassigned i { background: #b99142; }
+.contact { display: flex; flex-wrap: wrap; align-items: center; gap: 5px 11px; margin-top: 11px; color: #6f7d72; font-size: 8px; }
+.contact strong { color: #405347; }
+.contact a { color: #69816d; }
+.contact span { display: inline-flex; align-items: center; gap: 4px; color: #909b91; }
+.note { margin: 11px 0 0; padding: 9px 10px; color: #68766b; background: #f2f5ef; font-size: 9px; line-height: 1.5; white-space: pre-wrap; overflow-wrap: anywhere; }
+.requestLines { padding: 0; margin: 10px 0; list-style: none; }
+.requestLines li { display: flex; justify-content: space-between; gap: 8px; padding: 7px 0; color: #526157; border-bottom: 1px solid #edf0eb; font-size: 8px; }
+.requestLines li > span { min-width: 0; }
+.requestLines small { display: block; margin-top: 3px; color: #929b93; font-size: 7px; }
+.requestLines strong { flex: 0 0 auto; color: #45594a; font-size: 8px; }
+.claimForm { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding-top: 9px; border-top: 1px solid #e8ece6; }
+.assignedNote { margin: 0; padding-top: 9px; color: #8b948c; border-top: 1px solid #e8ece6; font-size: 8px; }
+.claimForm span { color: #849086; font-size: 8px; line-height: 1.4; }
+.claimForm button, .offerSubmit button { display: inline-flex; min-height: 31px; flex: 0 0 auto; align-items: center; justify-content: center; gap: 6px; padding: 0 10px; color: #f3f6f0; border: 0; background: #244332; font-size: 8px; font-weight: 600; cursor: pointer; }
+.claimForm button:hover, .offerSubmit button:hover { background: #34583f; }
+.offerForm { padding-top: 10px; border-top: 1px solid #e8ece6; }
+.offerHeading { display: flex; align-items: center; justify-content: space-between; gap: 8px; color: #8c978d; font: 7px var(--font-mono); }
+.offerHeading label { display: flex; align-items: center; gap: 5px; color: #6f7b71; }
+.offerHeading select { height: 27px; padding: 0 6px; color: #49594d; border: 1px solid #e0e7de; background: #fff; font-size: 8px; }
+.offerLines { margin: 5px 0 9px; }
+.offerLine { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 8px 0; border-bottom: 1px solid #edf0eb; }
+.offerLine > span:first-child { display: flex; min-width: 0; flex-direction: column; gap: 3px; }
+.offerLine strong { color: #3d5143; font-size: 8px; }
+.offerLine small { color: #929b93; font-size: 7px; }
+.priceField { display: flex; flex: 0 0 102px; flex-direction: column; align-items: flex-end; gap: 2px; }
+.priceField input { width: 102px; height: 29px; padding: 0 7px; color: #344a39; border: 1px solid #dce4da; background: #fff; font-size: 10px; text-align: right; }
+.priceField small { color: #96a096; font-size: 7px; }
+.offerSubmit { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding-top: 8px; }
+.offerSubmit > span { color: #879389; font-size: 7px; }
+.offerSubmit > span strong { display: block; margin-top: 3px; color: #2f4735; font: 500 14px var(--font-display); }
+.offerSubmit button:disabled { color: #a8b0a8; background: #e8ece6; cursor: not-allowed; }
+.empty { display: flex; min-height: 138px; flex-direction: column; align-items: center; justify-content: center; gap: 7px; padding: 20px; color: #829081; text-align: center; }
+.empty svg { color: #66834e; }
+.empty strong { color: #455849; font-size: 10px; }
+.empty span { font-size: 8px; }
+
+@media (max-width: 850px) { .queue { grid-template-columns: 1fr; } }
+@media (max-width: 540px) { .queue { padding: 10px; } .card { padding: 11px; } .cardTop { flex-direction: column; } }
