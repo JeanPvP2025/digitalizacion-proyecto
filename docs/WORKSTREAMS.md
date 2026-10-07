@@ -73,7 +73,7 @@ Se inspeccionaron los cinco worktrees, su estado Git, commits y cambios. Procure
 | Conversation | Role | Task | Ownership | Dependencies | State |
 |---|---|---|---|---|---|
 | Tech Lead | Performance/accessibility closeout | Lighthouse local en portada móvil y catálogo desktop; corregir contraste, labels, targets, carga LCP e imágenes responsive | `app/globals.css`, storefront media, `tests/e2e/ux-audit/**`, `docs/PERFORMANCE_AUDIT.md` | Build production local | ✅ 92/100 móvil, 100/100 desktop; accesibilidad 100/100 en ambos; medición de laboratorio y sin CrUX |
-| Pendiente | Manual visual/functional audit | Completar walkthrough de todos los estados/roles y breakpoints en storefront/backoffice | QA report y suites E2E/a11y | Cuentas locales por rol; build | P2 |
+| Tech Lead (current) | UX final audit | Barrido anónimo de 27 rutas y walkthrough de staff roles en 3 viewports; quedan cliente/B2B, interfaz catálogo y shell de soporte | `tests/e2e/ux-audit/**`, `docs/UX_FINAL_AUDIT.md` | Supabase local efímero; no tocar stack compartido | Parcial: E2E demo 17/17 + Auth roles 1/1; tsc/lint pasan; riesgos P2 identificados |
 | Pendiente | Public SEO/CWV validation | Confirmar indexación, CWV de campo, schema y sitemap tras configurar el dominio público real | `robots.ts`, metadata, sitemap | URL/despliegue remoto y Search Console/CrUX | Bloqueado por entorno |
 
 ## Ola 7 — cierre RMA por Tech Lead

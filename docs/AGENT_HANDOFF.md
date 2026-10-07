@@ -359,4 +359,15 @@ No queda P0 local reproducible. Quedan como P1: inspección/disposición RMA, an
 
 ### Pendiente externo
 
-No existe proyecto Supabase remoto, dominio, credenciales de despliegue ni datos CrUX. La aplicación está cerrada para pruebas locales; no se afirma que esté desplegada, indexable o certificada para producción. La auditoría visual del backoffice y de todos los estados/roles permanece como calidad manual pendiente.
+No existe proyecto Supabase remoto, dominio, credenciales de despliegue ni datos CrUX. La aplicación está cerrada para pruebas locales; no se afirma que esté desplegada, indexable o certificada para producción. Los límites UX pendientes (cliente/B2B Auth, contraste, UI de catálogo y shell de soporte) quedan en `docs/UX_FINAL_AUDIT.md`.
+
+## Handoff: auditoría UX local — 2026-10-07
+
+- Rama de trabajo: `codex/ux-final-audit` en worktree propio.
+- Cambio: el barrido anónimo cubre 27 rutas en desktop, móvil y tablet. Se añadió runner Supabase local efímero y walkthrough Auth de cinco roles internos, además del retorno por teclado desde moderación de opiniones. Se añadió `docs/UX_FINAL_AUDIT.md` y se reconciliaron este handoff, `STATUS.md` y `WORKSTREAMS.md`.
+- Verificación: `pnpm test:e2e` 17/17; `pwsh -File tests/e2e/ux-audit/run-roles.ps1` 1/1; `pnpm exec tsc --noEmit` y `pnpm lint` pasan.
+- No hubo cambios de schema/migraciones/RLS/CSS global ni se tocó el stack NODRIA compartido o un proyecto remoto. El runner creó y limpió únicamente `nodria-ux-audit` en loopback con Auth/grants ficticios.
+- Límite: customer, memberships B2B y buyer/viewer/owner/admin no se recorrieron con Auth. Tampoco hay UI de gestión de catálogo para `catalog_manager`; soporte interno conserva el chrome del storefront; contraste de backoffice sigue sin medición de Lighthouse/axe.
+- Hallazgo corregido: moderación de opiniones no ofrecía salida; “Volver a operaciones” ya está visible en estados demo/error/denegado y contenido, y se verifica con Enter.
+- Riesgos ambientales: Playwright muestra style de caret durante hidratación y `NO_COLOR`/`FORCE_COLOR`; Next dev registró `destination stream errored` durante el recorrido, aunque las páginas cargaron y E2E pasó. Origen del caret/stream no atribuido al producto.
+- Siguiente paso: ampliar customer/B2B, implementar o retirar la expectativa de UI de catálogo, evaluar el shell de soporte y revisar contraste con herramientas accesibles; mantener producción como no validada.

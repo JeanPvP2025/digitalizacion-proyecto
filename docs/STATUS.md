@@ -14,7 +14,7 @@ Estado observado el **2026-10-07** después de integrar la sexta ola, cerrar loc
 - ✅ **Analytics del alcance publicado:** pedidos, ventas brutas aprobadas, aprobación de pago, inventario disponible y conversión de solicitudes CRM tienen fórmula, fuente, periodo de 30 días Europe/Madrid, límites y fixtures puros/SQL/E2E; el dashboard falla cerrado ante discrepancias. Ventas netas, margen, visitas y conversión específica de cotizaciones B2B no se presentan como KPIs todavía.
 - ✅ **Demo Mode local:** modo de archivos limitado a desarrollo y sin Auth; Supabase configurado siempre gana y falla cerrado. La guía cubre reset local y organización ficticia; `scripts/demo/assign-staff-roles.ps1` asigna en loopback grants de los cinco roles internos a cuentas Auth locales ya creadas, sin crear ni almacenar contraseñas. Se ejecutó y verificó que escribe exactamente un grant por rol; `db reset --local` los elimina.
 - ✅ **Seguridad/Auth local:** aislamiento, escalada, permisos sensibles y boundaries HTTP verificados con matriz documentada, suites SQL y 78 probes autenticados; esto no certifica un entorno remoto ni prueba CRUD exhaustivo por cada campo/endpoint. `manager` y `marketing` no son roles persistidos y no reciben permisos implícitos.
-- 🚧 **Experiencia y presentación:** storefront medido en Lighthouse local: portada móvil 92 (LCP simulado 3,2 s; traza observada local 0,56 s) y catálogo desktop 100. Ambas rutas obtienen 100 en accesibilidad, mejores prácticas e imágenes; los defectos medidos de contraste, etiquetas y objetivos táctiles se corrigieron. No hay datos de campo CrUX/INP ni URL pública; la auditoría visual completa de backoffice y otros breakpoints sigue pendiente.
+- 🚧 **Experiencia y presentación:** storefront medido en Lighthouse local: portada móvil 92 (LCP simulado 3,2 s; traza observada local 0,56 s) y catálogo desktop 100. Se añadieron sweeps UX de 27 rutas y roles internos en tres viewports. Customer/B2B Auth, contraste/lector de pantalla en backoffice, la UI de catálogo y el shell de soporte siguen pendientes; no hay CrUX/INP ni URL pública.
 
 ## Sexta ola integrada
 
@@ -77,10 +77,12 @@ Warnings no bloqueantes conocidos: Node reporta `MODULE_TYPELESS_PACKAGE_JSON` e
 
 - [x] Medir Lighthouse local en portada móvil y catálogo desktop; corregir contraste, nombres accesibles, objetivos táctiles e imágenes responsive. Evidencia detallada en `docs/PERFORMANCE_AUDIT.md` y `.seo-cache/`.
 - [ ] Repetir CWV con la URL de producción y datos de campo cuando exista despliegue; el perfil Lighthouse móvil simulado aún da LCP 3,2 s, mientras que su traza observada en localhost da 0,56 s.
-- [ ] Completar auditoría manual visual/responsive de todos los estados del backoffice y storefront; la automatización existente cubre rutas primarias, teclado y viewport móvil, no toda combinación de rol/estado.
-- [ ] Terminar walkthrough manual por cada rol demo; ya hay 78 probes Auth/PostgREST y recorridos de dominio, pero no equivalen a revisar cada pantalla y Server Action.
+- [x] Ampliar el barrido E2E anónimo a 27 rutas, teclado, nombres de controles, enlaces/destinos y overflow en desktop, móvil (390 px) y tablet (768 px); detalle en `docs/UX_FINAL_AUDIT.md`.
+- [x] Walkthrough responsive autenticado de roles internos en Supabase local efímero: support, sales, fulfillment, catalog (denegación documentada) y superadmin; evidencia en `docs/UX_FINAL_AUDIT.md`.
+- [ ] Completar recorrido con sesión de cliente y membresías buyer/viewer/owner/admin; las vistas de portal B2B y cuenta siguen sin prueba visual autenticada por rol.
+- [ ] Añadir una UI interna de catálogo para `catalog_manager` o retirar la expectativa de gestión de catálogo como capacidad visual del demo.
 - [ ] Configurar dominio público para verificar `robots.txt`, sitemap, schema y metadatos en despliegue. En local se bloquea indexación deliberadamente para evitar publicar una demo sin dominio real.
-- [ ] Identificar el origen del estilo de caret inyectado en el navegador Playwright y resolver warnings de entorno sin alterar semántica del producto.
+- [ ] Identificar el origen del estilo `caret-color: transparent` que Playwright registra en la hidratación y resolver warnings de entorno sin alterar semántica del producto.
 
 ### P3
 
@@ -96,3 +98,14 @@ Una feature solo es ✅ cuando su contrato, autorización servidor/DB, persisten
 - Portada móvil Lighthouse 92 / accesibilidad 100; catálogo desktop 100 / accesibilidad 100. Contraste, nombres accesibles, objetivos táctiles y optimización de imágenes pasan en las rutas medidas.
 - Métricas completas y límites de laboratorio en `docs/PERFORMANCE_AUDIT.md`; se ignoran los datos crudos en `.seo-cache/`.
 - No se ha aplicado despliegue ni se afirma certificación de producción.
+
+## Auditoría UX final local — 2026-10-07
+
+- Suite demo/UX: 17/17; el barrido de `tests/e2e/ux-audit/ux-audit.spec.ts` ahora incluye 27 rutas, Desktop Chrome 1280 × 720, móvil 390 × 844 y tablet 768 × 1024, sin overflow horizontal de página ni controles visibles sin nombre en las rutas inspeccionadas.
+- Teclado, búsqueda/sugerencias, errores B2B, foco al primer campo inválido, estado de checkout vacío y navegación interna pasan. TypeScript y lint pasan.
+- El backoffice se recorrió en estado anónimo y con cinco roles internos en un Supabase local efímero; no se mutaron los contenedores compartidos. Roles internos cubiertos a 1280/390/768 px. Cliente y membresías B2B siguen pendientes.
+- Se corrigió el callejón sin salida de moderación: `/backoffice/reviews` ofrece “Volver a operaciones” en estados de contenido, no disponible, error y permiso denegado; el E2E prueba su navegación por teclado.
+- La bandeja `/soporte/agente` conserva cabecera/pie del storefront y carece de navegación entre herramientas internas; queda como riesgo UX P2 para un shell de equipo.
+- No se repitió Lighthouse: sus valores y alcance siguen en `docs/PERFORMANCE_AUDIT.md`. No se midió contraste del backoffice ni se validó producción.
+- Playwright volvió a mostrar `style="caret-color: transparent"` en la hidratación y warnings `NO_COLOR`/`FORCE_COLOR`; no se atribuyen a la aplicación ni se modificó CSS global.
+- Informe completo: `docs/UX_FINAL_AUDIT.md`.
