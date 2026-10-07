@@ -37,8 +37,8 @@ VALUES
   ('00000000-0000-4000-8000-00000000d101', '00000000-0000-4000-8000-00000000b109', 'buyer', '00000000-0000-4000-8000-00000000b108'),
   ('00000000-0000-4000-8000-00000000d102', '00000000-0000-4000-8000-00000000b110', 'owner', '00000000-0000-4000-8000-00000000b110');
 
-INSERT INTO public.products (id, slug, sku, name, brand, is_published)
-VALUES ('qa-rbac-unpublished', 'qa-rbac-unpublished', 'QA-RBAC-UNPUBLISHED-01', 'RBAC unpublished product', 'NODRIA QA', false);
+INSERT INTO public.products (id, slug, sku, name, brand, summary, is_published)
+VALUES ('qa-rbac-unpublished', 'qa-rbac-unpublished', 'QA-RBAC-UNPUBLISHED-01', 'RBAC unpublished product', 'NODRIA QA', 'Before edit', false);
 
 INSERT INTO public.carts (id, user_id, currency)
 VALUES
@@ -85,10 +85,54 @@ BEGIN
      OR has_table_privilege('authenticated', 'public.organizations', 'UPDATE') THEN
     RAISE EXCEPTION 'direct order or inventory DML is unexpectedly granted';
   END IF;
-  IF NOT has_table_privilege('authenticated', 'public.products', 'INSERT')
-     OR NOT has_table_privilege('authenticated', 'public.products', 'UPDATE')
-     OR NOT has_table_privilege('authenticated', 'public.products', 'DELETE') THEN
-    RAISE EXCEPTION 'catalog management table grants are missing';
+  IF has_table_privilege('authenticated', 'public.categories', 'INSERT')
+     OR has_table_privilege('authenticated', 'public.categories', 'UPDATE')
+     OR has_table_privilege('authenticated', 'public.categories', 'DELETE')
+     OR has_table_privilege('authenticated', 'public.products', 'INSERT')
+     OR has_table_privilege('authenticated', 'public.products', 'UPDATE')
+     OR has_table_privilege('authenticated', 'public.products', 'DELETE')
+     OR has_table_privilege('authenticated', 'public.product_categories', 'INSERT')
+     OR has_table_privilege('authenticated', 'public.product_categories', 'UPDATE')
+     OR has_table_privilege('authenticated', 'public.product_categories', 'DELETE')
+     OR has_table_privilege('authenticated', 'public.product_variants', 'INSERT')
+     OR has_table_privilege('authenticated', 'public.product_variants', 'UPDATE')
+     OR has_table_privilege('authenticated', 'public.product_variants', 'DELETE')
+     OR has_table_privilege('authenticated', 'public.product_specifications', 'INSERT')
+     OR has_table_privilege('authenticated', 'public.product_specifications', 'UPDATE')
+     OR has_table_privilege('authenticated', 'public.product_specifications', 'DELETE')
+     OR has_any_column_privilege('authenticated', 'public.categories', 'INSERT')
+     OR has_any_column_privilege('authenticated', 'public.categories', 'UPDATE')
+     OR has_any_column_privilege('authenticated', 'public.products', 'INSERT')
+     OR has_any_column_privilege('authenticated', 'public.products', 'UPDATE')
+     OR has_any_column_privilege('authenticated', 'public.product_categories', 'INSERT')
+     OR has_any_column_privilege('authenticated', 'public.product_categories', 'UPDATE')
+     OR has_any_column_privilege('authenticated', 'public.product_variants', 'INSERT')
+     OR has_any_column_privilege('authenticated', 'public.product_variants', 'UPDATE')
+     OR has_any_column_privilege('authenticated', 'public.product_specifications', 'INSERT')
+     OR has_any_column_privilege('authenticated', 'public.product_specifications', 'UPDATE') THEN
+    RAISE EXCEPTION 'authenticated can directly mutate a catalog table';
+  END IF;
+  IF NOT has_table_privilege('authenticated', 'public.products', 'SELECT')
+     OR NOT has_table_privilege('anon', 'public.products', 'SELECT') THEN
+    RAISE EXCEPTION 'catalog reads were removed while restricting writes';
+  END IF;
+  IF has_function_privilege('anon', 'public.update_catalog_product_editorial(text,jsonb)', 'EXECUTE')
+     OR has_function_privilege('service_role', 'public.update_catalog_product_editorial(text,jsonb)', 'EXECUTE')
+     OR NOT has_function_privilege('authenticated', 'public.update_catalog_product_editorial(text,jsonb)', 'EXECUTE')
+     OR NOT has_function_privilege('authenticated', 'private.update_catalog_product_editorial_impl(text,jsonb)', 'EXECUTE')
+     OR has_function_privilege('anon', 'private.update_catalog_product_editorial_impl(text,jsonb)', 'EXECUTE')
+     OR has_function_privilege('service_role', 'private.update_catalog_product_editorial_impl(text,jsonb)', 'EXECUTE')
+     OR (SELECT procedure.prosecdef FROM pg_catalog.pg_proc AS procedure
+         WHERE procedure.oid = 'public.update_catalog_product_editorial(text,jsonb)'::regprocedure)
+     OR NOT (SELECT procedure.prosecdef FROM pg_catalog.pg_proc AS procedure
+             WHERE procedure.oid = 'private.update_catalog_product_editorial_impl(text,jsonb)'::regprocedure)
+     OR EXISTS (
+       SELECT 1 FROM pg_catalog.pg_proc AS procedure
+       CROSS JOIN LATERAL pg_catalog.aclexplode(procedure.proacl) AS acl
+       WHERE procedure.oid = 'public.update_catalog_product_editorial(text,jsonb)'::regprocedure
+         AND acl.grantee = 0 AND acl.privilege_type = 'EXECUTE'
+     ) THEN
+    RAISE EXCEPTION 'catalog editorial RPC grants do not match authenticated-only contract';
   END IF;
   IF has_function_privilege('anon', 'public.place_order_from_checkout(uuid,text,jsonb,jsonb,jsonb)', 'EXECUTE')
      OR NOT has_function_privilege('authenticated', 'public.place_order_from_checkout(uuid,text,jsonb,jsonb,jsonb)', 'EXECUTE')
@@ -211,15 +255,63 @@ BEGIN
   EXCEPTION WHEN SQLSTATE '22023' THEN NULL;
   END;
 
-  -- Catalog manager can inspect and publish a hidden product, but has no
-  -- warehouse/inventory or CRM access.
+  -- Catalog manager can read hidden products and edit only editorial fields;
+  -- publication, identity, rating and inventory remain outside the contract.
   PERFORM set_config('request.jwt.claim.sub', '00000000-0000-4000-8000-00000000b103', true);
   PERFORM set_config('request.jwt.claims', '{"sub":"00000000-0000-4000-8000-00000000b103","role":"authenticated"}', true);
   SELECT count(*) INTO v_count FROM public.products WHERE sku = 'QA-RBAC-UNPUBLISHED-01';
   IF v_count <> 1 THEN RAISE EXCEPTION 'catalog manager cannot read an unpublished product'; END IF;
-  UPDATE public.products SET is_published = true WHERE sku = 'QA-RBAC-UNPUBLISHED-01';
-  GET DIAGNOSTICS v_rows = ROW_COUNT;
-  IF v_rows <> 1 THEN RAISE EXCEPTION 'catalog manager cannot update a product'; END IF;
+  BEGIN
+    UPDATE public.products SET is_published = true WHERE sku = 'QA-RBAC-UNPUBLISHED-01';
+    RAISE EXCEPTION USING ERRCODE = 'ZX000', MESSAGE = 'catalog manager directly updated a product';
+  EXCEPTION WHEN insufficient_privilege THEN NULL;
+  END;
+  BEGIN
+    INSERT INTO public.product_specifications (product_id, label, value)
+    VALUES ('qa-rbac-unpublished', 'Protected', 'No direct insert');
+    RAISE EXCEPTION USING ERRCODE = 'ZX000', MESSAGE = 'catalog manager directly inserted a specification';
+  EXCEPTION WHEN insufficient_privilege THEN NULL;
+  END;
+  BEGIN
+    DELETE FROM public.product_categories WHERE product_id = 'qa-rbac-unpublished';
+    RAISE EXCEPTION USING ERRCODE = 'ZX000', MESSAGE = 'catalog manager directly deleted a category link';
+  EXCEPTION WHEN insufficient_privilege THEN NULL;
+  END;
+  IF public.update_catalog_product_editorial(
+       'qa-rbac-unpublished',
+       '{"name":"Updated editorial name","summary":"Updated summary","image_url":null,"badge":"Nuevo"}'::jsonb
+     ) ->> 'changed' <> 'true' THEN
+    RAISE EXCEPTION 'catalog manager could not edit allowed product fields';
+  END IF;
+  IF public.update_catalog_product_editorial(
+       'qa-rbac-unpublished',
+       '{"name":"Updated editorial name","summary":"Updated summary","image_url":null,"badge":"Nuevo"}'::jsonb
+     ) ->> 'changed' <> 'false' THEN
+    RAISE EXCEPTION 'catalog editorial replay was not idempotent';
+  END IF;
+  IF NOT EXISTS (
+       SELECT 1 FROM public.products
+       WHERE id = 'qa-rbac-unpublished' AND name = 'Updated editorial name'
+         AND summary = 'Updated summary' AND image_url IS NULL AND badge = 'Nuevo'
+         AND is_published = false AND rating_count = 0
+     ) THEN
+    RAISE EXCEPTION 'catalog editor changed a protected value or failed to persist editorial values';
+  END IF;
+  BEGIN
+    PERFORM public.update_catalog_product_editorial('qa-rbac-unpublished', '{"is_published":true}'::jsonb);
+    RAISE EXCEPTION USING ERRCODE = 'ZX000', MESSAGE = 'catalog RPC accepted a protected field';
+  EXCEPTION WHEN invalid_parameter_value THEN NULL;
+  END;
+  BEGIN
+    PERFORM public.update_catalog_product_editorial('qa-rbac-unpublished', '{"name":null}'::jsonb);
+    RAISE EXCEPTION USING ERRCODE = 'ZX000', MESSAGE = 'catalog RPC accepted an invalid type';
+  EXCEPTION WHEN invalid_parameter_value THEN NULL;
+  END;
+  BEGIN
+    PERFORM public.update_catalog_product_editorial('qa-rbac-unpublished', '{"name":"x"}'::jsonb);
+    RAISE EXCEPTION USING ERRCODE = 'ZX000', MESSAGE = 'catalog RPC accepted a too-short name';
+  EXCEPTION WHEN invalid_parameter_value THEN NULL;
+  END;
   SELECT count(*) INTO v_count FROM public.inventory;
   IF v_count <> 0 THEN RAISE EXCEPTION 'catalog manager can read inventory'; END IF;
   SELECT count(*) INTO v_count FROM public.quote_inquiries;
@@ -227,6 +319,36 @@ BEGIN
   BEGIN
     PERFORM public.claim_business_quote('00000000-0000-4000-8000-00000000e101');
     RAISE EXCEPTION USING ERRCODE = 'ZX000', MESSAGE = 'catalog manager claimed a sales quote';
+  EXCEPTION WHEN insufficient_privilege THEN NULL;
+  END;
+
+  PERFORM set_config('request.jwt.claim.sub', '00000000-0000-4000-8000-00000000b107', true);
+  PERFORM set_config('request.jwt.claims', '{"sub":"00000000-0000-4000-8000-00000000b107","role":"authenticated"}', true);
+  IF public.update_catalog_product_editorial('qa-rbac-unpublished', '{"image_alt":"Superadmin edit"}'::jsonb) ->> 'changed' <> 'true' THEN
+    RAISE EXCEPTION 'persisted super_admin grant cannot edit catalog';
+  END IF;
+
+  -- Other staff and ordinary customers cannot call the narrowly granted RPC,
+  -- even if a user-editable JWT metadata field claims a privileged role.
+  PERFORM set_config('request.jwt.claim.sub', '00000000-0000-4000-8000-00000000b105', true);
+  PERFORM set_config('request.jwt.claims', '{"sub":"00000000-0000-4000-8000-00000000b105","role":"authenticated","user_metadata":{"role":"catalog_manager"}}', true);
+  BEGIN
+    PERFORM public.update_catalog_product_editorial('qa-rbac-unpublished', '{"name":"Unauthorized"}'::jsonb);
+    RAISE EXCEPTION USING ERRCODE = 'ZX000', MESSAGE = 'sales manager edited catalog';
+  EXCEPTION WHEN insufficient_privilege THEN NULL;
+  END;
+  PERFORM set_config('request.jwt.claim.sub', '00000000-0000-4000-8000-00000000b106', true);
+  PERFORM set_config('request.jwt.claims', '{"sub":"00000000-0000-4000-8000-00000000b106","role":"authenticated"}', true);
+  BEGIN
+    PERFORM public.update_catalog_product_editorial('qa-rbac-unpublished', '{"name":"Unauthorized"}'::jsonb);
+    RAISE EXCEPTION USING ERRCODE = 'ZX000', MESSAGE = 'fulfillment manager edited catalog';
+  EXCEPTION WHEN insufficient_privilege THEN NULL;
+  END;
+  PERFORM set_config('request.jwt.claim.sub', '00000000-0000-4000-8000-00000000b101', true);
+  PERFORM set_config('request.jwt.claims', '{"sub":"00000000-0000-4000-8000-00000000b101","role":"authenticated","user_metadata":{"role":"super_admin"}}', true);
+  BEGIN
+    PERFORM public.update_catalog_product_editorial('qa-rbac-unpublished', '{"name":"Unauthorized"}'::jsonb);
+    RAISE EXCEPTION USING ERRCODE = 'ZX000', MESSAGE = 'customer metadata escalated catalog access';
   EXCEPTION WHEN insufficient_privilege THEN NULL;
   END;
 
