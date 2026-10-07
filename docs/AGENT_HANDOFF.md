@@ -238,3 +238,29 @@ Se crearon cinco conversaciones independientes, cada una en worktree, con bootst
 - Connected QA/analytics integrity: `client-new-thread:16fba6ee-c539-429e-84d8-cd25d31a2165`.
 
 El estado y ownership están en `WORKSTREAMS.md`. Setup de worktrees/conversaciones es asíncrono; las conversaciones tienen instrucciones para inspeccionar su checkout antes de cambiar código.
+
+## Sexta ola integrada por Tech Lead — 2026-10-07
+
+### Trabajo recogido y evidencia
+
+| Conversación | Implementación verificada | Integración | Resultado/limitación |
+|---|---|---|---|
+| B2B formal order slice (`01a116da-74e8-7d90-986e-56db80cdb512`) | Cotización aceptada → pedido formal tenant-scoped, snapshots, stock/reserva e idempotencia; runner de navegador aislado | `68c6dfa`, `25c074d` | Browser aislado 1/1; pedido queda pendiente de anticipo, sin liquidación implementada |
+| Procurement suppliers and purchase orders (`01a116da-74e8-7d90-986e-56fc143a985f`) | Proveedores, purchase orders, recepciones parciales/finales enlazadas al ledger | `4e7d1e6` | SQL runtime valida permisos, replay, sobre-recepción y vínculo de ledger; facturas/pagos a proveedor fuera del alcance |
+| Order fulfillment workflow (`01a116da-93a2-7fe0-9cd5-e430efc6a1e8`) | Picking/packing/expedición, timeline y consumo de reserva | Cambios de worktree rescatados en `4d862be`, integrados `8946f7e` | SQL runtime pasa; la expedición consume la reserva una vez |
+| RMA approval effects (`01a116da-74e8-7d90-986e-56e5365d584b`) | Reembolso demo calculado/idempotente y unidades `pending_inspection` | `2f4599c` | pruebas de soporte/RMA/concurrencia pasan; inspección física/disposición de stock queda pendiente |
+| Connected QA and analytics integrity (`01a116da-b0ae-7a82-bb34-9fe260cd1eff`) | E2E conectado de portal B2B, pedidos de cuenta, reviews, soporte y analytics; definición de métricas | Cambios de QA rescatados y commit coordinador `2f17bd2` | Suite conectada 5/5 + cleanup; B2B de este suite verifica autorización sin escribir pedido; emisión real cubierta en runner aislado |
+
+### Defectos de integración corregidos
+
+- El test de aislamiento de Postgres asumía recuentos estáticos de pedidos y grants que dejaron de ser ciertos al cambiar el seed. Ahora compara con un baseline tomado dentro de su transacción, sin relajar RLS.
+- El E2E transversal B2B esperaba la antigua conversión auditada; se actualizó al contrato de pedido formal y se limitó a visibilidad/autorización para mantener fixtures reintentables. El runner aislado verifica la mutación real.
+- La primera ejecución produjo un pedido fixture cuyo cleanup chocó con el ledger append-only de reservas. Se reinició la base local, se eliminó esa mutación del E2E común y se repitió la suite: 5/5 con teardown limpio.
+
+### Gate coordinador
+
+`pnpm install --frozen-lockfile` pasó; `tsc --noEmit`, `lint`, `pnpm test` (175 Vitest + 18 Node), `pnpm test:e2e` (17/17), `pnpm build` (36 rutas), reset local (15 migraciones + seed), pgTAP (265 aserciones), SQL runtime RLS/RBAC/Auth/support/inventory/procurement/fulfillment y DB lint pasaron. La suite `connected-domains` terminó 5/5 con cleanup. Checkout conectado 4/4, B2B aislado 1/1 y 78 probes HTTP Auth ya estaban verificados en esta cadena de integración.
+
+### Estado global tras la sexta ola
+
+No queda P0 local reproducible. Quedan como P1: inspección/disposición RMA, anticipo B2B, Demo Mode por rol/reset, cobertura exhaustiva de permisos y reconciliación de KPIs. P2: auditoría visual/accesible completa, medición CWV/bundle e inspección de navegación/contenido. No se configuró/probó Supabase remoto ni producción. El siguiente backlog y ownership candidato están en `WORKSTREAMS.md`.

@@ -33,6 +33,8 @@ erDiagram
   ORGANIZATIONS ||--o{ QUOTES : solicita
   QUOTES ||--|{ QUOTE_ITEMS : cotiza
   QUOTES ||--o| BUSINESS_QUOTE_CONVERSIONS : snapshot
+  QUOTES ||--o| BUSINESS_QUOTE_ORDERS : emits
+  ORDERS ||--o| BUSINESS_QUOTE_ORDERS : links
   ORGANIZATIONS ||--o{ BUSINESS_QUOTE_CONVERSIONS : convierte
   ORGANIZATIONS ||--o{ CRM_ACTIVITIES : historial
   QUOTES o|--o{ CRM_ACTIVITIES : registra
@@ -61,7 +63,7 @@ erDiagram
 - `receive_inventory` y `adjust_inventory` rechazan un reintento con clave ya asociada a otro payload. Un mismo payload devuelve el movimiento anterior sin duplicar unidades ni ledger.
 - `payment_transactions` pertenece al pedido. `private.demo_payment_attempts` asocia un event ID único a pedido y resultado. El RPC de pago acepta únicamente resultado simulado en el servidor y escribe transición, auditoría/timeline y estado de forma atómica.
 - `quotes` y `quote_items` guardan snapshots de organización/contacto, producto, precio solicitado/ofertado, moneda e impuestos. `sales_owner_id` define la propiedad comercial; el equipo comercial puede reclamar solicitudes sin asignar mediante RPC.
-- `business_quote_conversions` registra como máximo una conversión auditable por propuesta aceptada y conserva snapshots de organización, oferta y líneas. No es un `orders` formal y no reserva stock; ese contrato B2B sigue pendiente.
+- `business_quote_conversions` registra la conversión auditable; `business_quote_orders` enlaza una cotización aceptada con un pedido formal, preservando snapshots comerciales/direcciones e idempotencia. La emisión revalida pertenencia y stock y crea reservas. El pedido requiere anticipo y permanece `pending_payment`; no se expide sin el pago confirmado por el flujo permitido.
 - `crm_activities` vincula actividad a lead, solicitud, presupuesto u organización. Las notas `organization` solo son visibles a miembros de la organización antes de que el presupuesto sea reclamado; la cola comercial sin asignar expone actividad `internal`.
 - `create_support_ticket` guarda ticket y primer mensaje juntos. `request_return` valida cliente, pedido entregado, ventana y suma acumulada por línea; la clave idempotente impide duplicar una devolución.
 - Mensajes/transiciones de agente y review de RMA pasan por RPC idempotente; `support_ticket_events` y `return_request_events` registran timeline sin habilitar DML directo al navegador.
@@ -83,5 +85,8 @@ erDiagram
 - `20261007134000_crm_business_quote_conversion_audit.sql` — registro de conversión B2B aceptada a snapshots auditables tenant-scoped.
 - `20261007140000_checkout_retry_lookup.sql` — lookup autenticado por fingerprint que permite reintentar checkout sin mutar/crear otro carrito.
 - `20261007145943_procurement_purchase_orders.sql` — proveedores, órdenes de compra, snapshots de líneas, intentos y líneas de recepción, eventos y RPCs de escritura autorizadas; cambios en espera de integración coordinadora.
+- `20261007150000_order_fulfillment_stages.sql` — picking, packing y expedición con transición autorizada, eventos y consumo de reservas.
+- `20261007160000_crm_b2b_formal_order.sql` — emisión idempotente de pedidos desde cotización B2B aceptada, snapshots y límites por membresía.
+- `20261007180727_rma_approval_refund_inspection.sql` — reembolso demo calculado desde snapshots de pago/precio y estado de inspección pendiente.
 
-El esquema no convierte por sí solo procurement, pedido B2B formal, fulfillment UI completo o efectos de RMA en flujos terminados.
+El esquema no sustituye la recepción física/disposición de RMA, liquidación del anticipo B2B, configuración remota o auditoría exhaustiva de permisos.

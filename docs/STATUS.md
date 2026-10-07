@@ -1,99 +1,82 @@
 # Estado del proyecto
 
-Estado observado el **2026-10-07** tras integrar la quinta ola. Se contrastaron commits, diffs, cambios sin commit y el comportamiento local; el repositorio y las migraciones son la fuente de verdad. No hay proyecto Supabase remoto ni despliegue de producción probado.
+Estado observado el **2026-10-07** después de integrar la sexta ola. Git, código, migraciones y pruebas locales prevalecen sobre estados anteriores de los agentes. No existe un proyecto Supabase remoto configurado ni se ha probado un despliegue de producción.
 
-## Resumen funcional
+## Estado funcional
 
-- ✅ **Checkout conectado:** sesión GoTrue, `variantId`, precio/stock desde servidor, pedido con snapshots y reserva transaccional, pago demo autorizado solo en servidor, rechazo/retry/concurrencia. El lookup idempotente valida clave y fingerprint antes de crear o mutar un carrito. E2E local conectado cubre aprobado, rechazado, refresh/retry y dos compras concurrentes.
-- ✅ **Auth/RLS boundary local:** 78 probes HTTP GoTrue/PostgREST pasan, incluidos anon, perfiles/pedidos/tickets, aislamiento de cliente y organización, roles persistidos, RPCs privilegiadas, prioridad Supabase sobre `DEMO_MODE`, fallo conectado sin fallback y scan de secretos cliente. La matriz CRUD completa de cada tabla/columna/rol sigue abierta.
-- ✅ **Inventario operativo básico:** almacén puede recibir stock y ajustar cantidades por RPC, con actor, motivo/proveedor/albarán, ledger append-only, idempotencia de payload y protección de reservas. Los movimientos no suplantan el ledger de checkout/fulfillment.
-- 🚧 **Procurement (slice en worktree, pendiente de integración):** proveedores con archivo lógico, borradores/órdenes de compra y recepciones parciales/finales vinculadas al ledger por RPC transaccional. La prueba runtime local y pruebas de rutas cubren roles, replay, conflictos, exceso y snapshots. No incluye factura/impuestos/pagos a proveedor ni integración externa.
-- ✅ **PC Builder comprable:** seis componentes ficticios vendibles con atributos tipados; compatibility selection y carrito preservan los `variantId` exactos. Checkout vuelve a validar producto, variante, precio y stock.
-- ✅ **Reviews en PDP:** enlace a opiniones y conteo exacto solo cuando los datos conectados están disponibles; el workflow verificado/moderado mantiene estados de carga, vacío y error.
-- ✅ **CRM/B2B — conversión auditada:** una oferta aceptada puede registrarse una sola vez con snapshots tenant-scoped e historial. 🚧 No emite todavía un `orders` formal ni reserva stock.
-- 🚧 **Operations Center:** cola y métricas consultan datos operativos; picking/packing, expedición y escaneo siguen incompletos.
-- 🚧 **Support/RMA:** tickets, mensajes, estados y revisión/límite de unidades funcionan. Aprobar una devolución registra un reembolso simulado idempotente y deja las unidades en `pending_inspection`; falta recepción/inspección física y una disposición de almacén antes de cambiar stock.
-- 🚧 **Analytics:** consultas operativas conectadas, pendiente demostrar consistencia de cada KPI contra una fuente de negocio y cerrar rangos/filtros.
-- 🚧 **Demo Mode:** aislamiento de datos y límites de seguridad verificados localmente; falta una demo completa por roles con reset determinista.
-- 🚧 **Contenido, SEO, responsive y performance:** bases y polish parcial; no hay auditoría integral de rendimiento, blog/CMS ni revisión visual completa de todas las rutas.
+- ✅ **Checkout B2C conectado:** sesión Auth real, variante/precio/stock validados en servidor, pedido y líneas con snapshots, pago demo simulado, reservas transaccionales, rechazo/retry y control de idempotencia. 4/4 pruebas browser conectadas pasan.
+- ✅ **Catálogo, búsqueda, carrito y PC Builder comprable:** el configurador añade variantes publicadas al carrito; el checkout vuelve a validar los datos de negocio. Hay pruebas de compatibilidad del slice, aunque ampliar la cobertura de compatibilidades sigue en calidad pendiente.
+- ✅ **Reviews:** elegibilidad por línea entregada, moderación protegida, lectura pública solo de publicadas y acceso desde PDP.
+- ✅ **CRM/B2B hasta pedido formal:** cotización aceptada puede emitir un pedido formal tenant-scoped, conserva precios/direcciones en snapshots y crea el vínculo comercial. El pedido queda `pending_payment` bajo anticipo; la captura/liquidación del anticipo es un límite pendiente y el pedido no se expide antes.
+- ✅ **Inventario y procurement básico:** ledger idempotente de movimientos, proveedores, órdenes de compra, recepciones parciales/finales vinculadas al movimiento y control de sobre-recepción.
+- ✅ **Fulfillment:** pedido pagado pasa por picking, packing y expedición con timeline y consumo de reserva. La secuencia y autorización están cubiertas en PostgreSQL.
+- 🚧 **Support/RMA:** tickets, conversación, decisión de devolución y reembolso demo idempotente funcionan. Las unidades aprobadas quedan en `pending_inspection`; todavía falta escaneo/recepción física y disposición autorizada (reponer o desechar).
+- 🚧 **Analytics:** KPIs consultan filas operativas y ocultan totales inconsistentes; se necesitan checks de reconciliación por métrica/rango y cobertura de filtros antes de cerrar el módulo.
+- 🚧 **Demo Mode:** el modo no elude autorización y no hace fallback a datos demo cuando Supabase está configurado; falta un recorrido repetible por roles y reset determinista de datos demo.
+- 🚧 **Seguridad/Auth:** aislamiento, escalada, permisos sensibles y boundaries HTTP locales verificados; la matriz no es un CRUD exhaustivo de cada tabla/campo/endpoint. `manager` y `marketing` no son roles persistidos y no deben recibir permisos implícitos.
+- 🚧 **Experiencia y presentación:** E2E cubre rutas clave, pero no se ha hecho una auditoría visual completa en todos los breakpoints, medición Lighthouse/CWV ni auditoría integral de SEO/contenido. No hay CMS/blog editorial.
 
-## Integración de la quinta ola
+## Sexta ola integrada
 
-- Se rescataron cuatro commits limpios: B2B conversion (`473bff1`), PC Builder (`6011f77`), PDP reviews (`bb20ce8`) y checkout E2E (`2f8d264`). Las revisiones se integraron como commits separados; las ediciones de documentos worker basadas en el snapshot antiguo se reconciliaron aquí.
-- Se rescataron sin commit los cambios de inventario del worktree `c27b` y el runner Auth/PostgREST y su handoff desde `29a6`.
-- La prueba conectada detectó que el retry podía crear otro carrito con líneas antes de que el RPC encontrase el pedido. Se añadió `find_checkout_order`, que compara el fingerprint registrado antes de reservar/crear carrito; misma clave/payload reusa el pedido y payload diferente devuelve conflicto.
-- Se separó el E2E conectado del gate demo general: `pnpm test:e2e` no requiere credenciales locales; `tests/e2e/checkout-connected/run.ps1` ejecuta el recorrido GoTrue/PostgREST aislado.
-- Los dos scripts SQL runtime tenían conteos literales de seed antiguos. Se sustituyeron por conteos basales capturados en la transacción y se volvieron a ejecutar sin ampliar policies.
-- El primer reset local de esta integración dejó Docker en reinicio incompleto; un segundo reset con el stack sano aplicó migraciones y seed completos. Las pruebas posteriores usaron esa base recién reiniciada.
+Se inspeccionaron commits y diffs reales de las cinco conversaciones/worktrees; el cambio de QA que aún estaba sin commit y los ajustes de prueba de integración se rescataron. Commits integrados en la rama actual:
+
+- `4e7d1e6` — proveedores, órdenes de compra y recepciones vinculadas.
+- `8946f7e` — etapas de fulfillment conectado.
+- `68c6dfa` — pedido formal desde presupuesto B2B aceptado.
+- `25c074d` — suite B2B conectada en Supabase aislado.
+- `2f4599c` — efectos de negocio al aprobar RMA.
+- `2f17bd2` — QA conectado de dominios y analytics.
+
+La prueba E2E transversal verifica permisos de emisión B2B sin crear pedidos residuales; el flujo real de pedido B2B se cubre en el runner aislado de ese dominio. Se corrigieron conteos absolutos de filas de seed en el test de aislamiento RLS. El reset de Supabase local limpió fixtures residuales y reaplicó las 15 migraciones y seed.
+
+## Gates de integración
+
+| Check | Resultado |
+|---|---|
+| `pnpm install --frozen-lockfile` | ✅ validado en la integración de esta ola |
+| `pnpm exec tsc --noEmit` | ✅ |
+| `pnpm lint` | ✅ |
+| `pnpm test` | ✅ 175 Vitest + 18 Node |
+| `pnpm test:e2e` | ✅ 17/17 |
+| `pwsh -File tests/e2e/connected-domains/run.ps1` | ✅ 5/5 y teardown limpio |
+| `pwsh -File tests/e2e/checkout-connected/run.ps1` | ✅ 4/4; aprobado, rechazado, refresh/retry, payload distinto y concurrencia (verificación integrada previa) |
+| runner B2B aislado | ✅ 1/1; pedido formal y límites tenant/stock (verificación integrada previa) |
+| `pnpm build` | ✅ producción; 36 páginas/rutas compiladas |
+| `pnpm dlx supabase@latest db reset --local --yes` | ✅ 15 migraciones y seed aplicados |
+| pgTAP database/checkout/reviews/fulfillment | ✅ 265 aserciones |
+| SQL runtime RLS/RBAC/Auth/support/inventory/procurement | ✅ scripts aplicados con fixtures transaccionales |
+| `pnpm dlx supabase@latest db lint --local --fail-on error` | ✅ sin errores de esquema |
+| `git diff --check` | pendiente tras cerrar documentación/commit |
+
+Warnings no bloqueantes conocidos: Node reporta `MODULE_TYPELESS_PACKAGE_JSON` en dos pruebas de módulos `.ts`; Playwright/Windows muestra conflicto `NO_COLOR`/`FORCE_COLOR`. El antiguo warning de estilo de caret en inputs no se ha atribuido al árbol React y requiere confirmar en navegador limpio.
 
 ## Backlog priorizado
 
 ### P0
 
-- [ ] Ningún bloqueo P0 confirmado por los gates locales de esta ola. Mantener no-go de producción hasta configurar un proyecto remoto, secretos/redirects y ejecutar pruebas de despliegue.
+- ✅ No hay bloqueo P0 reproducible en el stack local tras esta ola.
+- ⛔ **Go-live remoto:** no-go hasta disponer de proyecto/credenciales, redirects/secret management, migraciones remotas y pruebas de despliegue; no está dentro de los gates locales.
 
 ### P1
 
-- [ ] Completar pedido B2B formal desde oferta aceptada: dirección/facturación, condiciones de pago, precio negociado como snapshot e integración de stock/reservas sin eludir checkout.
-- [ ] Integrar el slice de procurement descrito abajo; después acordar si el producto requiere facturas, impuestos, pagos o integración externa de proveedor.
-- [ ] Cerrar fulfillment con picking/packing/expedición y timeline conectado a la cola operacional.
-- [ ] Completar recepción e inspección física de RMA y la disposición auditada de unidades (reponer o desechar) después de verificar el producto.
-- [ ] Validar origen de cada KPI y sus filtros con casos de negocio reproducibles; completar escenarios operativos restantes de analytics.
-- [ ] Matriz Auth/RLS más amplia para manager/marketing y CRUD de tablas/columnas/acciones, con tokens HTTP y pruebas de IDOR por dominio.
+- [ ] Completar recepción física e inspección de RMA, con disposición auditada y una sola actualización de stock; probar cantidades, repetición y permisos de almacén.
+- [ ] Cerrar el pago/anticipo de pedidos B2B o dejar explícito como límite de demo en UI, estados, documentación y guion; impedir expedición mientras no se registre el anticipo esperado.
+- [ ] Completar Demo Mode por rol con reset local reproducible y recorrido de storefront, CRM, soporte y almacén sin credenciales privilegiadas cliente.
+- [ ] Completar una matriz de permisos defensible por acción/ruta/RPC y ampliar pruebas HTTP de roles persistidos; no inventar grants para `manager`/`marketing`.
+- [ ] Reconciliar KPIs operativos con casos de negocio (definición, filtro, fuente, rango y zona horaria) y cubrir inconsistencia de cada métrica.
 
 ### P2
 
-- [ ] E2E conectado de pedido en cuenta, cotización/portal B2B, reseña elegible, ticket/mensajes y permisos de backoffice.
-- [ ] Demo Mode por perfiles con fixture/reset estable y guion repetible de extremo a extremo.
-- [ ] Revisión manual de accesibilidad y responsive en cada módulo, incluidos diálogos, tablas y feedback de mutaciones.
-- [ ] Medición Lighthouse/CWV y bundle/imágenes; resolver la discrepancia de hidratación `caret-color: transparent` en navegador limpio si persiste.
-- [ ] Auditoría de navegación y acciones para módulos con páginas conectadas; añadir contenido/blog y metadatos donde existan rutas públicas.
+- [ ] Hacer auditoría visual/manual responsive y accesible en storefront y backoffice, con navegación teclado, diálogos, formularios, tablas, errores, carga y vacío.
+- [ ] Medir Lighthouse/CWV y revisar bundle/imagenes/consultas con resultados reproducibles.
+- [ ] Auditar navegación, filtros y acciones de rutas restantes para localizar fake completeness; priorizar controles visibles que no persisten.
+- [ ] Completar metadatos, schema/sitemap y contenido público; blog/CMS se mantiene fuera de alcance si no es requisito académico.
+- [ ] Confirmar el warning de caret en navegador limpio y reducir warnings Node si se puede sin cambiar semántica del proyecto.
 
 ### P3
 
-- [ ] CMS/blog editorial, recomendaciones, mercados/monedas adicionales y refinamientos de compras no requeridos para la demo académica.
-
-## Gates de la integración
-
-| Check | Resultado |
-|---|---|
-| `pnpm install --frozen-lockfile` | ✅ |
-| `pnpm exec tsc --noEmit` | ✅ |
-| `pnpm lint` | ✅ sin diagnósticos |
-| `pnpm test` | ✅ 160 Vitest + 18 Node |
-| `pnpm test:e2e` | ✅ 17/17 demo y UX |
-| `pwsh -File tests/e2e/checkout-connected/run.ps1` | ✅ 4/4 con GoTrue, PostgREST y RPCs locales; incluye retry, payload distinto, refresh y concurrencia |
-| `pnpm build` | ✅ Next.js producción; 33 rutas enumeradas |
-| `supabase db reset --local --yes` | ✅ segundo intento; migraciones y seed, incluida conversión B2B, movimientos e idempotency lookup |
-| pgTAP database/checkout/reviews | ✅ 189 aserciones |
-| RLS/security/RBAC/Auth escalation/support/inventory SQL | ✅ todos los scripts runtime pasaron y revirtieron fixtures |
-| Auth/PostgREST boundary runner | ✅ 78 probes HTTP; 0 fallos; cleanup verificado |
-| `supabase db lint --local --fail-on error` | ✅ sin errores de esquema |
-| `git diff --check` | ✅ sin errores; Git puede mostrar LF/CRLF de Windows |
-
-## Verificación del slice de procurement en el worktree
-
-Este slice implementado todavía necesita revisión e integración coordinadora; sus resultados no sustituyen los gates de despliegue ni convierten el estado global del producto en `Done`.
-
-| Check | Resultado |
-|---|---|
-| `pnpm test` | ✅ 166 Vitest + 18 Node; repetición completa tras timeout de preparación concurrente |
-| `pnpm exec tsc --noEmit` | ✅ |
-| `pnpm lint` | ✅ sin diagnósticos |
-| `pnpm build` | ✅ producción, incluida nueva página y seis rutas API procurement |
-| `supabase db reset --local --yes` | ✅ migración procurement y seed aplicados en reset local |
-| `tests/integration/procurement/procurement.sql` | ✅ runtime PostgreSQL local; permisos, lifecycle, replay, persistencia de rechazos y vínculo a ledger; rollback |
-| `supabase db lint --local --fail-on error` | ✅ sin errores de esquema |
-| Route tests procurement | ✅ 6 casos unitarios, incluidos rol, validación, origen, RPC y errores persistidos |
+- [ ] CMS/blog completo, monedas/mercados adicionales, facturas/impuestos/pagos de proveedor y sistemas externos, solo si se amplía el alcance académico.
 
 ## Criterio de cierre
 
-Una feature se marca ✅ solo con contrato integrado, autorización server/database, persistencia, estados de error/vacío, UX navegable y pruebas del recorrido principal. Los gates locales no prueban producción ni sustituyen configuración remota.
-
-## Slice RMA aprobado — 2026-10-07
-
-- La aprobación por soporte crea, en la misma transacción, un registro único de reembolso `simulated`, actualiza el timeline y pone las unidades devueltas en `pending_inspection`. El cliente ve el importe simulado y la cantidad pendiente.
-- El importe usa los precios históricos IVA-incluidos de las líneas, distribuye proporcionalmente el descuento de pedido y excluye el envío. Solo se acepta un pago demo confirmado que coincida con el total/moneda del pedido; se limita la suma de reembolsos al importe pagado.
-- Revisión repetida con la misma clave y payload reproduce el resultado sin duplicar reembolso, timeline ni cantidad; una clave reutilizada con payload diferente entra en conflicto. La aprobación de un pedido sin pago y el rechazo no producen reembolso ni disposición de inventario.
-- Verificación: `support-flow/postgres.sql` (incluye descuento de 10 € y envío de 20 € sobre 200 € de mercancía, reembolso esperado de 95 €), `support-rma/postgres.sql` y `concurrent-return-review.sql` pasaron sobre una instancia Supabase aislada; `pnpm test` (161 Vitest + 18 Node), `pnpm lint`, `next typegen`, `tsc --noEmit`, `pnpm build` y `supabase db lint --fail-on error` pasaron. `git diff --check` no reportó errores. El advisor señaló solo políticas SELECT permisivas preexistentes de catálogo/reviews; ninguna de RMA. No se alteró el ledger de inventario.
-- Límite deliberado: no se repone ni se desecha automáticamente un artículo que aún no ha sido recibido e inspeccionado. El workflow de almacén queda abierto; no se declara completo el dominio RMA.
+Una feature solo es ✅ cuando su contrato, autorización servidor/DB, persistencia, estados de error/vacío, UX y recorrido principal están integrados y verificados. Un límite de demo debe expresarse en la UI y documentación. Los gates locales no certifican un entorno remoto.

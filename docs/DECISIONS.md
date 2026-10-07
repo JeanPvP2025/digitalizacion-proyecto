@@ -142,15 +142,15 @@ Las decisiones de alcance heredadas de la misión se marcan **Confirmada**. Las 
 - **Decisión:** Procesar Tailwind 4 por `@tailwindcss/postcss` en `postcss.config.mjs` y dejar CSS Modules en el pipeline nativo de Next/Turbopack.
 - **Consecuencias:** B2B y otras superficies recuperan sus clases; E2E verifica root classes y responsive. No volver a aplicar una regla global de loader CSS a todos los módulos.
 
-## D-015 — La conversión B2B aceptada se audita antes de emitir un pedido
+## D-015 — La cotización B2B aceptada se audita y después puede emitir un pedido formal
 
 - **Fecha:** 2026-10-07
-- **Estado:** Confirmada para el contrato actual; el pedido comercial sigue pendiente de acuerdo con Commerce/Tech Lead.
+- **Estado:** Confirmada e integrada; las dos fases se registran como conversión auditable y pedido formal enlazado.
 - **Contexto:** Las cotizaciones B2B conservan precios negociados e identidad empresarial, mientras `orders` solo se crea hoy desde el checkout con direcciones, fingerprint de carrito, precio/stock actuales, reserva de inventario y pago demo.
-- **Decisión:** Owner/admin puede registrar explícitamente e idempotentemente la conversión de una cotización `accepted`. CRM persiste snapshots inmutables de organización, oferta y líneas, y una actividad visible para el tenant. El registro no se presenta como pedido, no reserva stock y no altera la oferta.
+- **Decisión:** Owner/admin puede registrar idempotentemente la conversión y emitir un pedido formal desde cotización `accepted`. Se conservan snapshots de organización, oferta, líneas y direcciones; la emisión revalida tenant y stock, reserva unidades y enlaza `business_quote_orders` con `orders`.
 - **Alternativas:** insertar directamente filas de comercio desde CRM sin resolver direcciones/condiciones de pago ni reutilizar la reserva autoritativa; o mantener una aceptación sin paso posterior auditable.
 - **Motivo:** Preserva auditoría/aislamiento y evita saltarse el contrato autoritativo de checkout o el ownership de inventario.
-- **Consecuencias:** Portal presenta la conversión como auditada y deja explícito que falta emitir pedido formal. Commerce/Tech Lead debe acordar el contrato para direcciones, pago y revalidación/reserva de stock antes de crear órdenes B2B. Ver `lib/crm/CONTRACT.md` y `tests/database/crm_b2b.sql`.
+- **Consecuencias:** La orden requiere anticipo y queda `pending_payment`; no se expide antes del pago habilitado. La liquidación del anticipo aún no está implementada y no se representa como pago real. Ver `20261007160000_crm_b2b_formal_order.sql` y `tests/database/crm_b2b.sql`.
 
 ## D-016 — Movimientos manuales de inventario son ledger e idempotentes
 
@@ -171,8 +171,24 @@ Las decisiones de alcance heredadas de la misión se marcan **Confirmada**. Las 
 ## D-018 — Las recepciones de procurement completan órdenes de compra mediante el ledger
 
 - **Fecha:** 2026-10-07
-- **Estado:** Slice implementado en worktree; pendiente de integración coordinadora.
+- **Estado:** Integrada en `20261007145943_procurement_purchase_orders.sql`.
 - **Contexto:** Las recepciones directas de inventario ya generan movimientos idempotentes, pero no conservaban el proveedor, la orden de compra ni cantidades recibidas contra una solicitud.
 - **Decisión:** Gestionar proveedores con desactivación lógica y órdenes de compra con snapshots de proveedor/producto. Solo `fulfillment_manager` y `super_admin` leen y mutan procurement; cambios pasan por RPCs acotadas. Una recepción parcial/final aplica `receive_inventory` por línea dentro de la misma transacción, vincula cada línea al movimiento resultante y actualiza estado/timeline de PO.
 - **Alternativas:** alterar inventario desde la UI o mantener recibos desconectados del ledger, lo que permitiría saltarse autorización, idempotencia o reconciliación.
 - **Consecuencias:** Clave UUID más fingerprint evita duplicados y conflictos de payload; excesos y órdenes no receivables quedan registrados como rechazados sin modificar stock. La moneda del coste es EUR. Facturas, impuestos de proveedor, pagos, devoluciones a proveedor y sincronización con sistemas externos no forman parte del slice. Ver `20261007145943_procurement_purchase_orders.sql` y `tests/integration/procurement/procurement.sql`.
+
+## D-019 — La aprobación RMA no equivale a inspección ni reposición
+
+- **Fecha:** 2026-10-07
+- **Estado:** Confirmada para el slice integrado; flujo de inspección pendiente.
+- **Contexto:** Aprobar una devolución puede autorizar un reembolso simulado, pero el producto aún no se ha recibido ni se ha comprobado su estado.
+- **Decisión:** La aprobación crea un efecto de reembolso idempotente y marca unidades `pending_inspection`. No cambia `on_hand` ni libera unidades al catálogo. La disposición futura (reponer/desechar) requiere actor autorizado de almacén, evento auditable e idempotencia propia.
+- **Consecuencias:** Nunca incrementar stock al aprobar una solicitud. El ledger solo cambia después de recepción e inspección física.
+
+## D-020 — Los pedidos B2B requieren anticipo antes de fulfillment
+
+- **Fecha:** 2026-10-07
+- **Estado:** Límite deliberado del demo hasta implementar liquidación.
+- **Contexto:** Las condiciones de la oferta B2B establecen pago anticipado; la simulación de checkout B2C no representa el cobro de una factura comercial.
+- **Decisión:** La orden B2B se crea con estado `pending_payment` y reservas, pero la transición a pagado/expedible debe depender de un registro de pago explícito y auditable. No reutilizar silenciosamente el simulador B2C ni permitir fulfillment sin liquidación.
+- **Consecuencias:** El módulo sigue parcial hasta que exista una acción segura de registrar anticipo simulado o un proveedor de pago real separado.

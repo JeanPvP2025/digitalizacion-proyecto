@@ -1,6 +1,6 @@
 # Matriz de roles y permisos
 
-Estado al 2026-10-07 tras la quinta ola. La autorización efectiva combina sesión Auth, `user_role_grants`, `organization_memberships`, grants SQL, RLS y validaciones de RPC. Ocultar una acción en UI no concede ni deniega acceso.
+Estado al 2026-10-07 tras la sexta ola. La autorización efectiva combina sesión Auth, `user_role_grants`, `organization_memberships`, grants SQL, RLS y validaciones de RPC. Ocultar una acción en UI no concede ni deniega acceso.
 
 ## Nombres de rol
 
@@ -40,7 +40,7 @@ Estado al 2026-10-07 tras la quinta ola. La autorización efectiva combina sesi�
 | Devoluciones/RMA y reembolsos | — | C por RPC; R propias y reembolso propio | C por RPC si es titular; R propia | C por RPC si es titular; R propia | R/U de revisión por RPC; R de reembolso autorizado | — | R operativa y R de reembolso | — | R/U según acción por RPC |
 | Auditoría/timeline | — | R de timeline propio permitido | Propio/org | Propio/org | R de caso autorizado | Actividad interna comercial autorizada | Eventos de pedidos operativos | — | R |
 
-Las celdas “—” significan sin permiso por el contrato actual. Para movimientos manuales, `receive_inventory` y `adjust_inventory` permiten solo `fulfillment_manager`/`super_admin`; Postgres valida rol, fingerprint y saldo reservado aun cuando se invoque la RPC fuera de la UI. Estas acciones actualizan `on_hand`, no `reserved`. Esta matriz es conservadora: antes de ampliar un permiso se debe documentar campo/acción y añadir una prueba runtime.
+Las celdas “—” significan sin permiso por el contrato actual. Para movimientos manuales, `receive_inventory` y `adjust_inventory` permiten solo `fulfillment_manager`/`super_admin`; Postgres valida rol, fingerprint y saldo reservado aun cuando se invoque la RPC fuera de la UI. Procurement sigue el mismo límite interno. Fulfillment requiere el rol de almacén/superadmin y consume una reserva solo al expedir. Owner/admin B2B puede emitir el pedido aceptado por RPC, con stock revalidado y estado pendiente de anticipo. Estas acciones actualizan `on_hand` solo cuando corresponde; esta matriz es conservadora y debe ampliarse con pruebas por endpoint antes de conceder permisos.
 
 La tabla `return_refunds` solo concede lectura RLS al propietario de la devolución y a `support_agent`, `fulfillment_manager` y `super_admin`; `authenticated` no recibe escritura directa. La review solo acepta `support_agent`/`super_admin` vía RPC. Aprobar requiere pago demo confirmado y pone unidades en inspección pendiente, pero no da permiso para mutar stock; la futura disposición de almacén debe usar su propia transición autorizada.
 
@@ -49,8 +49,8 @@ La tabla `return_refunds` solo concede lectura RLS al propietario de la devoluci
 - Ejecutados en PostgreSQL local: `tests/integration/postgres-rls.sql`, `security/postgres-object-isolation.sql`, `rbac/postgres-role-action-matrix.sql`, `auth-boundaries/postgres-role-escalation.sql`, `support-rma/postgres.sql`, `support-flow/postgres.sql`, `inventory/inventory-movements.sql`, `reviews/product-reviews.sql`, `tests/database/*.sql` y `commerce/checkout-flow.sql`.
 - La prueba `tests/integration/procurement/procurement.sql` verifica RPCs y RLS: fulfillment opera, sales y buyer no leen las tablas procurement, no hay DML directo de navegador, y los movimientos recibidos quedan enlazados a la orden.
 - Además, `pwsh -File tests/integration/auth-boundaries/run-local.ps1` ejercita 78 requests con access JWT de GoTrue en PostgREST; 0 fallos. Cubre `anon`, customer A/B, business admin/buyer, `catalog_manager`, `support_agent`, `sales_manager`, `fulfillment_manager` y `super_admin` para salud, filas propias/tenant, roles persistidos, escalation y RPCs restringidas.
-- La matriz SQL y HTTP prueba aislamiento cliente/organización, grants, acciones de catálogo, soporte, CRM/pagos, inventario, devoluciones, checkout y escalada.
+- La matriz SQL y HTTP prueba aislamiento cliente/organización, grants, acciones de catálogo, soporte, CRM/pagos, inventario, procurement, devolución, checkout, pedido B2B y escalada.
 - `create_business_order_from_accepted_quote` solo admite owner/admin; `orders`, `order_items`, `order_events`, pagos y `business_quote_orders` se leen por membresía de organización o por los roles internos ya permitidos. `tests/database/crm_b2b.sql` verifica buyer/viewer lectura, bloqueo de emisión para esos roles y aislamiento tenant B.
 - La matriz inicial se corrigió al detectar que el RPC, no el DML directo, es el contrato para transición de ticket. No se añadió permiso directo.
 - No existen roles persistidos `marketing` ni `manager` genérico; sus pruebas son por ausencia de enum/grant, no por usuario con un rol inventado.
-- No se ha ejecutado CRUD exhaustivo en cada columna/tabla, ni pruebas HTTP de cada Server Action. Roles `marketing` y `manager` genérico no existen como grants persistidos y aún no tienen usuarios/probes dedicados. El gate cubre escenarios seleccionados y no constituye certificación de producción.
+- No se ha ejecutado CRUD exhaustivo en cada columna/tabla, ni pruebas HTTP de cada Server Action. Roles `marketing` y `manager` genérico no existen como grants persistidos y no deben recibir acceso implícito. El gate cubre escenarios seleccionados y no constituye certificación de producción.

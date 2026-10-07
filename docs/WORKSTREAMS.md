@@ -54,15 +54,29 @@ Los worktrees limpios produjeron commits para checkout variante, RBAC/Auth bound
 
 Se incorporaron los commits worker `473bff1`, `6011f77`, `bb20ce8` y `2f8d264`, además de cambios sin commit de los worktrees `c27b` (inventario) y `29a6` (Auth/PostgREST). Commits del Tech Lead: `a3904c9` (checkout retry), `81c7be7` (movimientos de inventario) y `26ee62b` (fixtures RLS/Auth). La integración añadió `find_checkout_order` para validar fingerprint antes de mutar o crear otro carrito en un retry. Los gates e incidencias reproducibles figuran en `docs/STATUS.md` y `docs/AGENT_HANDOFF.md`.
 
-## Ready for next conversation wave
+## Ola 6 — finalizada e integrada (2026-10-07)
 
 | Conversation | Role | Task | Ownership | Dependencies | State |
 |---|---|---|---|---|---|
-| `client-new-thread:611d2ca5-4f48-4394-a4f9-98abe74e4c0a` — B2B formal order slice | B2B Commerce Agent | Emitir pedido formal desde una conversión aceptada con condiciones y snapshots seguros | CRM quote conversion + pedido B2B dedicado y tests | Contrato de dirección/precio/pago/reserva; no alterar checkout B2C | 🚧 Despachado en worktree independiente |
-| `client-new-thread:7bc64795-e018-48fe-8cbd-d128ab9380e3` — Procurement suppliers and purchase orders | Procurement Agent | Proveedores, órdenes de compra y recepción vinculada a PO | `lib/inventory/procurement/**`, inventory procurement migrations/tests | Movimientos idempotentes de esta ola | 🚧 Despachado en worktree independiente |
-| `client-new-thread:f4d5abf7-4185-4a8c-a0a5-1afc4bb22d84` — Order fulfillment workflow | Fulfillment Agent | Picking/packing/dispatch y timeline operativo completo | `lib/operations/**`, operaciones UI/actions/tests | `fulfill_order`, inventario/reservas existentes | 🚧 Despachado en worktree independiente |
-| `client-new-thread:4b252a38-3247-4979-8abd-53d9641cac7b` — RMA approval effects | Returns/RMA Agent | Efectos idempotentes de aprobación (devolución/reembolso demo/stock) | support return RPC/migrations/tests/UI | Devolución aprobada, pedidos y ledger | 🚧 Despachado en worktree independiente |
-| `client-new-thread:16fba6ee-c539-429e-84d8-cd25d31a2165` — Connected QA and analytics integrity | QA/Analytics Agent | Contrastar KPIs y cerrar E2E connected para B2B, cuenta, reviews y soporte | analytics tests y `tests/e2e/connected-domains/**` | contratos estables de los dominios integrados | 🚧 Despachado en worktree independiente |
+| `01a116da-74e8-7d90-986e-56db80cdb512` — B2B formal order slice | B2B Commerce Agent | Emitir pedido formal desde presupuesto aceptado con snapshots y límites de tenant | Portal/contrato B2B, migración y pruebas | Conversión aceptada, reserva e inventario | ✅ Integrado; `68c6dfa`; runner aislado 1/1 |
+| `01a116da-74e8-7d90-986e-56fc143a985f` — Procurement suppliers and purchase orders | Procurement Agent | Proveedores, órdenes de compra y recepción vinculada a PO | `lib/inventory/procurement/**`, migration y SQL/route tests | Ledger de inventario | ✅ Integrado; `4e7d1e6`; SQL de runtime pasa |
+| `01a116da-93a2-7fe0-9cd5-e430efc6a1e8` — Order fulfillment workflow | Fulfillment Agent | Picking/packing/expedición, consumo de reserva y timeline | Operaciones, RPC, migration y pruebas | Pago aprobado y reserva | ✅ Diff sin commit rescatado; `8946f7e`; SQL de fulfillment pasa |
+| `01a116da-74e8-7d90-986e-56e5365d584b` — RMA approval effects | Returns/RMA Agent | Reembolso demo idempotente y estado de inspección pendiente | Support/RMA RPC, migration, UI y SQL | Devolución revisada y pago aprobado | ✅ Integrado; `2f4599c`; inspección/disposición sigue abierta |
+| `01a116da-b0ae-7a82-bb34-9fe260cd1eff` — Connected QA and analytics integrity | QA/Analytics Agent | E2E de cuenta, B2B, reviews, soporte y métricas operativas | `tests/e2e/connected-domains/**`, fixtures, `docs/ANALYTICS.md` | Contratos de los dominios integrados | ✅ Diff sin commit rescatado; `2f17bd2`; suite conectada 5/5 |
+
+### Verificación de integración de la sexta ola
+
+Se inspeccionaron los cinco worktrees, su estado Git, commits y cambios. Procurement, B2B, fulfillment y RMA tenían commits; el QA E2E y ajustes de fixtures no estaban completamente comprometidos en su worktree y se revisaron/rescataron. Se actualizó el fixture de aislamiento de pedidos/grants para tomar baseline de seed. En el E2E cruzado B2B se valida visibilidad/autorización sin crear un pedido persistente; el recorrido de emisión real está en el runner B2B aislado. `tests/e2e/connected-domains/run.ps1` termina 5/5 con cleanup correcto.
+
+## Siguiente ronda — lista para despacho
+
+| Conversation | Role | Task | Ownership | Dependencies | State |
+|---|---|---|---|---|---|
+| Pendiente de crear | RMA Warehouse Agent | Recepción, inspección y disposición autorizada de devolución | `support`/inventory migrations, endpoint/UI de inspección y pruebas | `pending_inspection` y ledger actual | Ready |
+| Pendiente de crear | Demo Mode Agent | Demo repetible por rol con reset determinista y límites de autorización | Demo auth/fixtures/UI/docs/tests | Auth boundary y fixtures actuales | Ready |
+| Pendiente de crear | Security Matrix Agent | Ampliar matriz route/RPC/tabla y revisar permiso de cada rol | `tests/integration/auth-boundaries/**`, `RBAC_MATRIX.md`, `SECURITY.md` | Roles actuales y contratos de endpoint | Ready |
+| Pendiente de crear | Analytics Integrity Agent | Reconciliar KPIs, filtros y rangos con SQL de referencia | `lib/analytics/**`, `docs/ANALYTICS.md`, tests | Datos de pedidos, inventario, soporte/CRM | Ready |
+| Pendiente de crear | UX/Performance Audit Agent | Auditoría responsive/accesible, Lighthouse y rutas con fake completeness | Reportes, E2E/a11y/perf sin cambios de dominio | Build integrado | Ready |
 
 ## Definition of Done por conversación
 

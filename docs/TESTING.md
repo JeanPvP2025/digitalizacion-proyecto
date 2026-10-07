@@ -20,7 +20,7 @@ pwsh -File tests/e2e/checkout-connected/run.ps1
 
 El runner obtiene claves solo en memoria desde el status de Supabase local, rechaza URLs no loopback, ejecuta Chromium con `DEMO_MODE=false` y limpia fixtures. Cubre aprobado, rechazado, misma clave/payload, clave/payload distinto, refresh/retry y dos sesiones concurrentes con una unidad. Nunca ejecutar simultáneamente con otros tests que muten el mismo proyecto local.
 
-Resultado tras la quinta ola: 160 Vitest + 18 Node; 17/17 E2E demo/UX; 4/4 E2E checkout conectado; TypeScript, ESLint y build pasan. En E2E demo apareció un warning de hidratación por `caret-color: transparent` en inputs; no se atribuyó al árbol React y falta confirmarlo en navegador limpio. Windows también informa `NO_COLOR`/`FORCE_COLOR`.
+Resultado tras la sexta ola: 175 Vitest + 18 Node; 17/17 E2E demo/UX; 4/4 E2E checkout conectado; 5/5 dominios conectados con cleanup limpio; 1/1 B2B browser aislado; TypeScript, ESLint y build pasan. El E2E demo informa de un atributo `caret-color: transparent` inyectado en inputs, sin origen identificado en la aplicación; hay que confirmar en navegador limpio. Windows también informa `NO_COLOR`/`FORCE_COLOR`.
 
 ## Supabase/PostgreSQL local
 
@@ -44,7 +44,7 @@ Para boundary HTTP con tokens reales, después del reset:
 pwsh -File tests/integration/auth-boundaries/run-local.ps1
 ```
 
-La quinta ola pasó reset/seed; **189** aserciones pgTAP; RLS/security/RBAC/auth-escalation/support/inventory runtime SQL; **78** probes HTTP GoTrue/PostgREST; y DB lint sin errores. Los scripts de conteo RLS toman baseline dentro de la transacción para no depender de un número fijo de filas en seed. Todos los scripts runtime revierten fixtures.
+La sexta ola pasó reset/seed (15 migraciones); **265** aserciones pgTAP; RLS/security/RBAC/auth-escalation/support/inventory/procurement/fulfillment runtime SQL; **78** probes HTTP GoTrue/PostgREST; y DB lint sin errores. Los scripts de conteo RLS toman baseline dentro de la transacción para no depender de un número fijo de filas en seed. Todos los scripts runtime revierten fixtures.
 
 ## Qué verifican
 
@@ -52,12 +52,12 @@ La quinta ola pasó reset/seed; **189** aserciones pgTAP; RLS/security/RBAC/auth
 - Inventario SQL: autorización warehouse/sales, recepción/ajuste idempotente, conflicto de fingerprint, no consumo de reserva y fulfillment que consume la reserva una sola vez.
 - Procurement SQL/rutas: solo fulfillment/superadmin ven proveedores y órdenes; las escrituras usan RPC. Prueba creación/edición/colocación/cancelación, recepción parcial/final vinculada a un movimiento, replay/conflicto por clave, sobre-recepción, archivo de proveedor y permisos de sales/buyer.
 - RLS/Auth HTTP: anon, customer A/B, business admin/buyer, catalog, support, sales, fulfillment y superadmin; perfil/pedido/ticket/tenant aislados; escalation y RPCs privilegiadas denegadas; demo no hace fallback conectado.
-- Conversión CRM/B2B: quote aceptado produce snapshots e historial una sola vez; el registro no se confunde con un pedido comercial.
+- B2B formal: owner/admin emite desde cotización aceptada; snapshots, organización, idempotencia, pedido y reserva quedan enlazados; el anticipo sigue pendiente hasta su flujo.
 - Reviews/RMA: elegibilidad por línea, moderación, intake atómico, límite de cantidades y transitions por RPC.
 
 ## Límites pendientes
 
 - La matriz Auth/RLS no cubre CRUD de cada columna/tabla/endpoint para cada rol; roles `manager` y `marketing` requieren probes HTTP adicionales. Ver `RBAC_MATRIX.md`.
 - No se probó configuración Supabase remota, despliegue, secretos de producción o migración remota.
-- Falta E2E conectado para pedido en cuenta, portal B2B, reseña elegible, ticket/mensajes y roles de backoffice.
-- El slice de procurement está implementado en un worktree pero espera integración coordinadora; no incluye facturas/impuestos/pagos de proveedor ni sincronización externa. Operations/picking, pedido formal B2B y efectos de RMA tampoco están completos.
+- La suite conectada cubre pedidos en cuenta, autorización B2B, reseña elegible, ticket/mensajes y analytics. El pedido B2B real se prueba en un proyecto Supabase aislado para no dejar fixtures persistentes en el stack compartido.
+- Procurement, etapas de fulfillment, emisión B2B formal y efectos de aprobación RMA están integrados. Faltan disposición física RMA, anticipo B2B, auditoría exhaustiva de permisos y pruebas remotas. Facturas/impuestos/pagos de proveedor e integraciones externas están fuera del alcance actual.
