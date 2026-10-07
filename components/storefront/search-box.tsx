@@ -27,6 +27,7 @@ type SearchAction =
   | { kind: "product"; key: string; href: string; searchTerm: string; product: CatalogSearchResult }
   | { kind: "recent"; key: string; href: string; searchTerm: string }
   | { kind: "all"; key: string; href: string; searchTerm: string; total: number };
+type SearchApiResponse = CatalogSearchResponse & { source: "demo" | "supabase" };
 
 class SearchApiError extends Error {}
 
@@ -98,7 +99,7 @@ export function SearchBox({
   const statusId = searchId + "-status";
   const [query, setQuery] = useState(initialQuery.slice(0, SEARCH_QUERY_MAX_LENGTH));
   const [recentSearches, setRecentSearches] = useState<string[]>(readStoredSearches);
-  const [response, setResponse] = useState<CatalogSearchResponse | null>(null);
+  const [response, setResponse] = useState<SearchApiResponse | null>(null);
   const [error, setError] = useState<{ query: string; message: string } | null>(null);
   const [retryCount, setRetryCount] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
@@ -149,11 +150,12 @@ export function SearchBox({
           || !payload.results.every(isCatalogSearchResult)
           || typeof payload.total !== "number"
           || !Number.isInteger(payload.total)
-          || payload.total < 0) {
+          || payload.total < 0
+          || (payload.source !== "demo" && payload.source !== "supabase")) {
           throw new SearchApiError("La respuesta de búsqueda no es válida.");
         }
 
-        setResponse({ query: trimmedQuery, total: payload.total, results: payload.results });
+        setResponse({ query: trimmedQuery, total: payload.total, results: payload.results, source: payload.source });
         setError(null);
       } catch (cause) {
         if (controller.signal.aborted) return;
@@ -396,6 +398,11 @@ export function SearchBox({
               )}
               {!isLoading && error?.query !== trimmedQuery && response?.query === trimmedQuery && response.total > 0 && (
                 <>
+                  {response.source === "demo" && (
+                    <p role="status" style={{ margin: 0, padding: "8px 13px 0", color: "#788178", fontSize: 10 }}>
+                      Sugerencias de demostración local.
+                    </p>
+                  )}
                   <p style={{ margin: 0, padding: "10px 13px 7px", color: "#788178", fontSize: 10 }}>
                     {response.total} {response.total === 1 ? "resultado" : "resultados"} en el catálogo
                   </p>

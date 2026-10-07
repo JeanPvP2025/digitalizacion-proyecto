@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
-import { ArrowRight, ArrowUpRight, Search, Star } from "lucide-react";
+import { ArrowRight, Search } from "lucide-react";
 import { ProductCard } from "@/components/storefront/product-card";
-import { formatPrice, type Product } from "@/lib/catalog";
+import { ConnectedProductCard } from "@/components/storefront/connected-product-card";
 import { getCatalogData, getCatalogSourceNotice } from "@/lib/catalog-repository";
 import { rankCatalogProducts } from "@/lib/search";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = { title: "Catálogo", description: "Explora ordenadores, componentes, monitores, redes y más en NODRIA." };
 
@@ -13,26 +15,6 @@ type SearchParams = Promise<{ q?: string | string[]; categoria?: string | string
 
 function first(value?: string | string[]) { return Array.isArray(value) ? value[0] : value; }
 function slug(value: string) { return value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, ""); }
-
-function ConnectedProductCard({ product, index }: { product: Product; index: number }) {
-  return (
-    <article className="product-card" style={{ animationDelay: `${index * 70}ms` }}>
-      <Link className="product-image-link" href={`/producto/${product.slug}`} aria-label={`Ver ${product.name}`}>
-        <div className="product-photo-wrap">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          {product.image ? <img className="product-photo" src={product.image} alt={product.imageAlt} loading={index > 2 ? "lazy" : "eager"} /> : <span className="product-photo-placeholder">Imagen no disponible</span>}
-          {product.badge && <span className="product-badge">{product.badge}</span>}
-          <span className="product-open"><ArrowUpRight size={16} /></span>
-        </div>
-      </Link>
-      <div className="product-card-meta"><span>{product.category}</span><span className="product-rating"><Star size={12} fill="currentColor" /> {product.rating.toFixed(1)} <small>({product.reviewCount})</small></span></div>
-      <Link className="product-card-title" href={`/producto/${product.slug}`}><h3>{product.name}</h3></Link>
-      <div className="product-card-price"><strong>{formatPrice(product.price)}</strong>{product.previousPrice !== undefined && <del>{formatPrice(product.previousPrice)}</del>}</div>
-      <div className="product-card-stock">Disponibilidad por confirmar</div>
-      <p className="product-card-stock">El catálogo público no muestra unidades exactas de inventario.</p>
-    </article>
-  );
-}
 
 async function CatalogResults({ searchParams }: { searchParams: SearchParams }) {
   const params = await searchParams;
@@ -70,7 +52,7 @@ async function CatalogResults({ searchParams }: { searchParams: SearchParams }) 
             <option value="recomendados">Orden recomendado</option>
             <option value="precio-asc">Precio: menor a mayor</option>
             <option value="precio-desc">Precio: mayor a menor</option>
-            <option value="mejor-valorados">Mejor valorados</option>
+            {data.source === "demo" && <option value="mejor-valorados">Mejor valorados · demo</option>}
           </select>
           <button aria-label="Aplicar búsqueda y orden" className="icon-button" type="submit"><Search size={16} /></button>
         </form>
@@ -90,7 +72,7 @@ async function CatalogResults({ searchParams }: { searchParams: SearchParams }) 
           <div className="filter-block"><h2>Confianza NODRIA</h2><p className="filter-note">Cada producto pasa por las manos de un especialista antes de llegar a nuestra selección.</p><Link className="filter-help-link" href="/servicios">Cómo elegimos <ArrowRight size={12} /></Link></div>
         </aside>
         <section className="catalog-results" aria-label="Resultados del catálogo">
-          {products.length > 0 ? <div className="catalog-product-grid">{products.map((product, index) => data.source === "demo" ? <ProductCard key={product.id} product={product} index={index} /> : <ConnectedProductCard key={product.id} product={product} index={index} />)}</div> : <div className="catalog-empty"><strong>No encontramos lo que buscas.</strong><p>Prueba con un nombre, referencia o especificación diferente.</p><Link href="/catalogo">Limpiar búsqueda</Link></div>}
+          {products.length > 0 ? <div className="catalog-product-grid">{products.map((product, index) => data.source === "demo" ? <ProductCard key={product.id} product={product} index={index} /> : <ConnectedProductCard key={product.id} product={product} index={index} />)}</div> : allProducts.length === 0 ? <div className="catalog-empty"><strong>Aún no hay productos publicados.</strong><p>El catálogo aparecerá aquí cuando haya productos disponibles.</p></div> : <div className="catalog-empty"><strong>No encontramos lo que buscas.</strong><p>Prueba con un nombre, referencia o especificación diferente.</p><Link href="/catalogo">Limpiar búsqueda</Link></div>}
         </section>
       </div>
     </main>

@@ -1,12 +1,14 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { demoProducts } from "@/lib/catalog";
+import { getCatalogData } from "@/lib/catalog-repository";
 import {
   SEARCH_QUERY_MAX_LENGTH,
   SEARCH_RESULT_LIMIT,
   SEARCH_RESULT_MAX_LIMIT,
   searchCatalogProducts,
 } from "@/lib/search";
+
+export const dynamic = "force-dynamic";
 
 const querySchema = z.string()
   .trim()
@@ -23,7 +25,7 @@ function badRequest(error: string) {
   );
 }
 
-export function GET(request: Request) {
+export async function GET(request: Request) {
   const params = new URL(request.url).searchParams;
   const rawQueries = params.getAll("q");
   if (rawQueries.length !== 1 || rawQueries[0].length > SEARCH_QUERY_MAX_LENGTH) {
@@ -43,11 +45,22 @@ export function GET(request: Request) {
     return badRequest("El límite debe estar entre 1 y " + SEARCH_RESULT_MAX_LIMIT + ".");
   }
 
+  const catalog = await getCatalogData();
+  if (catalog.source === "error") {
+    return NextResponse.json(
+      { error: catalog.message },
+      { status: 503, headers: { "Cache-Control": "no-store" } },
+    );
+  }
+
   const result = searchCatalogProducts(
-    demoProducts,
+    catalog.products,
     parsedQuery.data,
     parsedLimit?.data ?? SEARCH_RESULT_LIMIT,
   );
 
-  return NextResponse.json(result, { headers: { "Cache-Control": "no-store" } });
+  return NextResponse.json(
+    { ...result, source: catalog.source },
+    { headers: { "Cache-Control": "no-store" } },
+  );
 }

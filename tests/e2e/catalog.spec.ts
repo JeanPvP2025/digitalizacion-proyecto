@@ -12,6 +12,23 @@ test("search and category filters narrow catalog results", async ({ page }) => {
   await expect(page.getByRole("heading", { name: "FluxBook 14 Pro" })).toHaveCount(0);
 });
 
+test("favorites and compare resolve only products from the active demo catalogue", async ({ page }) => {
+  await page.addInitScript(() => {
+    localStorage.setItem("nodria.favorites.v1", JSON.stringify(["pr_loom27"]));
+    localStorage.setItem("nodria.compare.v1", JSON.stringify(["pr_loom27"]));
+  });
+
+  await page.goto("/favoritos");
+  await expect(page.getByRole("heading", { name: "Loom 27 4K" })).toBeVisible();
+  await expect(page.getByText("datos de demostración local", { exact: false }).first()).toBeVisible();
+
+  await page.goto("/comparar");
+  await expect(page.getByRole("region", { name: "Tabla comparativa de productos" })).toBeVisible();
+  await page.getByRole("button", { name: "+ FluxBook 14 Pro" }).click();
+  await expect(page.getByRole("link", { name: /FluxBook 14 Pro/ })).toBeVisible();
+  await expect(page.getByText("DEMO", { exact: false }).first()).toBeVisible();
+});
+
 test("catalog sorting orders products by server-rendered price", async ({ page }) => {
   await page.goto("/catalogo?orden=precio-asc");
 

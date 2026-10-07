@@ -25,7 +25,7 @@ export type Product = {
   featured?: boolean;
 };
 
-/** Demo catalogue used only when the server has no Supabase credentials. */
+/** Fictional fixtures; server routes may expose them only in explicit local-demo mode. */
 export const demoProducts: Product[] = [
   {
     id: "pr_fluxbook14",
@@ -175,4 +175,5 @@ export const categories = [
 export const formatPrice = (price: number) =>
   new Intl.NumberFormat("es-ES", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(price);
 
-export const getProduct = (slug: string) => demoProducts.find((product) => product.slug === slug);
+/** Explicitly demo-only lookup. Runtime storefront reads should use the mode-aware repository. */
+export const getDemoProduct = (slug: string) => demoProducts.find((product) => product.slug === slug);

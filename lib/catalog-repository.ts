@@ -2,6 +2,7 @@ import "server-only";
 
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { demoProducts, categories as demoCategories } from "@/lib/catalog";
+import { getServerDataMode } from "@/lib/server/data-mode";
 import { getSupabaseCredentials } from "@/lib/supabase/config";
 import { CATALOG_READ_ERROR, catalogDataFromSupabase, type CatalogData, type CatalogRows, type CatalogCategory } from "@/lib/catalog-mapping";
 
@@ -19,7 +20,7 @@ const demoCategoryData: CatalogCategory[] = demoCategories.map((category, index)
 async function readPublishedCatalog(client: SupabaseClient): Promise<CatalogRows> {
   const productResult = await client
     .from("products")
-    .select("id,slug,sku,name,brand,summary,description,image_url,image_alt,badge,rating_average,rating_count,is_featured,is_published")
+    .select("id,slug,sku,name,brand,summary,description,image_url,image_alt,badge,is_featured,is_published")
     .eq("is_published", true)
     .order("name");
 
@@ -54,8 +55,14 @@ async function readPublishedCatalog(client: SupabaseClient): Promise<CatalogRows
 }
 
 export async function getCatalogData(): Promise<CatalogData> {
+  const mode = getServerDataMode();
+  if (mode === "local-demo") return { source: "demo", products: demoProducts, categories: demoCategoryData };
+  if (mode === "unavailable") {
+    return { source: "error", products: [], categories: [], message: CATALOG_READ_ERROR };
+  }
+
   const credentials = getSupabaseCredentials();
-  if (!credentials) return { source: "demo", products: demoProducts, categories: demoCategoryData };
+  if (!credentials) return { source: "error", products: [], categories: [], message: CATALOG_READ_ERROR };
 
   try {
     // Public storefront reads run under anon RLS policies; no service-role key is involved.

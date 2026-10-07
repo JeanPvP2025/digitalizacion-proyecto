@@ -19,8 +19,6 @@ type ProductRow = {
   image_url: string | null;
   image_alt: string;
   badge: string | null;
-  rating_average: number | string;
-  rating_count: number;
   is_featured: boolean;
   is_published: boolean;
 };
@@ -136,8 +134,9 @@ export function mapCatalogRows(rows: CatalogRows): { products: Product[]; catego
         brand: product.brand,
         price: Number(variant.current_price),
         ...(variant.compare_at_price === null ? {} : { previousPrice: Number(variant.compare_at_price) }),
-        rating: Number(product.rating_average),
-        reviewCount: product.rating_count,
+        // Seeded aggregate ratings are not backed by a connected review workflow yet.
+        rating: 0,
+        reviewCount: 0,
         // Exact inventory is protected by RLS. Connected storefront UI must not treat this as stock.
         stock: 0,
         image: product.image_url ?? "",
