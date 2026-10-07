@@ -72,12 +72,15 @@ export function ReturnHistory({ connected, authenticated, reloadKey }: { connect
             <span className={styles.status} data-status={request.status}>{statusLabels[request.status] ?? request.status}</span>
           </div>
           <p className={styles.returnReason}>{request.reason}</p>
-          <ul className={styles.returnLines}>{request.items.map((item) => <li key={item.orderItemId}>{item.name} · {item.variant}: <strong>{item.requestedQuantity} de {item.purchasedQuantity} compradas</strong></li>)}</ul>
+          {request.refundAmount !== null && request.refundCurrency && <p className={styles.decisionReason}><PackageCheck size={14} /> Reembolso demo registrado: {formatMoney(request.refundAmount, request.refundCurrency)}.</p>}
+          {request.pendingInspectionQuantity > 0 && <p className={styles.decisionReason}><PackageCheck size={14} /> {request.pendingInspectionQuantity} unidades esperan inspección; aún no se han reincorporado al stock disponible.</p>}
+          <ul className={styles.returnLines}>{request.items.map((item) => <li key={item.orderItemId}>{item.name} · {item.variant}: <strong>{item.requestedQuantity} de {item.purchasedQuantity} compradas</strong>{item.inventoryDisposition === "pending_inspection" && <small> · {item.inspectionQuantity} pendientes de inspección</small>}</li>)}</ul>
           {request.decisionReason && <p className={styles.decisionReason}><PackageCheck size={14} /> Decisión del equipo: {request.decisionReason}</p>}
           <ol className={styles.returnTimeline}>{request.timeline.map((event) => <li key={event.id}>
-            <span>{event.type === "requested" ? "Solicitud recibida" : `Estado: ${statusLabels[event.fromStatus ?? ""] ?? event.fromStatus ?? "—"} → ${statusLabels[event.toStatus] ?? event.toStatus}`}</span>
+            <span>{event.type === "requested" ? "Solicitud recibida" : event.type === "business_effects_recorded" ? "Efectos de la aprobación registrados" : `Estado: ${statusLabels[event.fromStatus ?? ""] ?? event.fromStatus ?? "—"} → ${statusLabels[event.toStatus] ?? event.toStatus}`}</span>
             <time dateTime={event.occurredAt}>{formatDate(event.occurredAt)}</time>
             {event.reason && <p>{event.reason}</p>}
+            {event.type === "business_effects_recorded" && <p>Reembolso demo {formatMoney(Number(event.details.refund_amount), String(event.details.refund_currency))}; {Number(event.details.returned_quantity)} unidades pendientes de inspección.</p>}
           </li>)}</ol>
         </article>)}
       </div>
@@ -88,4 +91,8 @@ export function ReturnHistory({ connected, authenticated, reloadKey }: { connect
 function formatDate(value: string) {
   const date = new Date(value);
   return Number.isNaN(date.getTime()) ? value : new Intl.DateTimeFormat("es-ES", { dateStyle: "medium", timeStyle: "short" }).format(date);
+}
+
+function formatMoney(amount: number, currency: string) {
+  return new Intl.NumberFormat("es-ES", { style: "currency", currency }).format(amount);
 }

@@ -131,6 +131,7 @@ export type ReturnTimelineItem = {
   fromStatus: string | null;
   toStatus: string;
   reason: string;
+  details: Record<string, unknown>;
   occurredAt: string;
 };
 
@@ -142,6 +143,9 @@ export type ReturnCase = {
   status: string;
   reason: string;
   decisionReason: string;
+  refundAmount: number | null;
+  refundCurrency: string | null;
+  pendingInspectionQuantity: number;
   requestedAt: string;
   reviewedAt: string | null;
   items: Array<{
@@ -151,6 +155,8 @@ export type ReturnCase = {
     variant: string;
     requestedQuantity: number;
     purchasedQuantity: number;
+    inventoryDisposition: string;
+    inspectionQuantity: number;
   }>;
   timeline: ReturnTimelineItem[];
 };
@@ -170,24 +176,29 @@ export async function loadReturnCases(supabase: SupabaseServerClient, requestedO
 
   const requestIds = requests.map((request) => String(request.id));
   const orderIds = [...new Set(requests.map((request) => String(request.order_id)))];
-  const [itemsResult, eventsResult, ordersResult] = await Promise.all([
+  const [itemsResult, eventsResult, ordersResult, refundsResult] = await Promise.all([
     supabase
       .from("return_items")
-      .select("return_request_id, order_item_id, quantity")
+      .select("return_request_id, order_item_id, quantity, inventory_disposition, inspection_quantity")
       .in("return_request_id", requestIds),
     supabase
       .from("return_request_events")
-      .select("id, return_request_id, event_type, from_status, to_status, decision_reason, occurred_at")
+      .select("id, return_request_id, event_type, from_status, to_status, decision_reason, details, occurred_at")
       .in("return_request_id", requestIds)
       .order("occurred_at", { ascending: true }),
     supabase
       .from("orders")
       .select("id, order_number")
       .in("id", orderIds),
+    supabase
+      .from("return_refunds")
+      .select("return_request_id, amount, currency, status")
+      .in("return_request_id", requestIds),
   ]);
   if (itemsResult.error) return { data: null, error: itemsResult.error };
   if (eventsResult.error) return { data: null, error: eventsResult.error };
   if (ordersResult.error) return { data: null, error: ordersResult.error };
+  if (refundsResult.error) return { data: null, error: refundsResult.error };
 
   const orderItemIds = [...new Set((itemsResult.data ?? []).map((item) => String(item.order_item_id)))];
   const orderItemsResult = orderItemIds.length
@@ -214,6 +225,8 @@ export async function loadReturnCases(supabase: SupabaseServerClient, requestedO
       variant: String(orderItem.variant_title),
       requestedQuantity: Number(item.quantity),
       purchasedQuantity: Number(orderItem.quantity),
+      inventoryDisposition: String(item.inventory_disposition ?? "not_applicable"),
+      inspectionQuantity: Number(item.inspection_quantity ?? 0),
     });
     requestItems.set(requestId, existing);
   }
@@ -227,10 +240,12 @@ export async function loadReturnCases(supabase: SupabaseServerClient, requestedO
       fromStatus: event.from_status ? String(event.from_status) : null,
       toStatus: String(event.to_status),
       reason: String(event.decision_reason ?? ""),
+      details: isRecord(event.details) ? event.details : {},
       occurredAt: String(event.occurred_at),
     });
     requestEvents.set(requestId, existing);
   }
+  const refundsByRequestId = new Map((refundsResult.data ?? []).map((refund) => [String(refund.return_request_id), refund]));
 
   return {
     data: requests.map((request) => ({
@@ -241,6 +256,11 @@ export async function loadReturnCases(supabase: SupabaseServerClient, requestedO
       status: String(request.status),
       reason: String(request.reason),
       decisionReason: String(request.decision_reason ?? ""),
+      refundAmount: refundsByRequestId.has(String(request.id)) ? Number(refundsByRequestId.get(String(request.id))?.amount) : null,
+      refundCurrency: refundsByRequestId.has(String(request.id)) ? String(refundsByRequestId.get(String(request.id))?.currency) : null,
+      pendingInspectionQuantity: (requestItems.get(String(request.id)) ?? [])
+        .filter((item) => item.inventoryDisposition === "pending_inspection")
+        .reduce((total, item) => total + item.inspectionQuantity, 0),
       requestedAt: String(request.requested_at),
       reviewedAt: request.reviewed_at ? String(request.reviewed_at) : null,
       items: requestItems.get(String(request.id)) ?? [],
@@ -263,8 +283,29 @@ export async function reviewReturn(
   });
   if (error) return { data: null, error: error as DbError };
   const row = Array.isArray(data) ? data[0] : data;
-  if (!row || typeof row !== "object" || !("return_request_id" in row) || !("return_status" in row)) {
+  if (!row || typeof row !== "object" || !("return_request_id" in row) || !("return_status" in row)
+      || !("refund_amount" in row) || !("refund_currency" in row)
+      || !("inventory_pending_inspection_quantity" in row) || !("replayed" in row)) {
     return { data: null, error: { code: "INVALID_RPC_RESPONSE", message: "Return review response is incomplete" } };
   }
-  return { data: { id: String(row.return_request_id), status: String(row.return_status) }, error: null };
+  const refundAmount = row.refund_amount === null ? null : Number(row.refund_amount);
+  const pendingInspectionQuantity = Number(row.inventory_pending_inspection_quantity);
+  if ((refundAmount !== null && !Number.isFinite(refundAmount)) || !Number.isSafeInteger(pendingInspectionQuantity)) {
+    return { data: null, error: { code: "INVALID_RPC_RESPONSE", message: "Return review response contains invalid business effects" } };
+  }
+  return {
+    data: {
+      id: String(row.return_request_id),
+      status: String(row.return_status),
+      refundAmount,
+      refundCurrency: row.refund_currency === null ? null : String(row.refund_currency),
+      pendingInspectionQuantity,
+      replayed: Boolean(row.replayed),
+    },
+    error: null,
+  };
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
 }

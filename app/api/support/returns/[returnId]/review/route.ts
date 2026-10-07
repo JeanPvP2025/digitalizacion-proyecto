@@ -35,7 +35,8 @@ export async function POST(request: Request, { params }: RouteContext) {
   if (result.error) {
     if (result.error.code === "P0002") return NextResponse.json({ error: "La solicitud de devolución no existe." }, { status: 404, headers: privateHeaders });
     if (result.error.code === "42501") return NextResponse.json({ error: "No tienes permiso para resolver esta devolución." }, { status: 403, headers: privateHeaders });
-    if (result.error.code === "23514" || result.error.code === "22023") return NextResponse.json({ error: "La solicitud ya cambió de estado o la clave de reintento contiene otros datos." }, { status: 409, headers: privateHeaders });
+    if (result.error.code === "23514") return NextResponse.json({ error: "La solicitud ya se resolvió o no cumple las condiciones de entrega, pago confirmado y cantidades reembolsables." }, { status: 409, headers: privateHeaders });
+    if (result.error.code === "22023") return NextResponse.json({ error: "La clave de reintento ya se usó con otros datos o la decisión no es válida." }, { status: 409, headers: privateHeaders });
     return NextResponse.json({ error: "No se pudo confirmar la decisión. Puedes reintentar la misma solicitud." }, { status: 500, headers: privateHeaders });
   }
   return NextResponse.json({ persisted: true, ...result.data }, { headers: privateHeaders });

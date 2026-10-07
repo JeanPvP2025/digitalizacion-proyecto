@@ -76,11 +76,18 @@ export function SupportAgentWorkspace() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ decision, reason, idempotencyKey: key }),
       });
-      const body = await response.json() as { error?: string };
+      const body = await response.json() as {
+        error?: string;
+        refundAmount?: number | null;
+        refundCurrency?: string | null;
+        pendingInspectionQuantity?: number;
+      };
       if (!response.ok) throw new Error(body.error ?? "No se pudo registrar la decisión.");
       requestKeys.current.delete(request.id);
       setNotes((current) => ({ ...current, [request.id]: "" }));
-      setNotice(`${request.returnNumber}: devolución ${decision === "approved" ? "aprobada" : "rechazada"}.`);
+      setNotice(decision === "approved"
+        ? `${request.returnNumber}: aprobada; reembolso demo ${formatMoney(body.refundAmount ?? 0, body.refundCurrency ?? "EUR")} y ${body.pendingInspectionQuantity ?? 0} unidades pendientes de inspección.`
+        : `${request.returnNumber}: devolución rechazada; no se ha generado reembolso ni movimiento de stock.`);
       await loadQueue();
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : "No se pudo registrar la decisión.");
@@ -111,9 +118,10 @@ export function SupportAgentWorkspace() {
             <p className={styles.returnReason}>{request.reason}</p>
             <ul className={styles.returnLines}>{request.items.map((item) => <li key={item.orderItemId}>{item.name} · {item.sku} · {item.variant}: <strong>{item.requestedQuantity} de {item.purchasedQuantity} compradas</strong></li>)}</ul>
             <ol className={styles.returnTimeline}>{request.timeline.map((event) => <li key={event.id}>
-              <span>{event.type === "requested" ? "Solicitud recibida" : `Estado: ${statusLabels[event.fromStatus ?? ""] ?? event.fromStatus ?? "—"} → ${statusLabels[event.toStatus] ?? event.toStatus}`}</span>
+              <span>{event.type === "requested" ? "Solicitud recibida" : event.type === "business_effects_recorded" ? "Efectos de la aprobación registrados" : `Estado: ${statusLabels[event.fromStatus ?? ""] ?? event.fromStatus ?? "—"} → ${statusLabels[event.toStatus] ?? event.toStatus}`}</span>
               <time dateTime={event.occurredAt}>{formatDate(event.occurredAt)}</time>
               {event.reason && <p>{event.reason}</p>}
+              {event.type === "business_effects_recorded" && <p>Reembolso demo {formatMoney(Number(event.details.refund_amount), String(event.details.refund_currency))}; {Number(event.details.returned_quantity)} unidades pendientes de inspección.</p>}
             </li>)}</ol>
             <div className="field">
               <label htmlFor={`return-decision-${request.id}`}>Motivo o nota de la decisión</label>
@@ -137,4 +145,8 @@ export function SupportAgentWorkspace() {
 function formatDate(value: string) {
   const date = new Date(value);
   return Number.isNaN(date.getTime()) ? value : new Intl.DateTimeFormat("es-ES", { dateStyle: "medium", timeStyle: "short" }).format(date);
+}
+
+function formatMoney(amount: number, currency: string) {
+  return new Intl.NumberFormat("es-ES", { style: "currency", currency }).format(amount);
 }

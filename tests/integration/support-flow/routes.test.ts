@@ -133,7 +133,14 @@ describe("support workflow routes", () => {
   it("passes the explicit decision and stable retry key to the decision RPC", async () => {
     const returnId = randomUUID();
     const idempotencyKey = randomUUID();
-    const rpc = vi.fn().mockResolvedValue({ data: [{ return_request_id: returnId, return_status: "rejected" }], error: null });
+    const rpc = vi.fn().mockResolvedValue({ data: [{
+      return_request_id: returnId,
+      return_status: "rejected",
+      refund_amount: null,
+      refund_currency: null,
+      inventory_pending_inspection_quantity: 0,
+      replayed: false,
+    }], error: null });
     session({ from: vi.fn(), rpc });
     const body = { decision: "rejected", reason: "La solicitud no cumple las condiciones publicadas.", idempotencyKey };
 
@@ -146,6 +153,35 @@ describe("support workflow routes", () => {
       p_decision: "rejected",
       p_decision_reason: body.reason,
       p_idempotency_key: idempotencyKey,
+    });
+  });
+
+  it("returns the simulated refund and inspection quantity after an approval", async () => {
+    const returnId = randomUUID();
+    const idempotencyKey = randomUUID();
+    const rpc = vi.fn().mockResolvedValue({ data: [{
+      return_request_id: returnId,
+      return_status: "approved",
+      refund_amount: "99.95",
+      refund_currency: "EUR",
+      inventory_pending_inspection_quantity: 2,
+      replayed: true,
+    }], error: null });
+    session({ from: vi.fn(), rpc });
+
+    const response = await reviewRoute.POST(request("/", {
+      decision: "approved", reason: "Aprobada tras validar pedido y unidades.", idempotencyKey,
+    }), { params: Promise.resolve({ returnId }) });
+
+    expect(response.status).toBe(200);
+    expect(await response.json()).toMatchObject({
+      persisted: true,
+      id: returnId,
+      status: "approved",
+      refundAmount: 99.95,
+      refundCurrency: "EUR",
+      pendingInspectionQuantity: 2,
+      replayed: true,
     });
   });
 

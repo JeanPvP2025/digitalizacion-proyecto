@@ -12,7 +12,7 @@ Estado observado el **2026-10-07** tras integrar la quinta ola. Se contrastaron 
 - ✅ **Reviews en PDP:** enlace a opiniones y conteo exacto solo cuando los datos conectados están disponibles; el workflow verificado/moderado mantiene estados de carga, vacío y error.
 - ✅ **CRM/B2B — conversión auditada:** una oferta aceptada puede registrarse una sola vez con snapshots tenant-scoped e historial. 🚧 No emite todavía un `orders` formal ni reserva stock.
 - 🚧 **Operations Center:** cola y métricas consultan datos operativos; picking/packing, expedición y escaneo siguen incompletos.
-- 🚧 **Support/RMA:** tickets, mensajes, estados y revisión/límite de unidades funcionan; falta ejecutar los efectos aprobados de devolución sobre reembolso/stock.
+- 🚧 **Support/RMA:** tickets, mensajes, estados y revisión/límite de unidades funcionan. Aprobar una devolución registra un reembolso simulado idempotente y deja las unidades en `pending_inspection`; falta recepción/inspección física y una disposición de almacén antes de cambiar stock.
 - 🚧 **Analytics:** consultas operativas conectadas, pendiente demostrar consistencia de cada KPI contra una fuente de negocio y cerrar rangos/filtros.
 - 🚧 **Demo Mode:** aislamiento de datos y límites de seguridad verificados localmente; falta una demo completa por roles con reset determinista.
 - 🚧 **Contenido, SEO, responsive y performance:** bases y polish parcial; no hay auditoría integral de rendimiento, blog/CMS ni revisión visual completa de todas las rutas.
@@ -37,7 +37,7 @@ Estado observado el **2026-10-07** tras integrar la quinta ola. Se contrastaron 
 - [ ] Completar pedido B2B formal desde oferta aceptada: dirección/facturación, condiciones de pago, precio negociado como snapshot e integración de stock/reservas sin eludir checkout.
 - [ ] Integrar el slice de procurement descrito abajo; después acordar si el producto requiere facturas, impuestos, pagos o integración externa de proveedor.
 - [ ] Cerrar fulfillment con picking/packing/expedición y timeline conectado a la cola operacional.
-- [ ] Definir y ejecutar efectos de RMA aprobado sobre devolución, reembolso simulado y stock de forma idempotente.
+- [ ] Completar recepción e inspección física de RMA y la disposición auditada de unidades (reponer o desechar) después de verificar el producto.
 - [ ] Validar origen de cada KPI y sus filtros con casos de negocio reproducibles; completar escenarios operativos restantes de analytics.
 - [ ] Matriz Auth/RLS más amplia para manager/marketing y CRUD de tablas/columnas/acciones, con tokens HTTP y pruebas de IDOR por dominio.
 
@@ -89,3 +89,11 @@ Este slice implementado todavía necesita revisión e integración coordinadora;
 ## Criterio de cierre
 
 Una feature se marca ✅ solo con contrato integrado, autorización server/database, persistencia, estados de error/vacío, UX navegable y pruebas del recorrido principal. Los gates locales no prueban producción ni sustituyen configuración remota.
+
+## Slice RMA aprobado — 2026-10-07
+
+- La aprobación por soporte crea, en la misma transacción, un registro único de reembolso `simulated`, actualiza el timeline y pone las unidades devueltas en `pending_inspection`. El cliente ve el importe simulado y la cantidad pendiente.
+- El importe usa los precios históricos IVA-incluidos de las líneas, distribuye proporcionalmente el descuento de pedido y excluye el envío. Solo se acepta un pago demo confirmado que coincida con el total/moneda del pedido; se limita la suma de reembolsos al importe pagado.
+- Revisión repetida con la misma clave y payload reproduce el resultado sin duplicar reembolso, timeline ni cantidad; una clave reutilizada con payload diferente entra en conflicto. La aprobación de un pedido sin pago y el rechazo no producen reembolso ni disposición de inventario.
+- Verificación: `support-flow/postgres.sql` (incluye descuento de 10 € y envío de 20 € sobre 200 € de mercancía, reembolso esperado de 95 €), `support-rma/postgres.sql` y `concurrent-return-review.sql` pasaron sobre una instancia Supabase aislada; `pnpm test` (161 Vitest + 18 Node), `pnpm lint`, `next typegen`, `tsc --noEmit`, `pnpm build` y `supabase db lint --fail-on error` pasaron. `git diff --check` no reportó errores. El advisor señaló solo políticas SELECT permisivas preexistentes de catálogo/reviews; ninguna de RMA. No se alteró el ledger de inventario.
+- Límite deliberado: no se repone ni se desecha automáticamente un artículo que aún no ha sido recibido e inspeccionado. El workflow de almacén queda abierto; no se declara completo el dominio RMA.

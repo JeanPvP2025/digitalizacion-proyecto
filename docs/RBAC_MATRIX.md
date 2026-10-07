@@ -37,10 +37,12 @@ Estado al 2026-10-07 tras la quinta ola. La autorización efectiva combina sesi�
 | Stock/reservas/fulfillment | — | — | — | — | — | — | R; recepción/ajuste por RPC idempotente; fulfillment consume reserva por RPC | R de catálogo, sin mutación de stock | R y RPC según acción |
 | Procurement | — | — | — | — | — | — | R de proveedores/PO/recepciones; CRUD de proveedor, borrador/estado de PO y recepción por RPC | — | R y RPCs de procurement según acción |
 | Tickets y mensajes | — | C por RPC; R/mensaje propio permitido | Propio/org | Propio/org | R/U y respuesta por RPC; DML directo revocado | — | — | — | R/U por RPC según acción |
-| Devoluciones/RMA | — | C por RPC; R propia | Propia/org | Propia/org | R/U operativa de soporte | — | R/U por RPC operativa | — | R/U según acción |
+| Devoluciones/RMA y reembolsos | — | C por RPC; R propias y reembolso propio | C por RPC si es titular; R propia | C por RPC si es titular; R propia | R/U de revisión por RPC; R de reembolso autorizado | — | R operativa y R de reembolso | — | R/U según acción por RPC |
 | Auditoría/timeline | — | R de timeline propio permitido | Propio/org | Propio/org | R de caso autorizado | Actividad interna comercial autorizada | Eventos de pedidos operativos | — | R |
 
 Las celdas “—” significan sin permiso por el contrato actual. Para movimientos manuales, `receive_inventory` y `adjust_inventory` permiten solo `fulfillment_manager`/`super_admin`; Postgres valida rol, fingerprint y saldo reservado aun cuando se invoque la RPC fuera de la UI. Estas acciones actualizan `on_hand`, no `reserved`. Esta matriz es conservadora: antes de ampliar un permiso se debe documentar campo/acción y añadir una prueba runtime.
+
+La tabla `return_refunds` solo concede lectura RLS al propietario de la devolución y a `support_agent`, `fulfillment_manager` y `super_admin`; `authenticated` no recibe escritura directa. La review solo acepta `support_agent`/`super_admin` vía RPC. Aprobar requiere pago demo confirmado y pone unidades en inspección pendiente, pero no da permiso para mutar stock; la futura disposición de almacén debe usar su propia transición autorizada.
 
 ## Evidencia y cobertura
 

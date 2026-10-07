@@ -21,11 +21,20 @@ insert into public.orders (
 values (
   '10000000-0000-4000-8000-00000000b201', 'NDR-SF-000001', '10000000-0000-4000-8000-00000000a201',
   'support-flow-order-1', repeat(md5('support-flow-order-1'), 2), 'delivered', 'EUR',
-  200, 0, 0, 0, 200, '{}', '{}', now() - interval '5 days'
+  200, 0, 20, 10, 210, '{}', '{}', now() - interval '5 days'
+), (
+  '10000000-0000-4000-8000-00000000b202', 'NDR-SF-000002', '10000000-0000-4000-8000-00000000a201',
+  'support-flow-order-2', repeat(md5('support-flow-order-2'), 2), 'delivered', 'EUR',
+  40, 0, 0, 0, 40, '{}', '{}', now() - interval '2 days'
 );
 
 insert into public.order_items (id, order_id, product_name, product_sku, variant_title, quantity, unit_price, currency)
-values ('10000000-0000-4000-8000-00000000c201', '10000000-0000-4000-8000-00000000b201', 'Portátil QA', 'QA-SF-1', '16 GB', 2, 100, 'EUR');
+values
+  ('10000000-0000-4000-8000-00000000c201', '10000000-0000-4000-8000-00000000b201', 'Portátil QA', 'QA-SF-1', '16 GB', 2, 100, 'EUR'),
+  ('10000000-0000-4000-8000-00000000c202', '10000000-0000-4000-8000-00000000b202', 'Ratón QA', 'QA-SF-2', 'Estándar', 1, 40, 'EUR');
+
+insert into public.payment_transactions (id, order_id, provider, provider_reference, status, amount, currency, processed_at)
+values ('10000000-0000-4000-8000-00000000f210', '10000000-0000-4000-8000-00000000b201', 'demo', 'support-flow-paid-order', 'paid', 210, 'EUR', now() - interval '4 days');
 
 do $$
 begin
@@ -42,6 +51,13 @@ begin
   if has_function_privilege('anon', 'public.send_support_message(uuid,text,public.ticket_status,uuid)', 'EXECUTE')
      or has_function_privilege('anon', 'public.review_return_request(uuid,public.return_status,text,uuid)', 'EXECUTE') then
     raise exception 'Anonymous users must not invoke support or RMA transitions';
+  end if;
+  if has_table_privilege('anon', 'public.return_refunds', 'SELECT')
+     or has_table_privilege('authenticated', 'public.return_refunds', 'INSERT')
+     or has_table_privilege('authenticated', 'public.return_refunds', 'UPDATE')
+     or has_table_privilege('authenticated', 'public.return_refunds', 'DELETE')
+     or has_table_privilege('authenticated', 'public.return_items', 'UPDATE') then
+    raise exception 'Return refund and inspection rows must be private and RPC-managed';
   end if;
 end;
 $$;
@@ -60,6 +76,7 @@ declare
   v_retry_id uuid;
   v_return_one uuid;
   v_return_two uuid;
+  v_return_no_payment uuid;
   v_count integer;
 begin
   select ticket_id into v_ticket_id
@@ -161,6 +178,13 @@ begin
     jsonb_build_array(jsonb_build_object('order_item_id', '10000000-0000-4000-8000-00000000c201', 'quantity', 1)),
     '10000000-0000-4000-8000-00000000e205'
   );
+  v_return_no_payment := public.request_return(
+    '10000000-0000-4000-8000-00000000b202',
+    'El ratón no encaja con el equipo indicado.',
+    jsonb_build_array(jsonb_build_object('order_item_id', '10000000-0000-4000-8000-00000000c202', 'quantity', 1)),
+    '10000000-0000-4000-8000-00000000e213'
+  );
+  if v_return_no_payment is null then raise exception 'Unpaid-order return intake did not persist'; end if;
   begin
     perform public.request_return(
       '10000000-0000-4000-8000-00000000b201',
@@ -216,6 +240,10 @@ declare
   v_return_two uuid;
   v_status public.ticket_status;
   v_return_status public.return_status;
+  v_refund_amount numeric(12,2);
+  v_refund_currency text;
+  v_inspection_quantity integer;
+  v_replayed boolean;
   v_count integer;
 begin
   select id into v_ticket_id from public.support_tickets where subject = 'Ayuda con el portátil QA';
@@ -247,17 +275,37 @@ begin
 
   select id into v_return_one from public.return_requests where idempotency_key = '10000000-0000-4000-8000-00000000e204';
   select id into v_return_two from public.return_requests where idempotency_key = '10000000-0000-4000-8000-00000000e205';
-  select return_status into v_return_status from public.review_return_request(
+  select return_status, refund_amount, refund_currency, inventory_pending_inspection_quantity, replayed
+    into v_return_status, v_refund_amount, v_refund_currency, v_inspection_quantity, v_replayed
+    from public.review_return_request(
     v_return_one, 'approved', 'Se aprueba tras revisar la incidencia y la cantidad solicitada.',
     '10000000-0000-4000-8000-00000000e211'
   );
-  if v_return_status <> 'approved' then raise exception 'Support agent could not approve the requested return'; end if;
-  select return_status into v_return_status from public.review_return_request(
+  if v_return_status <> 'approved' or v_refund_amount <> 95 or v_refund_currency <> 'EUR'
+     or v_inspection_quantity <> 1 or v_replayed then
+    raise exception 'Support approval did not return its refund and inspection effects';
+  end if;
+  select return_status, refund_amount, refund_currency, inventory_pending_inspection_quantity, replayed
+    into v_return_status, v_refund_amount, v_refund_currency, v_inspection_quantity, v_replayed
+    from public.review_return_request(
     v_return_one, 'approved', 'Se aprueba tras revisar la incidencia y la cantidad solicitada.',
     '10000000-0000-4000-8000-00000000e211'
   );
-  if v_return_status <> 'approved' then raise exception 'Return decision retry did not return the original result'; end if;
-
+  if v_return_status <> 'approved' or v_refund_amount <> 95 or v_refund_currency <> 'EUR'
+     or v_inspection_quantity <> 1 or not v_replayed then
+    raise exception 'Return decision retry did not return the original business effects';
+  end if;
+  select count(*) into v_count from public.return_refunds
+    where return_request_id = v_return_one and amount = 95 and currency = 'EUR' and status = 'simulated';
+  if v_count <> 1 then raise exception 'Approval retry generated a duplicate or incomplete simulated refund'; end if;
+  select count(*) into v_count from public.return_items
+    where return_request_id = v_return_one and inventory_disposition = 'pending_inspection' and inspection_quantity = 1;
+  if v_count <> 1 then raise exception 'Approved return units were not held for inspection'; end if;
+  if not exists (
+    select 1 from public.return_request_events
+    where return_request_id = v_return_one and event_type = 'business_effects_recorded'
+      and details @> '{"refund_amount": 95, "refund_currency": "EUR", "returned_quantity": 1, "inventory_disposition": "pending_inspection"}'::jsonb
+  ) then raise exception 'Refund and stock inspection effects are missing from the timeline'; end if;
   begin
     perform * from public.review_return_request(
       v_return_one, 'rejected', 'Cambio de decisión con una clave ya usada.',
@@ -272,6 +320,31 @@ begin
     '10000000-0000-4000-8000-00000000e212'
   );
   if v_return_status <> 'rejected' then raise exception 'Support agent could not reject a return with a reason'; end if;
+  if exists (select 1 from public.return_refunds where return_request_id = v_return_two)
+     or exists (select 1 from public.return_items where return_request_id = v_return_two and inventory_disposition <> 'not_applicable')
+     or exists (select 1 from public.return_request_events where return_request_id = v_return_two and event_type = 'business_effects_recorded') then
+    raise exception 'Rejected return generated refund or stock effects';
+  end if;
+
+  begin
+    perform * from public.review_return_request(
+      (select id from public.return_requests where idempotency_key = '10000000-0000-4000-8000-00000000e213'),
+      'approved', 'No hay un pago demo confirmado para este pedido.',
+      '10000000-0000-4000-8000-00000000e214'
+    );
+    raise exception 'A return without a confirmed demo payment was approved';
+  exception when check_violation then null;
+  end;
+  if exists (
+    select 1 from public.return_refunds f
+    join public.return_requests r on r.id = f.return_request_id
+    where r.idempotency_key = '10000000-0000-4000-8000-00000000e213'
+  ) or exists (
+    select 1 from public.return_items ri
+    join public.return_requests r on r.id = ri.return_request_id
+    where r.idempotency_key = '10000000-0000-4000-8000-00000000e213'
+      and ri.inventory_disposition <> 'not_applicable'
+  ) then raise exception 'Failed approval without payment left business effects'; end if;
 
   select count(*) into v_count from public.return_request_events
     where return_request_id in (v_return_one, v_return_two) and event_type = 'status_changed';
@@ -284,5 +357,44 @@ begin
 end;
 $$;
 
+reset role;
+set local "request.jwt.claim.sub" = '10000000-0000-4000-8000-00000000a201';
+set local "request.jwt.claims" = '{"sub":"10000000-0000-4000-8000-00000000a201","role":"authenticated"}';
+set local role authenticated;
+do $$
+declare
+  v_return_id uuid;
+  v_count integer;
+begin
+  select id into v_return_id from public.return_requests
+    where idempotency_key = '10000000-0000-4000-8000-00000000e204';
+  select count(*) into v_count from public.return_refunds
+    where return_request_id = v_return_id and amount = 95 and currency = 'EUR';
+  if v_count <> 1 then raise exception 'The return owner cannot read their simulated refund'; end if;
+end;
+$$;
+
+reset role;
+set local "request.jwt.claim.sub" = '10000000-0000-4000-8000-00000000a202';
+set local "request.jwt.claims" = '{"sub":"10000000-0000-4000-8000-00000000a202","role":"authenticated"}';
+set local role authenticated;
+do $$
+declare
+  v_return_id uuid;
+  v_count integer;
+begin
+  select id into v_return_id from public.return_requests
+    where idempotency_key = '10000000-0000-4000-8000-00000000e204';
+  select count(*) into v_count from public.return_refunds where return_request_id = v_return_id;
+  if v_count <> 0 then raise exception 'Another customer can read a private simulated refund'; end if;
+  begin
+    perform * from public.review_return_request(
+      v_return_id, 'approved', '', '10000000-0000-4000-8000-00000000e215'
+    );
+    raise exception 'A customer invoked the support return review RPC';
+  exception when insufficient_privilege then null;
+  end;
+end;
+$$;
 reset role;
 rollback;
