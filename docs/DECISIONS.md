@@ -200,3 +200,11 @@ Las decisiones de alcance heredadas de la misión se marcan **Confirmada**. Las 
 - **Contexto:** Lighthouse encontró imágenes mayores que su tamaño de render y el hero LCP estaba diferido por lazy loading y una animación de opacidad.
 - **Decisión:** Las imágenes demo de Unsplash usan `next/image` con `sizes` y eager/high priority solo para la imagen LCP. Las imágenes conectadas conservan `<img>` porque sus URL pueden venir de hosts que no están incluidos en `remotePatterns`.
 - **Consecuencias:** La entrega responsive pasa el audit en las rutas medidas; Lighthouse marca cero ahorro estimado. Mantener el allowlist de hosts y revisar el origen antes de migrar imágenes conectadas.
+
+## D-022 — La UI interna de catálogo espera una frontera de escritura por campo
+
+- **Fecha:** 2026-10-08
+- **Estado:** Propuesta; requiere revisión del Tech Lead antes de cambiar grants o migraciones.
+- **Contexto:** `catalog_manager` existe y RLS le concede DML sobre el catálogo, pero el grant actual abarca columnas protegidas y PostgREST permite saltarse cualquier allowlist exclusiva del Route Handler.
+- **Decisión propuesta:** No implementar una UI conectada mientras `authenticated` conserve DML directo de tabla completa. Revisar una migración que revoque dicho DML y exponga una RPC acotada para metadatos editoriales de productos existentes, con validación y autorización en PostgreSQL; solo después construir el consumidor server-side.
+- **Consecuencias:** El backlog permanece bloqueado, no hay mock ni funcionalidad parcial, y la lista de campos, auditoría y pruebas pendientes está en `docs/CATALOG_MANAGER.md`. No cambia el comportamiento actual de base de datos hasta que la migración se revise e integre.

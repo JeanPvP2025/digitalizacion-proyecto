@@ -1,5 +1,12 @@
 # Registro de handoffs
 
+## Handoff gestión interna de catálogo — 2026-10-08
+
+- Estado: bloqueado con evidencia, no implementado. `catalog_manager` existe en `app_role`, `private.has_any_staff_role` y policies RLS; la migración base también concede DML completo a `authenticated` sobre tablas de catálogo.
+- RLS restringe las filas, pero el permiso directo permite mutar columnas sensibles y PostgREST puede saltarse una allowlist del Route Handler. La matriz de roles ya comprueba que el rol publica productos directamente.
+- No se escribieron UI/API ni migración. Se integró la auditoría y D-022 como propuesta de revocar DML amplio y ofrecer una RPC limitada a campos editoriales, después de validación de grants/RLS/runtime.
+- No se ejecutaron pruebas de producto porque no cambió código. El trabajo queda en `docs/CATALOG_MANAGER.md`; requiere integración segura y pruebas SQL/Auth antes de exponer una pantalla.
+
 ## Ola 2 recibida e integrada — 2026-10-07
 
 Las seis conversaciones indicadas por el usuario se consideran finalizadas. Se inspeccionaron sus worktrees bajo `C:\Users\lopez\.codex\worktrees\{17c4,bfa1,2696,0cc1,fcd7,a2ad}\digitalizacion-web`: todos estaban en `68bb12a`, sin commits adicionales; se conservaron sus cambios útiles y reportes. Los IDs `client-new-thread:*` no fueron resolubles con el endpoint de lectura como hilos ordinarios, por lo que los entregables se contrastaron directamente con Git/worktree y los informes presentes. No se esperaron respuestas.

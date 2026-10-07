@@ -80,7 +80,7 @@ Warnings no bloqueantes conocidos: Node reporta `MODULE_TYPELESS_PACKAGE_JSON` e
 - [x] Ampliar el barrido E2E anónimo a 27 rutas, teclado, nombres de controles, enlaces/destinos y overflow en desktop, móvil (390 px) y tablet (768 px); detalle en `docs/UX_FINAL_AUDIT.md`.
 - [x] Walkthrough responsive autenticado de roles internos en Supabase local efímero: support, sales, fulfillment, catalog (denegación documentada) y superadmin; evidencia en `docs/UX_FINAL_AUDIT.md`.
 - [ ] Completar recorrido con sesión de cliente y membresías buyer/viewer/owner/admin; las vistas de portal B2B y cuenta siguen sin prueba visual autenticada por rol.
-- [ ] Añadir una UI interna de catálogo para `catalog_manager` o retirar la expectativa de gestión de catálogo como capacidad visual del demo.
+- [ ] ⛔ Cerrar el contrato seguro de escritura de catálogo: los grants DML actuales de `authenticated` permiten alterar columnas protegidas por PostgREST. Revisar migración/RPC acotada antes de implementar UI; evidencia y diseño en `docs/CATALOG_MANAGER.md`.
 - [ ] Unificar la navegación interna de `/soporte/agente` y verificar accesibilidad del backoffice más allá de nombres accesibles y overflow; slice asignado en ola 8.
 - [ ] Configurar dominio público para verificar `robots.txt`, sitemap, schema y metadatos en despliegue. En local se bloquea indexación deliberadamente para evitar publicar una demo sin dominio real.
 - [ ] Identificar el origen del estilo `caret-color: transparent` que Playwright registra en la hidratación y resolver warnings de entorno sin alterar semántica del producto.

@@ -81,7 +81,7 @@ Se inspeccionaron los cinco worktrees, su estado Git, commits y cambios. Procure
 | Conversation | Role | Task | Ownership | Dependencies | State |
 |---|---|---|---|---|---|
 | `client-new-thread:53b855ee-f47b-4eb5-9726-b93abd5fe11e` | Support UX Agent | Navegación de staff y accesibilidad de `/soporte/agente` | `app/(store)/soporte/agente/**`, componentes/estilos propios, tests, `docs/UX_STAFF_SHELL.md` | Auth/RBAC existentes | 🚧 Worktree solicitado; cambios aislados |
-| `client-new-thread:9e92853d-ba58-4e3c-9f55-5473a6d86c16` | Catalog Manager Agent | UI operativa protegida de catálogo con persistencia si el contrato actual lo permite | `app/backoffice/catalog/**`, `app/api/backoffice/catalog/**`, `lib/catalog/admin/**`, tests, `docs/CATALOG_MANAGER.md` | Verificar grants, schema y RLS existentes; no ampliar migraciones unilateralmente | 🚧 Worktree solicitado; cambios aislados |
+| `01a11866-ba5c-7c20-8fc3-45ad8493612c` | Catalog Manager Agent | Auditoría de contrato y UI operativa si existe una escritura segura por campo | `docs/CATALOG_MANAGER.md`, estado/decisión/handoff de catálogo | Grants y policies DB existentes | ⛔ Completó auditoría; grants DML de tabla completa exponen columnas protegidas. No añadió UI/migración; siguiente paso: migración/RPC acotada revisada por Tech Lead |
 | `client-new-thread:677c01bd-00ed-4f2a-a1e7-390fb544934c` | Customer/B2B UX QA Agent | Recorridos Auth de customer y membresías buyer/viewer/owner/admin | `tests/e2e/ux-audit/customer-b2b.*`, runner aislado, `docs/UX_CUSTOMER_B2B_AUDIT.md` | Supabase local efímero con puertos/proyecto exclusivos | 🚧 Worktree solicitado; tests/documentación solamente |
 
 ## Ola 7 — cierre RMA por Tech Lead
