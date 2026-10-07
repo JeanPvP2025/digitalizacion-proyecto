@@ -13,12 +13,18 @@ export type MemoryGeneration = "DDR4" | "DDR5";
 export type MotherboardFormFactor = "E-ATX" | "ATX" | "microATX" | "Mini-ITX";
 
 type PcComponentBase<Category extends PcBuilderCategory> = {
+  /** For catalogue components this equals the selected sellable variant ID. */
   id: string;
   category: Category;
   name: string;
   manufacturer: string;
   priceEur: number;
   description: string;
+  variantId?: string;
+  productId?: string;
+  productSlug?: string;
+  sku?: string;
+  variantTitle?: string;
 };
 
 export type CpuFixture = PcComponentBase<"cpu"> & {
@@ -33,6 +39,7 @@ export type MotherboardFixture = PcComponentBase<"motherboard"> & {
   formFactor: MotherboardFormFactor;
   memoryGeneration: MemoryGeneration;
   maxMemoryGb: number;
+  estimatedPowerW: number;
 };
 
 export type MemoryFixture = PcComponentBase<"memory"> & {
@@ -46,6 +53,7 @@ export type MemoryFixture = PcComponentBase<"memory"> & {
 export type CaseFixture = PcComponentBase<"case"> & {
   supportedFormFactors: readonly MotherboardFormFactor[];
   maxGpuLengthMm: number;
+  estimatedPowerW: number;
 };
 
 export type GpuFixture = PcComponentBase<"gpu"> & {
@@ -79,7 +87,20 @@ export type PcBuilderComponent =
   | StorageFixture
   | CoolerFixture;
 
-/** Selected fixture IDs, grouped by their component category. */
+export type PcBuilderCatalogComponent = PcBuilderComponent & {
+  variantId: string;
+  productId: string;
+  productSlug: string;
+  sku: string;
+  variantTitle: string;
+};
+
+export type PcBuilderCatalog =
+  | { source: "demo"; components: []; omittedVariants: 0 }
+  | { source: "supabase"; components: PcBuilderCatalogComponent[]; omittedVariants: number }
+  | { source: "error"; components: []; omittedVariants: 0; message: string };
+
+/** Selected sellable variant IDs, grouped by their component category. */
 export type PcBuildSelection = Partial<Record<PcBuilderCategory, string | null>>;
 
 export type CompatibilitySeverity = "error" | "warning";

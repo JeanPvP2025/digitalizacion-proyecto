@@ -1,7 +1,3 @@
-import {
-  pcBuilderComponents,
-  requiredPcBuilderCategories,
-} from "./fixtures";
 import type {
   CaseFixture,
   CompatibilityIssue,
@@ -18,23 +14,26 @@ import type {
   StorageFixture,
 } from "./types";
 
-const OTHER_COMPONENTS_POWER_W = 75;
+export const pcBuilderCategories: readonly PcBuilderCategory[] = [
+  "cpu", "motherboard", "memory", "case", "psu",
+  "gpu", "storage", "cooler",
+];
+
+export const requiredPcBuilderCategories: readonly PcBuilderCategory[] = pcBuilderCategories.slice(0, 5);
+export const optionalPcBuilderCategories: readonly PcBuilderCategory[] = pcBuilderCategories.slice(5);
+
 const HEADROOM_MULTIPLIER = 1.2;
 const PSU_RECOMMENDATION_STEP_W = 50;
 
-const componentsById = new Map<string, PcBuilderComponent>(
-  pcBuilderComponents.map((component) => [component.id, component]),
-);
-
 const displayCategory: Record<PcBuilderCategory, string> = {
-  cpu: "procesador",
-  motherboard: "placa base",
-  memory: "memoria RAM",
-  case: "caja",
-  gpu: "gráfica",
-  psu: "fuente de alimentación",
-  storage: "almacenamiento",
-  cooler: "refrigeración",
+  cpu: "el procesador",
+  motherboard: "la placa base",
+  memory: "la memoria RAM",
+  case: "la caja",
+  gpu: "la gráfica",
+  psu: "la fuente de alimentación",
+  storage: "el almacenamiento",
+  cooler: "la refrigeración",
 };
 
 function roundUpToStep(value: number, step: number): number {
@@ -51,15 +50,20 @@ function byCategory<Category extends PcBuilderCategory>(
 }
 
 /**
- * Checks the selected demo fixtures and returns issues plus rule-of-thumb
- * totals. This is a display/domain helper, not an authority for a real purchase.
+ * Checks catalogue components using only their typed `pc_builder` attributes.
+ * It does not authorize a purchase; checkout must validate the selected
+ * variant IDs and current price/stock on the server. Consumers must pass the
+ * server-loaded catalogue explicitly, including an empty list.
  */
 export function checkBuildCompatibility(
   selection: PcBuildSelection,
+  components: readonly PcBuilderComponent[],
 ): PcBuildCompatibility {
   const issues: CompatibilityIssue[] = [];
   const selectedComponents: PcBuilderComponent[] = [];
   const missingCategories: PcBuilderCategory[] = [];
+
+  const componentsById = new Map(components.map((component) => [component.variantId ?? component.id, component]));
 
   for (const category of requiredPcBuilderCategories) {
     const selectedId = selection[category];
@@ -68,7 +72,7 @@ export function checkBuildCompatibility(
       issues.push({
         code: `missing-${category}`,
         severity: "warning",
-        message: `Selecciona un ${displayCategory[category]} para completar la configuración.`,
+        message: `Selecciona ${displayCategory[category]} para completar la configuración.`,
       });
       continue;
     }
@@ -86,7 +90,7 @@ export function checkBuildCompatibility(
     selectedComponents.push(component);
   }
 
-  for (const category of ["gpu", "storage", "cooler"] as const) {
+  for (const category of optionalPcBuilderCategories) {
     const selectedId = selection[category];
     if (!selectedId) continue;
 
@@ -188,18 +192,19 @@ export function checkBuildCompatibility(
   if (!gpu && cpu && !cpu.integratedGraphics) {
     issues.push({
       code: "graphics-may-be-required",
-      severity: "warning",
+      severity: "error",
       message:
         "No has seleccionado una gráfica dedicada y este procesador no declara gráficos integrados en la ficha demo.",
     });
   }
 
-  const hasPowerEstimate = Boolean(cpu && motherboard && memory);
+  const hasPowerEstimate = Boolean(cpu && motherboard && memory && pcCase);
   const estimatedDrawW = hasPowerEstimate
-    ? OTHER_COMPONENTS_POWER_W +
-      (cpu?.estimatedPowerW ?? 0) +
-      (gpu?.estimatedPowerW ?? 0) +
+    ? (cpu?.estimatedPowerW ?? 0) +
+      (motherboard?.estimatedPowerW ?? 0) +
       (memory?.estimatedPowerW ?? 0) +
+      (pcCase?.estimatedPowerW ?? 0) +
+      (gpu?.estimatedPowerW ?? 0) +
       (storage?.estimatedPowerW ?? 0) +
       (cooler?.estimatedPowerW ?? 0)
     : null;
@@ -251,6 +256,6 @@ export function checkBuildCompatibility(
     errors,
     warnings,
     estimateNote:
-      "El consumo es una regla práctica: suma estimaciones de CPU, GPU y piezas opcionales, más 75 W para placa y ventiladores. El objetivo de fuente aplica un 20% de margen y se redondea al siguiente tramo de 50 W. El consumo real varía según componentes, carga y configuración.",
+      "Estimación orientativa: se suman las potencias declaradas para CPU, placa, memoria, caja y piezas opcionales. La recomendación de fuente añade un 20% y redondea al siguiente tramo de 50 W. El consumo real depende de componentes, carga y configuración; checkout vuelve a validar disponibilidad y precio.",
   };
 }

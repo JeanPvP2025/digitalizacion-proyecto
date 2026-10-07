@@ -1,0 +1,96 @@
+.catalogState {
+  display: grid;
+  grid-template-columns: 16px minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 10px;
+  padding: 13px 15px;
+  color: #425538;
+  background: #edf3e7;
+  border: 1px solid #dce8d2;
+  font-size: 10px;
+  line-height: 1.55;
+}
+
+.catalogState.isEmpty {
+  color: #72592d;
+  background: #faf3e2;
+  border-color: #eee0bd;
+}
+
+.catalogState p { margin: 0; }
+.catalogState button { align-self: center; }
+
+.omittedNote {
+  margin: 0;
+  padding: 0 3px 3px;
+  color: #80632e;
+  font-size: 9px;
+  line-height: 1.5;
+}
+
+.cartRestriction {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 10px;
+  color: #735b30;
+  background: #faf3e2;
+  font-size: 9px;
+  line-height: 1.55;
+}
+
+.cartRestriction svg { flex: 0 0 auto; margin-top: 1px; }
+.cartRestriction p { margin: 0; }
+
+.issues { display: grid; gap: 7px; padding: 0; margin: 0 0 12px; list-style: none; }
+.issues li { padding: 8px 9px; font-size: 9px; line-height: 1.45; }
+.issueError { color: #8c3c32; background: #fbefec; }
+.issueWarning { color: #735b30; background: #faf3e2; }
+.estimateNote { margin: 0 0 12px; color: #7b857b; font-size: 8px; line-height: 1.55; }
+.validationLimit { margin: -5px 0 12px; color: #87643c; font-size: 8px; line-height: 1.5; }
+
+.actions { display: grid; gap: 8px; margin-top: 11px; }
+.actions > button { width: 100%; min-height: 35px; }
+.actions > button:disabled { opacity: .58; cursor: not-allowed; }
+
+.saved {
+  display: grid;
+  gap: 8px;
+  padding-top: 17px;
+  margin-top: 17px;
+  border-top: 1px solid #e2e8df;
+}
+
+.savedHeader { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+.savedHeader h3 { margin: 0; color: #405144; font: 600 10px var(--font-display); }
+.savedHeader small { color: #8b968a; font: 8px var(--font-mono); }
+.savedEmpty { margin: 0; color: #7a857b; font-size: 9px; line-height: 1.5; }
+
+.savedItem {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 30px;
+  align-items: stretch;
+  border: 1px solid #e1e8de;
+  background: #fbfcfa;
+}
+
+.savedItem.active { border-color: #9aad87; background: #f3f7ee; }
+.savedItem > button:first-child { display: grid; gap: 4px; padding: 9px; border: 0; background: transparent; color: #465448; text-align: left; cursor: pointer; }
+.savedItem strong { font-size: 9px; font-weight: 650; }
+.savedItem span { color: #7b857b; font-size: 8px; line-height: 1.4; }
+.savedDelete { display: grid; place-items: center; color: #7c887b; border: 0; border-left: 1px solid #e1e8de; background: transparent; cursor: pointer; }
+.savedDelete:hover { color: #9c4a3c; background: #fbf1ef; }
+
+.notice {
+  padding: 9px 10px;
+  margin: 10px 0 0;
+  color: #4d6048;
+  background: #eff5e8;
+  font-size: 9px;
+  line-height: 1.5;
+}
+
+@media (max-width: 720px) {
+  .catalogState { grid-template-columns: 16px minmax(0, 1fr); }
+  .catalogState button { grid-column: 2; justify-self: start; }
+}

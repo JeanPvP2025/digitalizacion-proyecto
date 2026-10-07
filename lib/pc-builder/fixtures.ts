@@ -55,6 +55,7 @@ export const pcBuilderComponents = [
     formFactor: "ATX",
     memoryGeneration: "DDR5",
     maxMemoryGb: 192,
+    estimatedPowerW: 50,
   },
   {
     id: "mb-atelier-z890",
@@ -67,6 +68,7 @@ export const pcBuilderComponents = [
     formFactor: "ATX",
     memoryGeneration: "DDR5",
     maxMemoryGb: 192,
+    estimatedPowerW: 50,
   },
   {
     id: "mb-pulse-b760-d4",
@@ -79,6 +81,7 @@ export const pcBuilderComponents = [
     formFactor: "microATX",
     memoryGeneration: "DDR4",
     maxMemoryGb: 128,
+    estimatedPowerW: 50,
   },
   {
     id: "ram-lumen-32-ddr5",
@@ -115,6 +118,7 @@ export const pcBuilderComponents = [
     description: "Torre ATX con frontal ventilado y espacio amplio para gráfica.",
     supportedFormFactors: ["E-ATX", "ATX", "microATX", "Mini-ITX"],
     maxGpuLengthMm: 400,
+    estimatedPowerW: 25,
   },
   {
     id: "case-arc-micro",
@@ -125,6 +129,7 @@ export const pcBuilderComponents = [
     description: "Torre compacta compatible con placas microATX y Mini-ITX.",
     supportedFormFactors: ["microATX", "Mini-ITX"],
     maxGpuLengthMm: 320,
+    estimatedPowerW: 25,
   },
   {
     id: "gpu-pulse-770",
