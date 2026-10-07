@@ -72,6 +72,7 @@ Warnings no bloqueantes conocidos: Node reporta `MODULE_TYPELESS_PACKAGE_JSON` e
 ### P1
 
 - ✅ Matriz de permisos por rol y dominio documentada en `RBAC_MATRIX.md`, con 78 probes HTTP autenticados y pruebas SQL por dominios críticos. La matriz declara expresamente sus límites: no equivale a CRUD exhaustivo por columna ni prueba cada Server Action.
+- 🚧 **Escritura segura de catálogo:** auditoría encontró DML directo demasiado amplio para `authenticated`, incluida la capacidad de cambiar campos protegidos. Migración/RPC y pruebas regresivas asignadas; no hay UI conectada hasta cerrar esa frontera. Ver `docs/CATALOG_MANAGER.md`.
 
 ### P2
 
@@ -80,7 +81,6 @@ Warnings no bloqueantes conocidos: Node reporta `MODULE_TYPELESS_PACKAGE_JSON` e
 - [x] Ampliar el barrido E2E anónimo a 27 rutas, teclado, nombres de controles, enlaces/destinos y overflow en desktop, móvil (390 px) y tablet (768 px); detalle en `docs/UX_FINAL_AUDIT.md`.
 - [x] Walkthrough responsive autenticado de roles internos en Supabase local efímero: support, sales, fulfillment, catalog (denegación documentada) y superadmin; evidencia en `docs/UX_FINAL_AUDIT.md`.
 - [ ] Completar recorrido con sesión de cliente y membresías buyer/viewer/owner/admin; las vistas de portal B2B y cuenta siguen sin prueba visual autenticada por rol.
-- [ ] ⛔ Cerrar el contrato seguro de escritura de catálogo: los grants DML actuales de `authenticated` permiten alterar columnas protegidas por PostgREST. Revisar migración/RPC acotada antes de implementar UI; evidencia y diseño en `docs/CATALOG_MANAGER.md`.
 - [ ] Unificar la navegación interna de `/soporte/agente` y verificar accesibilidad del backoffice más allá de nombres accesibles y overflow; slice asignado en ola 8.
 - [ ] Configurar dominio público para verificar `robots.txt`, sitemap, schema y metadatos en despliegue. En local se bloquea indexación deliberadamente para evitar publicar una demo sin dominio real.
 - [ ] Identificar el origen del estilo `caret-color: transparent` que Playwright registra en la hidratación y resolver warnings de entorno sin alterar semántica del producto.
@@ -122,4 +122,6 @@ Una feature solo es ✅ cuando su contrato, autorización servidor/DB, persisten
 - `client-new-thread:53b855ee-f47b-4eb5-9726-b93abd5fe11e`: shell de staff/accesibilidad de soporte.
 - `client-new-thread:9e92853d-ba58-4e3c-9f55-5473a6d86c16`: gestión real de catálogo para `catalog_manager`, condicionada a contratos y RLS existentes.
 - `client-new-thread:677c01bd-00ed-4f2a-a1e7-390fb544934c`: QA Auth visual de cliente y memberships B2B, sin cambios de producto.
-- Los tres worktrees partirán del commit integrado `26d3536`; integración y cierre quedan pendientes hasta recibir sus resultados.
+- `client-new-thread:606c169a-b83f-401e-a620-05b2a2e71a9f`: cierre P1 de permisos de escritura del catálogo mediante migración y RPC con pruebas de regresión.
+- `client-new-thread:d217fef5-c305-475d-bb3f-38710e4ba2f7`: UI de catálogo limitada al contrato RPC seguro, bloqueada funcionalmente hasta que la migración se integre.
+- Las tres conversaciones de UX iniciaron desde `26d3536`; las dos de catálogo parten de `a8ebfc0`. Integración y cierre quedan pendientes hasta recibir sus resultados.
