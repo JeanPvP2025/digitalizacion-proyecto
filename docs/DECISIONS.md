@@ -45,12 +45,12 @@ Las decisiones de alcance heredadas de la misión se marcan **Confirmada**. Las 
 ## D-005 — Supabase/PostgreSQL como fuente de verdad prevista
 
 - **Fecha:** 2026-10-07
-- **Estado:** Confirmada; schema/seed y checkout conectado implementados contra los RPCs existentes. Auth E2E remota y recorrido browser conectado pendientes.
+- **Estado:** Confirmada; schema/seed, checkout conectado, inventario básico y pruebas GoTrue/PostgREST local implementados. No hay proyecto remoto desplegado.
 - **Contexto:** La misión requiere Supabase para Postgres, Auth, Storage y RLS. Migraciones/reset/seed y pruebas locales pasan, pero no hay credenciales remotas ni ejecución de producción.
 - **Decisión:** Diseñar persistencia alrededor de PostgreSQL gestionado por Supabase, con migraciones reproducibles y RLS. Las migraciones y objetos de base pertenecen a `supabase/**`.
 - **Alternativas:** Datos solo locales/mock, cambios manuales en dashboard o un backend separado.
 - **Motivo:** Cumple el requisito del producto y permite integridad relacional, políticas y despliegue reproducible.
-- **Consecuencias:** Migraciones definen tablas, roles, policies y RPCs; reset/seed, 179 pgTAP y pruebas PostgreSQL locales pasan. Storefront, checkout, CRM, soporte, reviews, operations y analytics consumen contratos conectados por slices; inventario/procurement y PC Builder permanecen parciales. No presentar `.data/` como PostgreSQL. El arranque local usa puertos alternativos en `supabase/config.toml` por exclusiones de Windows.
+- **Consecuencias:** Migraciones definen tablas, roles, policies y RPCs; reset/seed, 189 pgTAP, runtime SQL y 78 probes Auth/PostgREST locales pasan. Storefront, checkout, CRM, soporte, reviews, operations, analytics, inventario básico y PC Builder consumen contratos conectados por slices; compras avanzadas y algunos workflows siguen parciales. No presentar `.data/` como PostgreSQL. El arranque local usa puertos alternativos en `supabase/config.toml` por exclusiones de Windows.
 
 ## D-010 — Modo de datos demo resuelto en servidor
 
@@ -66,7 +66,7 @@ Las decisiones de alcance heredadas de la misión se marcan **Confirmada**. Las 
 - **Estado:** Confirmada parcialmente; gates locales pasan.
 - **Contexto:** La escritura directa en orders, payments, inventory y memberships podía romper estado o cruzar tenants.
 - **Decisión:** Revocar DML directo sobre transiciones operativas protegidas y exponer operaciones PostgreSQL acotadas como `place_order`, `resolve_demo_payment`, `fulfill_order`, `mark_order_delivered` y `adjust_inventory`; controlar cambios mediante transacción/RLS y grants mínimos.
-- **Consecuencias:** Reset/seed, 60 pgTAP, DB lint y un gate RLS/checkout seleccionado pasan localmente. La aplicación conectada aún no consume outcome de pago/fulfillment; el gate no es auditoría exhaustiva ni prueba remota.
+- **Consecuencias:** `receive_inventory` y `adjust_inventory` comprueban en DB los roles warehouse/superadmin, validan idempotency key + fingerprint y preservan reservas. 189 pgTAP, SQL runtime y gates RLS pasan localmente; la matriz CRUD no es exhaustiva ni sustituye despliegue remoto.
 
 ## D-006 — Pago únicamente simulado
 
@@ -76,17 +76,17 @@ Las decisiones de alcance heredadas de la misión se marcan **Confirmada**. Las 
 - **Decisión:** Mantener simulador server-side con resultados de prueba, intentos persistidos, pedido relacionado e historial ficticio. No usar pasarela real y no solicitar números bancarios reales.
 - **Alternativas:** Stripe/pasarela bancaria real, o checkout que solo aparenta confirmar pedidos.
 - **Motivo:** Evita dinero real y permite enseñar estados de aprobación, rechazo y reintento con trazabilidad.
-- **Consecuencias:** UI y documentación advierten no introducir datos bancarios. Route Handler autenticado crea/recupera el pedido; `payment-admin.ts` llama RPC de resultado con clave secreta solo servidor; RPC vincula outcome/evento, pago, pedido, timeline y reserva atómicamente. pgTAP y pruebas de ruta cubren retry/rollback; falta E2E con Auth/PostgREST conectado.
+- **Consecuencias:** UI y documentación advierten no introducir datos bancarios. Route Handler autenticado crea/recupera el pedido; `payment-admin.ts` llama RPC de resultado con clave secreta solo servidor; RPC vincula outcome/evento, pago, pedido, timeline y reserva atómicamente. E2E GoTrue/PostgREST local cubre aprobado/rechazado, retry, refresh, payload distinto y concurrencia de stock; no se procesan cargos reales.
 
 ## D-007 — Inventario derivado y checkout transaccional
 
 - **Fecha:** 2026-10-07
-- **Estado:** Materializada por `place_order_from_checkout`, `resolve_demo_payment` y RPCs de fulfillment; validada en base local. Pruebas de concurrencia separada pendientes.
+- **Estado:** Materializada por `place_order_from_checkout`, `resolve_demo_payment`, `fulfill_order` y RPCs de movimientos; validada en DB y E2E local.
 - **Contexto:** Pedidos simultáneos, cancelaciones y devoluciones pueden dejar stock incoherente.
 - **Decisión:** Modelar disponibilidad como físico menos reservado y coordinar reserva/liberación y cambios de pedido de manera atómica en base de datos. El servidor confirma precios y stock al checkout.
 - **Alternativas:** Tratar el stock enviado por el cliente como autoridad o mantener contadores duplicados sin reconciliación.
 - **Motivo:** Protege invariantes de negocio bajo concurrencia y deja el histórico auditable.
-- **Consecuencias:** `docs/DATA_MODEL.md` documenta snapshots y relaciones; SQL verifica sobreventa, retry, liberación, rollback y reconciliación. Checkout API conectado está integrado; Operations/fulfillment UI e inventario continúan parciales.
+- **Consecuencias:** `docs/DATA_MODEL.md` documenta snapshots y relaciones; SQL/E2E verifica sobreventa, retry, liberación, rollback, movimientos idempotentes y reconciliación. Checkout conectado e inventario básico están integrados; procurement y fulfillment visual completo siguen parciales.
 
 ## D-008 — Datos de demostración siempre ficticios
 
@@ -124,7 +124,7 @@ Las decisiones de alcance heredadas de la misión se marcan **Confirmada**. Las 
 - **Estado:** Confirmada e integrada en `c03e63b`.
 - **Contexto:** Un producto puede tener varias variantes; un `productId` genérico no identifica con seguridad la línea de compra.
 - **Decisión:** El cliente envía `variantId` y cantidad. El servidor exige una variante activa/publicada y vuelve a resolver precio y stock; nunca acepta importes de cliente. Se conserva compatibilidad `productId` solo cuando hay exactamente una variante vendible no ambigua.
-- **Consecuencias:** PC Builder podrá usar la misma identidad al añadirse catálogo PC; hasta entonces la compra permanece bloqueada. Ver `tests/integration/commerce/checkout-cart.test.ts`.
+- **Consecuencias:** El seed publica componentes PC ficticios con `attributes.pc_builder`; el configurador preserva variante al añadir al carrito y checkout vuelve a resolver precio/stock. Ver `lib/pc-builder/cart.ts` y `tests/integration/pc-builder/**`.
 
 ## D-013 — Las transiciones de soporte/RMA usan RPC
 
@@ -151,3 +151,19 @@ Las decisiones de alcance heredadas de la misión se marcan **Confirmada**. Las 
 - **Alternativas:** insertar directamente filas de comercio desde CRM sin resolver direcciones/condiciones de pago ni reutilizar la reserva autoritativa; o mantener una aceptación sin paso posterior auditable.
 - **Motivo:** Preserva auditoría/aislamiento y evita saltarse el contrato autoritativo de checkout o el ownership de inventario.
 - **Consecuencias:** Portal presenta la conversión como auditada y deja explícito que falta emitir pedido formal. Commerce/Tech Lead debe acordar el contrato para direcciones, pago y revalidación/reserva de stock antes de crear órdenes B2B. Ver `lib/crm/CONTRACT.md` y `tests/database/crm_b2b.sql`.
+
+## D-016 — Movimientos manuales de inventario son ledger e idempotentes
+
+- **Fecha:** 2026-10-07
+- **Estado:** Integrada en `20261007133000_inventory_receipts_idempotent_movements.sql`.
+- **Contexto:** La UI de inventario era de solo lectura; recepción/ajustes directos podían perder auditoría, duplicarse al reintentar o consumir unidades reservadas.
+- **Decisión:** Exponer `receive_inventory` y la variante idempotente de `adjust_inventory`, con clave/fingerprint y ledger append-only. PostgreSQL autoriza `fulfillment_manager`/`super_admin`; solo cambia `on_hand` y un ajuste no puede bajar de `reserved`.
+- **Consecuencias:** La UI envía requests al Route Handler conectado y muestra disponible recalculado; no hay proveedor maestro ni PO, que quedan como trabajo separado.
+
+## D-017 — Reintentos de checkout validan pedido antes de mutar carrito
+
+- **Fecha:** 2026-10-07
+- **Estado:** Integrada en `20261007140000_checkout_retry_lookup.sql`.
+- **Contexto:** El Route Handler podía crear un segundo carrito y escribir sus líneas antes de que checkout hallara un pedido idempotente ya existente.
+- **Decisión:** `find_checkout_order` exige identidad, valida el payload y compara su fingerprint contra el pedido antes de resolver pago. El retry igual reusa el evento/pedido; la clave con payload distinto produce conflicto y no crea carrito.
+- **Consecuencias:** E2E conectado comprueba una sola cesta, un pago, una reserva y eventos consistentes en retries. El RPC es autenticado y no devuelve pedidos de otro usuario.

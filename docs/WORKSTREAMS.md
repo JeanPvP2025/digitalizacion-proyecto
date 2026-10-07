@@ -39,16 +39,30 @@ Tablero de conversaciones. El repositorio y las migraciones son fuente de verdad
 
 Los worktrees limpios produjeron commits para checkout variante, RBAC/Auth boundary, soporte/RMA, reseñas, Operations Center, analytics, UX E2E y documentación. No se encontró diff integrable de checkout browser/Auth ni de inventario/procurement. El worktree de PC Builder se integró previamente en `f2f806f`. La integración añadió además `postcss.config.mjs` y corrigió la regla CSS global que anulaba los CSS Modules; pruebas E2E cubren las regresiones halladas. Gates registrados en `STATUS.md` y handoff en `AGENT_HANDOFF.md`.
 
-## Ola 5 — backlog listo para despacho
+## Ola 5 — finalizada e integrada (2026-10-07)
 
 | Conversation | Role | Task | Ownership | Dependencies | State |
 |---|---|---|---|---|---|
-| `client-new-thread:6d108c32-268b-4335-b373-3d7b7ae77f33` — Checkout conectado E2E | QA/Commerce Agent | Auth/PostgREST checkout approved/declined, retry/refresh/concurrency | `tests/e2e/checkout-connected/**` | Checkout `variantId` integration `c03e63b`, Supabase local | 🚧 Dispatched; worktree setup queued |
-| `client-new-thread:6e8348a3-3ecb-45f0-9c45-f7480cabf131` — Inventory y procurement vertical slice | Inventory Agent | Receive/adjust stock, ledger idempotente y reconcile reservations | `lib/inventory/**`, inventory APIs/UI, migration/tests; no seed | Order/reservation contracts, existing RLS | 🚧 Dispatched; worktree setup queued |
-| `client-new-thread:b2c76fe0-03f7-47fd-915c-5f35089f189e` — PC Builder comprable por variantes | Catalog/PC Agent | Typed sellable components, compatibility and cart bridge via variantId | `supabase/seed.sql`, PC Builder files/tests | Checkout variant contract, compatibility types | 🚧 Dispatched; worktree setup queued |
-| `client-new-thread:aaaf527a-401d-41ab-b56b-57e1496b87b1` — Conversión de presupuesto B2B a pedido | CRM/Commerce Agent | Accepted quote → audited conversion/order path and tests | CRM quote actions/domain, focused migration/tests if needed | organization/order/payment contracts | 🚧 Dispatched; worktree setup queued |
-| `client-new-thread:3d06f4bc-5697-45b4-9bfd-1cb1a674b096` — Reviews integradas en PDP | Storefront Reviews Agent | Link eligible reviews from PDP and verify purchased-review flow/moderation | product detail + opinions UI tests | Existing reviews API/migration | 🚧 Dispatched; worktree setup queued |
-| `client-new-thread:03e546f1-aeb2-4364-9d87-6a383cc4281c` — Auth/PostgREST boundary audit | Auth/RLS QA Agent | GoTrue/PostgREST role claims and demo/connected boundary checks | `tests/integration/auth-boundaries/**`, `docs/AUTH_BOUNDARIES.md` | Existing local Supabase and role matrix | 🚧 Dispatched; worktree setup queued |
+| `client-new-thread:6d108c32-268b-4335-b373-3d7b7ae77f33` — Checkout conectado E2E | QA/Commerce Agent | GoTrue checkout aprobado/rechazado, retry/refresh/concurrencia | `tests/e2e/checkout-connected/**` | RPC checkout/payment, Supabase local | ✅ Commit worker `2f8d264` → integración `3e19ed8`; suite 4/4; fix del retry `a3904c9`; se corrigió el test discovery del gate demo |
+| `client-new-thread:6e8348a3-3ecb-45f0-9c45-f7480cabf131` — Inventory/procurement | Inventory Agent | Recepciones/ajustes, ledger idempotente y conciliación de reservas | inventory UI/API/migration/tests | Order/reservation contracts, RLS roles | ✅ Cambios sin commit rescatados desde `c27b`; integración `81c7be7`; proveedores/PO siguen abiertos |
+| `client-new-thread:b2c76fe0-03f7-47fd-915c-5f35089f189e` — PC Builder comprable por variantes | Catalog/PC Agent | Seed vendible, compatibilidad y carrito vía `variantId` | `supabase/seed.sql`, configurador/carrito/tests | Contrato checkout `variantId` | ✅ Commit worker `6011f77` → integración `e49cdb5`; falta ampliar matrices de compatibilidad |
+| `client-new-thread:aaaf527a-401d-41ab-b56b-57e1496b87b1` — Conversión de presupuesto B2B | CRM/Commerce Agent | Oferta aceptada → conversión auditable e idempotente | CRM portal/action, migration, tests | organization/quote/order contracts | ✅ Commit worker `473bff1` → integración `1d7e375`; explícitamente no crea pedido formal |
+| `client-new-thread:3d06f4bc-5697-45b4-9bfd-1cb1a674b096` — Reviews PDP | Storefront Reviews Agent | Link opiniones y estado conectado desde PDP | PDP/opiniones tests | Reviews API/migration | ✅ Commit worker `bb20ce8` → integración `04dff19`; unit/E2E incluidos en gates |
+| `client-new-thread:03e546f1-aeb2-4364-9d87-6a383cc4281c` — Auth/PostgREST boundary | Auth/RLS QA Agent | Tokens GoTrue, isolation/role grants, demo/data boundary | `tests/integration/auth-boundaries/**`, `docs/AUTH_BOUNDARIES.md` | Local Supabase/role matrix | ✅ Runner/docs sin commit rescatados desde `29a6`; integración `26ee62b`; 78 probes HTTP, 0 fallos |
+
+### Integración de la quinta ola
+
+Se incorporaron los commits worker `473bff1`, `6011f77`, `bb20ce8` y `2f8d264`, además de cambios sin commit de los worktrees `c27b` (inventario) y `29a6` (Auth/PostgREST). Commits del Tech Lead: `a3904c9` (checkout retry), `81c7be7` (movimientos de inventario) y `26ee62b` (fixtures RLS/Auth). La integración añadió `find_checkout_order` para validar fingerprint antes de mutar o crear otro carrito en un retry. Los gates e incidencias reproducibles figuran en `docs/STATUS.md` y `docs/AGENT_HANDOFF.md`.
+
+## Ready for next conversation wave
+
+| Conversation | Role | Task | Ownership | Dependencies | State |
+|---|---|---|---|---|---|
+| Pending | B2B Commerce Agent | Emitir pedido formal desde una conversión aceptada con condiciones y snapshots seguros | CRM quote conversion + pedido B2B dedicado y tests | Contrato de dirección/precio/pago/reserva; no alterar checkout B2C | ⏳ Ready |
+| Pending | Procurement Agent | Proveedores, órdenes de compra y recepción vinculada a PO | `lib/inventory/procurement/**`, inventory procurement migrations/tests | Movimientos idempotentes de esta ola | ⏳ Ready |
+| Pending | Fulfillment Agent | Picking/packing/dispatch y timeline operativo completo | `lib/operations/**`, operaciones UI/actions/tests | `fulfill_order`, inventario/reservas existentes | ⏳ Ready |
+| Pending | RMA Agent | Efectos idempotentes de aprobación (devolución/reembolso demo/stock) | support return RPC/migrations/tests/UI | Devolución aprobada, pedidos y ledger | ⏳ Ready |
+| Pending | QA/Analytics Agent | Contrastar KPIs y cerrar E2E connected para B2B, cuenta, reviews y soporte | analytics tests y `tests/e2e/connected-domains/**` | contratos estables de los dominios integrados | ⏳ Ready |
 
 ## Definition of Done por conversación
 

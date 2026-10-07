@@ -1,6 +1,6 @@
 # Matriz de roles y permisos
 
-Estado al 2026-10-07, ejecutado localmente durante la cuarta ola. La autorización efectiva combina sesión Auth, `user_role_grants`, `organization_memberships`, grants SQL, RLS y validaciones de RPC. Ocultar una acción en UI no concede ni deniega acceso.
+Estado al 2026-10-07 tras la quinta ola. La autorización efectiva combina sesión Auth, `user_role_grants`, `organization_memberships`, grants SQL, RLS y validaciones de RPC. Ocultar una acción en UI no concede ni deniega acceso.
 
 ## Nombres de rol
 
@@ -34,17 +34,18 @@ Estado al 2026-10-07, ejecutado localmente durante la cuarta ola. La autorizaci�
 | Pedidos y líneas | — | R propio | R propio | R de pedidos de su org cuando está asociado | R mínimo necesario por política/soporte | — | R operativa | — | R |
 | Pagos | — | R de pago propio | R propio | R de pedidos de su org | R mínimo de contexto permitido | — | R operativo | — | R |
 | Crear pedido / checkout | — | C por RPC autenticada; precios y stock servidor | Igual, vinculado a org miembro | Igual | — | — | — | — | Solo por flujo/autorización explícita |
-| Stock/reservas/fulfillment | — | — | — | — | — | — | R; cambios mediante RPC de fulfillment/service-role | R de catálogo, sin mutación de stock | R y RPC según acción |
+| Stock/reservas/fulfillment | — | — | — | — | — | — | R; recepción/ajuste por RPC idempotente; fulfillment consume reserva por RPC | R de catálogo, sin mutación de stock | R y RPC según acción |
 | Tickets y mensajes | — | C por RPC; R/mensaje propio permitido | Propio/org | Propio/org | R/U y respuesta por RPC; DML directo revocado | — | — | — | R/U por RPC según acción |
 | Devoluciones/RMA | — | C por RPC; R propia | Propia/org | Propia/org | R/U operativa de soporte | — | R/U por RPC operativa | — | R/U según acción |
 | Auditoría/timeline | — | R de timeline propio permitido | Propio/org | Propio/org | R de caso autorizado | Actividad interna comercial autorizada | Eventos de pedidos operativos | — | R |
 
-Las celdas “—” significan sin permiso por el contrato actual. Esta matriz es conservadora: antes de ampliar un permiso se debe documentar campo/acción y añadir una prueba runtime.
+Las celdas “—” significan sin permiso por el contrato actual. Para movimientos manuales, `receive_inventory` y `adjust_inventory` permiten solo `fulfillment_manager`/`super_admin`; Postgres valida rol, fingerprint y saldo reservado aun cuando se invoque la RPC fuera de la UI. Estas acciones actualizan `on_hand`, no `reserved`. Esta matriz es conservadora: antes de ampliar un permiso se debe documentar campo/acción y añadir una prueba runtime.
 
 ## Evidencia y cobertura
 
-- Ejecutados en PostgreSQL local: `tests/integration/postgres-rls.sql`, `security/postgres-object-isolation.sql`, `rbac/postgres-role-action-matrix.sql`, `auth-boundaries/postgres-role-escalation.sql`, `support-rma/postgres.sql`, `support-flow/postgres.sql`, `reviews/product-reviews.sql`, `tests/database/*.sql` y `commerce/checkout-flow.sql`.
-- Cubre `anon`, customer A/B, business buyer/admin, `catalog_manager`, `support_agent`, `sales_manager`, `fulfillment_manager` y `super_admin`; prueba aislamiento cliente/organización, grants, acciones de catálogo, RPC de soporte, CRM/pagos, devoluciones, checkout e intentos de escalada.
+- Ejecutados en PostgreSQL local: `tests/integration/postgres-rls.sql`, `security/postgres-object-isolation.sql`, `rbac/postgres-role-action-matrix.sql`, `auth-boundaries/postgres-role-escalation.sql`, `support-rma/postgres.sql`, `support-flow/postgres.sql`, `inventory/inventory-movements.sql`, `reviews/product-reviews.sql`, `tests/database/*.sql` y `commerce/checkout-flow.sql`.
+- Además, `pwsh -File tests/integration/auth-boundaries/run-local.ps1` ejercita 78 requests con access JWT de GoTrue en PostgREST; 0 fallos. Cubre `anon`, customer A/B, business admin/buyer, `catalog_manager`, `support_agent`, `sales_manager`, `fulfillment_manager` y `super_admin` para salud, filas propias/tenant, roles persistidos, escalation y RPCs restringidas.
+- La matriz SQL y HTTP prueba aislamiento cliente/organización, grants, acciones de catálogo, soporte, CRM/pagos, inventario, devoluciones, checkout y escalada.
 - La matriz inicial se corrigió al detectar que el RPC, no el DML directo, es el contrato para transición de ticket. No se añadió permiso directo.
 - No existen roles persistidos `marketing` ni `manager` genérico; sus pruebas son por ausencia de enum/grant, no por usuario con un rol inventado.
-- No se ha ejecutado CRUD exhaustivo en cada columna/tabla, una matriz con JWT emitidos por GoTrue/PostgREST, E2E conectado ni pruebas HTTP de cada Server Action. El gate es fuerte para escenarios seleccionados y no constituye certificación de producción.
+- No se ha ejecutado CRUD exhaustivo en cada columna/tabla, ni pruebas HTTP de cada Server Action. Roles `marketing` y `manager` genérico no existen como grants persistidos y aún no tienen usuarios/probes dedicados. El gate cubre escenarios seleccionados y no constituye certificación de producción.

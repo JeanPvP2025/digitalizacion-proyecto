@@ -181,4 +181,48 @@ Se crearon en paralelo seis conversaciones independientes con worktrees desde `m
 - `client-new-thread:3d06f4bc-5697-45b4-9bfd-1cb1a674b096` — integración de reviews en PDP.
 - `client-new-thread:03e546f1-aeb2-4364-9d87-6a383cc4281c` — Auth/PostgREST role boundary.
 
-Los seis despachos retornaron `clientThreadId` con host local; la creación/setup de worktrees es asíncrona. El tablero los marca `worktree setup queued`; no se afirma que ya hayan empezado cambios.
+Los seis despachos retornaron `clientThreadId` con host local; la creación/setup de worktrees fue asíncrona. La integración de la quinta ola ya inspeccionó los seis worktrees y no depende de que vuelvan a contestar.
+
+## Ola 5 recibida, contrastada e integrada — 2026-10-07
+
+### Workstreams y evidencia real
+
+| Conversación | Trabajo real | Evidencia y estado |
+|---|---|---|
+| Checkout conectado E2E `6d108c32…` | Cuatro pruebas Playwright con Auth real, PostgREST, approved/declined, refresh/retry, payload idempotente distinto y concurrencia de stock; helpers crean/limpian fixtures solo localmente. | Worker commit `2f8d264`, integrado `3e19ed8`; suite conectada 4/4. El gate demo general se separó de esta suite. |
+| Inventario/procurement `6e8348a3…` | Route Handler, UI de recepciones/ajustes, migration idempotente y prueba SQL de ledger/reservas. | Sin commit en el worktree `c27b`; cambios se rescataron. El slice integrado cubre movimientos, no proveedor maestro ni PO. |
+| PC Builder `b2c76fe0…` | Seed de seis componentes vendibles, atributos estructurados, carrito conserva `variantId` y checkout conectado. | Worker commit `6011f77`, integrado `e49cdb5`; unit/build gates pasan. |
+| CRM/B2B `aaaf527a…` | Conversión explícita de quote aceptado, snapshots organización/propuesta/líneas, actividad tenant e idempotencia. | Worker commit `473bff1`, integrado `1d7e375`; pgTAP/action tests pasan. No es un pedido formal. |
+| Reviews PDP `3d06f4bc…` | Opiniones enlazadas desde PDP, estados/cuenta de reviews conectadas y pruebas UI/E2E. | Worker commit `bb20ce8`, integrado `04dff19`; gates pasan. |
+| Auth/PostgREST `03e546f1…` | Runner PowerShell para tokens GoTrue/PostgREST, organization/customer isolation, grants/RPC boundary y separación Supabase/Demo Mode. | Sin commit en el worktree `29a6`; script y `docs/AUTH_BOUNDARIES.md` rescatados. 78 probes, 0 fallos; cleanup `0:0:0`. |
+
+### Cambios de integración del Tech Lead
+
+- Se añadió `20261007140000_checkout_retry_lookup.sql` con `find_checkout_order`: el actor autenticado compara clave/fingerprint antes de crear/mutar otro carrito; misma clave + payload diferente devuelve conflicto. Route Handler resuelve resultado de pago para el pedido existente sin duplicar carrito.
+- El E2E conectado ahora afirma que hay una única cesta/línea tras retry y comprueba approved/declined, evento/pago/reserva, refresh, reintento y una sola compra concurrente con stock unitario.
+- `playwright.config.ts` excluye `checkout-connected/**` del gate demo y deja su runner separado con su configuración/credenciales local-only.
+- Se corrigió límite SQL de cantidad de recepción a 1–100000 y se verificó el límite de reserva desde runtime SQL.
+- Se hicieron dinámicos los conteos en `postgres-rls.sql` y `security/postgres-object-isolation.sql`: baseline stock/órdenes se captura en la transacción, sin cambiar policies.
+- Auth runner crea una orden temporal para demostrar lectura propia/fulfillment y denegación IDOR de cliente B; la limpia en transacción. El scan solo rechaza nombres públicamente prefijados y valor real de la clave, no nombres de variables server-only en source maps.
+
+### Gates ejecutados
+
+- `pnpm install --frozen-lockfile`: pasó.
+- `pnpm test`: 160 Vitest + 18 Node, pasó.
+- `pnpm exec tsc --noEmit`, `pnpm lint`, `pnpm build`: pasaron; build enumera 33 rutas.
+- `pnpm test:e2e`: 17/17 demo/UX. La nueva suite conectada se ejecuta aparte y pasó 4/4.
+- Segundo `pnpm dlx supabase@latest db reset --local --yes`: pasó con las once migraciones y seed. El primer intento dejó stack Docker reiniciándose y falló antes de preparar schema; se verificó que el DB estaba vacío y se repitió tras estabilizarlo.
+- pgTAP database/checkout/reviews: 189 aserciones, pasó. RLS, seguridad, role matrix, role escalation, support-rma, support-flow e inventory SQL runtime pasaron secuencialmente con rollback.
+- `pwsh -File tests/integration/auth-boundaries/run-local.ps1`: 78 probes HTTP, 0 fallos; cuentas/orgs/pedido de fixture eliminados.
+- `supabase db lint --local --fail-on error` y `git diff --check`: pasan.
+
+### Pendientes desbloqueados y riesgos
+
+- Checkout conectado ya está probado localmente; el ledger de inventario permite recepciones/ajustes básicos. Procurement con proveedores/PO, picking/packing/dispatch y efectos de RMA permanecen como slices separados.
+- La conversión de quote se registra como snapshot auditable, no como `orders`; falta acordar emisión de pedido B2B, sus direcciones/pago y reserva/precio negociado.
+- Matriz HTTP no es CRUD exhaustivo: los roles `marketing` y `manager` no existen como grants y faltan operaciones por columna/endpoint.
+- No hay Supabase remoto ni deployment/redirects de producción probados. No afirmar certificación de producción.
+
+Commits de integración de la quinta ola: `1d7e375`, `e49cdb5`, `04dff19`, `3e19ed8`, `a3904c9`, `81c7be7` y `26ee62b`. Documentación consolidada en `STATUS.md`, `WORKSTREAMS.md`, `ARCHITECTURE.md`, `DECISIONS.md`, `SECURITY.md`, `TESTING.md`, `DATA_MODEL.md`, `RBAC_MATRIX.md` y `AUTH_BOUNDARIES.md`.
+
+El siguiente backlog funcional priorizado queda organizado para la sexta ola en `WORKSTREAMS.md`: pedido B2B formal, procurement con proveedores/PO, fulfillment hasta despacho, efectos de RMA aprobada y QA conectado de analytics/dominios. Son slices independientes con ownership separado; comparten contratos ya integrados y no deben afirmar cierre antes de validar persistencia, permisos y pruebas de extremo a extremo.

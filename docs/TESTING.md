@@ -12,35 +12,50 @@ pnpm build
 git diff --check
 ```
 
-Integración cuarta ola (2026-10-07): 148 pruebas Vitest + 18 Node; 15 Playwright demo/UX; build Next.js; typecheck y ESLint pasan. Playwright ejecutó 3 checks dirigidos sobre CSS Modules, compra con carrito vacío y volver arriba. Un warning de hidratación mostró `caret-color: transparent` inyectado por el contexto del navegador en inputs, no una prop del árbol React; confirmar en navegador limpio si persiste. También aparece el aviso de Windows `NO_COLOR`/`FORCE_COLOR`.
+`pnpm test:e2e` ejecuta únicamente los flujos demo/UX y no necesita secretos Supabase. Para checkout conectado se usa el runner aislado:
+
+```powershell
+pwsh -File tests/e2e/checkout-connected/run.ps1
+```
+
+El runner obtiene claves solo en memoria desde el status de Supabase local, rechaza URLs no loopback, ejecuta Chromium con `DEMO_MODE=false` y limpia fixtures. Cubre aprobado, rechazado, misma clave/payload, clave/payload distinto, refresh/retry y dos sesiones concurrentes con una unidad. Nunca ejecutar simultáneamente con otros tests que muten el mismo proyecto local.
+
+Resultado tras la quinta ola: 160 Vitest + 18 Node; 17/17 E2E demo/UX; 4/4 E2E checkout conectado; TypeScript, ESLint y build pasan. En E2E demo apareció un warning de hidratación por `caret-color: transparent` en inputs; no se atribuyó al árbol React y falta confirmarlo en navegador limpio. Windows también informa `NO_COLOR`/`FORCE_COLOR`.
 
 ## Supabase/PostgreSQL local
 
 ```powershell
 pnpm dlx supabase@latest db reset --local --yes
 pnpm dlx supabase@latest db lint --local --fail-on error
-pnpm dlx supabase@latest test db --local tests/database tests/integration/commerce/checkout-flow.sql
-pnpm dlx supabase@latest test db --local tests/integration/reviews/product-reviews.sql
+pnpm dlx supabase@latest test db --local tests/database tests/integration/commerce/checkout-flow.sql tests/integration/reviews/product-reviews.sql
 Get-Content tests\integration\postgres-rls.sql -Raw | docker exec -i supabase_db_nodria-commerce psql -U postgres -d postgres -v ON_ERROR_STOP=1
 Get-Content tests\integration\security\postgres-object-isolation.sql -Raw | docker exec -i supabase_db_nodria-commerce psql -U postgres -d postgres -v ON_ERROR_STOP=1
 Get-Content tests\integration\rbac\postgres-role-action-matrix.sql -Raw | docker exec -i supabase_db_nodria-commerce psql -U postgres -d postgres -v ON_ERROR_STOP=1
 Get-Content tests\integration\auth-boundaries\postgres-role-escalation.sql -Raw | docker exec -i supabase_db_nodria-commerce psql -U postgres -d postgres -v ON_ERROR_STOP=1
 Get-Content tests\integration\support-rma\postgres.sql -Raw | docker exec -i supabase_db_nodria-commerce psql -U postgres -d postgres -v ON_ERROR_STOP=1
 Get-Content tests\integration\support-flow\postgres.sql -Raw | docker exec -i supabase_db_nodria-commerce psql -U postgres -d postgres -v ON_ERROR_STOP=1
+Get-Content tests\integration\inventory\inventory-movements.sql -Raw | docker exec -i supabase_db_nodria-commerce psql -U postgres -d postgres -v ON_ERROR_STOP=1
 ```
 
-Resultado observado tras la cuarta ola: reset/seed OK; 179 pgTAP aserciones; RLS/role matrix/auth-boundary/support scripts pasan y revierten sus fixtures; DB lint sin errores de schema. La primera ejecución de role matrix reveló que su expectativa de DML directo a tickets contradecía el grant revocado; el test ahora llama `send_support_message`, y no se amplió el permiso.
+Para boundary HTTP con tokens reales, después del reset:
 
-## Cobertura que sí existe
+```powershell
+pwsh -File tests/integration/auth-boundaries/run-local.ps1
+```
 
-- Checkout SQL: pago approved/declined/processing/temporary error; pedido/pago/reserva única; idempotencia de mismo payload; rechazo de cambio de dirección o cantidad; misma payment event key idempotente y rechazo de key con otro resultado; fallo parcial provoca rollback; reintento recupera; rechazo cancela y libera stock.
-- RLS/seguridad SQL: anon, customer A/B, business buyer/admin, catalog manager, sales, fulfillment, support y superadmin; boundaries de organización, pagos, órdenes, tickets, mensajes, devoluciones, reviews, quotes/actividades CRM, RPC grants y escalada de rol.
-- RMA SQL: intake ticket+mensaje, límite de compra/ventana, idempotencia y aislamiento.
-- Aplicación: pruebas de Route Handler y Server Actions usan dobles/mocks; los E2E usan `DEMO_MODE=true` sin Auth/Supabase conectado.
+La quinta ola pasó reset/seed; **189** aserciones pgTAP; RLS/security/RBAC/auth-escalation/support/inventory runtime SQL; **78** probes HTTP GoTrue/PostgREST; y DB lint sin errores. Los scripts de conteo RLS toman baseline dentro de la transacción para no depender de un número fijo de filas en seed. Todos los scripts runtime revierten fixtures.
+
+## Qué verifican
+
+- Checkout SQL/E2E: precio/stock de servidor, snapshots, reserva única, estados approved/declined/processing/error, recuperación, payload distinto bajo clave existente, refresh y concurrencia de stock.
+- Inventario SQL: autorización warehouse/sales, recepción/ajuste idempotente, conflicto de fingerprint, no consumo de reserva y fulfillment que consume la reserva una sola vez.
+- RLS/Auth HTTP: anon, customer A/B, business admin/buyer, catalog, support, sales, fulfillment y superadmin; perfil/pedido/ticket/tenant aislados; escalation y RPCs privilegiadas denegadas; demo no hace fallback conectado.
+- Conversión CRM/B2B: quote aceptado produce snapshots e historial una sola vez; el registro no se confunde con un pedido comercial.
+- Reviews/RMA: elegibilidad por línea, moderación, intake atómico, límite de cantidades y transitions por RPC.
 
 ## Límites pendientes
 
-- No hay E2E conectado contra GoTrue/PostgREST; el navegador no ejecuta checkout con usuario autenticado real ni se probaron los resultados approved/declined en API real.
-- No se probó doble POST concurrente, doble click contra ruta real, refresh conectado ni dos compras simultáneas con stock insuficiente.
-- La matriz no cubre CRUD de cada tabla/columna/endpoint por cada rol; ver `RBAC_MATRIX.md`.
-- No se probó configuración remota ni despliegue. Los gates locales no certifican producción.
+- La matriz Auth/RLS no cubre CRUD de cada columna/tabla/endpoint para cada rol; roles `manager` y `marketing` requieren probes HTTP adicionales. Ver `RBAC_MATRIX.md`.
+- No se probó configuración Supabase remota, despliegue, secretos de producción o migración remota.
+- Falta E2E conectado para pedido en cuenta, portal B2B, reseña elegible, ticket/mensajes y roles de backoffice.
+- Operations/picking, procurement completo, pedido formal B2B y efectos de RMA no están completos; gates de las capas existentes no prueban esos flujos.

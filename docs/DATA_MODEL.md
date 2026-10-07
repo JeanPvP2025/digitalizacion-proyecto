@@ -20,8 +20,11 @@ erDiagram
   WAREHOUSES ||--o{ INVENTORY_RESERVATIONS : asigna
   PRODUCT_VARIANTS ||--o{ INVENTORY : almacena
   WAREHOUSES ||--o{ INVENTORY : contiene
+  INVENTORY ||--o{ INVENTORY_MOVEMENTS : ledger
   ORGANIZATIONS ||--o{ QUOTES : solicita
   QUOTES ||--|{ QUOTE_ITEMS : cotiza
+  QUOTES ||--o| BUSINESS_QUOTE_CONVERSIONS : snapshot
+  ORGANIZATIONS ||--o{ BUSINESS_QUOTE_CONVERSIONS : convierte
   ORGANIZATIONS ||--o{ CRM_ACTIVITIES : historial
   QUOTES o|--o{ CRM_ACTIVITIES : registra
   AUTH_USERS ||--o{ SUPPORT_TICKETS : abre
@@ -42,8 +45,11 @@ erDiagram
 - `orders` conserva la clave idempotente del cliente y un SHA-256 del contenido persistido del carrito y las direcciones. La RPC de checkout bloquea carrito/líneas/stock; una misma clave y payload devuelve el pedido existente, y una carga distinta se rechaza.
 - `order_items` conserva SKU, nombres, variante, cantidad, precio, moneda e impuestos del momento de compra. No depende de que el catálogo conserve el mismo producto.
 - `inventory` deriva disponible de `on_hand - reserved`. El pedido reserva unidades en la transacción de checkout; pago aprobado conserva la reserva hasta expedición; pago rechazado libera unidades. `inventory_reservations` vincula esas cantidades con líneas de pedido y almacenes.
+- `inventory_movements` registra cambios append-only de checkout/fulfillment y recepciones/ajustes. Movimientos manuales guardan actor, motivo/proveedor/albarán, UUID idempotente y fingerprint; actualizan `on_hand`, nunca modifican `reserved`, y bloquean ajuste por debajo de reservas.
+- `receive_inventory` y `adjust_inventory` rechazan un reintento con clave ya asociada a otro payload. Un mismo payload devuelve el movimiento anterior sin duplicar unidades ni ledger.
 - `payment_transactions` pertenece al pedido. `private.demo_payment_attempts` asocia un event ID único a pedido y resultado. El RPC de pago acepta únicamente resultado simulado en el servidor y escribe transición, auditoría/timeline y estado de forma atómica.
 - `quotes` y `quote_items` guardan snapshots de organización/contacto, producto, precio solicitado/ofertado, moneda e impuestos. `sales_owner_id` define la propiedad comercial; el equipo comercial puede reclamar solicitudes sin asignar mediante RPC.
+- `business_quote_conversions` registra como máximo una conversión auditable por propuesta aceptada y conserva snapshots de organización, oferta y líneas. No es un `orders` formal y no reserva stock; ese contrato B2B sigue pendiente.
 - `crm_activities` vincula actividad a lead, solicitud, presupuesto u organización. Las notas `organization` solo son visibles a miembros de la organización antes de que el presupuesto sea reclamado; la cola comercial sin asignar expone actividad `internal`.
 - `create_support_ticket` guarda ticket y primer mensaje juntos. `request_return` valida cliente, pedido entregado, ventana y suma acumulada por línea; la clave idempotente impide duplicar una devolución.
 - Mensajes/transiciones de agente y review de RMA pasan por RPC idempotente; `support_ticket_events` y `return_request_events` registran timeline sin habilitar DML directo al navegador.
@@ -61,5 +67,8 @@ erDiagram
 - `20261007114945_limit_sales_queue_activity_visibility.sql` — acota notas de actividad visibles a ventas y elimina acceso de ventas a datos de pago.
 - `20261007120621_product_reviews.sql` — reviews verificadas, moderación y RLS.
 - `20261007120753_support_agent_rma_review_workflow.sql` — timeline y transiciones idempotentes de ticket/agente y revisión de devoluciones.
+- `20261007133000_inventory_receipts_idempotent_movements.sql` — recepciones/ajustes autorizados con ledger, proveedor/albarán e idempotencia.
+- `20261007134000_crm_business_quote_conversion_audit.sql` — registro de conversión B2B aceptada a snapshots auditables tenant-scoped.
+- `20261007140000_checkout_retry_lookup.sql` — lookup autenticado por fingerprint que permite reintentar checkout sin mutar/crear otro carrito.
 
-El esquema no convierte por sí solo pantallas todavía demo (Operations Center, compras, analítica o PC Builder) en flujos conectados.
+El esquema no convierte por sí solo procurement, pedido B2B formal, fulfillment UI completo o efectos de RMA en flujos terminados.

@@ -1,40 +1,26 @@
 # Seguridad y RLS
 
-Estado del 2026-10-07 tras la cuarta ola. Revisado contra la base Supabase local reiniciada desde las migraciones integradas. No se probaron credenciales remotas ni JWT emitidos por un proyecto de producción.
+Estado del **2026-10-07** tras la quinta ola. Migraciones, código y pruebas locales fueron revisados. No se probaron credenciales remotas ni JWT de un proyecto de producción.
 
 ## Controles integrados
 
-- RLS/grants por propósito; escritura directa de pedido, pago, reserva y stock se mantiene cerrada y los cambios de estado usan RPCs.
-- El modo de datos se decide en servidor. Fixtures `.data/` requieren modo demo explícito de desarrollo; los fallos conectados de catálogo no se esconden con fixtures.
-- Checkout valida identidad, reconstruye carrito desde IDs/variantes, vuelve a leer precio y stock, y persiste el pedido/reservas en RPC. El resultado demo se procesa en RPC privilegiada mediante `lib/commerce/payment-admin.ts`, que solo lee `SUPABASE_SECRET_KEY` o `SUPABASE_SERVICE_ROLE_KEY` en servidor. Ninguna variable `NEXT_PUBLIC_*` contiene clave privilegiada.
-- Pago simulado no solicita tarjeta real. La transición pedido/pago/timeline/reserva es atómica e idempotente por event ID; el navegador no puede escoger resultado invocando el RPC.
-- RMA impide devolver más unidades de las compradas y exige pedido entregado dentro de la ventana; ticket y primer mensaje se crean juntos.
-- CRM protege organizaciones/membresías por tenant. La cola de propuestas B2B no asignadas es global para que ventas pueda reclamarlas; las actividades internas se filtran y las notas `organization` no son visibles a ventas hasta que la propuesta sea reclamada. Esta excepción es explícita y probada.
-- Sales no accede a pedidos, pagos, almacén ni tickets; payment SELECT se limita a cliente, fulfillment y superadmin.
-- Transiciones de agente en soporte/RMA se ejecutan con RPCs transaccionales; usuarios `authenticated` no reciben DML directo sobre tickets ni mensajes.
-- Reseñas requieren línea de pedido entregada del mismo usuario/producto; el estado comienza en pending y solo personal autorizado puede moderar.
-- Checkout acepta `variantId`; el payload del cliente no puede fijar precio/stock y las variantes se comprueban en servidor.
-
-## Hallazgos de la revisión independiente
-
-Ver `SECURITY_FOLLOWUP.md` para evidencia. No se confirmó bypass Critical/High en la segunda revisión. La prueba detectó que ventas podía ver notas `organization` de propuestas sin asignar; `20261007114945_limit_sales_queue_activity_visibility.sql` limita la cola a actividades `internal`. La misma migración elimina `sales_manager` de la policy de pagos. Los hallazgos previos sobre organizaciones/membresías globales se corrigieron en el workflow CRM.
-
-La cuarta ola añadió role/action y Auth claim-escalation scripts. Ambos pasan en PostgreSQL local. Durante integración, la matriz inicialmente intentó actualizar directamente un ticket de soporte y falló por falta de grant; el diseño revoca deliberadamente ese DML, así que se corrigió el test para ejecutar `send_support_message` y comprobar el estado resultante. No se añadió grant directo.
+- RLS/grants protegen tablas; escrituras críticas de pedido, pago, reserva, soporte y stock pasan por RPCs limitadas. Las acciones de inventario exigen `fulfillment_manager` o `super_admin` tanto en Route Handler como en PostgreSQL.
+- El modo de datos se decide en servidor. Supabase configurado prevalece sobre `DEMO_MODE`; una caída conectada devuelve error y no recurre a `.data/`.
+- Checkout reconstruye variantes vendibles, precio y stock; `find_checkout_order` compara el fingerprint bajo identidad autenticada antes de reusar pedido y resolver pago. La clave service-role queda en servidor y solo resuelve el resultado de pago demo.
+- Checkout e inventario rechazan una clave idempotente reutilizada con payload diferente. Los reintentos de checkout no crean carritos adicionales; las recepciones/ajustes registran un movimiento y preservan reservas activas.
+- RMA limita suma devuelta por línea y requiere pedido entregado/ventana aplicable. Ticket+primer mensaje y transiciones de agente usan RPCs transaccionales.
+- CRM limita organizaciones/membresías por tenant. Ventas puede reclamar propuestas B2B sin asignar; la cola expone actividad `internal`, no notas privadas de organización. Ventas no accede a pedidos ni pagos.
+- Reseñas requieren una línea de pedido entregada del mismo usuario/producto; comienzan en moderación y solo las publicadas se exponen públicamente.
+- No hay campos de pago real ni se procesan cargos. El navegador no puede llamar a RPCs privilegiadas de pago, fulfillment, entrega ni inventario.
 
 ## Evidencia local
 
-- `tests/integration/postgres-rls.sql`
-- `tests/integration/security/postgres-object-isolation.sql`
-- `tests/integration/support-rma/postgres.sql`
-- `tests/integration/support-flow/postgres.sql`
-- `tests/integration/rbac/postgres-role-action-matrix.sql`
-- `tests/integration/auth-boundaries/postgres-role-escalation.sql`
-- `tests/integration/reviews/product-reviews.sql`
-- `tests/database/*.sql` y `tests/integration/commerce/checkout-flow.sql`
-- `pnpm dlx supabase@latest db lint --local --fail-on error`
+- `pwsh -File tests/integration/auth-boundaries/run-local.ps1`: **78 probes HTTP, 0 fallos**, con JWT emitidos por GoTrue y consultas PostgREST. Incluye anon, customer A/B, B2B admin/buyer, catalog, support, sales, fulfillment, superadmin, aislamiento de objetos, roles, RPCs, modo demo y scan de secreto cliente.
+- `tests/integration/postgres-rls.sql`, `tests/integration/security/postgres-object-isolation.sql`, role-action matrix, auth escalation, Support/RMA y movimientos de inventario: pasan con fixtures en transacciones revertidas.
+- pgTAP database/checkout/reviews: 189 aserciones; `supabase db lint --local --fail-on error`: sin errores.
+- `tests/e2e/checkout-connected/run.ps1`: 4/4 con sesión browser GoTrue/PostgREST; aprueba, rechaza, reintenta tras refresh, rechaza payload con clave repetida y evita doble reserva bajo concurrencia.
+- La verificación de cleanup del runner Auth encontró cero usuarios/orgs/pedidos fixture. El scan no encontró identificadores `NEXT_PUBLIC_*` privilegiados ni el valor local de service-role en fuentes/assets cliente.
 
-Los escenarios ejecutan `SET ROLE` más claims JWT locales y revisan grants/RLS reales de PostgreSQL. No equivalen a una prueba HTTP con Auth/GoTrue/PostgREST. No hay CRUD exhaustivo para todas las operaciones/roles; `RBAC_MATRIX.md` identifica explícitamente esas brechas.
+## Límites
 
-## No habilitar datos reales todavía
-
-Faltan prueba de checkout conectado con Auth local desde aplicación, matriz CRUD/API exhaustiva con GoTrue/PostgREST, reconciliación de stock/procurement y revisión del despliegue. Separar secretos por entorno; nunca exponer service-role en cliente ni variables `NEXT_PUBLIC_*`.
+La matriz no prueba CRUD de cada columna/tabla/endpoint contra todos los roles; `RBAC_MATRIX.md` conserva esa brecha. Los roles `manager` y `marketing` necesitan cobertura HTTP adicional. Demo Mode aún necesita un guion completo por roles; no hay secret management/deployment remoto probado. El inventario incluye recepciones directas y ajustes, no proveedores maestros ni órdenes de compra. No habilitar datos reales ni afirmar certificación de producción.

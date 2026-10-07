@@ -1,81 +1,75 @@
 # Estado del proyecto
 
-Estado observado el **2026-10-07** tras integrar la cuarta ola. Git, migraciones y gates locales son la fuente de este resumen. No hay entorno Supabase remoto, sesión GoTrue/PostgREST desde navegador ni despliegue de producción probado.
+Estado observado el **2026-10-07** tras integrar la quinta ola. Se contrastaron commits, diffs, cambios sin commit y el comportamiento local; el repositorio y las migraciones son la fuente de verdad. No hay proyecto Supabase remoto ni despliegue de producción probado.
 
-## Resumen
+## Resumen funcional
 
-- ✅ **Checkout/Pedido/Pago simulado (SQL):** carrito persistido, precio/stock autoritativos en servidor, fingerprint de pedido, snapshots históricos, reserva transaccional, intents de pago, rechazo/aprobación y recuperación; PgTAP cubre la misma clave con payload distinto.
-- 🚧 **Checkout conectado en aplicación:** `POST /api/checkout` acepta `variantId`, reconstruye el contenido y llama RPCs para pedido/pago con credencial privilegiada solo servidor. Route tests y SQL pasan; falta recorrer la ruta por GoTrue/PostgREST con sesión real, retry/refresco y doble POST concurrente desde navegador.
-- ✅ **Boundary storefront:** demo fixtures solo se usan bajo el modo demo explícito; catálogo conectado no vuelve a fixtures cuando falla Supabase. Búsqueda conectada devuelve error/resultado vacío controlado. Playwright cubre solo demo local.
-- 🚧 **CRM/B2B:** organizaciones/membresías, portal, solicitud con snapshots, cola de ventas, claim y oferta/aceptación, actividades y políticas tenant. Una acción idempotente registra conversión auditada con snapshots tenant-scoped; no crea pedido formal ni reserva stock. El contrato de pedido B2B (direcciones, pago y reserva con precio negociado) queda pendiente de Commerce/Tech Lead.
-- ✅ **Soporte/RMA conectado:** bandeja agente, mensajes y transiciones mediante RPC, timeline, revisión idempotente y límite de unidades; sin efectos de reembolso/stock integrados.
-- 🚧 **RBAC/RLS:** matrix runtime PostgreSQL ahora incluye anon, clientes A/B, buyer/admin B2B, catalog manager, support, sales, fulfillment y superadmin. El acceso a transición de soporte se ejerce por RPC; DML directo permanece revocado. Falta validar con JWT GoTrue/PostgREST y completar cobertura endpoint/columna.
-- 🚧 **Storefront y cuenta:** catálogo, PDP, búsqueda, favoritos/comparador, carrito y guardados funcionan parcialmente con demo/browser storage. PC Builder carga seis variantes ficticias publicadas en EUR, valida atributos declarados, guarda/restaura configuraciones por `variantId` y añade configuraciones completas compatibles al carrito con esos mismos IDs. Checkout conectado vuelve a validar precio y stock; Auth/PostgREST browser E2E sigue abierto.
-- 🚧 **Backoffice:** Operations Center y analytics consultan pedidos/eventos/métricas operativas y tienen tests de módulo. Inventario sigue solo lectura; procurement/recepciones no están implementados.
-- 🚧 **Reseñas:** PDP enlaza opiniones; el catálogo conectado muestra únicamente el total exacto de reseñas publicadas y la demo no presenta testimonios/contadores inventados. Opiniones conserva estados vacío, carga y error, acceso por sesión y formulario solo para línea entregada elegible; la demo es de solo lectura. Unit y E2E de demo pasan; falta recorrerlo con Auth/PostgREST conectados en navegador.
-- 🚧 **Calidad visual:** E2E de catálogo/demo y UX responsive/teclado; CSS Modules restaurados para todas las superficies. No cubren Auth conectado ni checkout real. Performance, SEO, contenido y polish global permanecen abiertos.
+- ✅ **Checkout conectado:** sesión GoTrue, `variantId`, precio/stock desde servidor, pedido con snapshots y reserva transaccional, pago demo autorizado solo en servidor, rechazo/retry/concurrencia. El lookup idempotente valida clave y fingerprint antes de crear o mutar un carrito. E2E local conectado cubre aprobado, rechazado, refresh/retry y dos compras concurrentes.
+- ✅ **Auth/RLS boundary local:** 78 probes HTTP GoTrue/PostgREST pasan, incluidos anon, perfiles/pedidos/tickets, aislamiento de cliente y organización, roles persistidos, RPCs privilegiadas, prioridad Supabase sobre `DEMO_MODE`, fallo conectado sin fallback y scan de secretos cliente. La matriz CRUD completa de cada tabla/columna/rol sigue abierta.
+- ✅ **Inventario operativo básico:** almacén puede recibir stock y ajustar cantidades por RPC, con actor, motivo/proveedor/albarán, ledger append-only, idempotencia de payload y protección de reservas. Los movimientos no suplantan el ledger de checkout/fulfillment.
+- ✅ **PC Builder comprable:** seis componentes ficticios vendibles con atributos tipados; compatibility selection y carrito preservan los `variantId` exactos. Checkout vuelve a validar producto, variante, precio y stock.
+- ✅ **Reviews en PDP:** enlace a opiniones y conteo exacto solo cuando los datos conectados están disponibles; el workflow verificado/moderado mantiene estados de carga, vacío y error.
+- ✅ **CRM/B2B — conversión auditada:** una oferta aceptada puede registrarse una sola vez con snapshots tenant-scoped e historial. 🚧 No emite todavía un `orders` formal ni reserva stock.
+- 🚧 **Operations Center:** cola y métricas consultan datos operativos; picking/packing, expedición y escaneo siguen incompletos.
+- 🚧 **Support/RMA:** tickets, mensajes, estados y revisión/límite de unidades funcionan; falta ejecutar los efectos aprobados de devolución sobre reembolso/stock.
+- 🚧 **Analytics:** consultas operativas conectadas, pendiente demostrar consistencia de cada KPI contra una fuente de negocio y cerrar rangos/filtros.
+- 🚧 **Demo Mode:** aislamiento de datos y límites de seguridad verificados localmente; falta una demo completa por roles con reset determinista.
+- 🚧 **Contenido, SEO, responsive y performance:** bases y polish parcial; no hay auditoría integral de rendimiento, blog/CMS ni revisión visual completa de todas las rutas.
 
-## Hallazgos de integración de la tercera ola
+## Integración de la quinta ola
 
-- Todos los worktrees presentaron commit y estado limpio; se integraron cinco commits lógicos y se reconciliaron sus docs en el coordinador.
-- Se repararon fixtures SQL que quedaron incompatibles con las nuevas restricciones de pedido/presupuesto y el uso de RPC de membresías.
-- La auditoría reproducía exposición global a ventas de organizaciones/membresías; la migración CRM ya la restringe. La cola de presupuestos B2B sin asignar es global por requisito de asignación comercial, queda explícitamente documentada; ventas no obtiene lectura de pedidos ni pagos.
-- La auditoría detectó que notas CRM `organization` de una propuesta sin asignar podían verse en la cola de ventas. Se restringieron; además se eliminó `sales_manager` de la policy de pagos.
-- No se confirmó hallazgo Critical. Hallazgo de acceso a notas CRM de otra organización corregido en la migración nueva; scope restante de la cola comercial está aceptado/documentado y cubierto por prueba.
-
-## Hallazgos de integración de la cuarta ola
-
-- Se integraron ocho worktree commits verificables de dominios/tests/docs; los commits de coordinador cerraron los límites de variantId, CSS, acciones UX y contrato de RPC de soporte.
-- Los E2E revelaron CSS Modules vacíos en toda la app porque `*.css` usaba el loader global de Tailwind. Se migró Tailwind a PostCSS y se verificó con E2E responsive.
-- El checkout permitía submit con carrito vacío y el footer ofrecía un “Volver arriba” sin interacción; ambos quedaron corregidos y con E2E sin expected-failure.
-- La role matrix primero falló porque probó DML directo revocado en `support_tickets`. El test ahora valida el RPC autorizado y la transición resultante; grants directos permanecen cerrados.
-- No hay diff/commit verificable de los workstreams checkout E2E con Auth ni inventario/procurement. No se promueven a completados; siguen P0/P1.
+- Se rescataron cuatro commits limpios: B2B conversion (`473bff1`), PC Builder (`6011f77`), PDP reviews (`bb20ce8`) y checkout E2E (`2f8d264`). Las revisiones se integraron como commits separados; las ediciones de documentos worker basadas en el snapshot antiguo se reconciliaron aquí.
+- Se rescataron sin commit los cambios de inventario del worktree `c27b` y el runner Auth/PostgREST y su handoff desde `29a6`.
+- La prueba conectada detectó que el retry podía crear otro carrito con líneas antes de que el RPC encontrase el pedido. Se añadió `find_checkout_order`, que compara el fingerprint registrado antes de reservar/crear carrito; misma clave/payload reusa el pedido y payload diferente devuelve conflicto.
+- Se separó el E2E conectado del gate demo general: `pnpm test:e2e` no requiere credenciales locales; `tests/e2e/checkout-connected/run.ps1` ejecuta el recorrido GoTrue/PostgREST aislado.
+- Los dos scripts SQL runtime tenían conteos literales de seed antiguos. Se sustituyeron por conteos basales capturados en la transacción y se volvieron a ejecutar sin ampliar policies.
+- El primer reset local de esta integración dejó Docker en reinicio incompleto; un segundo reset con el stack sano aplicó migraciones y seed completos. Las pruebas posteriores usaron esa base recién reiniciada.
 
 ## Backlog priorizado
 
 ### P0
 
-- [ ] Hacer E2E conectado de API/route → GoTrue/PostgREST → pedido/pago; cubrir doble envío, timeout/retry, refresh y concurrencia de stock. El checkout E2E anterior no dejó cambios verificables integrables.
-- [ ] Validar CRUD y acciones sensibles con tokens GoTrue/PostgREST; ampliar Auth boundary y separación demo/prod runtime.
-- [ ] Acordar e integrar con Commerce/Tech Lead el contrato de pedido formal B2B desde la conversión auditada: dirección, pago y revalidación/reserva de stock con el precio aceptado.
+- [ ] Ningún bloqueo P0 confirmado por los gates locales de esta ola. Mantener no-go de producción hasta configurar un proyecto remoto, secretos/redirects y ejecutar pruebas de despliegue.
 
 ### P1
 
-- [x] Sembrar CPU/placa/RAM/caja/fuente/almacenamiento ficticios y conectar el carrito por `variantId`; permanece pendiente el recorrido browser con Auth/PostgREST conectado.
-- [ ] Completar inventario/procurement con recepciones, movimientos y ledger idempotente; no se halló diff verificable de esta tarea en la cuarta ola.
-- [ ] Confirmar conversión de propuesta B2B aceptada a pedido o evento formal de conversión.
-- [ ] Integrar Operations Center con picking, envío y estados completos; la cola y acciones conectadas son un slice, no todo el fulfillment.
-- [ ] Verificar y enlazar reseñas elegibles desde PDP; completar moderación con recorrido visual integrado.
+- [ ] Completar pedido B2B formal desde oferta aceptada: dirección/facturación, condiciones de pago, precio negociado como snapshot e integración de stock/reservas sin eludir checkout.
+- [ ] Extender inventario a proveedores maestros y órdenes de compra; la ola actual cubre recepciones directas y ajustes, no procurement completo.
+- [ ] Cerrar fulfillment con picking/packing/expedición y timeline conectado a la cola operacional.
+- [ ] Definir y ejecutar efectos de RMA aprobado sobre devolución, reembolso simulado y stock de forma idempotente.
+- [ ] Validar origen de cada KPI y sus filtros con casos de negocio reproducibles; completar escenarios operativos restantes de analytics.
+- [ ] Matriz Auth/RLS más amplia para manager/marketing y CRUD de tablas/columnas/acciones, con tokens HTTP y pruebas de IDOR por dominio.
 
 ### P2
 
-- [ ] E2E conectado para checkout aprobado/rechazado, detalle de pedido, CRM/B2B y Support/RMA.
-- [ ] Pruebas de concurrencia con solicitudes paralelas sobre la misma clave/carrito/stock.
-- [ ] Revisión manual de teclado, focus, dialogs, responsive y contraste en storefront/backoffice.
-- [ ] Medir performance real de rutas/imágenes/bundle y corregir fallos de estado vacío/error.
-- [ ] Auditar botones/enlaces, persistencia, paginación, reviews, moderación, blog/SEO.
+- [ ] E2E conectado de pedido en cuenta, cotización/portal B2B, reseña elegible, ticket/mensajes y permisos de backoffice.
+- [ ] Demo Mode por perfiles con fixture/reset estable y guion repetible de extremo a extremo.
+- [ ] Revisión manual de accesibilidad y responsive en cada módulo, incluidos diálogos, tablas y feedback de mutaciones.
+- [ ] Medición Lighthouse/CWV y bundle/imágenes; resolver la discrepancia de hidratación `caret-color: transparent` en navegador limpio si persiste.
+- [ ] Auditoría de navegación y acciones para módulos con páginas conectadas; añadir contenido/blog y metadatos donde existan rutas públicas.
 
 ### P3
 
-- [ ] CMS/blog completo, catálogo/proveedores/compras avanzadas, monedas/países adicionales y recomendaciones.
-- [ ] Guion de demo y material académico final con diagramas y límites del modo demo.
+- [ ] CMS/blog editorial, recomendaciones, mercados/monedas adicionales y refinamientos de compras no requeridos para la demo académica.
 
-## Gates de esta integración
+## Gates de la integración
 
 | Check | Resultado |
 |---|---|
 | `pnpm install --frozen-lockfile` | ✅ |
 | `pnpm exec tsc --noEmit` | ✅ |
-| `pnpm lint` | ✅ |
-| `pnpm test` | ✅ 148 Vitest + 18 Node |
-| `pnpm test:e2e` | ✅ 15 Playwright demo/UX; no Checkout Auth conectado |
-| `pnpm build` | ✅ Next.js producción, 32 páginas estáticas |
-| `supabase db reset --local --yes` | ✅ migraciones y seed, incluida RMA/reviews |
-| pgTAP `tests/database`, checkout y reviews | ✅ 179 aserciones |
-| PostgreSQL RLS, role matrix, auth boundary, soporte/RMA | ✅ rollback scripts; la matriz fue corregida para usar el RPC de soporte |
-| `supabase db lint --local --fail-on error` | ✅ sin errores de schema |
-| `git diff --check` | ✅ |
+| `pnpm lint` | ✅ sin diagnósticos |
+| `pnpm test` | ✅ 160 Vitest + 18 Node |
+| `pnpm test:e2e` | ✅ 17/17 demo y UX |
+| `pwsh -File tests/e2e/checkout-connected/run.ps1` | ✅ 4/4 con GoTrue, PostgREST y RPCs locales; incluye retry, payload distinto, refresh y concurrencia |
+| `pnpm build` | ✅ Next.js producción; 33 rutas enumeradas |
+| `supabase db reset --local --yes` | ✅ segundo intento; migraciones y seed, incluida conversión B2B, movimientos e idempotency lookup |
+| pgTAP database/checkout/reviews | ✅ 189 aserciones |
+| RLS/security/RBAC/Auth escalation/support/inventory SQL | ✅ todos los scripts runtime pasaron y revirtieron fixtures |
+| Auth/PostgREST boundary runner | ✅ 78 probes HTTP; 0 fallos; cleanup verificado |
+| `supabase db lint --local --fail-on error` | ✅ sin errores de esquema |
+| `git diff --check` | ✅ sin errores; Git puede mostrar LF/CRLF de Windows |
 
 ## Criterio de cierre
 
-Una feature queda ✅ solo con contrato integrado, autorización server/database, persistencia, estados de error/vacío, UX navegable y pruebas del recorrido principal. Gates locales no prueban producción ni sustituyen Auth/PostgREST E2E.
+Una feature se marca ✅ solo con contrato integrado, autorización server/database, persistencia, estados de error/vacío, UX navegable y pruebas del recorrido principal. Los gates locales no prueban producción ni sustituyen configuración remota.
