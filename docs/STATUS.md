@@ -7,7 +7,7 @@ Estado observado el **2026-10-07** después de integrar la sexta ola. Git, códi
 - ✅ **Checkout B2C conectado:** sesión Auth real, variante/precio/stock validados en servidor, pedido y líneas con snapshots, pago demo simulado, reservas transaccionales, rechazo/retry y control de idempotencia. 4/4 pruebas browser conectadas pasan.
 - ✅ **Catálogo, búsqueda, carrito y PC Builder comprable:** el configurador añade variantes publicadas al carrito; el checkout vuelve a validar los datos de negocio. Hay pruebas de compatibilidad del slice, aunque ampliar la cobertura de compatibilidades sigue en calidad pendiente.
 - ✅ **Reviews:** elegibilidad por línea entregada, moderación protegida, lectura pública solo de publicadas y acceso desde PDP.
-- ✅ **CRM/B2B hasta pedido formal:** cotización aceptada puede emitir un pedido formal tenant-scoped, conserva precios/direcciones en snapshots y crea el vínculo comercial. El pedido queda `pending_payment` bajo anticipo; la captura/liquidación del anticipo es un límite pendiente y el pedido no se expide antes.
+- ✅ **CRM/B2B hasta pago demo:** cotización aceptada emite pedido formal tenant-scoped con snapshots/reserva; owner/admin simula anticipo aprobado o rechazado. Aprobado guarda pago, pedido, actividad CRM y eventos idempotentes; rechazado cancela y libera reserva. No se recogen datos de tarjeta ni se procesa dinero real.
 - ✅ **Inventario y procurement básico:** ledger idempotente de movimientos, proveedores, órdenes de compra, recepciones parciales/finales vinculadas al movimiento y control de sobre-recepción.
 - ✅ **Fulfillment:** pedido pagado pasa por picking, packing y expedición con timeline y consumo de reserva. La secuencia y autorización están cubiertas en PostgreSQL.
 - ✅ **Support/RMA local:** ticket, conversación, revisión/reembolso demo, inspección de almacén y disposición por línea funcionan. Reponer incrementa `on_hand` una sola vez mediante ledger; desechar no incrementa stock; al inspeccionar todas las líneas la devolución se cierra con evento de timeline. Falta recorrido browser autenticado del panel de almacén.
@@ -42,7 +42,7 @@ La prueba E2E transversal verifica permisos de emisión B2B sin crear pedidos re
 | `pwsh -File tests/e2e/checkout-connected/run.ps1` | ✅ 4/4; aprobado, rechazado, refresh/retry, payload distinto y concurrencia (verificación integrada previa) |
 | runner B2B aislado | ✅ 1/1; pedido formal y límites tenant/stock (verificación integrada previa) |
 | `pnpm build` | ✅ producción; 38 páginas/rutas compiladas |
-| `pnpm dlx supabase@latest db reset --local --yes` | ✅ 16 migraciones y seed aplicados |
+| `pnpm dlx supabase@latest db reset --local --yes` | ✅ 17 migraciones y seed aplicados |
 | pgTAP database/checkout/reviews | ✅ 230 aserciones |
 | SQL runtime RLS/RBAC/Auth/support/inventory/procurement | ✅ scripts aplicados con fixtures transaccionales |
 | `pnpm dlx supabase@latest db lint --local --fail-on error` | ✅ sin errores de esquema |
@@ -50,11 +50,13 @@ La prueba E2E transversal verifica permisos de emisión B2B sin crear pedidos re
 | `tests/integration/support-flow/inspection-route.test.ts` | ✅ 4/4 |
 | `git diff --check` | pendiente tras cerrar documentación/commit |
 
-## Séptima ola parcial — cierre de inspección RMA
+## Séptima ola — cierre de RMA y anticipo B2B
 
 El Tech Lead implementó el siguiente slice después de verificar el backlog real: página protegida de cola de devoluciones, inspección por línea y almacén activo, motivo obligatorio, repetición idempotente, rechazo de payload distinto, ledger de reposición, desecho sin cambio de stock y cierre/timeline al completar todas las líneas. Roles de soporte/cliente no pueden inspeccionar; el RPC y las tablas privadas aplican controles en PostgreSQL además del route guard.
 
-Verificación del slice: reset local aplicó 16 migraciones y seed; `tests/integration/support-flow/return-inspection.sql` pasó en PostgreSQL (autorización, cantidades, reposición/desecho, idempotencia incluso tras cerrar, conflicto de clave, timeline y stock). La route suite tiene 4 pruebas. Checks generales después de esta edición deben confirmarse abajo antes del commit.
+Verificación del slice: reset local aplicó 17 migraciones y seed; `tests/integration/support-flow/return-inspection.sql` pasó en PostgreSQL (autorización, cantidades, reposición/desecho, idempotencia incluso tras cerrar, conflicto de clave, timeline y stock). La route suite tiene 4 pruebas.
+
+El mismo cierre de backlog incorporó anticipo B2B demo en una migración posterior: tenant owner/admin puede registrar resultado aprobado/rechazado, con idempotencia y registro de CRM. El runner aislado verifica permiso denegado a buyer, replay, payload diferente y liberación de reserva ante rechazo.
 
 Warnings no bloqueantes conocidos: Node reporta `MODULE_TYPELESS_PACKAGE_JSON` en dos pruebas de módulos `.ts`; Playwright/Windows muestra conflicto `NO_COLOR`/`FORCE_COLOR`. El antiguo warning de estilo de caret en inputs no se ha atribuido al árbol React y requiere confirmar en navegador limpio.
 
@@ -67,7 +69,6 @@ Warnings no bloqueantes conocidos: Node reporta `MODULE_TYPELESS_PACKAGE_JSON` e
 
 ### P1
 
-- [ ] Cerrar el pago/anticipo de pedidos B2B o dejar explícito como límite de demo en UI, estados, documentación y guion; impedir expedición mientras no se registre el anticipo esperado.
 - [ ] Completar Demo Mode por rol con reset local reproducible y recorrido de storefront, CRM, soporte y almacén sin credenciales privilegiadas cliente.
 - [ ] Completar una matriz de permisos defensible por acción/ruta/RPC y ampliar pruebas HTTP de roles persistidos; no inventar grants para `manager`/`marketing`.
 - [ ] Reconciliar KPIs operativos con casos de negocio (definición, filtro, fuente, rango y zona horaria) y cubrir inconsistencia de cada métrica.

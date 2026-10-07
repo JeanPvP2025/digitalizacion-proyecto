@@ -1,6 +1,6 @@
 # Arquitectura inicial de NODRIA
 
-**Estado de este documento:** snapshot integrado de sexta ola al 2026-10-07. El repo contiene storefront, Auth SSR, checkout conectado, CRM/B2B con emisión de pedido formal, soporte/RMA con reembolso simulado, reseñas, fulfillment por etapas, analytics, inventario y procurement, y PC Builder conectado a variantes. La disposición de devolución pendiente de inspección y el anticipo B2B son flujos incompletos. Gates/límites constan en `STATUS.md`; no hay entorno Supabase remoto ni despliegue probado. Ver `SECURITY.md`, `RBAC_MATRIX.md` y `TESTING.md`.
+**Estado de este documento:** snapshot coordinado tras la sexta ola y cierres locales de RMA/B2B (2026-10-07). El repo contiene storefront, Auth SSR, checkout conectado, CRM/B2B con pedido y anticipo demo, soporte/RMA con reembolso e inspección, reseñas, fulfillment por etapas, analytics, inventario/procurement y PC Builder conectado a variantes. Demo Mode por rol, cobertura exhaustiva de permisos y reconciliación completa de analytics siguen parciales. Gates/límites constan en `STATUS.md`; no hay entorno Supabase remoto ni despliegue probado. Ver `SECURITY.md`, `RBAC_MATRIX.md` y `TESTING.md`.
 
 ## Objetivo y restricciones
 
@@ -23,7 +23,7 @@ flowchart LR
   Server --> DemoPay[Simulador de pago ficticio]
 ```
 
-El simulador no es una pasarela externa ni procesa dinero. Checkout autentica en servidor, acepta `variantId`, relee catálogo/stock, valida retries por fingerprint antes de mutar la cesta, persiste por RPC y resuelve el resultado con secreto server-only. La emisión B2B valida tenant/stock y deja pedido pendiente de anticipo. Fulfillment consume reservas al expedir; procurement conecta recepciones con el ledger. Aprobar una devolución crea reembolso simulado y unidades `pending_inspection`; el almacén puede inspeccionarlas y reponer/desechar con autorización, ledger idempotente y cierre auditado. CSS global usa PostCSS Tailwind; `.module.css` usa el procesamiento nativo de Next/Turbopack.
+El simulador no es una pasarela externa ni procesa dinero. Checkout autentica en servidor, acepta `variantId`, relee catálogo/stock, valida retries por fingerprint antes de mutar la cesta, persiste por RPC y resuelve el resultado con secreto server-only. La emisión B2B valida tenant/stock y deja el pedido pendiente; owner/admin registra después un anticipo demo idempotente con auditoría, y fulfillment consume reservas solo si está pagado. Procurement conecta recepciones con el ledger. Aprobar una devolución crea reembolso simulado y unidades `pending_inspection`; el almacén puede inspeccionarlas y reponer/desechar con autorización, ledger idempotente y cierre auditado. CSS global usa PostCSS Tailwind; `.module.css` usa el procesamiento nativo de Next/Turbopack.
 
 ## Límites de dominio
 
@@ -100,4 +100,4 @@ Vercel Preview debe usar datos no productivos y credenciales separadas. Los camb
 
 ## Verificación y calidad
 
-Los scripts declaran `pnpm lint`, `pnpm build`, `pnpm test` y `pnpm test:e2e`; typecheck usa `pnpm exec tsc --noEmit`. La integración actual tiene 179 Vitest, 18 Node, 17 E2E demo/UX, 4 E2E checkout GoTrue/PostgREST, 5 E2E dominios, un E2E B2B aislado, 230 aserciones pgTAP y 78 probes HTTP Auth, además de SQL runtime de RLS/role/auth/support/inventory/procurement/fulfillment/RMA inspection. Un build o una pantalla renderizada no demuestra integridad funcional ni seguridad.
+Los scripts declaran `pnpm lint`, `pnpm build`, `pnpm test` y `pnpm test:e2e`; typecheck usa `pnpm exec tsc --noEmit`. La integración actual tiene 179 Vitest, 18 Node, 17 E2E demo/UX, 4 E2E checkout GoTrue/PostgREST, 5 E2E dominios, un E2E B2B aislado que incluye anticipo aprobado/rechazado, replay y permisos, 230 aserciones pgTAP y 78 probes HTTP Auth, además de SQL runtime de RLS/role/auth/support/inventory/procurement/fulfillment/RMA inspection. Un build o una pantalla renderizada no demuestra integridad funcional ni seguridad.

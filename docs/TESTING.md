@@ -20,7 +20,7 @@ pwsh -File tests/e2e/checkout-connected/run.ps1
 
 El runner obtiene claves solo en memoria desde el status de Supabase local, rechaza URLs no loopback, ejecuta Chromium con `DEMO_MODE=false` y limpia fixtures. Cubre aprobado, rechazado, misma clave/payload, clave/payload distinto, refresh/retry y dos sesiones concurrentes con una unidad. Nunca ejecutar simultáneamente con otros tests que muten el mismo proyecto local.
 
-Resultado después del cierre RMA: 179 Vitest + 18 Node; 17/17 E2E demo/UX; 4/4 E2E checkout conectado; 5/5 dominios conectados con cleanup limpio; 1/1 B2B browser aislado; TypeScript, ESLint y build pasan en esta cadena. La nueva route suite RMA es 4/4. El E2E demo informa de un atributo `caret-color: transparent` inyectado en inputs, sin origen identificado en la aplicación; hay que confirmar en navegador limpio. Windows también informa `NO_COLOR`/`FORCE_COLOR`.
+Resultado de la integración actual: 179 Vitest + 18 Node; 17/17 E2E demo/UX; 4/4 E2E checkout conectado; 5/5 dominios conectados con cleanup limpio; 1/1 B2B browser aislado con anticipo aprobado/rechazado, replay y permisos; TypeScript, ESLint y build pasan. La route suite RMA es 4/4. El E2E demo informa de un atributo `caret-color: transparent` inyectado en inputs, sin origen identificado en la aplicación; hay que confirmar en navegador limpio. Windows también informa `NO_COLOR`/`FORCE_COLOR`.
 
 ## Supabase/PostgreSQL local
 
@@ -45,7 +45,7 @@ Para boundary HTTP con tokens reales, después del reset:
 pwsh -File tests/integration/auth-boundaries/run-local.ps1
 ```
 
-La integración pasó reset/seed (16 migraciones); **230** aserciones pgTAP; RLS/security/RBAC/auth-escalation/support/inventory/procurement/fulfillment runtime SQL y el nuevo runtime SQL RMA; **78** probes HTTP GoTrue/PostgREST; y DB lint sin errores. Los scripts de conteo RLS toman baseline dentro de la transacción para no depender de un número fijo de filas en seed. Todos los scripts runtime reversibles revierten fixtures; la prueba concurrente RMA se limpia explícitamente al finalizar.
+La integración pasó reset/seed (17 migraciones); **230** aserciones pgTAP; RLS/security/RBAC/auth-escalation/support/inventory/procurement/fulfillment runtime SQL y runtime SQL RMA; **78** probes HTTP GoTrue/PostgREST; y DB lint sin errores. Los scripts de conteo RLS toman baseline dentro de la transacción para no depender de un número fijo de filas en seed. Los scripts runtime reversibles revierten fixtures; la prueba concurrente RMA se limpia explícitamente al finalizar.
 
 ## Qué verifican
 
@@ -53,7 +53,7 @@ La integración pasó reset/seed (16 migraciones); **230** aserciones pgTAP; RLS
 - Inventario SQL: autorización warehouse/sales, recepción/ajuste idempotente, conflicto de fingerprint, no consumo de reserva y fulfillment que consume la reserva una sola vez.
 - Procurement SQL/rutas: solo fulfillment/superadmin ven proveedores y órdenes; las escrituras usan RPC. Prueba creación/edición/colocación/cancelación, recepción parcial/final vinculada a un movimiento, replay/conflicto por clave, sobre-recepción, archivo de proveedor y permisos de sales/buyer.
 - RLS/Auth HTTP: anon, customer A/B, business admin/buyer, catalog, support, sales, fulfillment y superadmin; perfil/pedido/ticket/tenant aislados; escalation y RPCs privilegiadas denegadas; demo no hace fallback conectado.
-- B2B formal: owner/admin emite desde cotización aceptada; snapshots, organización, idempotencia, pedido y reserva quedan enlazados; el anticipo sigue pendiente hasta su flujo.
+- B2B formal: owner/admin emite desde cotización aceptada; snapshots, organización, idempotencia, pedido y reserva quedan enlazados. Anticipo demo aprobado deja estado pagado y audita pedido/CRM; rechazo cancela/libera reserva; buyer es denegado y retries no duplican.
 - Reviews/RMA: elegibilidad por línea, moderación, intake atómico, límite de cantidades y transitions por RPC.
 - Inspección RMA: solo almacén/superadmin, cantidad exacta aprobada, reposición incrementa stock y crea un único ledger, desecho no cambia stock, retry igual incluso después del cierre, payload distinto/segunda disposición denegados y timeline completo.
 

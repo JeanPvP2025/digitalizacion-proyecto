@@ -265,7 +265,7 @@ El estado y ownership están en `WORKSTREAMS.md`. Setup de worktrees/conversacio
 
 No queda P0 local reproducible. Quedan como P1: inspección/disposición RMA, anticipo B2B, Demo Mode por rol/reset, cobertura exhaustiva de permisos y reconciliación de KPIs. P2: auditoría visual/accesible completa, medición CWV/bundle e inspección de navegación/contenido. No se configuró/probó Supabase remoto ni producción. El siguiente backlog y ownership candidato están en `WORKSTREAMS.md`.
 
-## Ola 7 — RMA warehouse inspection y disposición
+## Ola 7 — cierre funcional de RMA y anticipo B2B
 
 ### Trabajo realizado
 
@@ -285,7 +285,7 @@ No queda P0 local reproducible. Quedan como P1: inspección/disposición RMA, an
 
 ### Verificación ejecutada
 
-- Supabase local reset: 16 migraciones y seed aplicados.
+- Supabase local reset: 17 migraciones y seed aplicados.
 - PostgreSQL runtime RMA: pasó con autorización por rol, cantidad, restock, desecho, replay antes/después de cierre, conflicto de fingerprint, segunda disposición, stock y timeline.
 - Route tests: 4/4.
 
@@ -293,4 +293,32 @@ No queda P0 local reproducible. Quedan como P1: inspección/disposición RMA, an
 
 - El flujo aún no tiene browser E2E con sesión warehouse; el producto cuenta con prueba de route y PostgreSQL.
 - Pendientes del proyecto: anticipo B2B, recorrido/reset Demo Mode por rol, matriz de permisos más exhaustiva, reconciliación de analytics, auditoría responsive/performance/fake completeness y pruebas de despliegue remoto.
-- No hay commit coordinador para esta séptima ola todavía; debe ejecutarse el gate completo, revisar diff y crear commits lógicos.
+- Commits coordinadores: `df259a4` RMA warehouse inspection, `4ef4800` estado/docs, `9273a32` limpieza E2E y `bd33a72` anticipo B2B.
+
+## Ola 7 — anticipo B2B demo
+
+### Trabajo realizado
+
+- Se añadió `resolve_business_order_demo_payment`, que solo permite al owner/admin del tenant del pedido resolver un resultado `approved`/`failed` de anticipo B2B demo.
+- La operación requiere que el pedido tenga vínculo `business_quote_orders`, bloquea el pedido, usa key UUID más referencia determinista, y escribe pago, `order_events` y `crm_activities` en la misma transacción.
+- El aprobado cambia el pedido a pagado y puede pasar a fulfillment. El rechazo cancela y libera reservas. Replays idénticos devuelven estado anterior y un payload distinto con la misma clave se rechaza.
+- El portal muestra controles separados, explica que no procesa dinero ni pide tarjeta, y oculta el formulario tras terminar. Buyers/viewers no pueden resolver el pago.
+
+### Archivos/contratos afectados
+
+- `supabase/migrations/20261007210000_b2b_demo_advance_payment.sql`
+- `app/(store)/empresas/portal/actions.ts`, `page.tsx`
+- `tests/integration/b2b-connected/b2b-connected.spec.ts`
+- RPC nueva: `resolve_business_order_demo_payment(uuid, text, uuid)`; authenticated invoca wrapper, la DB valida membership owner/admin y el order B2B.
+
+### Verificación ejecutada
+
+- Reset Supabase local aplicó 17 migraciones y seed.
+- `tests/integration/b2b-connected/run.ps1`: runner aislado 1/1; cubre aprobado → pagado → expedición/consumo de reserva, rechazo → cancelación/liberación, buyer denegado, replay y payload distinto.
+- `tsc --noEmit`, ESLint y build de 38 rutas pasan después del cambio; `pnpm test` es 179 Vitest + 18 Node.
+
+### Riesgos / backlog siguiente
+
+- No es una pasarela ni procesa dinero real; es un paso de simulación para la demo académica.
+- La reserva B2B pendiente no tiene caducidad automática.
+- Demo Mode por rol/reset, matrix exhaustiva, reconciliación de métricas y auditoría de navegación/performance continúan pendientes. No se configuró Supabase remoto.

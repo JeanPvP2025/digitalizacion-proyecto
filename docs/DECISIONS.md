@@ -150,7 +150,7 @@ Las decisiones de alcance heredadas de la misión se marcan **Confirmada**. Las 
 - **Decisión:** Owner/admin puede registrar idempotentemente la conversión y emitir un pedido formal desde cotización `accepted`. Se conservan snapshots de organización, oferta, líneas y direcciones; la emisión revalida tenant y stock, reserva unidades y enlaza `business_quote_orders` con `orders`.
 - **Alternativas:** insertar directamente filas de comercio desde CRM sin resolver direcciones/condiciones de pago ni reutilizar la reserva autoritativa; o mantener una aceptación sin paso posterior auditable.
 - **Motivo:** Preserva auditoría/aislamiento y evita saltarse el contrato autoritativo de checkout o el ownership de inventario.
-- **Consecuencias:** La orden requiere anticipo y queda `pending_payment`; no se expide antes del pago habilitado. La liquidación del anticipo aún no está implementada y no se representa como pago real. Ver `20261007160000_crm_b2b_formal_order.sql` y `tests/database/crm_b2b.sql`.
+- **Consecuencias:** La orden requiere anticipo y queda `pending_payment`; no se expide antes del pago habilitado. La simulación B2B auditada está implementada y no se representa como pago real. Ver `20261007160000_crm_b2b_formal_order.sql`, `20261007210000_b2b_demo_advance_payment.sql` y el runner `tests/integration/b2b-connected/run.ps1`.
 
 ## D-016 — Movimientos manuales de inventario son ledger e idempotentes
 
@@ -188,7 +188,7 @@ Las decisiones de alcance heredadas de la misión se marcan **Confirmada**. Las 
 ## D-020 — Los pedidos B2B requieren anticipo antes de fulfillment
 
 - **Fecha:** 2026-10-07
-- **Estado:** Límite deliberado del demo hasta implementar liquidación.
+- **Estado:** Implementado como simulación académica tenant-scoped en `20261007210000_b2b_demo_advance_payment.sql`.
 - **Contexto:** Las condiciones de la oferta B2B establecen pago anticipado; la simulación de checkout B2C no representa el cobro de una factura comercial.
-- **Decisión:** La orden B2B se crea con estado `pending_payment` y reservas, pero la transición a pagado/expedible debe depender de un registro de pago explícito y auditable. No reutilizar silenciosamente el simulador B2C ni permitir fulfillment sin liquidación.
-- **Consecuencias:** El módulo sigue parcial hasta que exista una acción segura de registrar anticipo simulado o un proveedor de pago real separado.
+- **Decisión:** La orden B2B se crea con estado `pending_payment` y reservas. Owner/admin puede elegir aprobado o rechazado en un paso identificado como demo; no se piden datos de tarjeta. La RPC valida membresía del tenant, guarda fingerprint idempotente y registra el resultado en pedido, pago y actividad de CRM. El rechazo cancela el pedido y libera la reserva. Fulfillment sigue exigiendo pago `paid`.
+- **Consecuencias:** El escenario académico de anticipo funciona de punta a punta; no equivale a un proveedor de pago real ni procesa dinero.

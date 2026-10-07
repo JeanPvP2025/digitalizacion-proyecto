@@ -63,7 +63,7 @@ erDiagram
 - `receive_inventory` y `adjust_inventory` rechazan un reintento con clave ya asociada a otro payload. Un mismo payload devuelve el movimiento anterior sin duplicar unidades ni ledger.
 - `payment_transactions` pertenece al pedido. `private.demo_payment_attempts` asocia un event ID único a pedido y resultado. El RPC de pago acepta únicamente resultado simulado en el servidor y escribe transición, auditoría/timeline y estado de forma atómica.
 - `quotes` y `quote_items` guardan snapshots de organización/contacto, producto, precio solicitado/ofertado, moneda e impuestos. `sales_owner_id` define la propiedad comercial; el equipo comercial puede reclamar solicitudes sin asignar mediante RPC.
-- `business_quote_conversions` registra la conversión auditable; `business_quote_orders` enlaza una cotización aceptada con un pedido formal, preservando snapshots comerciales/direcciones e idempotencia. La emisión revalida pertenencia y stock y crea reservas. El pedido requiere anticipo y permanece `pending_payment`; no se expide sin el pago confirmado por el flujo permitido.
+- `business_quote_conversions` registra la conversión auditable; `business_quote_orders` enlaza una cotización aceptada con un pedido formal, preservando snapshots comerciales/direcciones e idempotencia. La emisión revalida pertenencia y stock y crea reservas. El pedido nace `pending_payment`; owner/admin del tenant puede registrar anticipo demo por RPC. Solo pagado pasa a fulfillment; rechazado cancela y libera reserva.
 - `crm_activities` vincula actividad a lead, solicitud, presupuesto u organización. Las notas `organization` solo son visibles a miembros de la organización antes de que el presupuesto sea reclamado; la cola comercial sin asignar expone actividad `internal`.
 - `create_support_ticket` guarda ticket y primer mensaje juntos. `request_return` valida cliente, pedido entregado, ventana y suma acumulada por línea; la clave idempotente impide duplicar una devolución.
 - Mensajes/transiciones de agente y review de RMA pasan por RPC idempotente; `support_ticket_events` y `return_request_events` registran timeline sin habilitar DML directo al navegador.
@@ -84,10 +84,11 @@ erDiagram
 - `20261007133000_inventory_receipts_idempotent_movements.sql` — recepciones/ajustes autorizados con ledger, proveedor/albarán e idempotencia.
 - `20261007134000_crm_business_quote_conversion_audit.sql` — registro de conversión B2B aceptada a snapshots auditables tenant-scoped.
 - `20261007140000_checkout_retry_lookup.sql` — lookup autenticado por fingerprint que permite reintentar checkout sin mutar/crear otro carrito.
-- `20261007145943_procurement_purchase_orders.sql` — proveedores, órdenes de compra, snapshots de líneas, intentos y líneas de recepción, eventos y RPCs de escritura autorizadas; cambios en espera de integración coordinadora.
+- `20261007145943_procurement_purchase_orders.sql` — proveedores, órdenes de compra, snapshots de líneas, intentos y líneas de recepción, eventos y RPCs de escritura autorizadas.
 - `20261007150000_order_fulfillment_stages.sql` — picking, packing y expedición con transición autorizada, eventos y consumo de reservas.
 - `20261007160000_crm_b2b_formal_order.sql` — emisión idempotente de pedidos desde cotización B2B aceptada, snapshots y límites por membresía.
 - `20261007180727_rma_approval_refund_inspection.sql` — reembolso demo calculado desde snapshots de pago/precio y estado de inspección pendiente.
 - `20261007200000_return_inspection_disposition.sql` — inspección de almacén idempotente; reposición/desecho por línea, ledger y cierre auditado al completar las líneas.
+- `20261007210000_b2b_demo_advance_payment.sql` — anticipo B2B demo tenant-scoped; owner/admin, pago/evento/actividad auditados, rechazo que cancela y libera reserva.
 
 El esquema ya incluye inspección/disposición de RMA. Siguen fuera de este slice la liquidación del anticipo B2B, configuración remota y auditoría exhaustiva de permisos.
