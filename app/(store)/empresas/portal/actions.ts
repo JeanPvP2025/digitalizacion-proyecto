@@ -32,6 +32,12 @@ const businessOrderSchema = z.object({
   billingCity: z.string().trim().min(2).max(80),
   confirmTerms: z.literal("accepted"),
 }).strict();
+const businessPaymentSchema = z.object({
+  orderId: z.string().uuid(),
+  organizationId: z.string().uuid(),
+  outcome: z.enum(["approved", "failed"]),
+  idempotencyKey: z.string().uuid(),
+}).strict();
 
 function noticeFor(error: { code?: string; message?: string } | null): string {
   if (!error) return "error";
@@ -228,6 +234,34 @@ export async function createBusinessOrderFromAcceptedQuote(formData: FormData) {
     finish("error", input.data.organizationId);
   }
   finish("business-order-created", input.data.organizationId);
+}
+
+export async function resolveBusinessOrderAdvance(formData: FormData) {
+  const input = businessPaymentSchema.safeParse({
+    orderId: formData.get("orderId"),
+    organizationId: formData.get("organizationId"),
+    outcome: formData.get("outcome"),
+    idempotencyKey: formData.get("idempotencyKey"),
+  });
+  if (!input.success) finish("invalid", organizationIdFrom(formData));
+
+  const supabase = await getSignedInClient();
+  const { data, error } = await supabase.rpc("resolve_business_order_demo_payment", {
+    p_order_id: input.data.orderId,
+    p_outcome: input.data.outcome,
+    p_idempotency_key: input.data.idempotencyKey,
+  });
+  if (error) {
+    const notice = error.code === "42501" ? "forbidden"
+      : error.code === "P0002" ? "not-found"
+        : error.code === "23505" ? "payment-conflict"
+          : ["22023", "23514"].includes(error.code ?? "") ? "invalid" : "error";
+    finish(notice, input.data.organizationId);
+  }
+  const result = z.array(z.object({ payment_status: z.enum(["paid", "failed"]), replayed: z.boolean() }).strict()).length(1).safeParse(data);
+  if (!result.success) finish("error", input.data.organizationId);
+  const row = result.data[0];
+  finish(row.replayed ? "business-payment-replayed" : row.payment_status === "paid" ? "business-payment-approved" : "business-payment-declined", input.data.organizationId);
 }
 
 function organizationIdFrom(formData: FormData) {

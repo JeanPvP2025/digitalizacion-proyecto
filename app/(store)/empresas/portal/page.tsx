@@ -3,7 +3,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { ArrowRight, Building2, CalendarClock, Check, CircleAlert, ContactRound, FileText, Plus, ShieldCheck, UserRound } from "lucide-react";
 import { BusinessQuoteRequest, type BusinessProductOption } from "@/components/business/business-quote-request";
-import { addOrganizationMember, createBusinessOrderFromAcceptedQuote, removeOrganizationMember, respondToBusinessQuote, setOrganizationMemberRole, createOrganization } from "./actions";
+import { addOrganizationMember, createBusinessOrderFromAcceptedQuote, removeOrganizationMember, respondToBusinessQuote, setOrganizationMemberRole, createOrganization, resolveBusinessOrderAdvance } from "./actions";
 import styles from "./business-portal.module.css";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
@@ -91,6 +91,10 @@ function noticeMessage(notice: string) {
     case "quote-accepted": return "Propuesta aceptada y guardada en el historial de la organización.";
     case "quote-converted": return "Conversión registrada con los snapshots de la propuesta y la empresa.";
     case "business-order-created": return "Pedido formal creado con el precio aceptado y la reserva de stock. El anticipo demo sigue pendiente; el transporte se cotizará por separado.";
+    case "business-payment-approved": return "Anticipo demo aprobado y guardado en el historial del pedido y la organización.";
+    case "business-payment-declined": return "Anticipo demo rechazado. El pedido se canceló y las unidades reservadas volvieron a estar disponibles.";
+    case "business-payment-replayed": return "El anticipo ya estaba registrado; el reintento no duplicó el pago ni el historial.";
+    case "payment-conflict": return "La clave de pago ya se usó para otra operación. No se cambió el pedido.";
     case "stock-unavailable": return "El stock disponible ya no cubre la propuesta aceptada. No se creó el pedido ni se reservó ninguna unidad.";
     case "order-conflict": return "Ya existe un pedido para esta propuesta con otra dirección. Revisa el pedido existente antes de reintentar.";
     case "quote-rejected": return "Decisión registrada en el historial de la organización.";
@@ -207,7 +211,7 @@ export default async function BusinessPortalPage({ searchParams }: { searchParam
       </section>
 
       {organizations.length > 1 && <nav aria-label="Organizaciones disponibles" className={styles.organizationTabs}>{organizations.map((row) => <Link aria-current={row.id === organization.id ? "page" : undefined} className={row.id === organization.id ? styles.organizationTabActive : styles.organizationTab} href={`/empresas/portal?organization=${row.id}`} key={row.id}>{row.display_name}<small>{roleLabels[memberships.find((item) => item.organization_id === row.id)?.role ?? "viewer"]}</small></Link>)}</nav>}
-      {notice && <p className={styles.notice} role={["quote-requested", "member-added", "quote-accepted", "quote-converted", "business-order-created", "quote-rejected", "member-updated", "member-removed", "organization-created"].includes(firstValue(params.notice)) ? "status" : "alert"}><CircleAlert aria-hidden="true" size={15} />{notice}</p>}
+      {notice && <p className={styles.notice} role={["quote-requested", "member-added", "quote-accepted", "quote-converted", "business-order-created", "business-payment-approved", "business-payment-declined", "business-payment-replayed", "quote-rejected", "member-updated", "member-removed", "organization-created"].includes(firstValue(params.notice)) ? "status" : "alert"}><CircleAlert aria-hidden="true" size={15} />{notice}</p>}
 
       <div className={styles.workspace}>
         <div className={styles.primaryColumn}>
@@ -235,6 +239,16 @@ export default async function BusinessPortalPage({ searchParams }: { searchParam
                   <p className={styles.quoteMeta}>Pedido formal <strong>{order.order_number}</strong> · {dateLabel(order.created_at)} · {orderStatusLabels[order.status]}</p>
                   {conversion && <p className={styles.quoteMeta}>Conversión auditada: {conversion.conversion_number} · {dateLabel(conversion.created_at)}</p>}
                   <p className={styles.orderTerms}>{businessOrder.payment_terms_snapshot} {businessOrder.delivery_terms_snapshot}</p>
+                  {canManage && order.status === "pending_payment" && <div className={styles.businessOrderFormWrap}>
+                    <p className={styles.orderTerms}>Simulación académica de anticipo: no se recogen datos de tarjeta ni se procesa dinero. Si la prueba se rechaza, el pedido se cancela y la reserva se libera.</p>
+                    <form action={resolveBusinessOrderAdvance} className={styles.decisionRow}>
+                      <input name="orderId" type="hidden" value={order.id} />
+                      <input name="organizationId" type="hidden" value={organization.id} />
+                      <input name="idempotencyKey" type="hidden" value={crypto.randomUUID()} />
+                      <button className={styles.acceptButton} name="outcome" type="submit" value="approved"><Check size={14} /> Simular anticipo aprobado</button>
+                      <button className={styles.rejectButton} name="outcome" type="submit" value="failed">Simular rechazo</button>
+                    </form>
+                  </div>}
                 </div> : canManage ? <div className={styles.businessOrderFormWrap}>
                   {conversion && <p className={styles.quoteMeta}>Conversión auditada: <strong>{conversion.conversion_number}</strong> · {dateLabel(conversion.created_at)}.</p>}
                   <p className={styles.orderTerms}>Al emitir, el pedido conservará el precio aceptado y reservará el stock disponible. Pago anticipado antes de expedición; el transporte se cotizará por separado.</p>

@@ -95,12 +95,29 @@ test("portal conectado: oferta, pedido, retry, permisos de organización y rollb
   expect(order).toMatchObject({ status: "pending_payment", grand_total: 216.5, organization_id: organizationId, shipping_address: shipping, billing_address: billing });
   expect(checked(await owner.client.from("order_items").select("unit_price,quantity").eq("order_id", order.id))).toMatchObject([{ unit_price: 108.25, quantity: 2 }]);
   expect(checked(await owner.client.from("payment_transactions").select("status,amount").eq("order_id", order.id))).toMatchObject([{ status: "pending", amount: 216.5 }]);
+  const advanceKey = await page.locator('input[name="idempotencyKey"]').inputValue();
+  expect((await buyer.client.rpc("resolve_business_order_demo_payment", {
+    p_order_id: order.id, p_outcome: "approved", p_idempotency_key: advanceKey,
+  })).error?.code).toBe("42501");
+  await page.getByRole("button", { name: "Simular anticipo aprobado" }).click();
+  await expect(page.getByRole("status").filter({ hasText: "Anticipo demo aprobado" })).toBeVisible();
+  expect(checked(await owner.client.rpc("resolve_business_order_demo_payment", {
+    p_order_id: order.id, p_outcome: "approved", p_idempotency_key: advanceKey,
+  }))).toMatchObject([{ payment_status: "paid", replayed: true }]);
+  expect((await owner.client.rpc("resolve_business_order_demo_payment", {
+    p_order_id: order.id, p_outcome: "failed", p_idempotency_key: advanceKey,
+  })).error?.code).toBe("23505");
+  expect(checked(await owner.client.from("orders").select("status").eq("id", order.id))).toMatchObject([{ status: "paid" }]);
+  expect(checked(await owner.client.from("payment_transactions").select("status,amount").eq("order_id", order.id))).toMatchObject([{ status: "paid", amount: 216.5 }]);
+  expect(checked(await owner.client.from("order_events").select("event_key").eq("order_id", order.id).eq("event_key", "business_advance_paid"))).toHaveLength(1);
+  expect(checked(await owner.client.from("crm_activities").select("event_key").eq("organization_id", organizationId).eq("event_key", "business_advance_paid"))).toHaveLength(1);
   const payload = { p_quote_id: quoteId, p_shipping_address: shipping, p_billing_address: billing };
   expect(checked(await owner.client.rpc("create_business_order_from_accepted_quote", payload))).toMatchObject([{ order_id: order.id }]);
   expect((await owner.client.rpc("create_business_order_from_accepted_quote", { ...payload, p_shipping_address: { ...shipping, city: "Toledo" } })).error?.code).toBe("23505");
   await page.reload();
   await expect(page.getByText(order.order_number, { exact: true })).toBeVisible();
   await expect(page.getByRole("button", { name: "Emitir pedido formal" })).toHaveCount(0);
+  await expect(page.getByRole("button", { name: "Simular anticipo aprobado" })).toHaveCount(0);
   expect(sql(`select reserved from public.inventory where variant_id='${variant.id}';`)).toBe("2");
   for (const member of [buyer, viewer]) {
     expect(checked(await member.client.from("orders").select("id").eq("id", order.id))).toEqual([{ id: order.id }]);
@@ -119,12 +136,33 @@ test("portal conectado: oferta, pedido, retry, permisos de organización y rollb
     await expect(viewerPage.getByText(order.order_number, { exact: true })).toBeVisible();
     await expect(viewerPage.getByRole("button", { name: "Emitir pedido formal" })).toHaveCount(0);
   } finally { await viewerContext.close(); }
+  expect(sql(`select public.fulfill_order('${order.id}');`)).toBe("shipped");
+  expect(checked(await owner.client.from("orders").select("status").eq("id", order.id))).toMatchObject([{ status: "shipped" }]);
+  expect(sql(`select on_hand from public.inventory where variant_id='${variant.id}';`)).toBe("1");
+  expect(sql(`select reserved from public.inventory where variant_id='${variant.id}';`)).toBe("0");
+  const declinedQuote = await offer(1);
+  checked(await owner.client.rpc("respond_to_business_quote", { p_quote_id: declinedQuote, p_decision: "accepted" }));
+  await page.goto(`/empresas/portal?organization=${organizationId}`);
+  await fillOrder(page, declinedQuote);
+  const declineKey = await page.locator('input[name="idempotencyKey"]').inputValue();
+  await page.getByRole("button", { name: "Simular rechazo" }).click();
+  await expect(page.getByRole("status").filter({ hasText: "Anticipo demo rechazado" })).toBeVisible();
+  const declinedLink = checked(await owner.client.from("business_quote_orders").select("order_id").eq("quote_id", declinedQuote).single());
+  expect(checked(await owner.client.rpc("resolve_business_order_demo_payment", {
+    p_order_id: declinedLink.order_id, p_outcome: "failed", p_idempotency_key: declineKey,
+  }))).toMatchObject([{ payment_status: "failed", replayed: true }]);
+  expect((await owner.client.rpc("resolve_business_order_demo_payment", {
+    p_order_id: declinedLink.order_id, p_outcome: "approved", p_idempotency_key: declineKey,
+  })).error?.code).toBe("23505");
+  expect(checked(await owner.client.from("orders").select("status").eq("id", declinedLink.order_id))).toMatchObject([{ status: "cancelled" }]);
+  expect(checked(await owner.client.from("payment_transactions").select("status").eq("order_id", declinedLink.order_id))).toMatchObject([{ status: "failed" }]);
+  expect(sql(`select count(*) from public.inventory_reservations ir join public.order_items oi on oi.id=ir.order_item_id where oi.order_id='${declinedLink.order_id}' and ir.released_at is not null;`)).toBe("1");
   const shortageQuote = await offer(2);
   checked(await owner.client.rpc("respond_to_business_quote", { p_quote_id: shortageQuote, p_decision: "accepted" }));
   await page.goto(`/empresas/portal?organization=${organizationId}`);
   await fillOrder(page, shortageQuote);
   await expect(page.getByRole("alert").filter({ hasText: "El stock disponible ya no cubre" })).toBeVisible();
   expect(checked(await owner.client.from("business_quote_orders").select("order_id").eq("quote_id", shortageQuote))).toEqual([]);
-  expect(sql(`select reserved from public.inventory where variant_id='${variant.id}';`)).toBe("2");
+  expect(sql(`select reserved from public.inventory where variant_id='${variant.id}';`)).toBe("0");
   expect(sql(`select count(*) from public.inventory_reservations ir join public.order_items oi on oi.id=ir.order_item_id where oi.order_id='${order.id}';`)).toBe("1");
 });
