@@ -1,6 +1,6 @@
 # Seguridad y RLS
 
-Estado del **2026-10-07** tras la sexta ola y los cierres locales de RMA, B2B y Demo Mode. Migraciones, código y pruebas locales fueron revisados. No se probaron credenciales remotas ni JWT de un proyecto de producción.
+Estado del **2026-10-08** tras integrar el contrato de escritura editorial de catálogo y su UI por rol. Migraciones, código y pruebas locales fueron revisados. No se probaron credenciales remotas ni JWT de un proyecto de producción.
 
 ## Controles integrados
 
@@ -12,6 +12,7 @@ Estado del **2026-10-07** tras la sexta ola y los cierres locales de RMA, B2B y 
 - RMA limita suma devuelta por línea y requiere pedido entregado/ventana aplicable. Ticket+primer mensaje y transiciones de agente usan RPCs transaccionales.
 - CRM limita organizaciones/membresías por tenant. Ventas puede reclamar propuestas B2B sin asignar; la cola expone actividad `internal`, no notas privadas de organización. Ventas no accede a pedidos ni pagos.
 - Reseñas requieren una línea de pedido entregada del mismo usuario/producto; comienzan en moderación y solo las publicadas se exponen públicamente.
+- `authenticated` no tiene DML directo amplio sobre catálogo. `update_catalog_product_editorial` valida rol persistido en PostgreSQL y solo acepta `name`, `summary`, `description`, `image_url`, `image_alt` y `badge`; el route handler repite autorización y usa la sesión del usuario. El E2E de `catalog_manager` persiste y restaura un campo, y confirma denegación en las otras áreas internas.
 - Emisión de pedido formal B2B exige owner/admin de la organización, cotización aceptada y stock validado; la función crea un pedido idempotente pendiente de anticipo y no confía en importes/direcciones como autorización.
 - El anticipo B2B demo solo lo resuelve owner/admin del tenant mediante `resolve_business_order_demo_payment`; valida que el pedido tenga vínculo B2B, fija outcome/evento idempotente y escribe pago, timeline y CRM en la transacción. Un rechazo cancela y libera reservas; fulfillment requiere pago `paid`.
 - Procurement y fulfillment usan RPCs con autorización en PostgreSQL; receipts enlazan movimientos del ledger, y expedición consume la reserva una sola vez.
@@ -26,6 +27,7 @@ Estado del **2026-10-07** tras la sexta ola y los cierres locales de RMA, B2B y 
 - `tests/integration/support-flow/return-inspection.sql`: actor support/cliente denegado; almacén prueba cantidades, restock/desecho, conflicto/replay de idempotencia, unicidad de disposición, cierre y timeline.
 - `tests/integration/b2b-connected/run.ps1`: el runner aislado valida pago B2B aprobado/rechazado, replay, clave con resultado distinto, buyer denegado, auditoría y liberación de reserva.
 - `tests/e2e/checkout-connected/run.ps1`: 4/4 con sesión browser GoTrue/PostgREST; aprueba, rechaza, reintenta tras refresh, rechaza payload con clave repetida y evita doble reserva bajo concurrencia.
+- `tests/e2e/ux-audit/run-roles.ps1`: 1/1; acceso real de catalog manager a su superficie, guardado de campo editorial en DB y denegación de operaciones, inventario, CRM, compras y devoluciones.
 - La verificación de cleanup del runner Auth encontró cero usuarios/orgs/pedidos fixture. El scan no encontró identificadores `NEXT_PUBLIC_*` privilegiados ni el valor local de service-role en fuentes/assets cliente.
 
 ## Límites

@@ -1,6 +1,6 @@
 # Estado del proyecto
 
-Estado observado el **2026-10-08** después de integrar la sexta ola, cerrar localmente RMA/anticipo B2B/bootstrap de demo y completar el cierre UX local. Git, código, migraciones y pruebas locales prevalecen sobre estados anteriores de los agentes. No existe un proyecto Supabase remoto configurado ni se ha probado un despliegue de producción.
+Estado observado el **2026-10-08** tras integrar la sexta ola y cerrar los slices locales de RMA/anticipo B2B/bootstrap demo, catálogo editorial y UX autenticada. Git, código, migraciones y pruebas locales prevalecen sobre estados anteriores de los agentes. No existe un proyecto Supabase remoto configurado ni se ha probado un despliegue de producción.
 
 ## Estado funcional
 
@@ -14,7 +14,7 @@ Estado observado el **2026-10-08** después de integrar la sexta ola, cerrar loc
 - ✅ **Analytics del alcance publicado:** pedidos, ventas brutas aprobadas, aprobación de pago, inventario disponible y conversión de solicitudes CRM tienen fórmula, fuente, periodo de 30 días Europe/Madrid, límites y fixtures puros/SQL/E2E; el dashboard falla cerrado ante discrepancias. Ventas netas, margen, visitas y conversión específica de cotizaciones B2B no se presentan como KPIs todavía.
 - ✅ **Demo Mode local:** modo de archivos limitado a desarrollo y sin Auth; Supabase configurado siempre gana y falla cerrado. La guía cubre reset local y organización ficticia; `scripts/demo/assign-staff-roles.ps1` asigna en loopback grants de los cinco roles internos a cuentas Auth locales ya creadas, sin crear ni almacenar contraseñas. Se ejecutó y verificó que escribe exactamente un grant por rol; `db reset --local` los elimina.
 - ✅ **Seguridad/Auth local:** aislamiento, escalada, permisos sensibles y boundaries HTTP verificados con matriz documentada, suites SQL y 78 probes autenticados; esto no certifica un entorno remoto ni prueba CRUD exhaustivo por cada campo/endpoint. `manager` y `marketing` no son roles persistidos y no reciben permisos implícitos.
-- 🚧 **Experiencia y presentación:** storefront medido en Lighthouse local: portada móvil 92 (LCP simulado 3,2 s; traza observada local 0,56 s) y catálogo desktop 100. Se añadieron sweeps UX de 27 rutas y roles internos en tres viewports. Customer/B2B Auth, contraste/lector de pantalla en backoffice, la UI de catálogo y el shell de soporte siguen pendientes; no hay CrUX/INP ni URL pública.
+- 🚧 **Experiencia y presentación:** storefront medido en Lighthouse local: portada móvil 92 (LCP simulado 3,2 s; traza observada local 0,56 s) y catálogo desktop 100. Sweeps UX cubren rutas anónimas, customer/B2B y roles internos en tres viewports; catálogo y shell de soporte están integrados. No se ha medido contraste/lector de pantalla exhaustivo en backoffice; no hay CrUX/INP ni URL pública.
 
 ## Sexta ola integrada
 
@@ -36,15 +36,16 @@ La prueba E2E transversal verifica permisos de emisión B2B sin crear pedidos re
 | `pnpm install --frozen-lockfile` | ✅ validado en el cierre coordinador |
 | `pnpm exec tsc --noEmit` | ✅ |
 | `pnpm lint` | ✅ |
-| `pnpm test` | ✅ 179 Vitest + 18 Node |
-| `pnpm test:e2e` | ✅ 17/17 |
+| `pnpm test` | ✅ 189 Vitest + 18 Node |
+| `pnpm test:e2e` | ✅ 17/17 tras excluir suites Auth que requieren Supabase aislado; runners dedicados verificados aparte |
 | `pwsh -File tests/e2e/connected-domains/run.ps1` | ✅ 6/6 y teardown limpio; incluye cliente → aprobación soporte → inspección warehouse |
 | `pwsh -File tests/e2e/checkout-connected/run.ps1` | ✅ 4/4; aprobado, rechazado, refresh/retry, payload distinto y concurrencia |
-| `pwsh -File tests/e2e/connected-domains/run.ps1` | ✅ 5/5; teardown limpio |
+| `pwsh -File tests/e2e/ux-audit/run-roles.ps1` | ✅ 1/1; edición real de catálogo y denegaciones por rol |
+| `pwsh -File tests/e2e/ux-audit/run-customer-b2b.ps1` | ✅ 1/1; customer + owner/admin/buyer/viewer, tenant y responsive |
 | `pwsh -File tests/integration/b2b-connected/run.ps1` | ✅ 1/1; anticipo aprobado/rechazado, tenant, replay y fulfillment |
-| `pnpm build` | ✅ producción; 38 páginas/rutas compiladas |
-| `pnpm dlx supabase@latest db reset --local --yes` | ✅ 17 migraciones y seed aplicados |
-| pgTAP database/checkout/reviews | ✅ 230 aserciones |
+| `pnpm build` | ✅ producción; 40 páginas/rutas compiladas después de esta integración |
+| `pnpm dlx supabase@latest db reset --local --yes` | ✅ 18 migraciones y seed aplicados |
+| pgTAP database/checkout/reviews/catalog | ✅ 246 aserciones |
 | SQL runtime RLS/RBAC/Auth/support/inventory/procurement | ✅ scripts aplicados con fixtures transaccionales |
 | `pnpm dlx supabase@latest db lint --local --fail-on error` | ✅ sin errores de esquema |
 | `tests/integration/support-flow/return-inspection.sql` | ✅ PostgreSQL local; autorización, cantidades, idempotencia, ledger, desecho, cierre/timeline |
@@ -71,8 +72,8 @@ Warnings no bloqueantes conocidos: Node reporta `MODULE_TYPELESS_PACKAGE_JSON` e
 
 ### P1
 
-- ✅ Matriz de permisos por rol y dominio documentada en `RBAC_MATRIX.md`, con 78 probes HTTP autenticados y pruebas SQL por dominios críticos. La matriz declara expresamente sus límites: no equivale a CRUD exhaustivo por columna ni prueba cada Server Action.
-- 🚧 **Escritura segura de catálogo:** auditoría encontró DML directo demasiado amplio para `authenticated`, incluida la capacidad de cambiar campos protegidos. Migración/RPC y pruebas regresivas asignadas; no hay UI conectada hasta cerrar esa frontera. Ver `docs/CATALOG_MANAGER.md`.
+- ✅ Matriz de permisos por rol y dominio documentada en `RBAC_MATRIX.md`, con 78 probes HTTP autenticados, pruebas SQL por dominios críticos y E2E de roles; no equivale a CRUD exhaustivo por columna ni prueba cada Server Action.
+- ✅ **Escritura segura de catálogo:** migration revoca DML amplio y `update_catalog_product_editorial` aplica allowlist/rol en PostgreSQL. API de sesión, route/unit tests y E2E que edita y restaura un producto seed. Ver `docs/CATALOG_MANAGER_UI.md`.
 
 ### P2
 
@@ -80,14 +81,15 @@ Warnings no bloqueantes conocidos: Node reporta `MODULE_TYPELESS_PACKAGE_JSON` e
 - [ ] Repetir CWV con la URL de producción y datos de campo cuando exista despliegue; el perfil Lighthouse móvil simulado aún da LCP 3,2 s, mientras que su traza observada en localhost da 0,56 s.
 - [x] Ampliar el barrido E2E anónimo a 27 rutas, teclado, nombres de controles, enlaces/destinos y overflow en desktop, móvil (390 px) y tablet (768 px); detalle en `docs/UX_FINAL_AUDIT.md`.
 - [x] Walkthrough responsive autenticado de roles internos en Supabase local efímero: support, sales, fulfillment, catalog (denegación documentada) y superadmin; evidencia en `docs/UX_FINAL_AUDIT.md`.
-- [ ] Completar recorrido con sesión de cliente y membresías buyer/viewer/owner/admin; las vistas de portal B2B y cuenta siguen sin prueba visual autenticada por rol.
-- [ ] Unificar la navegación interna de `/soporte/agente` y verificar accesibilidad del backoffice más allá de nombres accesibles y overflow; slice asignado en ola 8.
+- [x] Recorrido Auth visual con sesión de cliente y membresías buyer/viewer/owner/admin, tenant ajeno y viewports 390/768/1280; sin mutaciones CRUD. Ver `docs/UX_CUSTOMER_B2B_AUDIT.md`.
+- [x] Shell y navegación interna de `/soporte/agente` con saltos de teclado/estados y viewports 390/768/1280. Ver `docs/UX_STAFF_SHELL.md`.
+- [ ] Medir contraste y revisar lector de pantalla de todas las superficies backoffice con tooling dedicado; E2E de nombre/foco/overflow no sustituye esa auditoría.
 - [ ] Configurar dominio público para verificar `robots.txt`, sitemap, schema y metadatos en despliegue. En local se bloquea indexación deliberadamente para evitar publicar una demo sin dominio real.
 - [ ] Identificar el origen del estilo `caret-color: transparent` que Playwright registra en la hidratación y resolver warnings de entorno sin alterar semántica del producto.
 
 ### P3
 
-- [ ] CMS/blog completo, monedas/mercados adicionales, facturas/impuestos/pagos de proveedor y sistemas externos, solo si se amplía el alcance académico.
+- [ ] CMS/blog, monedas/mercados adicionales, facturas/impuestos/pagos de proveedor y sistemas externos quedan fuera de los slices funcionales actuales; ampliar solo si la misión académica los exige.
 
 ## Criterio de cierre
 
@@ -117,11 +119,9 @@ Una feature solo es ✅ cuando su contrato, autorización servidor/DB, persisten
 - La suite Auth vuelve a mostrar `The destination stream errored while writing data` durante navegación; el test terminó aprobado y el runner detuvo su proyecto Supabase aislado. El origen del mensaje sigue sin atribuirse.
 - `git diff --check` pasa tras quitar espacios finales del nuevo informe. Warnings restantes de Node `MODULE_TYPELESS_PACKAGE_JSON` y Playwright `NO_COLOR`/`FORCE_COLOR` no afectan los resultados.
 
-## Siguiente trabajo local — ola 8
+## Integración de UX y catálogo — 2026-10-08
 
-- `client-new-thread:53b855ee-f47b-4eb5-9726-b93abd5fe11e`: shell de staff/accesibilidad de soporte.
-- `client-new-thread:9e92853d-ba58-4e3c-9f55-5473a6d86c16`: gestión real de catálogo para `catalog_manager`, condicionada a contratos y RLS existentes.
-- `client-new-thread:677c01bd-00ed-4f2a-a1e7-390fb544934c`: QA Auth visual de cliente y memberships B2B, sin cambios de producto.
-- `client-new-thread:606c169a-b83f-401e-a620-05b2a2e71a9f`: cierre P1 de permisos de escritura del catálogo mediante migración y RPC con pruebas de regresión.
-- `client-new-thread:d217fef5-c305-475d-bb3f-38710e4ba2f7`: UI de catálogo limitada al contrato RPC seguro, bloqueada funcionalmente hasta que la migración se integre.
-- Las tres conversaciones de UX iniciaron desde `26d3536`; las dos de catálogo parten de `a8ebfc0`. Integración y cierre quedan pendientes hasta recibir sus resultados.
+- Cerrada la ola 8: shell de soporte, recorrido visual customer/B2B autenticado, frontera SQL de catálogo y UI de catálogo están integrados. La migración real usa `update_catalog_product_editorial`, no el nombre provisional `update_catalog_product` que aparecía en el tablero anterior.
+- El gate demo inicialmente descubrió por error el spec customer/B2B, que requiere un proyecto Supabase aislado. `playwright.config.ts` ahora excluye ese spec, igual que excluye checkout conectado, dominios y roles; el runner dedicado sigue siendo el único responsable de la suite. La ejecución completa del gate se repite tras el cambio.
+- Riesgos locales restantes: auditoría dedicada de contraste/lector de pantalla del backoffice, warning de hidratación del caret sin origen atribuido y UX/product polish no bloqueante. No son autorización para etiquetar esas áreas como auditadas.
+- Bloqueos fuera del repo: proyecto/credenciales Supabase remotos, dominio, despliegue y CWV/CrUX de campo. Ningún cambio local puede sustituir esa configuración externa.

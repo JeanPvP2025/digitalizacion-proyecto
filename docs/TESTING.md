@@ -20,7 +20,7 @@ pwsh -File tests/e2e/checkout-connected/run.ps1
 
 El runner obtiene claves solo en memoria desde el status de Supabase local, rechaza URLs no loopback, ejecuta Chromium con `DEMO_MODE=false` y limpia fixtures. Cubre aprobado, rechazado, misma clave/payload, clave/payload distinto, refresh/retry y dos sesiones concurrentes con una unidad. Nunca ejecutar simultáneamente con otros tests que muten el mismo proyecto local.
 
-Resultado del cierre actual: 179 Vitest + 18 Node; 17/17 E2E demo/UX; 4/4 E2E checkout conectado; 6/6 dominios conectados con cleanup limpio, incluyendo el recorrido RMA cliente → soporte → warehouse; 1/1 B2B browser aislado con anticipo aprobado/rechazado, replay y permisos; TypeScript, ESLint y build pasan. La route suite RMA es 4/4. El E2E demo informa de un atributo `caret-color: transparent` inyectado en inputs, sin origen identificado en la aplicación; hay que confirmar en navegador limpio. Windows también informa `NO_COLOR`/`FORCE_COLOR`.
+Resultado de integración 2026-10-08: 189 Vitest + 18 Node; E2E demo/UX 17/17 tras excluir las suites que requieren Supabase aislado; checkout conectado 4/4; dominios conectados 6/6; B2B browser aislado 1/1; customer/B2B visual Auth 1/1; roles/backoffice/catálogo 1/1; TypeScript y ESLint pasan. Build y reset/pgTAP/DB runtime están registrados en `STATUS.md`. La route suite RMA es 4/4. Playwright reporta `caret-color: transparent` durante hidratación sin atribución al código, y Windows informa conflicto `NO_COLOR`/`FORCE_COLOR`.
 
 ## Rendimiento y accesibilidad medidos
 

@@ -386,3 +386,32 @@ No existe proyecto Supabase remoto, dominio, credenciales de despliegue ni datos
 - Verificación repetida en la rama integrada: instalación congelada; TypeScript; lint; 179 Vitest + 18 Node; E2E 17/17; build 38 rutas; runner Auth UX 1/1; diff check sin whitespace errors.
 - El runner Auth detuvo `nodria-ux-audit`; no quedaron cambios de Git ajenos a la integración. Next reportó un error de stream durante navegación sin fallo del caso; se conserva como riesgo ambiental pendiente de reproducir en build/servidor estable.
 - No se afirma cierre total: siguen pendientes sesión visual customer/B2B, contraste y lector de pantalla del backoffice, navegación interna de soporte, destino operativo de `catalog_manager`, CWV/SEO de producción y la configuración externa necesaria para desplegar.
+
+## Handoff de integración catálogo y UX autenticada — 2026-10-08
+
+### Trabajo realizado
+
+- Se inspeccionaron diffs de la ola UX/catálogo y se rescataron cambios no comprometidos útiles: shell de soporte, editor seguro de catálogo, suites customer/B2B Auth y roles. Se corrigió la divergencia del nombre RPC (`update_catalog_product_editorial`) contra la migración real.
+- Se extendió el E2E staff para editar y restaurar un campo editorial persistido y verificar denegaciones de `catalog_manager` en el resto del backoffice. Se corrigió la confirmación de review que desaparecía al refrescar el Server Component después de persistir.
+- El primer gate E2E encontró que la suite customer/B2B aislada se ejecutaba también en configuración demo. `playwright.config.ts` ahora la excluye; el runner dedicado conserva el requisito explícito de Supabase loopback y credenciales locales.
+
+### Archivos y contratos
+
+- Soporte: `app/(store)/soporte/agente/**`, workspace/historial y CSS de workflow.
+- Catálogo: `app/backoffice/catalog/**`, `app/api/backoffice/catalog/**`, `lib/catalog/admin/**`, `app/backoffice/layout.tsx`, policies y tests.
+- Tests: `tests/integration/catalog-admin/**`, `tests/e2e/ux-audit/{roles.spec.ts,customer-b2b.*}`, config/runner dedicado y E2E connected domains.
+- Contrato DB no cambia en esta integración: la UI llama `update_catalog_product_editorial(text,jsonb)` con JWT de sesión; no usa DML directo ni service role. D-022 pasa a implementada.
+
+### Verificaciones observadas
+
+- TypeScript ✅; ESLint ✅; Vitest 189 + Node 18 ✅; checkout conectado 4/4 ✅; dominios 6/6 ✅; B2B aislado 1/1 ✅; customer/B2B aislado 1/1 ✅; pgTAP 246 aserciones ✅; reset local (18 migraciones + seed) ✅; SQL runtime de RLS/RBAC/Auth/support/inventory/procurement/fulfillment ✅; 78 probes Auth ✅; DB lint `public,private` ✅.
+- Roles/backoffice/catálogo E2E 1/1 ✅; customer/B2B Auth 1/1 ✅; E2E demo/UX 17/17 ✅ luego de corregir la exclusión de tests que dependen de Supabase aislado.
+- `pnpm build` ✅; 40 rutas, incluida `/backoffice/catalog` y la ruta dinámica `/soporte/agente`. TypeScript ✅; ESLint ✅; `git diff --check` ✅ con avisos informativos de conversión LF→CRLF de Windows.
+- Commits coordinadores: `2dc6d1e` (catálogo seguro), `c71c295` (shell soporte y confirmación de review), `29b31d1` (E2E Auth aislado customer/B2B). Los docs de integración se cierran en un commit documental separado.
+
+### Riesgos y límites
+
+- El shell de soporte usa un adaptador CSS local con `:has()` para ocultar el chrome público; una futura reorganización de route groups puede sustituirlo. Contraste/lector de pantalla de backoffice no se declara medido.
+- Playwright aún registra estilo `caret-color: transparent` durante hidratación y warnings de entorno `NO_COLOR`/`FORCE_COLOR`; no se ha atribuido a una regla del producto.
+- No hay Supabase remoto, dominio, secretos de despliegue ni CrUX. Go-live, SEO público y CWV de campo siguen bloqueados por esa configuración externa.
+- Próximos pasos locales: concluir E2E/build, revisar diff/secret scan, crear commits lógicos y dejar árbol limpio. La ola 8 queda terminada tras commit.

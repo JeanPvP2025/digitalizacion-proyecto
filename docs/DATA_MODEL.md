@@ -70,6 +70,7 @@ erDiagram
 - `product_reviews` exige una línea entregada del autor para ese producto, una review por línea/autor-producto y moderación única desde `pending`. La pública solo expone el estado `published`.
 - El payload de checkout usa `variantId`; el pedido mantiene snapshots de variante, SKU y precio. Product IDs legacy solo se aceptan cuando el servidor resuelve exactamente una variante vendible.
 - Las membresías usan `owner`, `admin`, `buyer` y `viewer`. La administración se realiza mediante RPCs con validación; la escritura directa a tablas de transición está revocada.
+- El catálogo permite lectura conforme a RLS y no expone DML amplio a `authenticated`; la edición de seis campos editoriales pasa por `update_catalog_product_editorial(text,jsonb)`, que valida grants y allowlist en PostgreSQL.
 
 ## Migraciones que definen el estado
 
@@ -90,5 +91,6 @@ erDiagram
 - `20261007180727_rma_approval_refund_inspection.sql` — reembolso demo calculado desde snapshots de pago/precio y estado de inspección pendiente.
 - `20261007200000_return_inspection_disposition.sql` — inspección de almacén idempotente; reposición/desecho por línea, ledger y cierre auditado al completar las líneas.
 - `20261007210000_b2b_demo_advance_payment.sql` — anticipo B2B demo tenant-scoped; owner/admin, pago/evento/actividad auditados, rechazo que cancela y libera reserva.
+- `20261007221456_catalog_editorial_write_contract.sql` — revoca DML amplio a catálogo y expone actualización editorial acotada para roles persistidos `catalog_manager`/`super_admin`.
 
 El esquema ya incluye inspección/disposición de RMA y resolución de anticipo B2B demo con límites por tenant. La configuración remota y las pruebas CRUD exhaustivas de permisos siguen fuera de la verificación local realizada.
