@@ -9,6 +9,8 @@ export function checkBuildCompatibility(selection: PcBuildSelection, components:
 
 export { optionalPcBuilderCategories, pcBuilderCategories, requiredPcBuilderCategories } from "./compatibility";
 export { mapPcBuilderRows } from "./catalog-mapping";
+export { toCheckoutCartItems, toPcBuilderCartLines } from "./cart";
+export type { CheckoutCartItem, PcBuilderCartLine } from "./cart";
 export { pcBuilderComponents } from "./fixtures";
 export type {
   CaseFixture,

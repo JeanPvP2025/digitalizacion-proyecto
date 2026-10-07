@@ -14,6 +14,7 @@ import {
 import { pcBuilderCategories } from "@/lib/pc-builder/compatibility";
 
 const variantId = "00000000-0000-4000-8000-000000000001";
+const variantIdAt = (index: number) => `00000000-0000-4000-8000-${String(index).padStart(12, "0")}`;
 
 function selection() {
   return Object.fromEntries(pcBuilderCategories.map((category) => [category, category === "cpu" ? variantId : null]));
@@ -39,6 +40,14 @@ describe("PC Builder saved configurations", () => {
     expect(writeSavedPcBuilds(storage, builds)).toBe(true);
     expect(storage.getItem(PC_BUILDER_SAVED_KEY)).toContain(variantId);
     expect(readSavedPcBuilds(storage)).toEqual({ builds, invalidEntries: 0 });
+  });
+
+  it("restores a complete configuration with every selected sellable variant unchanged", () => {
+    const storage = memoryStorage();
+    const complete = Object.fromEntries(pcBuilderCategories.map((category, index) => [category, variantIdAt(index + 1)]));
+    const saved = { ...build("complete"), selection: complete } as SavedPcBuild;
+    expect(writeSavedPcBuilds(storage, [saved])).toBe(true);
+    expect(readSavedPcBuilds(storage).builds[0].selection).toEqual(complete);
   });
 
   it("rejects malformed selections and invalid JSON safely", () => {

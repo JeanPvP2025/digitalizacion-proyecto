@@ -5,9 +5,9 @@ import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import type { Product } from "@/lib/catalog";
-import type { PcBuilderComponent } from "@/lib/pc-builder";
+import { toPcBuilderCartLines, type PcBuilderCatalogComponent } from "@/lib/pc-builder";
 
-export type CartLine = { id: string; slug?: string; name: string; price: number; image?: string; sku?: string; quantity: number; type: "product" | "builder" };
+export type CartLine = { id: string; variantId?: string; slug?: string; name: string; price: number; image?: string; sku?: string; quantity: number; type: "product" | "builder" };
 export const CART_KEY = "nodria.cart.v1";
 export const FAVORITES_KEY = "nodria.favorites.v1";
 export const COMPARE_KEY = "nodria.compare.v1";
@@ -19,7 +19,7 @@ export function readCart(): CartLine[] {
     if (!Array.isArray(value)) return [];
     return value.filter((item): item is Record<string, unknown> => typeof item === "object" && item !== null).flatMap((item) => {
       if (typeof item.id !== "string" || typeof item.name !== "string" || typeof item.price !== "number" || typeof item.quantity !== "number") return [];
-      return [{ id: item.id, name: item.name, price: item.price, quantity: Math.max(1, Math.min(99, Math.floor(item.quantity))), type: item.type === "builder" ? "builder" as const : "product" as const, ...(typeof item.slug === "string" ? { slug: item.slug } : {}), ...(typeof item.sku === "string" ? { sku: item.sku } : {}), ...(typeof item.image === "string" ? { image: item.image } : {}) }];
+      return [{ id: item.id, name: item.name, price: item.price, quantity: Math.max(1, Math.min(99, Math.floor(item.quantity))), type: item.type === "builder" ? "builder" as const : "product" as const, ...(typeof item.variantId === "string" ? { variantId: item.variantId } : {}), ...(typeof item.slug === "string" ? { slug: item.slug } : {}), ...(typeof item.sku === "string" ? { sku: item.sku } : {}), ...(typeof item.image === "string" ? { image: item.image } : {}) }];
     });
   } catch { return []; }
 }
@@ -39,13 +39,12 @@ export function addToCart(product: Product, quantity = 1) {
   publishCart(lines);
 }
 
-export function addComponentsToCart(components: PcBuilderComponent[]) {
+export function addComponentsToCart(components: PcBuilderCatalogComponent[]) {
   const lines = readCart();
-  for (const component of components) {
-    const id = `builder:${component.id}`;
-    const existing = lines.find((line) => line.id === id);
+  for (const component of toPcBuilderCartLines(components)) {
+    const existing = lines.find((line) => line.variantId === component.variantId);
     if (existing) existing.quantity += 1;
-    else lines.push({ type: "builder", id, slug: undefined, name: component.name, price: component.priceEur, sku: component.id.toUpperCase(), quantity: 1 });
+    else lines.push(component);
   }
   publishCart(lines);
 }
@@ -159,7 +158,7 @@ export function CartPage() {
           <section className="cart-lines" aria-label="Artículos del carrito">
             {lines.map((line) => <article className="cart-line" key={line.id}>
               {line.image ? <Image src={line.image} alt="" width={88} height={88} unoptimized /> : <span className="cart-line-image-fallback" aria-hidden="true"><ShoppingBag size={21} /></span>}
-              <div className="cart-line-info"><span className="mono-label">{line.sku ?? "CONFIGURACIÓN NODRIA"}</span>{line.slug ? <Link href={`/producto/${line.slug}`}><h2>{line.name}</h2></Link> : <Link href="/configurador"><h2>{line.name}</h2></Link>}<span className="stock-status"><i /> {line.type === "builder" ? "Componente demo · disponibilidad orientativa" : "Disponible para envío"}</span></div>
+              <div className="cart-line-info"><span className="mono-label">{line.sku ?? "CONFIGURACIÓN NODRIA"}</span>{line.slug ? <Link href={`/producto/${line.slug}`}><h2>{line.name}</h2></Link> : <Link href="/configurador"><h2>{line.name}</h2></Link>}<span className="stock-status"><i /> {line.type === "builder" ? "Variante del catálogo · disponibilidad confirmada en checkout" : "Disponible para envío"}</span></div>
               <div className="quantity-control" aria-label={`Cantidad de ${line.name}`}><button aria-label="Reducir cantidad" type="button" onClick={() => changeQuantity(line.id, line.quantity - 1)}>−</button><span>{line.quantity}</span><button aria-label="Aumentar cantidad" type="button" onClick={() => changeQuantity(line.id, line.quantity + 1)}>+</button></div>
               <strong className="cart-line-price">{new Intl.NumberFormat("es-ES", { style: "currency", currency: "EUR", maximumFractionDigits: 2 }).format(line.price * line.quantity)}</strong>
               <button className="remove-line" type="button" onClick={() => changeQuantity(line.id, 0)}>Eliminar</button>

@@ -10,7 +10,7 @@ Estado observado el **2026-10-07** tras integrar la cuarta ola. Git, migraciones
 - 🚧 **CRM/B2B:** organizaciones/membresías, portal, solicitud con snapshots, cola de ventas, claim y oferta/aceptación, actividades y políticas tenant. Una acción idempotente registra conversión auditada con snapshots tenant-scoped; no crea pedido formal ni reserva stock. El contrato de pedido B2B (direcciones, pago y reserva con precio negociado) queda pendiente de Commerce/Tech Lead.
 - ✅ **Soporte/RMA conectado:** bandeja agente, mensajes y transiciones mediante RPC, timeline, revisión idempotente y límite de unidades; sin efectos de reembolso/stock integrados.
 - 🚧 **RBAC/RLS:** matrix runtime PostgreSQL ahora incluye anon, clientes A/B, buyer/admin B2B, catalog manager, support, sales, fulfillment y superadmin. El acceso a transición de soporte se ejerce por RPC; DML directo permanece revocado. Falta validar con JWT GoTrue/PostgREST y completar cobertura endpoint/columna.
-- 🚧 **Storefront y cuenta:** catálogo, PDP, búsqueda, favoritos/comparador, carrito y guardados funcionan parcialmente con demo/browser storage. PC Builder carga variantes publicadas con `attributes.pc_builder` completos, valida compatibilidad cubierta y guarda/recupera selecciones por `variantId`. El checkout ya acepta `variantId`, pero el seed no contiene componentes PC; muestra estado vacío y mantiene deshabilitada la compra hasta tener catálogo vendible.
+- 🚧 **Storefront y cuenta:** catálogo, PDP, búsqueda, favoritos/comparador, carrito y guardados funcionan parcialmente con demo/browser storage. PC Builder carga seis variantes ficticias publicadas en EUR, valida atributos declarados, guarda/restaura configuraciones por `variantId` y añade configuraciones completas compatibles al carrito con esos mismos IDs. Checkout conectado vuelve a validar precio y stock; Auth/PostgREST browser E2E sigue abierto.
 - 🚧 **Backoffice:** Operations Center y analytics consultan pedidos/eventos/métricas operativas y tienen tests de módulo. Inventario sigue solo lectura; procurement/recepciones no están implementados.
 - ✅ **Reseñas base:** elegibilidad por línea entregada, escritura pendiente de moderación, publicación/rechazo de moderador y RLS con pgTAP. La integración visual desde la PDP aún requiere revisión.
 - 🚧 **Calidad visual:** 15 E2E de catálogo/demo y UX responsive/teclado; CSS Modules restaurados para todas las superficies. No cubren Auth conectado ni checkout real. Performance, SEO, reviews en PDP, contenido y polish global permanecen abiertos.
@@ -41,7 +41,7 @@ Estado observado el **2026-10-07** tras integrar la cuarta ola. Git, migraciones
 
 ### P1
 
-- [ ] Publicar variantes reales CPU/placa/RAM/caja/fuente con `attributes.pc_builder`; el checkout ya acepta `variantId`, pero no hay componentes sembrados ni compra del configurador.
+- [x] Sembrar CPU/placa/RAM/caja/fuente/almacenamiento ficticios y conectar el carrito por `variantId`; permanece pendiente el recorrido browser con Auth/PostgREST conectado.
 - [ ] Completar inventario/procurement con recepciones, movimientos y ledger idempotente; no se halló diff verificable de esta tarea en la cuarta ola.
 - [ ] Confirmar conversión de propuesta B2B aceptada a pedido o evento formal de conversión.
 - [ ] Integrar Operations Center con picking, envío y estados completos; la cola y acciones conectadas son un slice, no todo el fulfillment.

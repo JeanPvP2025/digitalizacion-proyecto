@@ -6,6 +6,7 @@ import { ArrowRight, Check, CreditCard, LoaderCircle, ShieldCheck } from "lucide
 import { checkoutResponseSchema, type CheckoutResponse } from "@/lib/commerce/contracts";
 import type { CheckoutMode } from "@/lib/commerce/mode";
 import { clearCart, readCart, type CartLine } from "@/components/storefront/store-interactions";
+import { toCheckoutCartItems } from "@/lib/pc-builder/cart";
 
 const IDEMPOTENCY_STORAGE_KEY = "nodria.checkout.idempotency.v1";
 
@@ -32,12 +33,12 @@ function money(value: number) {
 }
 
 function cartFingerprint(lines: CartLine[]) {
-  return JSON.stringify(lines.map(({ id, quantity }) => ({ id, quantity })).sort((left, right) => left.id.localeCompare(right.id)));
+  return JSON.stringify(lines.map(({ id, variantId, quantity }) => ({ id, variantId, quantity })).sort((left, right) => left.id.localeCompare(right.id)));
 }
 
-async function requestFingerprint(items: Array<{ productId: string; quantity: number }>, customer: CheckoutCustomer) {
+async function requestFingerprint(items: ReturnType<typeof toCheckoutCartItems>, customer: CheckoutCustomer) {
   if (!globalThis.crypto?.subtle) return null;
-  const content = JSON.stringify({ items: [...items].sort((left, right) => left.productId.localeCompare(right.productId)), customer });
+  const content = JSON.stringify({ items: [...items].sort((left, right) => ("variantId" in left ? left.variantId : left.productId).localeCompare("variantId" in right ? right.variantId : right.productId)), customer });
   const digest = await globalThis.crypto.subtle.digest("SHA-256", new TextEncoder().encode(content));
   return [...new Uint8Array(digest)].map((byte) => byte.toString(16).padStart(2, "0")).join("");
 }
@@ -114,7 +115,7 @@ export function CheckoutForm({ mode }: { mode: CheckoutMode }) {
       city: String(form.get("city") ?? ""),
       province: String(form.get("province") ?? ""),
     };
-    const items = lines.map(({ id, quantity }) => ({ productId: id, quantity }));
+    const items = toCheckoutCartItems(lines);
     const submittedCart = cartFingerprint(lines);
 
     setSubmitting(true);

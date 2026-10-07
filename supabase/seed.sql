@@ -60,6 +60,48 @@ values
     'Unidad NVMe PCIe 4.0 de 2 TB, con hasta 7.100 MB/s de lectura secuencial.',
     'https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?auto=format&fit=crop&w=1200&q=85',
     'Unidad de almacenamiento SSD compacta sobre fondo neutro', null, 4.8, 98, false, true, now()
+  ),
+  (
+    'pr_nodria_cpu_a5', 'n-core-a5-7600', 'NOD-CPU-A5-7600', 'N-Core A5 7600', 'NODRIA',
+    'Procesador de seis núcleos para una estación equilibrada de trabajo y juego.',
+    'Procesador ficticio de demostración con socket AM5 y soporte DDR5.',
+    'https://images.unsplash.com/photo-1555617981-dac3880eac6e?auto=format&fit=crop&w=1200&q=85',
+    'Procesador de escritorio sobre una placa base', null, 0, 0, false, true, now()
+  ),
+  (
+    'pr_nodria_board_a5', 'n-board-a5-atx', 'NOD-MB-A5-ATX', 'N-Board A5 ATX', 'NODRIA',
+    'Placa base ATX con socket AM5 y cuatro ranuras DDR5.',
+    'Placa base ficticia de demostración compatible con procesadores AM5 y memoria DDR5.',
+    'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=85',
+    'Circuitos electrónicos en una placa', null, 0, 0, false, true, now()
+  ),
+  (
+    'pr_nodria_memory_d5', 'n-memory-d5-32', 'NOD-RAM-D5-32', 'N-Memory DDR5 32 GB', 'NODRIA',
+    'Kit ficticio de memoria DDR5 de 32 GB en dos módulos.',
+    'Memoria de demostración DDR5 de 6000 MT/s en kit de dos módulos.',
+    'https://images.unsplash.com/photo-1562976540-1502c2145186?auto=format&fit=crop&w=1200&q=85',
+    'Módulos de memoria para ordenador', null, 0, 0, false, true, now()
+  ),
+  (
+    'pr_nodria_case_atx', 'n-case-atx-air', 'NOD-CASE-ATX', 'N-Case Air ATX', 'NODRIA',
+    'Caja de torre ficticia con espacio para placas ATX y gráficas de hasta 340 mm.',
+    'Caja de demostración compatible con formatos ATX y microATX.',
+    'https://images.unsplash.com/photo-1587202372634-32705e3bf49c?auto=format&fit=crop&w=1200&q=85',
+    'Torre de ordenador de demostración', null, 0, 0, false, true, now()
+  ),
+  (
+    'pr_nodria_psu_650', 'n-power-650g', 'NOD-PSU-650G', 'N-Power 650 Gold', 'NODRIA',
+    'Fuente ficticia de 650 W con certificación de eficiencia Gold.',
+    'Fuente de alimentación de demostración, 650 W y 80+ Gold.',
+    'https://images.unsplash.com/photo-1591488320449-011701bb6704?auto=format&fit=crop&w=1200&q=85',
+    'Componentes internos de ordenador', null, 0, 0, false, true, now()
+  ),
+  (
+    'pr_nodria_nvme_1tb', 'n-arc-nvme-1tb', 'NOD-SSD-NVME-1T', 'N-Arc NVMe 1 TB', 'NODRIA',
+    'Unidad ficticia NVMe PCIe 4.0 de 1 TB.',
+    'Almacenamiento de demostración NVMe PCIe 4.0 con capacidad de 1 TB.',
+    'https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?auto=format&fit=crop&w=1200&q=85',
+    'Unidad de almacenamiento SSD compacta sobre fondo neutro', null, 0, 0, false, true, now()
   )
 on conflict (id) do update set
   slug = excluded.slug,
@@ -85,7 +127,13 @@ from (values
   ('pr_loom27', 'monitores'),
   ('pr_linkmesh', 'redes'),
   ('pr_slateair', 'telefonia'),
-  ('pr_arcssd', 'almacenamiento')
+  ('pr_arcssd', 'almacenamiento'),
+  ('pr_nodria_cpu_a5', 'componentes'),
+  ('pr_nodria_board_a5', 'componentes'),
+  ('pr_nodria_memory_d5', 'componentes'),
+  ('pr_nodria_case_atx', 'componentes'),
+  ('pr_nodria_psu_650', 'componentes'),
+  ('pr_nodria_nvme_1tb', 'almacenamiento')
 ) as mapping(product_id, category_slug)
 join public.categories on categories.slug = mapping.category_slug
 on conflict (product_id, category_id) do nothing;
@@ -99,7 +147,13 @@ values
   ('pr_loom27', 'NOD-LM27-4K', 'IPS Black · 144 Hz', '{"panel":"IPS Black","resolution":"3840 × 2160","refresh_rate":"144 Hz"}', 629.00, 699.00, 'EUR', 0.21, true),
   ('pr_linkmesh', 'NOD-LMX7-PRO', 'Wi-Fi 7', '{"standard":"Wi-Fi 7 · 802.11be","coverage":"230 m²"}', 289.00, null, 'EUR', 0.21, true),
   ('pr_slateair', 'NOD-SA11-256', '256 GB', '{"memory":"8 GB","storage":"256 GB","display":"11 pulgadas"}', 549.00, null, 'EUR', 0.21, true),
-  ('pr_arcssd', 'NOD-ARC-2T', '2 TB', '{"capacity":"2 TB","interface":"NVMe PCIe 4.0 ×4"}', 179.00, null, 'EUR', 0.21, true)
+  ('pr_arcssd', 'NOD-ARC-2T', '2 TB', '{"capacity":"2 TB","interface":"NVMe PCIe 4.0 ×4"}', 179.00, null, 'EUR', 0.21, true),
+  ('pr_nodria_cpu_a5', 'NOD-CPU-A5-7600', '6 núcleos', '{"pc_builder":{"category":"cpu","socket":"AM5","memory_generations":["DDR5"],"estimated_power_w":105,"integrated_graphics":true}}', 229.00, null, 'EUR', 0.21, true),
+  ('pr_nodria_board_a5', 'NOD-MB-A5-ATX', 'ATX · AM5 · DDR5', '{"pc_builder":{"category":"motherboard","socket":"AM5","form_factor":"ATX","memory_generation":"DDR5","max_memory_gb":192,"estimated_power_w":55}}', 169.00, null, 'EUR', 0.21, true),
+  ('pr_nodria_memory_d5', 'NOD-RAM-D5-32', '32 GB · 2 × 16 GB', '{"pc_builder":{"category":"memory","generation":"DDR5","capacity_gb":32,"kit_modules":2,"speed_mt_per_s":6000,"estimated_power_w":8}}', 99.00, null, 'EUR', 0.21, true),
+  ('pr_nodria_case_atx', 'NOD-CASE-ATX', 'ATX · Air', '{"pc_builder":{"category":"case","supported_form_factors":["ATX","microATX"],"max_gpu_length_mm":340,"estimated_power_w":20}}', 89.00, null, 'EUR', 0.21, true),
+  ('pr_nodria_psu_650', 'NOD-PSU-650G', '650 W · 80+ Gold', '{"pc_builder":{"category":"psu","capacity_w":650,"efficiency_label":"80+ Gold"}}', 109.00, null, 'EUR', 0.21, true),
+  ('pr_nodria_nvme_1tb', 'NOD-SSD-NVME-1T', '1 TB', '{"pc_builder":{"category":"storage","capacity_tb":1,"interface":"NVMe PCIe 4.0","estimated_power_w":6}}', 79.00, null, 'EUR', 0.21, true)
 on conflict (sku) do update set
   product_id = excluded.product_id,
   title = excluded.title,
@@ -156,7 +210,13 @@ from (values
   ('NOD-LM27-4K', 21),
   ('NOD-LMX7-PRO', 18),
   ('NOD-SA11-256', 32),
-  ('NOD-ARC-2T', 47)
+  ('NOD-ARC-2T', 47),
+  ('NOD-CPU-A5-7600', 12),
+  ('NOD-MB-A5-ATX', 12),
+  ('NOD-RAM-D5-32', 20),
+  ('NOD-CASE-ATX', 10),
+  ('NOD-PSU-650G', 12),
+  ('NOD-SSD-NVME-1T', 24)
 ) as stock(sku, on_hand)
 join public.product_variants v on v.sku = stock.sku
 join public.warehouses w on w.code = 'MAD-CENTRAL'

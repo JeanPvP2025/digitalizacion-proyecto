@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { checkBuildCompatibility, pcBuilderCategories } from "@/lib/pc-builder/compatibility";
+import { toCheckoutCartItems, toPcBuilderCartLines } from "@/lib/pc-builder/cart";
 import { mapPcBuilderRows, type PcBuilderCatalogRows } from "@/lib/pc-builder/catalog-mapping";
 import type { PcBuildSelection, PcBuilderCategory } from "@/lib/pc-builder/types";
 
@@ -84,6 +85,9 @@ describe("PC Builder catalogue contract and compatibility", () => {
     expect(result.selectedComponents.map((component) => component.variantId)).toEqual(pcBuilderCategories.map((_, index) => variantId(index + 1)));
     expect(result.estimatedDrawW).toBe(444);
     expect(result.recommendedPsuW).toBe(550);
+    const cartLines = toPcBuilderCartLines(result.selectedComponents as typeof components);
+    expect(cartLines.map((line) => line.variantId)).toEqual(pcBuilderCategories.map((_, index) => variantId(index + 1)));
+    expect(toCheckoutCartItems(cartLines)).toEqual(pcBuilderCategories.map((_, index) => ({ variantId: variantId(index + 1), quantity: 1 })));
   });
 
   it("blocks incompatible and incomplete combinations", () => {

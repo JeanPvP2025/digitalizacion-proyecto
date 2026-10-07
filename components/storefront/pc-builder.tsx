@@ -9,6 +9,7 @@ import {
   optionalPcBuilderCategories,
   pcBuilderCategories,
 } from "@/lib/pc-builder/compatibility";
+import { addComponentsToCart } from "@/components/storefront/store-interactions";
 import type { PcBuildSelection, PcBuilderCatalog, PcBuilderCategory, PcBuilderComponent } from "@/lib/pc-builder/types";
 import {
   MAX_SAVED_PC_BUILDS,
@@ -184,6 +185,16 @@ export function PcBuilder({ catalog }: { catalog: PcBuilderCatalog }) {
     setNotice("Selección vaciada. Tus configuraciones guardadas siguen disponibles.");
   }
 
+  function addBuildToCart() {
+    if (catalog.source !== "supabase" || result.status !== "compatible") return;
+    const selectedVariants = result.selectedComponents
+      .map((component) => componentMap.get(component.variantId ?? component.id))
+      .filter((component): component is typeof catalog.components[number] => component !== undefined);
+    if (selectedVariants.length !== result.selectedComponents.length) return;
+    addComponentsToCart(selectedVariants);
+    setNotice(`${result.selectedComponents.length} variante(s) añadidas al carrito. El servidor confirmará precio y stock al finalizar.`);
+  }
+
   const categoryRestriction = catalog.source === "demo"
     ? "El catálogo demo no contiene piezas PC con variant IDs. No se ofrecen fichas ficticias como compatibles o comprables."
     : catalog.source === "error"
@@ -265,10 +276,10 @@ export function PcBuilder({ catalog }: { catalog: PcBuilderCatalog }) {
 
           <div className={styles.cartRestriction} id="builder-cart-restriction">
             <ShoppingBag size={14} />
-            <p>El puente al carrito espera el contrato de checkout por variant ID. No se enviarán product IDs alternativos ni precios del navegador.</p>
+            <p>{catalog.source === "supabase" && result.status === "compatible" ? "Se enviarán los variant IDs seleccionados. Checkout volverá a validar publicación, precio EUR y stock en el servidor." : "Añadir al carrito se habilita cuando hay una configuración completa y compatible del catálogo conectado."}</p>
           </div>
           <div className={styles.actions}>
-            <button className="button button--accent" type="button" disabled aria-describedby="builder-cart-restriction"><ShoppingBag size={14} /> Añadir componentes</button>
+            <button className="button button--accent" type="button" disabled={catalog.source !== "supabase" || result.status !== "compatible"} onClick={addBuildToCart} aria-describedby="builder-cart-restriction"><ShoppingBag size={14} /> Añadir componentes</button>
             <button className="builder-save" onClick={saveBuild} type="button" disabled={selectedComponents.length === 0}><Save size={13} /> Guardar selección</button>
             <button className="builder-reset" onClick={resetSelection} type="button">Vaciar selección</button>
           </div>
