@@ -1,6 +1,7 @@
 import { expect, test, type Browser, type Page } from "@playwright/test";
 import {
   createAnalyticsFixtures,
+  createAdminClient,
   createInconsistentAnalyticsFixture,
   createUserClient,
   loadFixtures,
@@ -291,6 +292,71 @@ test("soporte conectado conserva errores reintentables, privacidad del ticket y 
     await expect(emptyCustomer.page.getByRole("heading", { name: "Bandeja restringida." })).toBeVisible();
   } finally {
     await Promise.all([customer.context.close(), emptyCustomer.context.close()]);
+  }
+});
+
+test("RMA conectado recorre cliente, aprobación de soporte e inspección autenticada de almacén", async ({ browser }) => {
+  const fixtures = await loadFixtures();
+  const customer = await openSession(browser, fixtures.users.businessOwner, "/soporte");
+  const support = await openSession(browser, fixtures.users.supportAgent, "/soporte/agente");
+  const warehouse = await openSession(browser, fixtures.users.fulfillmentManager, "/backoffice/returns");
+  const admin = createAdminClient();
+  try {
+    await customer.page.getByLabel("Número de pedido", { exact: true }).fill(fixtures.accountOrders.owner.number);
+    await customer.page.getByRole("button", { name: "Consultar pedido" }).click();
+    const quantity = customer.page.getByLabel("Unidades a devolver de " + fixtures.product.name);
+    await expect(quantity).toHaveValue("0");
+    await quantity.fill("1");
+    await customer.page.getByLabel("Motivo de la devolución").fill("El equipo llegó con la carcasa dañada.");
+    const createResponsePromise = customer.page.waitForResponse((response) =>
+      response.url().endsWith("/api/support/returns") && response.request().method() === "POST");
+    await customer.page.getByRole("button", { name: "Solicitar devolución" }).click();
+    const createResponse = await createResponsePromise;
+    expect(createResponse.status()).toBe(201);
+    const created = await createResponse.json() as { returnId: string; returnNumber: string; persisted: boolean };
+    expect(created.persisted).toBe(true);
+
+    await support.page.getByRole("region", { name: "Solicitudes por revisar" }).getByRole("button", { name: "Actualizar" }).click();
+    const reviewCard = support.page.locator("article").filter({ hasText: created.returnNumber });
+    await expect(reviewCard).toHaveCount(1);
+    await reviewCard.getByRole("button", { name: "Aprobar" }).click();
+    await expect(support.page.getByRole("status").filter({ hasText: created.returnNumber + ": aprobada" })).toBeVisible();
+
+    await warehouse.page.reload();
+    const warehouseCard = warehouse.page.locator("article").filter({ hasText: created.returnNumber });
+    await expect(warehouseCard).toHaveCount(1);
+    await expect(warehouseCard.getByText(fixtures.accountOrders.owner.number)).toBeVisible();
+    await warehouseCard.getByLabel("Resultado de inspección").selectOption("disposed");
+    await warehouseCard.getByLabel("Hallazgo de inspección").fill("Carcasa agrietada; no es segura para reventa.");
+    const inspectionResponsePromise = warehouse.page.waitForResponse((response) =>
+      response.url().endsWith("/api/backoffice/returns/inspection") && response.request().method() === "POST");
+    await warehouseCard.getByRole("button", { name: "Registrar inspección y desechar" }).click();
+    const inspectionResponse = await inspectionResponsePromise;
+    expect(inspectionResponse.status()).toBe(200);
+    await expect(warehouse.page.getByRole("status").filter({ hasText: "unidades registradas como no aptas para reventa" })).toBeVisible();
+
+    const { data: returnItem, error: itemError } = await admin.from("return_items")
+      .select("inventory_disposition, inspection_quantity")
+      .eq("return_request_id", created.returnId)
+      .single();
+    expect(itemError).toBeNull();
+    expect(returnItem).toMatchObject({ inventory_disposition: "disposed", inspection_quantity: 1 });
+    const { data: request, error: requestError } = await admin.from("return_requests")
+      .select("status")
+      .eq("id", created.returnId)
+      .single();
+    expect(requestError).toBeNull();
+    expect(request?.status).toBe("closed");
+    await customer.page.reload();
+    const historyCard = customer.page.locator("article").filter({ hasText: created.returnNumber });
+    await expect(historyCard.getByText("Cerrada", { exact: true })).toBeVisible();
+    await expect(historyCard.getByText("No apta para reventa; desechada")).toBeVisible();
+    await expect(historyCard.getByText(/inspeccionadas y retiradas del inventario disponible/)).toBeVisible();
+
+    await customer.page.goto("/backoffice/returns");
+    await expect(customer.page.getByRole("heading", { name: "No tienes acceso al portal de equipo." })).toBeVisible();
+  } finally {
+    await Promise.allSettled([customer.context.close(), support.context.close(), warehouse.context.close()]);
   }
 });
 

@@ -12,6 +12,7 @@ export type ConnectedDomainsFixtures = {
     businessViewer: ConnectedDomainUser;
     emptyBusinessOwner: ConnectedDomainUser;
     supportAgent: ConnectedDomainUser;
+    fulfillmentManager: ConnectedDomainUser;
     superAdmin: ConnectedDomainUser;
   };
   organizations: { business: string; empty: string };
@@ -130,6 +131,7 @@ export function emptyFixtures(): ConnectedDomainsFixtures {
       businessViewer: makeUser("business-viewer", "NODRIA QA Business Viewer"),
       emptyBusinessOwner: makeUser("empty-business", "NODRIA QA Empty Business"),
       supportAgent: makeUser("support-agent", "NODRIA QA Support Agent"),
+      fulfillmentManager: makeUser("fulfillment-manager", "NODRIA QA Fulfillment Manager"),
       superAdmin: makeUser("super-admin", "NODRIA QA Super Admin"),
     },
     organizations: { business: randomUUID(), empty: randomUUID() },
@@ -226,6 +228,7 @@ async function createCoreFixtures(admin: SupabaseClient, fixtures: ConnectedDoma
   const viewerId = String(fixtures.users.businessViewer.id);
   const emptyOwnerId = String(fixtures.users.emptyBusinessOwner.id);
   const supportAgentId = String(fixtures.users.supportAgent.id);
+  const fulfillmentManagerId = String(fixtures.users.fulfillmentManager.id);
   const superAdminId = String(fixtures.users.superAdmin.id);
   const lineSubtotal = Math.round(fixtures.product.price / (1 + fixtures.product.taxRate) * 100) / 100;
   const taxTotal = Math.round((fixtures.product.price - lineSubtotal) * 100) / 100;
@@ -235,6 +238,7 @@ async function createCoreFixtures(admin: SupabaseClient, fixtures: ConnectedDoma
     "begin;",
     "insert into public.user_role_grants (user_id, role, granted_by) values",
     "(" + sqlLiteral(supportAgentId) + "::uuid, 'support_agent', " + sqlLiteral(supportAgentId) + "::uuid),",
+    "(" + sqlLiteral(fulfillmentManagerId) + "::uuid, 'fulfillment_manager', " + sqlLiteral(fulfillmentManagerId) + "::uuid),",
     "(" + sqlLiteral(superAdminId) + "::uuid, 'super_admin', " + sqlLiteral(superAdminId) + "::uuid);",
     "insert into public.organizations (id, slug, legal_name, display_name, created_by) values",
     "(" + sqlLiteral(fixtures.organizations.business) + "::uuid, 'e2e-business-" + fixtures.runId.slice(0, 8) + "', 'NODRIA E2E Business SL', 'NODRIA E2E Business', " + sqlLiteral(ownerId) + "::uuid),",
@@ -249,6 +253,12 @@ async function createCoreFixtures(admin: SupabaseClient, fixtures: ConnectedDoma
     "values (" + sqlLiteral(fixtures.quoteId) + "::uuid, " + sqlLiteral(fixtures.product.variantId) + "::uuid, " + sqlLiteral(fixtures.product.id) + ", " + sqlLiteral(fixtures.product.name) + ", " + sqlLiteral(fixtures.product.sku) + ", " + sqlLiteral(fixtures.product.title) + ", '{}'::jsonb, 1, " + fixtures.product.price.toFixed(2) + ", null, " + fixtures.product.taxRate.toFixed(4) + ", 'EUR');",
     insertDeliveredOrder(fixtures, fixtures.accountOrders.owner, fixtures.users.businessOwner),
     insertDeliveredOrder(fixtures, fixtures.accountOrders.other, fixtures.users.supportAgent),
+    "insert into public.payment_transactions (order_id, provider, status, amount, currency, processed_at) values " +
+      "(" + sqlLiteral(fixtures.accountOrders.owner.id) + "::uuid, 'demo', 'paid', " + fixtures.product.price.toFixed(2) + ", 'EUR', now()), " +
+      "(" + sqlLiteral(fixtures.accountOrders.other.id) + "::uuid, 'demo', 'paid', " + fixtures.product.price.toFixed(2) + ", 'EUR', now());",
+    "insert into public.order_events (order_id, event_key, note, details, occurred_at) values " +
+      "(" + sqlLiteral(fixtures.accountOrders.owner.id) + "::uuid, 'payment_paid', 'Pago demo de fixture E2E', jsonb_build_object('fixture', " + runId + "), now()), " +
+      "(" + sqlLiteral(fixtures.accountOrders.other.id) + "::uuid, 'payment_paid', 'Pago demo de fixture E2E', jsonb_build_object('fixture', " + runId + "), now());",
     "insert into public.crm_activities (organization_id, quote_id, actor_user_id, event_key, title, subject_name, company_snapshot, body, visibility, details)",
     "values (" + sqlLiteral(fixtures.organizations.business) + "::uuid, " + sqlLiteral(fixtures.quoteId) + "::uuid, " + sqlLiteral(ownerId) + "::uuid, 'quote_accepted', 'Propuesta aceptada', " + sqlLiteral(fixtures.users.businessOwner.name) + ", 'NODRIA E2E Business', 'Oferta aceptada para fixture QA.', 'organization', jsonb_build_object('status', 'accepted', 'fixture', " + runId + "));",
     "commit;",
@@ -337,6 +347,11 @@ export async function cleanupFixtures(admin: SupabaseClient, fixtures: Connected
     "delete from public.support_messages where ticket_id in (select id from public.support_tickets where customer_id = any(" + userIds + "));",
     "delete from public.support_ticket_events where ticket_id in (select id from public.support_tickets where customer_id = any(" + userIds + "));",
     "delete from public.support_tickets where customer_id = any(" + userIds + ");",
+    "delete from private.return_inspection_attempts where return_request_id in (select id from public.return_requests where order_id = any(" + orderIds + "));",
+    "delete from public.return_refunds where return_request_id in (select id from public.return_requests where order_id = any(" + orderIds + "));",
+    "delete from public.return_request_events where return_request_id in (select id from public.return_requests where order_id = any(" + orderIds + "));",
+    "delete from public.return_items where return_request_id in (select id from public.return_requests where order_id = any(" + orderIds + "));",
+    "delete from public.return_requests where order_id = any(" + orderIds + ");",
     "delete from public.crm_activities where organization_id = any(" + organizationIds + ") or quote_id = any(" + quoteIds + ") or quote_inquiry_id = any(" + inquiryIds + ");",
     "delete from public.business_quote_conversions where quote_id = any(" + quoteIds + ");",
     "delete from public.quote_items where quote_id = any(" + quoteIds + ");",
