@@ -420,7 +420,6 @@ declare
   v_payment public.payment_transactions%rowtype;
   v_attempt private.demo_payment_attempts%rowtype;
   v_status public.payment_status;
-  v_terminal boolean;
   v_event_key text;
   v_note text;
 begin
@@ -469,7 +468,6 @@ begin
     raise exception using errcode = '23514', message = 'Pending payment does not match the persisted order total';
   end if;
 
-  v_terminal := p_outcome in ('approved', 'failed', 'declined', 'insufficient_funds');
   v_status := case
     when p_outcome = 'approved' then 'paid'::public.payment_status
     when p_outcome in ('failed', 'declined', 'insufficient_funds') then 'failed'::public.payment_status

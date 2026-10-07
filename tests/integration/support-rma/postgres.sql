@@ -20,14 +20,14 @@ values
   ('10000000-0000-4000-8000-00000000d102', '10000000-0000-4000-8000-00000000a102', 'owner', '10000000-0000-4000-8000-00000000a102');
 
 insert into public.orders (
-  id, order_number, customer_id, idempotency_key, organization_id, status, currency,
+  id, order_number, customer_id, idempotency_key, checkout_fingerprint, organization_id, status, currency,
   subtotal, tax_total, shipping_total, discount_total, grand_total,
   shipping_address, billing_address, delivered_at
 )
 values
-  ('10000000-0000-4000-8000-00000000b101', 'NDR-SR-000001', '10000000-0000-4000-8000-00000000a101', 'support-rma-order-a1', null, 'delivered', 'EUR', 200, 0, 0, 0, 200, '{}', '{}', now() - interval '10 days'),
-  ('10000000-0000-4000-8000-00000000b102', 'NDR-SR-000002', '10000000-0000-4000-8000-00000000a101', 'support-rma-order-a2', null, 'delivered', 'EUR', 100, 0, 0, 0, 100, '{}', '{}', now() - interval '31 days'),
-  ('10000000-0000-4000-8000-00000000b103', 'NDR-SR-000003', '10000000-0000-4000-8000-00000000a101', 'support-rma-order-a3', '10000000-0000-4000-8000-00000000d101', 'delivered', 'EUR', 100, 0, 0, 0, 100, '{}', '{}', now() - interval '3 days');
+  ('10000000-0000-4000-8000-00000000b101', 'NDR-SR-000001', '10000000-0000-4000-8000-00000000a101', 'support-rma-order-a1', repeat(md5('NDR-SR-000001'), 2), null, 'delivered', 'EUR', 200, 0, 0, 0, 200, '{}', '{}', now() - interval '10 days'),
+  ('10000000-0000-4000-8000-00000000b102', 'NDR-SR-000002', '10000000-0000-4000-8000-00000000a101', 'support-rma-order-a2', repeat(md5('NDR-SR-000002'), 2), null, 'delivered', 'EUR', 100, 0, 0, 0, 100, '{}', '{}', now() - interval '31 days'),
+  ('10000000-0000-4000-8000-00000000b103', 'NDR-SR-000003', '10000000-0000-4000-8000-00000000a101', 'support-rma-order-a3', repeat(md5('NDR-SR-000003'), 2), '10000000-0000-4000-8000-00000000d101', 'delivered', 'EUR', 100, 0, 0, 0, 100, '{}', '{}', now() - interval '3 days');
 
 insert into public.order_items (id, order_id, product_name, product_sku, variant_title, quantity, unit_price, currency)
 values

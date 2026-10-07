@@ -118,15 +118,15 @@ BEGIN
   FROM public.place_order(
     '00000000-0000-4000-8000-00000000b001',
     'qa-checkout-idempotency-001',
-    '{"city":"Madrid"}'::jsonb,
-    '{"city":"Madrid"}'::jsonb
+    '{"fullName":"QA Customer A","email":"qa-customer-a@nodria.test","phone":"600000000","address":"Calle de Prueba 1","postalCode":"28001","city":"Madrid","province":"Madrid","countryCode":"ES"}'::jsonb,
+    '{"fullName":"QA Customer A","email":"qa-customer-a@nodria.test","phone":"600000000","address":"Calle de Prueba 1","postalCode":"28001","city":"Madrid","province":"Madrid","countryCode":"ES"}'::jsonb
   );
   SELECT * INTO v_retry
   FROM public.place_order(
     '00000000-0000-4000-8000-00000000b001',
     'qa-checkout-idempotency-001',
-    '{"city":"Madrid"}'::jsonb,
-    '{"city":"Madrid"}'::jsonb
+    '{"fullName":"QA Customer A","email":"qa-customer-a@nodria.test","phone":"600000000","address":"Calle de Prueba 1","postalCode":"28001","city":"Madrid","province":"Madrid","countryCode":"ES"}'::jsonb,
+    '{"fullName":"QA Customer A","email":"qa-customer-a@nodria.test","phone":"600000000","address":"Calle de Prueba 1","postalCode":"28001","city":"Madrid","province":"Madrid","countryCode":"ES"}'::jsonb
   );
 
   IF v_first.order_id IS DISTINCT FROM v_retry.order_id
@@ -163,8 +163,8 @@ BEGIN
     SELECT * INTO v_retry FROM public.place_order(
       '00000000-0000-4000-8000-00000000b001',
       'qa-cross-customer-cart-001',
-      '{}'::jsonb,
-      '{}'::jsonb
+      '{"fullName":"QA Customer B","email":"qa-customer-b@nodria.test","phone":"600000000","address":"Calle de Prueba 2","postalCode":"28002","city":"Madrid","province":"Madrid","countryCode":"ES"}'::jsonb,
+      '{"fullName":"QA Customer B","email":"qa-customer-b@nodria.test","phone":"600000000","address":"Calle de Prueba 2","postalCode":"28002","city":"Madrid","province":"Madrid","countryCode":"ES"}'::jsonb
     );
     RAISE EXCEPTION USING ERRCODE = 'ZX000', MESSAGE = 'A different customer placed an order from someone else cart';
   EXCEPTION WHEN SQLSTATE 'P0002' THEN
@@ -175,8 +175,8 @@ BEGIN
     SELECT * INTO v_retry FROM public.place_order(
       '00000000-0000-4000-8000-00000000b002',
       'qa-overstock-checkout-001',
-      '{}'::jsonb,
-      '{}'::jsonb
+      '{"fullName":"QA Customer B","email":"qa-customer-b@nodria.test","phone":"600000000","address":"Calle de Prueba 2","postalCode":"28002","city":"Madrid","province":"Madrid","countryCode":"ES"}'::jsonb,
+      '{"fullName":"QA Customer B","email":"qa-customer-b@nodria.test","phone":"600000000","address":"Calle de Prueba 2","postalCode":"28002","city":"Madrid","province":"Madrid","countryCode":"ES"}'::jsonb
     );
     RAISE EXCEPTION USING ERRCODE = 'ZX000', MESSAGE = 'Checkout accepted a quantity above available stock';
   EXCEPTION WHEN SQLSTATE 'P0001' THEN
@@ -260,8 +260,9 @@ BEGIN
   SELECT count(*) INTO v_count FROM public.organization_memberships;
   IF v_count <> 1 THEN RAISE EXCEPTION 'A business buyer can read memberships outside their organization'; END IF;
   BEGIN
-    INSERT INTO public.organization_memberships (organization_id, user_id, role, added_by)
-    VALUES ('00000000-0000-4000-8000-00000000d001', '00000000-0000-4000-8000-00000000a009', 'buyer', '00000000-0000-4000-8000-00000000a008');
+    PERFORM public.add_organization_member(
+      '00000000-0000-4000-8000-00000000d001', 'qa-org-outsider@nodria.test', 'buyer'
+    );
     RAISE EXCEPTION USING ERRCODE = 'ZX000', MESSAGE = 'A business buyer added a member';
   EXCEPTION WHEN insufficient_privilege THEN NULL;
   END;
@@ -270,19 +271,22 @@ BEGIN
   PERFORM set_config('request.jwt.claims', '{"sub":"00000000-0000-4000-8000-00000000a007","role":"authenticated"}', true);
   SELECT count(*) INTO v_count FROM public.organization_memberships;
   IF v_count <> 3 THEN RAISE EXCEPTION 'A business admin cannot see its organization memberships'; END IF;
-  INSERT INTO public.organization_memberships (organization_id, user_id, role, added_by)
-  VALUES ('00000000-0000-4000-8000-00000000d001', '00000000-0000-4000-8000-00000000a009', 'viewer', '00000000-0000-4000-8000-00000000a007');
+  PERFORM public.add_organization_member(
+    '00000000-0000-4000-8000-00000000d001', 'qa-org-outsider@nodria.test', 'viewer'
+  );
   BEGIN
-    INSERT INTO public.organization_memberships (organization_id, user_id, role, added_by)
-    VALUES ('00000000-0000-4000-8000-00000000d002', '00000000-0000-4000-8000-00000000a008', 'buyer', '00000000-0000-4000-8000-00000000a007');
+    PERFORM public.add_organization_member(
+      '00000000-0000-4000-8000-00000000d002', 'qa-org-outsider@nodria.test', 'buyer'
+    );
     RAISE EXCEPTION USING ERRCODE = 'ZX000', MESSAGE = 'A business admin changed a different organization';
   EXCEPTION WHEN insufficient_privilege THEN NULL;
   END;
   BEGIN
-    INSERT INTO public.organization_memberships (organization_id, user_id, role, added_by)
-    VALUES ('00000000-0000-4000-8000-00000000d001', '00000000-0000-4000-8000-00000000a009', 'owner', '00000000-0000-4000-8000-00000000a007');
+    PERFORM public.add_organization_member(
+      '00000000-0000-4000-8000-00000000d001', 'qa-org-outsider@nodria.test', 'owner'
+    );
     RAISE EXCEPTION USING ERRCODE = 'ZX000', MESSAGE = 'A business admin assigned an owner role';
-  EXCEPTION WHEN insufficient_privilege THEN NULL;
+  EXCEPTION WHEN SQLSTATE '22023' THEN NULL;
   END;
   BEGIN
     UPDATE public.organization_memberships SET role = 'owner'
