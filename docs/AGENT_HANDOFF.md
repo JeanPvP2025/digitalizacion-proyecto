@@ -226,3 +226,15 @@ Los seis despachos retornaron `clientThreadId` con host local; la creación/setu
 Commits de integración de la quinta ola: `1d7e375`, `e49cdb5`, `04dff19`, `3e19ed8`, `a3904c9`, `81c7be7` y `26ee62b`. Documentación consolidada en `STATUS.md`, `WORKSTREAMS.md`, `ARCHITECTURE.md`, `DECISIONS.md`, `SECURITY.md`, `TESTING.md`, `DATA_MODEL.md`, `RBAC_MATRIX.md` y `AUTH_BOUNDARIES.md`.
 
 El siguiente backlog funcional priorizado queda organizado para la sexta ola en `WORKSTREAMS.md`: pedido B2B formal, procurement con proveedores/PO, fulfillment hasta despacho, efectos de RMA aprobada y QA conectado de analytics/dominios. Son slices independientes con ownership separado; comparten contratos ya integrados y no deben afirmar cierre antes de validar persistencia, permisos y pruebas de extremo a extremo.
+
+## Ola 6 despachada — 2026-10-07
+
+Se crearon cinco conversaciones independientes, cada una en worktree, con bootstrap documental, ownership y Definition of Done:
+
+- B2B formal order: `client-new-thread:611d2ca5-4f48-4394-a4f9-98abe74e4c0a`.
+- Procurement suppliers/PO: `client-new-thread:7bc64795-e018-48fe-8cbd-d128ab9380e3`.
+- Fulfillment workflow: `client-new-thread:f4d5abf7-4185-4a8c-a0a5-1afc4bb22d84`.
+- RMA approval effects: `client-new-thread:4b252a38-3247-4979-8abd-53d9641cac7b`.
+- Connected QA/analytics integrity: `client-new-thread:16fba6ee-c539-429e-84d8-cd25d31a2165`.
+
+El estado y ownership están en `WORKSTREAMS.md`. Setup de worktrees/conversaciones es asíncrono; las conversaciones tienen instrucciones para inspeccionar su checkout antes de cambiar código.

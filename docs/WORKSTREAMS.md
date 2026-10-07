@@ -58,11 +58,11 @@ Se incorporaron los commits worker `473bff1`, `6011f77`, `bb20ce8` y `2f8d264`, 
 
 | Conversation | Role | Task | Ownership | Dependencies | State |
 |---|---|---|---|---|---|
-| Pending | B2B Commerce Agent | Emitir pedido formal desde una conversión aceptada con condiciones y snapshots seguros | CRM quote conversion + pedido B2B dedicado y tests | Contrato de dirección/precio/pago/reserva; no alterar checkout B2C | ⏳ Ready |
-| Pending | Procurement Agent | Proveedores, órdenes de compra y recepción vinculada a PO | `lib/inventory/procurement/**`, inventory procurement migrations/tests | Movimientos idempotentes de esta ola | ⏳ Ready |
-| Pending | Fulfillment Agent | Picking/packing/dispatch y timeline operativo completo | `lib/operations/**`, operaciones UI/actions/tests | `fulfill_order`, inventario/reservas existentes | ⏳ Ready |
-| Pending | RMA Agent | Efectos idempotentes de aprobación (devolución/reembolso demo/stock) | support return RPC/migrations/tests/UI | Devolución aprobada, pedidos y ledger | ⏳ Ready |
-| Pending | QA/Analytics Agent | Contrastar KPIs y cerrar E2E connected para B2B, cuenta, reviews y soporte | analytics tests y `tests/e2e/connected-domains/**` | contratos estables de los dominios integrados | ⏳ Ready |
+| `client-new-thread:611d2ca5-4f48-4394-a4f9-98abe74e4c0a` — B2B formal order slice | B2B Commerce Agent | Emitir pedido formal desde una conversión aceptada con condiciones y snapshots seguros | CRM quote conversion + pedido B2B dedicado y tests | Contrato de dirección/precio/pago/reserva; no alterar checkout B2C | 🚧 Despachado en worktree independiente |
+| `client-new-thread:7bc64795-e018-48fe-8cbd-d128ab9380e3` — Procurement suppliers and purchase orders | Procurement Agent | Proveedores, órdenes de compra y recepción vinculada a PO | `lib/inventory/procurement/**`, inventory procurement migrations/tests | Movimientos idempotentes de esta ola | 🚧 Despachado en worktree independiente |
+| `client-new-thread:f4d5abf7-4185-4a8c-a0a5-1afc4bb22d84` — Order fulfillment workflow | Fulfillment Agent | Picking/packing/dispatch y timeline operativo completo | `lib/operations/**`, operaciones UI/actions/tests | `fulfill_order`, inventario/reservas existentes | 🚧 Despachado en worktree independiente |
+| `client-new-thread:4b252a38-3247-4979-8abd-53d9641cac7b` — RMA approval effects | Returns/RMA Agent | Efectos idempotentes de aprobación (devolución/reembolso demo/stock) | support return RPC/migrations/tests/UI | Devolución aprobada, pedidos y ledger | 🚧 Despachado en worktree independiente |
+| `client-new-thread:16fba6ee-c539-429e-84d8-cd25d31a2165` — Connected QA and analytics integrity | QA/Analytics Agent | Contrastar KPIs y cerrar E2E connected para B2B, cuenta, reviews y soporte | analytics tests y `tests/e2e/connected-domains/**` | contratos estables de los dominios integrados | 🚧 Despachado en worktree independiente |
 
 ## Definition of Done por conversación
 
