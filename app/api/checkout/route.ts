@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { consolidateCheckoutItems, CheckoutCartError, resolveCheckoutCartItems } from "@/lib/commerce/cart";
-import { checkoutRequestSchema, type CheckoutRequest } from "@/lib/commerce/contracts";
+import { consolidateCheckoutItems, CheckoutCartError, resolveCheckoutCartItems, type CheckoutVariantRow } from "@/lib/commerce/cart";
+import { checkoutItemSelectorError, checkoutRequestSchema, type CheckoutRequest } from "@/lib/commerce/contracts";
 import { getCheckoutMode } from "@/lib/commerce/mode";
 import { demoProducts } from "@/lib/catalog";
 import { pcBuilderComponents } from "@/lib/pc-builder";
@@ -34,8 +34,14 @@ const rpcOrderSchema = z.array(z.object({
   currency: currencySchema,
 }).strict()).length(1);
 const rpcPaymentStatusSchema = z.enum(["pending", "paid", "failed"]);
-const variantRowsSchema = z.array(z.object({ id: z.uuid(), product_id: z.string().min(1) }).strict());
+const variantRowsSchema = z.array(z.object({
+  id: z.uuid(),
+  product_id: z.string().min(1),
+  is_active: z.boolean(),
+  products: z.object({ is_published: z.boolean() }).strict(),
+}).strict());
 const cartIdSchema = z.uuid();
+const checkoutVariantSelect = "id,product_id,is_active,products!inner(is_published)";
 
 const MAX_ATTEMPTS_PER_MINUTE = 6;
 type DemoRequestWithRequest = { data: CheckoutRequest; request: Request };
@@ -91,6 +97,39 @@ function checkoutErrorResponse(error: unknown) {
     return NextResponse.json({ error: "Este pedido ya no admite otro resultado de pago." }, { status: 409 });
   }
   return NextResponse.json({ error: "No se ha podido confirmar el pedido con Supabase. Conserva la misma referencia al reintentar." }, { status: 503 });
+}
+
+async function loadSellableCheckoutVariants(
+  supabase: NonNullable<Awaited<ReturnType<typeof createSupabaseServerClient>>>,
+  items: CheckoutRequest["items"],
+): Promise<CheckoutVariantRow[]> {
+  const productIds = [...new Set(items.flatMap((item) => "productId" in item ? [item.productId] : []))];
+  const variantIds = [...new Set(items.flatMap((item) => "variantId" in item ? [item.variantId] : []))];
+  const sellableVariants = new Map<string, CheckoutVariantRow>();
+
+  const appendSellableVariants = async (column: "id" | "product_id", values: string[]) => {
+    if (values.length === 0) return;
+    const { data, error } = await supabase.from("product_variants")
+      .select(checkoutVariantSelect)
+      .in(column, values)
+      .eq("is_active", true)
+      .eq("products.is_published", true);
+    if (error) throw error;
+
+    const parsed = variantRowsSchema.safeParse(data);
+    if (!parsed.success) throw new Error("Supabase returned an invalid product variant response.");
+    for (const row of parsed.data) {
+      if (row.is_active && row.products.is_published) {
+        sellableVariants.set(row.id, { id: row.id, product_id: row.product_id });
+      }
+    }
+  };
+
+  // These reads use the authenticated user's publishable-key client. The query
+  // filters validate sellability while RLS remains the authorization boundary.
+  await appendSellableVariants("id", variantIds);
+  await appendSellableVariants("product_id", productIds);
+  return [...sellableVariants.values()];
 }
 
 async function getOrCreateActiveCart(supabase: NonNullable<Awaited<ReturnType<typeof createSupabaseServerClient>>>, userId: string) {
@@ -198,18 +237,12 @@ async function createSupabaseOrder(checkout: CheckoutRequest) {
 
   try {
     const items = consolidateCheckoutItems(checkout.items);
-    if (items.some((item) => item.productId.startsWith("builder:"))) {
+    if (items.some((item) => "productId" in item && item.productId.startsWith("builder:"))) {
       throw new CheckoutCartError("demo_only", "Las piezas del configurador solo se pueden pedir en el checkout demo local.");
     }
 
-    const productIds = items.map((item) => item.productId);
-    const { data: variantRows, error: variantError } = await supabase.from("product_variants")
-      .select("id,product_id")
-      .in("product_id", productIds);
-    if (variantError) throw variantError;
-    const variants = variantRowsSchema.safeParse(variantRows);
-    if (!variants.success) throw new Error("Supabase returned an invalid product variant response.");
-    const cartItems = resolveCheckoutCartItems(items, variants.data);
+    const variants = await loadSellableCheckoutVariants(supabase, items);
+    const cartItems = resolveCheckoutCartItems(items, variants);
 
     const cart = await getOrCreateActiveCart(supabase, userId);
 
@@ -282,8 +315,13 @@ async function createDemoOrder(checkout: DemoRequestWithRequest) {
   }
 
   const consolidated = consolidateCheckoutItems(checkout.data.items);
+  if (consolidated.some((item) => "variantId" in item)) {
+    return NextResponse.json({ error: "La selección por variantId requiere el checkout Supabase conectado; el modo demo local usa productId." }, { status: 400 });
+  }
   const orderItems: DemoOrderRecord["items"] = [];
-  for (const { productId, quantity } of consolidated) {
+  for (const item of consolidated) {
+    if (!("productId" in item)) continue;
+    const { productId, quantity } = item;
     if (productId.startsWith("builder:")) {
       const component = pcBuilderComponents.find((item) => item.id === productId.slice("builder:".length));
       if (!component) return NextResponse.json({ error: "Uno de los componentes guardados ya no está disponible." }, { status: 409 });
@@ -355,7 +393,11 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "El cuerpo de la solicitud no es JSON válido." }, { status: 400 });
   }
   const parsed = checkoutRequestSchema.safeParse(untrustedBody);
-  if (!parsed.success) return NextResponse.json({ error: "Revisa los datos del pedido y la dirección de entrega." }, { status: 400 });
+  if (!parsed.success) {
+    const selectorIssue = parsed.error.issues.find((issue) => issue.message === checkoutItemSelectorError);
+    if (selectorIssue) return NextResponse.json({ error: checkoutItemSelectorError }, { status: 400 });
+    return NextResponse.json({ error: "Revisa los datos del pedido y la dirección de entrega." }, { status: 400 });
+  }
 
   try {
     if (mode === "demo") {

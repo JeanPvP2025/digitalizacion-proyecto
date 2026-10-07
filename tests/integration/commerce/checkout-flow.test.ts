@@ -18,7 +18,7 @@ vi.mock("@/lib/commerce/payment-admin", () => ({
 
 type CheckoutRoute = typeof import("@/app/api/checkout/route");
 type CheckoutBody = {
-  items: Array<{ productId: string; quantity: number }>;
+  items: Array<{ productId: string; quantity: number } | { variantId: string; quantity: number }>;
   idempotencyKey: string;
   customer: {
     name: string;
@@ -54,7 +54,20 @@ function makeBody(overrides: Partial<CheckoutBody> = {}): CheckoutBody {
   };
 }
 
-function makeConnectedClients(options: { paymentResults?: Array<{ data: unknown; error: unknown }>; rejectSecondPlace?: boolean } = {}) {
+const variantId = "11111111-1111-4111-8111-111111111111";
+
+type MockVariantRow = {
+  id: string;
+  product_id: string;
+  is_active: boolean;
+  products: { is_published: boolean };
+};
+
+function makeConnectedClients(options: {
+  paymentResults?: Array<{ data: unknown; error: unknown }>;
+  rejectSecondPlace?: boolean;
+  variants?: MockVariantRow[];
+} = {}) {
   const userId = randomUUID();
   const orderId = randomUUID();
   const cartId = randomUUID();
@@ -64,22 +77,47 @@ function makeConnectedClients(options: { paymentResults?: Array<{ data: unknown;
   let cartItems: Array<{ variant_id: string; quantity: number }> = [];
   const placeOrderArgs: Array<Record<string, unknown>> = [];
   const paymentArgs: Array<Record<string, unknown>> = [];
+  const variantSelects: string[] = [];
+  const variants = options.variants ?? [{
+    id: variantId,
+    product_id: "pr_loom27",
+    is_active: true,
+    products: { is_published: true },
+  }];
   const paymentResults = [...(options.paymentResults ?? [{ data: "paid", error: null }])];
 
   const query = (result: unknown) => {
+    let currentData = result;
+    const filterRows = (predicate: (row: Record<string, unknown>) => boolean) => {
+      if (Array.isArray(currentData)) currentData = currentData.filter((row) => predicate(row as Record<string, unknown>));
+    };
     const value = {
-      select: () => value,
-      eq: () => value,
-      in: () => value,
+      select: (columns?: string) => {
+        if (columns && result === variants) variantSelects.push(columns);
+        return value;
+      },
+      eq: (column: string, expected: unknown) => {
+        filterRows((row) => {
+          const actual = column === "products.is_published"
+            ? (row.products as { is_published?: unknown } | undefined)?.is_published
+            : row[column];
+          return actual === expected;
+        });
+        return value;
+      },
+      in: (column: string, expected: unknown[]) => {
+        filterRows((row) => expected.includes(row[column]));
+        return value;
+      },
       insert: () => value,
       delete: () => value,
       upsert: (rows: Array<{ variant_id: string; quantity: number }>) => {
         cartItems = rows;
         return value;
       },
-      maybeSingle: async () => ({ data: result, error: null }),
+      maybeSingle: async () => ({ data: currentData, error: null }),
       single: async () => ({ data: { id: cartId }, error: null }),
-      then: (resolve: (value: unknown) => unknown, reject?: (reason: unknown) => unknown) => Promise.resolve({ data: result, error: null }).then(resolve, reject),
+      then: (resolve: (value: unknown) => unknown, reject?: (reason: unknown) => unknown) => Promise.resolve({ data: currentData, error: null }).then(resolve, reject),
     };
     return value;
   };
@@ -94,7 +132,7 @@ function makeConnectedClients(options: { paymentResults?: Array<{ data: unknown;
         grand_total: "629.00",
         currency: "EUR",
       } : null);
-      if (table === "product_variants") return query([{ id: "11111111-1111-4111-8111-111111111111", product_id: "pr_loom27" }]);
+      if (table === "product_variants") return query(variants);
       if (table === "carts") return query(null);
       if (table === "cart_items") return query(cartItems.map(({ variant_id }) => ({ variant_id })));
       throw new Error(`Unexpected table ${table}`);
@@ -125,7 +163,7 @@ function makeConnectedClients(options: { paymentResults?: Array<{ data: unknown;
     },
   };
 
-  return { userId, orderId, userClient, paymentAdmin, placeOrderArgs, paymentArgs, getOrderCreateCount: () => orderCreateCount };
+  return { userId, orderId, userClient, paymentAdmin, placeOrderArgs, paymentArgs, variantSelects, getOrderCreateCount: () => orderCreateCount };
 }
 
 function request(body: unknown) {
@@ -176,6 +214,121 @@ describe("connected Supabase checkout", () => {
       p_outcome: "approved",
     });
     expect(clients.paymentArgs[0].p_event_id).toMatch(/^[a-f0-9]{64}$/);
+  });
+
+  it("uses the explicitly selected variant and sends only its ID and quantity to the RPC", async () => {
+    const clients = makeConnectedClients();
+    checkoutMocks.createUserClient.mockResolvedValue(clients.userClient);
+    checkoutMocks.createPaymentAdminClient.mockReturnValue(clients.paymentAdmin);
+
+    const response = await request(makeBody({ items: [{ variantId, quantity: 2 }] }));
+    const body = await response.json();
+
+    expect(response.status).toBe(201);
+    expect(body.total).toBe(629);
+    expect(clients.placeOrderArgs[0].p_items).toEqual([{ variant_id: variantId, quantity: 2 }]);
+    expect(clients.variantSelects).toEqual(["id,product_id,is_active,products!inner(is_published)"]);
+    expect(JSON.stringify(clients.placeOrderArgs[0].p_items)).not.toMatch(/price|stock/i);
+  });
+
+  it.each([
+    ["does not exist", []],
+    ["is inactive", [{ id: variantId, product_id: "pr_loom27", is_active: false, products: { is_published: true } }]],
+    ["belongs to an unpublished product", [{ id: variantId, product_id: "pr_loom27", is_active: true, products: { is_published: false } }]],
+  ] as const)("rejects an explicitly selected variant that %s", async (_description, variants) => {
+    const clients = makeConnectedClients({ variants: [...variants] });
+    checkoutMocks.createUserClient.mockResolvedValue(clients.userClient);
+    checkoutMocks.createPaymentAdminClient.mockReturnValue(clients.paymentAdmin);
+
+    const response = await request(makeBody({ items: [{ variantId, quantity: 1 }] }));
+
+    expect(response.status).toBe(409);
+    expect((await response.json()).error).toContain("variante seleccionada");
+    expect(clients.placeOrderArgs).toHaveLength(0);
+  });
+
+  it("keeps the legacy productId input only when it resolves to one sellable variant", async () => {
+    const clients = makeConnectedClients({ variants: [
+      { id: variantId, product_id: "pr_loom27", is_active: true, products: { is_published: true } },
+      { id: "22222222-2222-4222-8222-222222222222", product_id: "pr_another", is_active: true, products: { is_published: true } },
+    ] });
+    checkoutMocks.createUserClient.mockResolvedValue(clients.userClient);
+    checkoutMocks.createPaymentAdminClient.mockReturnValue(clients.paymentAdmin);
+
+    const response = await request(makeBody());
+
+    expect(response.status).toBe(201);
+    expect(clients.placeOrderArgs[0].p_items).toEqual([{ variant_id: variantId, quantity: 1 }]);
+  });
+
+  it("rejects a legacy productId that resolves to multiple sellable variants", async () => {
+    const clients = makeConnectedClients({ variants: [
+      { id: variantId, product_id: "pr_loom27", is_active: true, products: { is_published: true } },
+      { id: "22222222-2222-4222-8222-222222222222", product_id: "pr_loom27", is_active: true, products: { is_published: true } },
+    ] });
+    checkoutMocks.createUserClient.mockResolvedValue(clients.userClient);
+    checkoutMocks.createPaymentAdminClient.mockReturnValue(clients.paymentAdmin);
+
+    const response = await request(makeBody());
+
+    expect(response.status).toBe(409);
+    expect((await response.json()).error).toContain("varias configuraciones");
+    expect(clients.placeOrderArgs).toHaveLength(0);
+  });
+
+  it("rejects invalid quantities before creating or pricing a cart", async () => {
+    const clients = makeConnectedClients();
+    checkoutMocks.createUserClient.mockResolvedValue(clients.userClient);
+    checkoutMocks.createPaymentAdminClient.mockReturnValue(clients.paymentAdmin);
+
+    const response = await request(makeBody({ items: [{ variantId, quantity: 11 }] }));
+
+    expect(response.status).toBe(400);
+    expect(clients.placeOrderArgs).toHaveLength(0);
+  });
+
+  it("rejects PC Builder fixture IDs in the connected checkout", async () => {
+    const clients = makeConnectedClients();
+    checkoutMocks.createUserClient.mockResolvedValue(clients.userClient);
+    checkoutMocks.createPaymentAdminClient.mockReturnValue(clients.paymentAdmin);
+
+    const response = await request(makeBody({ items: [{ productId: "builder:cpu-amd", quantity: 1 }] }));
+
+    expect(response.status).toBe(409);
+    expect((await response.json()).error).toContain("checkout demo local");
+    expect(clients.variantSelects).toHaveLength(0);
+    expect(clients.placeOrderArgs).toHaveLength(0);
+  });
+
+  it("rejects mixed productId and variantId references with a clear error", async () => {
+    const clients = makeConnectedClients();
+    checkoutMocks.createUserClient.mockResolvedValue(clients.userClient);
+    checkoutMocks.createPaymentAdminClient.mockReturnValue(clients.paymentAdmin);
+    const body = makeBody();
+
+    const response = await request({
+      ...body,
+      items: [{ productId: "pr_loom27", variantId, quantity: 1 }],
+    });
+
+    expect(response.status).toBe(400);
+    expect((await response.json()).error).toContain("exactamente uno: productId o variantId");
+    expect(clients.placeOrderArgs).toHaveLength(0);
+  });
+
+  it("does not accept client price or stock fields", async () => {
+    const clients = makeConnectedClients();
+    checkoutMocks.createUserClient.mockResolvedValue(clients.userClient);
+    checkoutMocks.createPaymentAdminClient.mockReturnValue(clients.paymentAdmin);
+    const body = makeBody();
+
+    const response = await request({
+      ...body,
+      items: [{ variantId, quantity: 1, unitPrice: 0.01, stock: 999 }],
+    });
+
+    expect(response.status).toBe(400);
+    expect(clients.placeOrderArgs).toHaveLength(0);
   });
 
   it.each([

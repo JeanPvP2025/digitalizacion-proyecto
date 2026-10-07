@@ -1,9 +1,25 @@
 import { z } from "zod";
 
+const checkoutItemSelectorError = "Cada artículo debe incluir exactamente uno: productId o variantId.";
+export type CheckoutRequestItem =
+  | { productId: string; quantity: number }
+  | { variantId: string; quantity: number };
+
 export const checkoutItemSchema = z.object({
-  productId: z.string().trim().min(1).max(140),
+  productId: z.string().trim().min(1).max(140).optional(),
+  variantId: z.uuid().optional(),
   quantity: z.number().int().min(1).max(10),
-}).strict();
+}).strict()
+  .superRefine((item, context) => {
+    if (Boolean(item.productId) === Boolean(item.variantId)) {
+      context.addIssue({ code: "custom", message: checkoutItemSelectorError, path: ["variantId"] });
+    }
+  })
+  .transform((item): CheckoutRequestItem => item.productId
+    ? { productId: item.productId, quantity: item.quantity }
+    : { variantId: item.variantId!, quantity: item.quantity });
+
+export { checkoutItemSelectorError };
 
 export const checkoutCustomerSchema = z.object({
   name: z.string().trim().min(2).max(100),
