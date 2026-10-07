@@ -1,9 +1,9 @@
 import "server-only";
 
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { hasStaffSurfaceRole, STAFF_SURFACE_ROLES } from "@/lib/supabase/policies";
 
 const INVENTORY_READ_LIMIT = 500;
-const STAFF_ROLES = ["fulfillment_manager", "super_admin"] as const;
 
 type InventoryDbRow = {
   warehouse_id: string;
@@ -74,11 +74,11 @@ export async function getInventorySnapshot(): Promise<InventorySnapshot> {
       .from("user_role_grants")
       .select("role")
       .eq("user_id", user.id)
-      .in("role", [...STAFF_ROLES])
+      .in("role", [...STAFF_SURFACE_ROLES.inventory])
       .returns<{ role: string }[]>();
 
     if (roleError) return { status: "error" };
-    if (!roleGrants?.some(({ role }) => role === "fulfillment_manager" || role === "super_admin")) {
+    if (!hasStaffSurfaceRole((roleGrants ?? []).map(({ role }) => role), "inventory")) {
       return { status: "forbidden" };
     }
 
