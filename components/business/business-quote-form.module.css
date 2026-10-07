@@ -1,0 +1,294 @@
+.formCard {
+  padding: 27px 29px 22px;
+  color: #29392e;
+  background: #fff;
+  border: 1px solid #e1e8de;
+  box-shadow: 0 24px 70px rgba(5, 23, 15, .22);
+}
+
+.formHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.formEyebrow {
+  margin: 0 0 9px;
+  color: #849183;
+  font: 8px var(--font-mono);
+  letter-spacing: .1em;
+}
+
+.formHeader h3,
+.successCard h3 {
+  margin: 0;
+  color: #25372b;
+  font: 500 24px/1.15 var(--font-display);
+  letter-spacing: -.055em;
+}
+
+.formNumber {
+  flex: 0 0 auto;
+  color: #8a9a7e;
+  font: 8px var(--font-mono);
+}
+
+.formIntro {
+  margin: 9px 0 19px;
+  color: #808980;
+  font-size: 9px;
+}
+
+.formIntro span,
+.field label > span:first-of-type {
+  color: #6c8e42;
+}
+
+.fields {
+  padding: 0;
+  margin: 0;
+  border: 0;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 13px 12px;
+}
+
+.field {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+.field > label:not(.privacyLabel) {
+  color: #536255;
+  font-size: 9px;
+  font-weight: 650;
+}
+
+.optional {
+  color: #96a096 !important;
+  font-size: 8px;
+  font-weight: 400;
+}
+
+.field input:not([type="checkbox"]),
+.field select,
+.field textarea {
+  width: 100%;
+  min-height: 39px;
+  padding: 9px 10px;
+  color: #344439;
+  border: 1px solid #dce4da;
+  border-radius: 2px;
+  outline: none;
+  background: #fff;
+  font-size: 10px;
+  transition: border-color .18s ease, box-shadow .18s ease;
+}
+
+.field select {
+  padding-right: 28px;
+  color: #5c6a5e;
+}
+
+.field textarea {
+  min-height: 94px;
+  resize: vertical;
+  line-height: 1.55;
+}
+
+.field textarea::placeholder {
+  color: #a3aba3;
+}
+
+.fieldError {
+  color: #8a342c;
+  font-size: 9px;
+  line-height: 1.5;
+}
+
+.field input:not([type="checkbox"]):focus,
+.field select:focus,
+.field textarea:focus {
+  border-color: #82a05a;
+  box-shadow: 0 0 0 3px rgba(130, 160, 90, .13);
+}
+
+.field input:not([type="checkbox"]):focus-visible,
+.field select:focus-visible,
+.field textarea:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 1px;
+  box-shadow: 0 0 0 5px #17392b;
+}
+
+.helper {
+  color: #90998f;
+  font-size: 8px;
+  line-height: 1.5;
+}
+
+.privacyLabel {
+  display: grid;
+  grid-template-columns: 15px 1fr;
+  align-items: start;
+  gap: 8px;
+  color: #778277;
+  font-size: 8px;
+  line-height: 1.6;
+  cursor: pointer;
+}
+
+.privacyLabel input {
+  width: 14px;
+  height: 14px;
+  margin: 1px 0 0;
+  accent-color: var(--forest);
+}
+
+.privacyLabel a {
+  color: var(--forest);
+  font-weight: 650;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.formError {
+  padding: 11px 12px;
+  margin: 14px 0 0;
+  color: #8a342c;
+  background: #fae9e6;
+  border-left: 2px solid #d77463;
+  font-size: 9px;
+  line-height: 1.5;
+}
+
+.submitRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.submitRow button {
+  min-width: 185px;
+}
+
+.submitRow > span {
+  color: #8a948a;
+  font-size: 8px;
+  text-align: right;
+}
+
+.spinner {
+  animation: spin .8s linear infinite;
+}
+
+.formFootnote {
+  padding-top: 12px;
+  margin: 15px 0 0;
+  color: #98a198;
+  border-top: 1px solid #edf0eb;
+  font-size: 7px;
+  line-height: 1.55;
+}
+
+.successCard {
+  min-height: 405px;
+  padding: 38px;
+}
+
+.successMark {
+  display: grid;
+  width: 46px;
+  height: 46px;
+  place-items: center;
+  margin-bottom: 22px;
+  color: #2b4b31;
+  background: var(--accent);
+  border-radius: 50%;
+}
+
+.successCard h3 {
+  max-width: 390px;
+  font-size: 31px;
+}
+
+.successCopy {
+  max-width: 430px;
+  margin: 13px 0 0;
+  color: #758075;
+  font-size: 10px;
+  line-height: 1.75;
+}
+
+.reference {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 9px;
+  width: fit-content;
+  padding: 10px 12px;
+  margin: 20px 0 0;
+  color: #859184;
+  background: #f2f5ef;
+  font: 8px var(--font-mono);
+}
+
+.reference strong {
+  color: #405b3c;
+  font-weight: 500;
+}
+
+.secondaryButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 0 13px;
+  margin-top: 22px;
+  color: #3d5a3d;
+  background: #fff;
+  border: 1px solid #cfddc6;
+  cursor: pointer;
+  font-size: 9px;
+  font-weight: 650;
+  transition: background .18s ease, border-color .18s ease;
+}
+
+.secondaryButton:hover {
+  background: #f4f7f0;
+  border-color: #a8c18d;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (max-width: 600px) {
+  .formCard { padding: 20px 16px 17px; }
+  .formHeader h3 { font-size: 21px; }
+  .formGrid { gap: 11px 8px; }
+  .field > label:not(.privacyLabel) { font-size: 8px; }
+  .field input:not([type="checkbox"]), .field select, .field textarea { min-height: 38px; padding: 8px; font-size: 9px; }
+  .submitRow { align-items: flex-start; flex-direction: column; }
+  .submitRow button { width: 100%; }
+  .submitRow > span { text-align: left; }
+  .successCard { min-height: 0; padding: 27px 21px; }
+  .successCard h3 { font-size: 28px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spinner { animation-duration: 1.5s; }
+  .field input, .field select, .field textarea, .secondaryButton { transition: none; }
+}

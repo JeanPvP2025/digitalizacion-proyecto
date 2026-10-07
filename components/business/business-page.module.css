@@ -1,0 +1,755 @@
+.businessPage {
+  overflow: hidden;
+  background: var(--paper);
+}
+
+.hero {
+  position: relative;
+  overflow: hidden;
+  color: #f3f6ef;
+  background: var(--forest-deep);
+  isolation: isolate;
+}
+
+.heroGrid,
+.heroGlow {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  pointer-events: none;
+}
+
+.heroGrid {
+  opacity: .48;
+  background-image: linear-gradient(rgba(219, 238, 210, .055) 1px, transparent 1px), linear-gradient(90deg, rgba(219, 238, 210, .055) 1px, transparent 1px);
+  background-size: 68px 68px;
+  mask-image: linear-gradient(90deg, #000, transparent 91%);
+}
+
+.heroGlow {
+  background: radial-gradient(ellipse 530px 460px at 77% 50%, rgba(119, 156, 84, .18), transparent 71%);
+}
+
+.heroInner {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.02fr) minmax(390px, .82fr);
+  align-items: center;
+  gap: clamp(45px, 8vw, 120px);
+  width: min(1280px, calc(100% - 88px));
+  min-height: 650px;
+  padding: 78px 0 89px;
+  margin: 0 auto;
+}
+
+.heroCopy {
+  position: relative;
+  z-index: 1;
+  max-width: 660px;
+  animation: hero-rise .68s both;
+}
+
+.heroEyebrow,
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 23px;
+  color: #829186;
+  font: 9px var(--font-mono);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.heroEyebrow {
+  color: #b2c1b3;
+}
+
+.heroEyebrow > span:first-child {
+  width: 22px;
+  height: 1px;
+  background: var(--accent);
+}
+
+.eyebrowIndex {
+  margin-left: 3px;
+  color: #7e9182;
+}
+
+.heroCopy h1 {
+  max-width: 650px;
+  margin: 0;
+  color: #f7f8f4;
+  font: 500 clamp(47px, 6.1vw, 78px)/1.02 var(--font-display);
+  letter-spacing: -.075em;
+}
+
+.heroCopy h1 em {
+  color: var(--accent);
+  font-style: normal;
+}
+
+.heroLead {
+  max-width: 490px;
+  margin: 23px 0 27px;
+  color: #bec9bf;
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 22px;
+}
+
+.heroPrimaryButton {
+  min-height: 48px;
+}
+
+.heroTextLink,
+.quoteCatalogLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: #e0e9df;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.heroTextLink:hover,
+.quoteCatalogLink:hover {
+  color: var(--accent);
+}
+
+.heroSignals {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 23px;
+  margin-top: 52px;
+  padding-top: 19px;
+  border-top: 1px solid rgba(255, 255, 255, .15);
+}
+
+.heroSignals > div {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #c2cec2;
+  font-size: 9px;
+}
+
+.signalIcon {
+  display: grid;
+  width: 25px;
+  height: 25px;
+  place-items: center;
+  color: var(--accent);
+  border: 1px solid rgba(201, 237, 120, .32);
+  border-radius: 50%;
+}
+
+.heroPanel {
+  position: relative;
+  z-index: 1;
+  padding: 21px 22px 16px;
+  color: var(--ink);
+  background: #f8f9f5;
+  border: 1px solid rgba(255, 255, 255, .4);
+  box-shadow: 0 28px 80px rgba(0, 0, 0, .2);
+  animation: hero-rise .8s .1s both;
+}
+
+.panelTopline,
+.panelFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #78847a;
+  font: 8px var(--font-mono);
+  letter-spacing: .075em;
+}
+
+.panelMark {
+  color: #8ba176;
+}
+
+.panelIntro {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 23px 0 20px;
+  border-bottom: 1px solid #e3e8df;
+}
+
+.panelIcon {
+  display: grid;
+  flex: 0 0 auto;
+  width: 43px;
+  height: 43px;
+  place-items: center;
+  color: var(--forest);
+  background: #eaf0e3;
+}
+
+.panelIntro h2 {
+  margin: 0;
+  color: #24372a;
+  font: 500 17px/1.2 var(--font-display);
+  letter-spacing: -.045em;
+}
+
+.panelIntro p {
+  margin: 5px 0 0;
+  color: #7a857a;
+  font-size: 9px;
+  line-height: 1.5;
+}
+
+.heroSteps {
+  display: grid;
+  gap: 0;
+  padding: 10px 0 8px;
+  margin: 0;
+  list-style: none;
+}
+
+.heroStep {
+  position: relative;
+  display: grid;
+  grid-template-columns: 33px 1fr;
+  gap: 11px;
+  min-height: 72px;
+  padding: 8px 0 7px;
+}
+
+.heroStepNumber {
+  display: grid;
+  z-index: 1;
+  width: 29px;
+  height: 29px;
+  place-items: center;
+  color: #54713f;
+  background: #edf2e6;
+  border: 1px solid #dce7d2;
+  border-radius: 50%;
+  font: 9px var(--font-mono);
+}
+
+.heroStep strong {
+  display: block;
+  color: #344438;
+  font-size: 10px;
+  font-weight: 650;
+}
+
+.heroStep p {
+  max-width: 350px;
+  margin: 4px 0 0;
+  color: #778177;
+  font-size: 9px;
+  line-height: 1.5;
+}
+
+.stepConnector {
+  position: absolute;
+  top: 35px;
+  bottom: -3px;
+  left: 14px;
+  width: 1px;
+  background: #d7e0d1;
+}
+
+.panelFooter {
+  min-height: 29px;
+  padding-top: 10px;
+  border-top: 1px solid #e3e8df;
+}
+
+.panelFooter > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.panelFooter i {
+  width: 5px;
+  height: 5px;
+  background: #8eb65a;
+  border-radius: 50%;
+}
+
+.panelFooter svg {
+  color: #758670;
+}
+
+.heroCoordinate {
+  position: absolute;
+  right: 25px;
+  bottom: 20px;
+  color: rgba(222, 235, 220, .44);
+  font: 8px var(--font-mono);
+  letter-spacing: .1em;
+}
+
+.sectionShell {
+  width: min(1280px, calc(100% - 88px));
+  margin: 0 auto;
+}
+
+.servicesSection {
+  padding: 88px 0 96px;
+  background: var(--paper);
+}
+
+.sectionHeading,
+.workflowHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 40px;
+  margin-bottom: 31px;
+}
+
+.sectionHeading .eyebrow,
+.workflowHeader .eyebrow {
+  margin-bottom: 14px;
+}
+
+.sectionHeading h2,
+.workflowHeader h2 {
+  margin: 0;
+  color: #1b2c21;
+  font: 500 clamp(33px, 4vw, 49px)/1.06 var(--font-display);
+  letter-spacing: -.07em;
+}
+
+.sectionIntro {
+  max-width: 385px;
+  margin: 0 0 3px;
+  color: #788278;
+  font-size: 11px;
+  line-height: 1.75;
+}
+
+.serviceGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 11px;
+}
+
+.serviceCard {
+  display: flex;
+  flex-direction: column;
+  min-height: 260px;
+  padding: 20px 18px 17px;
+  background: #fff;
+  border: 1px solid #e0e6de;
+  transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+}
+
+.serviceCard:hover {
+  transform: translateY(-3px);
+  border-color: #c2d49e;
+  box-shadow: 0 14px 30px rgba(29, 52, 33, .06);
+}
+
+.serviceCardTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 25px;
+}
+
+.serviceIcon {
+  display: grid;
+  width: 37px;
+  height: 37px;
+  place-items: center;
+  color: var(--forest);
+  background: #edf2e7;
+}
+
+.serviceNumber {
+  color: #a0aaa0;
+  font: 8px var(--font-mono);
+}
+
+.serviceCard h3 {
+  margin: 0 0 9px;
+  color: #28392d;
+  font: 500 16px/1.2 var(--font-display);
+  letter-spacing: -.04em;
+}
+
+.serviceCard > p {
+  margin: 0;
+  color: #788278;
+  font-size: 9px;
+  line-height: 1.7;
+}
+
+.serviceTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  padding: 0;
+  margin: auto 0 0;
+  padding-top: 17px;
+  list-style: none;
+}
+
+.serviceTags li {
+  padding: 5px 7px;
+  color: #667566;
+  background: #f3f5f0;
+  font: 7px var(--font-mono);
+}
+
+.workflowSection {
+  padding: 86px 0 92px;
+  background: #edf1e9;
+}
+
+.workflowHeader {
+  align-items: end;
+  margin-bottom: 34px;
+}
+
+.workflowHeader > p {
+  max-width: 410px;
+  margin: 0 0 3px;
+  color: #778177;
+  font-size: 11px;
+  line-height: 1.75;
+}
+
+.workflowList {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  padding: 0;
+  margin: 0;
+  border-top: 1px solid #d5ded0;
+  border-bottom: 1px solid #d5ded0;
+  list-style: none;
+}
+
+.workflowStep {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 195px;
+  padding: 19px 20px 17px 0;
+}
+
+.workflowStep + .workflowStep {
+  padding-left: 20px;
+  border-left: 1px solid #d5ded0;
+}
+
+.workflowNumber {
+  color: #6f8d4b;
+  font: 10px var(--font-mono);
+}
+
+.workflowStepBody {
+  margin-top: 33px;
+}
+
+.workflowStep h3 {
+  margin: 0 0 8px;
+  color: #2d4032;
+  font: 500 15px var(--font-display);
+  letter-spacing: -.035em;
+}
+
+.workflowStep p {
+  max-width: 230px;
+  margin: 0;
+  color: #7b877b;
+  font-size: 9px;
+  line-height: 1.65;
+}
+
+.workflowIcon {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  color: #a4b196;
+}
+
+.workflowNote {
+  display: grid;
+  grid-template-columns: 32px 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 15px 18px;
+  margin-top: 17px;
+  background: rgba(255, 255, 255, .7);
+  border: 1px solid #dfe6d9;
+}
+
+.noteIcon {
+  display: grid;
+  width: 31px;
+  height: 31px;
+  place-items: center;
+  color: #52723d;
+  background: #edf2e6;
+  border-radius: 50%;
+}
+
+.workflowNote p {
+  margin: 0;
+  color: #758076;
+  font-size: 9px;
+  line-height: 1.6;
+}
+
+.workflowNote p strong {
+  color: #3d5540;
+}
+
+.workflowNote a {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--forest);
+  font-size: 9px;
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+.quoteSection {
+  padding: 92px 0 100px;
+  color: #f0f4ed;
+  background: #132e23;
+  scroll-margin-top: 22px;
+}
+
+.quoteShell {
+  display: grid;
+  grid-template-columns: minmax(250px, .77fr) minmax(430px, 1fr);
+  gap: clamp(42px, 8vw, 104px);
+  align-items: start;
+  width: min(1160px, calc(100% - 88px));
+  margin: 0 auto;
+}
+
+.quoteAside {
+  padding-top: 15px;
+}
+
+.quoteAside .eyebrow {
+  color: #aebcab;
+}
+
+.quoteAside h2 {
+  max-width: 440px;
+  margin: 0;
+  color: #f8faf5;
+  font: 500 clamp(36px, 4.7vw, 56px)/1.04 var(--font-display);
+  letter-spacing: -.07em;
+}
+
+.quoteLead {
+  max-width: 430px;
+  margin: 18px 0 28px;
+  color: #b6c4b8;
+  font-size: 11px;
+  line-height: 1.75;
+}
+
+.quoteContactCard {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 15px;
+  border: 1px solid rgba(226, 239, 222, .17);
+  background: rgba(255, 255, 255, .045);
+}
+
+.contactIcon {
+  display: grid;
+  flex: 0 0 auto;
+  width: 32px;
+  height: 32px;
+  place-items: center;
+  color: var(--accent);
+  background: rgba(201, 237, 120, .1);
+}
+
+.quoteContactCard strong,
+.quoteContactCard span:not(.contactIcon) {
+  display: block;
+}
+
+.quoteContactCard strong {
+  color: #f0f5ed;
+  font-size: 10px;
+}
+
+.quoteContactCard div > span {
+  margin-top: 5px;
+  color: #a8b9ab;
+  font-size: 9px;
+  line-height: 1.55;
+}
+
+.quoteDetail {
+  display: grid;
+  grid-template-columns: 29px 1fr;
+  gap: 10px;
+  align-items: start;
+  padding-top: 14px;
+  margin-top: 13px;
+  border-top: 1px solid rgba(255, 255, 255, .12);
+}
+
+.quoteDetail > span {
+  color: var(--accent);
+  font: 9px var(--font-mono);
+}
+
+.quoteDetail p {
+  max-width: 350px;
+  margin: 0;
+  color: #bac7ba;
+  font-size: 9px;
+  line-height: 1.6;
+}
+
+.quoteCatalogLink {
+  margin-top: 23px;
+  color: var(--accent);
+}
+
+.closingBand {
+  padding: 27px 0;
+  background: #e8eee3;
+}
+
+.closingInner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 25px;
+  width: min(1280px, calc(100% - 88px));
+  margin: 0 auto;
+}
+
+.closingInner > div > p {
+  margin: 0 0 8px;
+  color: #849080;
+  font: 8px var(--font-mono);
+  letter-spacing: .1em;
+}
+
+.closingInner > div > p span {
+  color: #9ab565;
+}
+
+.closingInner h2 {
+  margin: 0;
+  color: #26382c;
+  font: 500 20px var(--font-display);
+  letter-spacing: -.045em;
+}
+
+@keyframes hero-rise {
+  from { opacity: 0; transform: translateY(11px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 1040px) {
+  .heroInner {
+    grid-template-columns: minmax(0, .95fr) minmax(340px, .85fr);
+    gap: 42px;
+    width: calc(100% - 64px);
+  }
+
+  .heroCopy h1 { font-size: clamp(46px, 6vw, 66px); }
+  .heroSignals { gap: 12px; }
+  .sectionShell, .closingInner { width: calc(100% - 64px); }
+  .serviceCard { padding-right: 14px; padding-left: 14px; }
+  .quoteShell { width: calc(100% - 64px); gap: 45px; }
+}
+
+@media (max-width: 820px) {
+  .heroInner {
+    grid-template-columns: 1fr;
+    gap: 38px;
+    max-width: 660px;
+    padding: 61px 0 73px;
+  }
+
+  .heroCopy { max-width: 620px; }
+  .heroCopy h1 { max-width: 580px; font-size: clamp(51px, 9vw, 75px); }
+  .heroLead { max-width: 530px; }
+  .heroSignals { margin-top: 35px; }
+  .heroPanel { max-width: 620px; }
+  .servicesSection, .workflowSection { padding: 68px 0 73px; }
+  .serviceGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .serviceCard { min-height: 240px; padding: 19px; }
+  .sectionHeading, .workflowHeader { align-items: start; flex-direction: column; gap: 16px; }
+  .sectionIntro, .workflowHeader > p { max-width: 540px; }
+  .workflowList { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .workflowStep { min-height: 167px; padding-bottom: 19px; }
+  .workflowStep:nth-child(3) { padding-left: 0; border-left: 0; border-top: 1px solid #d5ded0; }
+  .workflowStep:nth-child(4) { border-top: 1px solid #d5ded0; }
+  .quoteShell { grid-template-columns: 1fr; max-width: 660px; gap: 32px; }
+  .quoteAside { padding-top: 0; }
+  .quoteAside h2 { max-width: 550px; }
+  .quoteSection { padding: 68px 0 75px; }
+}
+
+@media (max-width: 600px) {
+  .heroInner, .sectionShell, .closingInner, .quoteShell { width: calc(100% - 38px); }
+  .heroInner { gap: 31px; padding: 47px 0 57px; }
+  .heroCopy h1 { font-size: clamp(46px, 12vw, 66px); }
+  .heroEyebrow, .eyebrow { font-size: 8px; }
+  .heroLead { margin: 16px 0 20px; font-size: 11px; }
+  .heroActions { gap: 14px; }
+  .heroPrimaryButton { min-height: 42px; padding: 0 13px; }
+  .heroTextLink { font-size: 9px; }
+  .heroSignals { gap: 11px 16px; margin-top: 27px; padding-top: 14px; }
+  .heroSignals > div { font-size: 8px; }
+  .signalIcon { width: 22px; height: 22px; }
+  .heroPanel { padding: 17px 15px 13px; }
+  .panelIntro { gap: 10px; padding: 19px 0 16px; }
+  .panelIntro h2 { font-size: 15px; }
+  .heroStep { min-height: 70px; }
+  .heroStep p { font-size: 8px; }
+  .heroCoordinate { right: 11px; bottom: 8px; font-size: 7px; }
+  .servicesSection, .workflowSection { padding: 53px 0 58px; }
+  .sectionHeading, .workflowHeader { margin-bottom: 23px; }
+  .sectionHeading h2, .workflowHeader h2 { font-size: 36px; }
+  .sectionIntro, .workflowHeader > p { font-size: 10px; }
+  .serviceGrid { gap: 8px; }
+  .serviceCard { min-height: 243px; padding: 14px 12px; }
+  .serviceCardTop { margin-bottom: 17px; }
+  .serviceIcon { width: 32px; height: 32px; }
+  .serviceCard h3 { font-size: 13px; }
+  .serviceCard > p { font-size: 8px; }
+  .serviceTags { gap: 4px; padding-top: 12px; }
+  .serviceTags li { padding: 4px 5px; font-size: 6px; }
+  .workflowStep { min-height: 167px; padding-right: 10px; }
+  .workflowStep + .workflowStep { padding-left: 12px; }
+  .workflowStep:nth-child(3) { padding-left: 0; }
+  .workflowStep h3 { font-size: 13px; }
+  .workflowStep p { font-size: 8px; }
+  .workflowIcon { right: 8px; }
+  .workflowNote { grid-template-columns: 31px 1fr; padding: 12px; }
+  .workflowNote a { grid-column: 2; width: fit-content; }
+  .quoteSection { padding: 55px 0 61px; }
+  .quoteAside h2 { font-size: 42px; }
+  .quoteLead { font-size: 10px; }
+  .closingInner { align-items: flex-start; flex-direction: column; }
+  .closingInner h2 { font-size: 18px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .heroCopy, .heroPanel { animation: none; }
+  .serviceCard { transition: none; }
+}
