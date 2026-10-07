@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Activity, ArrowDownRight, ArrowUpRight, Boxes, CheckCircle2, Clock3, Package, Search, Truck } from "lucide-react";
-import type { OperationsOrder, OperationsWorkspace } from "@/lib/operations/data";
+import type { OperationsFulfillmentStage, OperationsOrder, OperationsWorkspace } from "@/lib/operations/data";
 import { OperationsOrderAction } from "@/components/backoffice/operations-order-action";
 import styles from "./operations-center.module.css";
 
@@ -36,10 +36,21 @@ function formatMoney(value: number, currency: string): string {
   }
 }
 
-function statusLabel(status: OperationsOrder["status"]): string {
-  if (status === "paid") return "Listo para preparar";
-  if (status === "processing") return "Preparación";
-  return "En tránsito";
+function fulfillmentStageLabel(stage: OperationsFulfillmentStage): string {
+  const labels: Record<OperationsFulfillmentStage, string> = {
+    pending: "Pendiente de picking",
+    picking: "En picking",
+    packed: "Empaquetado",
+    shipped: "En tránsito",
+  };
+  return labels[stage];
+}
+
+function transitionForStage(stage: OperationsFulfillmentStage): "pick" | "pack" | "dispatch" | "deliver" {
+  if (stage === "pending") return "pick";
+  if (stage === "picking") return "pack";
+  if (stage === "packed") return "dispatch";
+  return "deliver";
 }
 
 function searchMatches(order: OperationsOrder, query: string): boolean {
@@ -59,8 +70,8 @@ export function OperationsCenter({
 }) {
   const normalizedQuery = query.toLocaleLowerCase("es-ES");
   const visibleOrders = workspace.orders.filter((order) => {
-    if (queue === "ready" && order.status === "shipped") return false;
-    if (queue === "shipped" && order.status !== "shipped") return false;
+    if (queue === "ready" && order.fulfillmentStage === "shipped") return false;
+    if (queue === "shipped" && order.fulfillmentStage !== "shipped") return false;
     return searchMatches(order, normalizedQuery);
   });
   const latestEventsByOrder = new Map<string, (typeof workspace.events)[number]>();
@@ -88,7 +99,7 @@ export function OperationsCenter({
         <div>
           <p className={styles.eyebrow}><span /> OPERACIONES / FULFILLMENT</p>
           <h1 id="operations-title">Centro operativo<span>.</span></h1>
-          <p className={styles.intro}>Pedidos confirmados, expediciones y actividad del timeline en una sola vista.</p>
+          <p className={styles.intro}>Picking, empaquetado, expedición y actividad del timeline en una sola vista.</p>
         </div>
         <div className={styles.connectionStatus}>
           <span className={styles.connectionDot} />
@@ -101,7 +112,7 @@ export function OperationsCenter({
           <span className={styles.metricIcon}><Package size={16} aria-hidden="true" /></span>
           <p>PENDIENTES DE EXPEDICIÓN</p>
           <strong>{workspace.readyForDispatch.toLocaleString("es-ES")}</strong>
-          <small>Pedidos con pago confirmado</small>
+          <small>Pedidos pagados pendientes de despacho</small>
           <ArrowUpRight className={styles.metricArrow} size={16} aria-hidden="true" />
         </article>
         <article className={styles.metric}>
@@ -145,7 +156,7 @@ export function OperationsCenter({
               <span className={styles.srOnly}>Filtrar cola por etapa</span>
               <select name="queue" defaultValue={queue}>
                 <option value="all">Todas las etapas</option>
-                <option value="ready">Pendientes de expedición</option>
+                <option value="ready">Pendientes de despacho</option>
                 <option value="shipped">En tránsito</option>
               </select>
             </label>
@@ -158,7 +169,7 @@ export function OperationsCenter({
           {visibleOrders.length ? (
             <div className={styles.tableScroll}>
               <table className={styles.ordersTable}>
-                <caption className={styles.srOnly}>Pedidos pagados pendientes de expedición y pedidos enviados pendientes de entrega</caption>
+                <caption className={styles.srOnly}>Pedidos pagados en picking o empaquetado y pedidos expedidos pendientes de entrega</caption>
                 <thead><tr><th scope="col">PEDIDO</th><th scope="col">DESTINO / ARTÍCULOS</th><th scope="col">ÚLTIMO EVENTO</th><th scope="col">ESTADO</th><th scope="col">ACCIÓN</th></tr></thead>
                 <tbody>
                   {visibleOrders.map((order) => {
@@ -180,8 +191,8 @@ export function OperationsCenter({
                         <td>
                           {latestEvent ? <><strong className={styles.eventName}>{latestEvent.key}</strong><span className={styles.eventDate}>{formatDate(latestEvent.occurredAt)}</span></> : <span className={styles.muted}>Sin eventos en los últimos 7 días</span>}
                         </td>
-                        <td><span className={`${styles.statusBadge} ${styles[`status_${order.status}`]}`}><i aria-hidden="true" />{statusLabel(order.status)}</span></td>
-                        <td><OperationsOrderAction orderId={order.id} transition={order.status === "shipped" ? "deliver" : "fulfill"} /></td>
+                        <td><span className={`${styles.statusBadge} ${styles[`stage_${order.fulfillmentStage}`]}`}><i aria-hidden="true" />{fulfillmentStageLabel(order.fulfillmentStage)}</span></td>
+                        <td><OperationsOrderAction orderId={order.id} transition={transitionForStage(order.fulfillmentStage)} /></td>
                       </tr>
                     );
                   })}
@@ -191,13 +202,13 @@ export function OperationsCenter({
           ) : (
             <div className={styles.emptyState}>
               <span className={styles.emptyIcon}><Package size={19} aria-hidden="true" /></span>
-              <strong>{hasFilters ? "No hay pedidos que coincidan" : "La cola de expedición está al día"}</strong>
-              <p>{hasFilters ? "Prueba con otro término o etapa." : "Los pedidos aparecen aquí tras confirmar el pago. Los pedidos enviados permanecen hasta que se registra su entrega."}</p>
+              <strong>{hasFilters ? "No hay pedidos que coincidan" : "La cola de preparación está al día"}</strong>
+              <p>{hasFilters ? "Prueba con otro término o etapa." : "Los pedidos aparecen aquí tras confirmar el pago. Los expedidos permanecen hasta que se registra su entrega."}</p>
               {hasFilters && <Link href="/backoffice">Ver toda la cola</Link>}
             </div>
           )}
           <footer className={styles.panelFooter}>
-            <span><i aria-hidden="true" /> Transiciones atómicas mediante RPC · El inventario no se modifica desde la interfaz</span>
+            <span><i aria-hidden="true" /> Picking y empaquetado quedan en timeline · El despacho consume reservas en PostgreSQL</span>
             <small>Actualizado {lastUpdated}</small>
           </footer>
         </section>

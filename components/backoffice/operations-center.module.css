@@ -102,8 +102,10 @@
 .muted { color: #a0aaa0; font-size: 9px; }
 .statusBadge { display: inline-flex; align-items: center; gap: 6px; min-height: 23px; padding: 0 8px; color: #697b55; background: #eef3e8; font-size: 8px; white-space: nowrap; }
 .statusBadge > i { width: 6px; height: 6px; background: currentColor; border-radius: 50%; }
-.status_processing { color: #987841; background: #f7f2e5; }
-.status_shipped { color: #5d788c; background: #eaf1f5; }
+.stage_pending { color: #697b55; background: #eef3e8; }
+.stage_picking { color: #987841; background: #f7f2e5; }
+.stage_packed { color: #6e6d92; background: #f0eff8; }
+.stage_shipped { color: #5d788c; background: #eaf1f5; }
 .actionCell { min-width: 153px; }
 .actionCell form { margin: 0; }
 .actionButton { display: inline-flex; min-height: 40px; align-items: center; justify-content: center; gap: 7px; padding: 0 10px; border: 1px solid #dce5d6; color: #476047; background: #f8faf6; font-size: 9px; font-weight: 650; cursor: pointer; transition: color .16s ease, background .16s ease, border-color .16s ease, transform .12s ease; }

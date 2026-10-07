@@ -8,9 +8,18 @@ import type { OperationsActionState } from "@/lib/operations/contracts";
 
 const orderIdSchema = z.uuid();
 
+type FulfillmentRpc = "start_order_picking" | "pack_order" | "dispatch_order" | "confirm_order_delivery";
+
+const fulfillmentActionCopy: Record<FulfillmentRpc, { expected: string; success: string }> = {
+  start_order_picking: { expected: "picking", success: "Preparación iniciada. El timeline ya está actualizado." },
+  pack_order: { expected: "packed", success: "Pedido empaquetado. El timeline ya está actualizado." },
+  dispatch_order: { expected: "shipped", success: "Pedido despachado. El timeline ya está actualizado." },
+  confirm_order_delivery: { expected: "delivered", success: "Entrega confirmada. El timeline ya está actualizado." },
+};
+
 async function runFulfillmentTransition(
   orderIdValue: FormDataEntryValue | null,
-  rpc: "fulfill_order" | "mark_order_delivered",
+  rpc: FulfillmentRpc,
 ): Promise<OperationsActionState> {
   const parsedOrderId = orderIdSchema.safeParse(orderIdValue);
   if (!parsedOrderId.success) {
@@ -26,37 +35,51 @@ async function runFulfillmentTransition(
   if (!admin) return { status: "error", message: "Falta la configuración segura del servicio operativo." };
 
   try {
-    const { data, error } = await admin.rpc(rpc, { p_order_id: parsedOrderId.data });
+    const { data, error } = await admin.rpc(rpc, {
+      p_order_id: parsedOrderId.data,
+      p_actor_user_id: access.user.id,
+    });
     if (error) {
       if (error.code === "42501") return { status: "error", message: "Tu cuenta no tiene permisos para realizar esta transición." };
       if (error.code === "P0002") return { status: "error", message: "El pedido ya no está disponible." };
       if (error.code === "23514") return { status: "error", message: "El estado actual del pedido no permite esta acción." };
       return { status: "error", message: "No se pudo actualizar el pedido. Comprueba la conexión y vuelve a intentarlo." };
     }
-    if (data !== (rpc === "fulfill_order" ? "shipped" : "delivered")) {
+    if (data !== fulfillmentActionCopy[rpc].expected) {
       return { status: "error", message: "La base de datos no confirmó el estado esperado del pedido." };
     }
 
     revalidatePath("/backoffice");
-    return {
-      status: "success",
-      message: rpc === "fulfill_order" ? "Pedido expedido. El timeline ya está actualizado." : "Entrega confirmada. El timeline ya está actualizado.",
-    };
+    return { status: "success", message: fulfillmentActionCopy[rpc].success };
   } catch {
     return { status: "error", message: "No se pudo actualizar el pedido. Comprueba la conexión y vuelve a intentarlo." };
   }
 }
 
-export async function fulfillOperationsOrder(
+export async function startOperationsPicking(
   _previousState: OperationsActionState,
   formData: FormData,
 ): Promise<OperationsActionState> {
-  return runFulfillmentTransition(formData.get("orderId"), "fulfill_order");
+  return runFulfillmentTransition(formData.get("orderId"), "start_order_picking");
+}
+
+export async function packOperationsOrder(
+  _previousState: OperationsActionState,
+  formData: FormData,
+): Promise<OperationsActionState> {
+  return runFulfillmentTransition(formData.get("orderId"), "pack_order");
+}
+
+export async function dispatchOperationsOrder(
+  _previousState: OperationsActionState,
+  formData: FormData,
+): Promise<OperationsActionState> {
+  return runFulfillmentTransition(formData.get("orderId"), "dispatch_order");
 }
 
 export async function markOperationsOrderDelivered(
   _previousState: OperationsActionState,
   formData: FormData,
 ): Promise<OperationsActionState> {
-  return runFulfillmentTransition(formData.get("orderId"), "mark_order_delivered");
+  return runFulfillmentTransition(formData.get("orderId"), "confirm_order_delivery");
 }
