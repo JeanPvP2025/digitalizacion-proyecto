@@ -33,7 +33,7 @@ export function StoreHeader() {
           <SearchBox />
           <div className="header-actions">
             <Link aria-label="Mis favoritos" className="header-icon-button" href="/favoritos"><span className="heart-glyph">♡</span></Link>
-            <Link aria-label="Mi cuenta" className="account-link" href="/mi-cuenta">Mi espacio</Link>
+            <Link aria-label="Mi espacio" className="account-link" href="/mi-cuenta">Mi espacio</Link>
             <CartLink />
           </div>
         </div>

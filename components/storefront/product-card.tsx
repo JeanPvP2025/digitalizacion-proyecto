@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowUpRight, Star } from "lucide-react";
 import type { Product } from "@/lib/catalog";
 import { formatPrice } from "@/lib/catalog";
@@ -7,10 +8,16 @@ import { ProductActions } from "@/components/storefront/store-interactions";
 export function ProductCard({ product, index = 0, showRating = true }: { product: Product; index?: number; showRating?: boolean }) {
   return (
     <article className="product-card" style={{ animationDelay: `${index * 70}ms` }}>
-      <Link className="product-image-link" href={`/producto/${product.slug}`} aria-label={`Ver ${product.name}`}>
+      <Link className="product-image-link" href={`/producto/${product.slug}`}>
         <div className="product-photo-wrap">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img className="product-photo" src={product.image} alt={product.imageAlt} loading={index > 2 ? "lazy" : "eager"} />
+          <Image
+            className="product-photo"
+            src={product.image}
+            alt={product.imageAlt}
+            fill
+            sizes="(max-width: 760px) 46vw, (max-width: 1100px) 36vw, 24vw"
+            loading={index > 2 ? "lazy" : "eager"}
+          />
           {product.badge && <span className="product-badge">DEMO · {product.badge}</span>}
           <span className="product-open"><ArrowUpRight size={16} /></span>
         </div>

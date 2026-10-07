@@ -114,7 +114,7 @@ export function ConnectedCollectionActions({ product }: { product: Product }) {
 export function ConnectedProductCard({ product, index = 0 }: { product: Product; index?: number }) {
   return (
     <article className="product-card" style={{ animationDelay: `${index * 70}ms` }}>
-      <Link className="product-image-link" href={`/producto/${product.slug}`} aria-label={`Ver ${product.name}`}>
+      <Link className="product-image-link" href={`/producto/${product.slug}`}>
         <div className="product-photo-wrap">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           {product.image ? <img className="product-photo" src={product.image} alt={product.imageAlt} loading={index > 2 ? "lazy" : "eager"} /> : <span className="product-photo-placeholder">Imagen no disponible</span>}

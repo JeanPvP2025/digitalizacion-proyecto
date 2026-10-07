@@ -47,10 +47,12 @@ test("primary flows render one main heading and named controls with working inte
           const labelText = element instanceof HTMLInputElement || element instanceof HTMLSelectElement || element instanceof HTMLTextAreaElement
             ? Array.from(element.labels ?? []).map((label) => label.textContent ?? "").join(" ")
             : "";
+          const imageAlternative = element.querySelector<HTMLImageElement>("img[alt]")?.alt ?? "";
           return ![
             element.getAttribute("aria-label"),
             labelledByText,
             labelText,
+            imageAlternative,
             element.getAttribute("title"),
             element.textContent,
           ].some((value) => value?.trim());

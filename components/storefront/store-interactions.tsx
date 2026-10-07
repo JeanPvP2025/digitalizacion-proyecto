@@ -82,10 +82,10 @@ export function CartLink() {
     return () => { window.removeEventListener("nodria:cart", update); window.removeEventListener("storage", update); };
   }, []);
   return <>
-    <Link aria-label={`Carrito, ${count} ${count === 1 ? "artículo" : "artículos"}`} className="header-cart" href="/carrito">
+    <Link className="header-cart" href="/carrito">
       <ShoppingBag aria-hidden="true" size={18} strokeWidth={1.7} />
-      <span aria-hidden="true" className="header-cart-label">Carrito</span>
-      <span aria-hidden="true" className="cart-count">{count}</span>
+      <span className="header-cart-label">Carrito</span>
+      <span className="cart-count">{count}</span>
     </Link>
     <span aria-atomic="true" aria-live="polite" className="sr-only" role="status">{announcement}</span>
   </>;

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, ArrowUpRight, AudioLines, Cpu, HardDrive, Laptop, Network, PanelsTopLeft, ShieldCheck, ShoppingBag } from "lucide-react";
 import { ProductCard } from "@/components/storefront/product-card";
@@ -41,8 +42,14 @@ export default function HomePage() {
           <div className="hero-art" aria-label="Ficha de ejemplo del FluxBook 14 Pro">
             <div className="hero-index"><b>01</b> / FICHA DEMO</div>
             <div className="hero-device">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={demoProducts[0].image} alt={demoProducts[0].imageAlt} fetchPriority="high" />
+              <Image
+                src={demoProducts[0].image}
+                alt={demoProducts[0].imageAlt}
+                fill
+                sizes="(max-width: 760px) calc(100vw - 38px), (max-width: 1100px) 46vw, 42vw"
+                loading="eager"
+                fetchPriority="high"
+              />
               <div className="device-frame" />
               <div className="device-coordinate">NODRIA / PRODUCTO FICTICIO</div>
               <div className="hero-product-callout"><span>FLUXBOOK 14 PRO · EJEMPLO</span><strong>Vista de<br />demostración.</strong><small>Precio demo · {formatPrice(demoProducts[0].price)}</small></div>

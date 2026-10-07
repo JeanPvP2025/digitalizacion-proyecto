@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
@@ -46,8 +47,12 @@ async function ProductContent({ params }: { params: PageProps<"/producto/[slug]"
       {sourceNotice && <p className="page-intro" role="status">{sourceNotice}</p>}
       <div className="product-detail-top">
         <div className="product-detail-image">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          {product.image ? <img src={product.image} alt={product.imageAlt} fetchPriority="high" /> : <span className="product-photo-placeholder">Imagen no disponible</span>}
+          {product.image ? data.source === "demo" ? (
+            <Image src={product.image} alt={product.imageAlt} fill sizes="(max-width: 760px) 100vw, 52vw" loading="eager" fetchPriority="high" />
+          ) : (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={product.image} alt={product.imageAlt} fetchPriority="high" />
+          ) : <span className="product-photo-placeholder">Imagen no disponible</span>}
           <span className="detail-image-label">NODRIA SELECT · {product.sku}</span>
         </div>
         <section className="product-detail-copy" aria-labelledby="product-name">
