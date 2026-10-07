@@ -1,0 +1,189 @@
+/* This route sits under the storefront layout. Keep its public chrome out of the staff workspace. */
+:global(body:has([data-support-agent-shell])) :global(.announcement-bar),
+:global(body:has([data-support-agent-shell])) :global(.demo-ribbon),
+:global(body:has([data-support-agent-shell])) :global(.skip-link),
+:global(body:has([data-support-agent-shell])) :global(.site-header),
+:global(body:has([data-support-agent-shell])) :global(.site-footer),
+:global(body:has([data-support-agent-shell])) :global(.skip-target) {
+  display: none;
+}
+
+.agentPage {
+  --agent-forest: #163d32;
+  --agent-ink: #202a25;
+  --agent-muted: #526158;
+  --agent-line: #cdd5cd;
+  --agent-paper: #f3f5ef;
+  min-height: 100svh;
+  color: var(--agent-ink);
+  background: var(--agent-paper);
+}
+
+.skipLink {
+  position: fixed;
+  z-index: 20;
+  top: .5rem;
+  left: .5rem;
+  padding: .7rem 1rem;
+  transform: translateY(-160%);
+  color: white;
+  background: var(--agent-forest);
+}
+
+.skipLink:focus { transform: translateY(0); }
+
+.header {
+  display: grid;
+  grid-template-columns: minmax(12rem, 1fr) auto minmax(8rem, 1fr);
+  align-items: center;
+  gap: 1.5rem;
+  min-height: 5.25rem;
+  padding: .8rem clamp(1rem, 4vw, 3.5rem);
+  border-bottom: 1px solid #31584b;
+  color: white;
+  background: var(--agent-forest);
+}
+
+.brand {
+  display: inline-flex;
+  width: fit-content;
+  flex-direction: column;
+  gap: .25rem;
+  color: inherit;
+  text-decoration: none;
+}
+
+.brandName {
+  font: 700 1.2rem/1 var(--font-display, sans-serif);
+  letter-spacing: .06em;
+}
+
+.brandContext {
+  color: #e1ecdf;
+  font-size: .72rem;
+  letter-spacing: .04em;
+}
+
+.navigation {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+}
+
+.navigation a,
+.storeLink,
+.accessLabel {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
+  padding: .55rem .85rem;
+  border: 1px solid transparent;
+  color: white;
+  font-size: .85rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.navigation a:hover,
+.storeLink:hover { background: rgb(255 255 255 / 10%); }
+
+.navigation a:focus-visible,
+.storeLink:focus-visible,
+.brand:focus-visible,
+.footer a:focus-visible,
+.skipLink:focus-visible {
+  outline: 3px solid #e1f28d;
+  outline-offset: 3px;
+}
+
+.storeLink { justify-self: end; }
+
+.accessLabel {
+  justify-self: center;
+  color: #e1ecdf;
+  cursor: default;
+}
+
+.main {
+  width: min(100% - 2rem, 86rem);
+  min-height: calc(100svh - 9.5rem);
+  margin-inline: auto;
+  padding-block: clamp(2rem, 5vw, 4rem);
+  scroll-margin-top: 1rem;
+}
+
+.main:focus { outline: none; }
+
+.main h1 {
+  margin: 0;
+  color: var(--agent-ink);
+  font: 550 clamp(2rem, 4vw, 3.25rem)/1.08 var(--font-display, sans-serif);
+  letter-spacing: -.035em;
+}
+
+.eyebrow {
+  margin: 0 0 .65rem;
+  color: #345b49;
+  font: 700 .72rem/1.4 var(--font-mono, monospace);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.intro {
+  max-width: 68ch;
+  margin: .85rem 0 0;
+  color: var(--agent-muted);
+  font-size: 1rem;
+  line-height: 1.65;
+}
+
+.state {
+  max-width: 54rem;
+  padding: clamp(1.25rem, 4vw, 2.5rem);
+  border: 1px solid var(--agent-line);
+  background: #fff;
+}
+
+.state p { color: var(--agent-muted); line-height: 1.6; }
+.state a { color: #164b38; font-weight: 700; text-underline-offset: .2em; }
+.state a:focus-visible { outline: 3px solid #806600; outline-offset: 3px; }
+
+.footer {
+  display: flex;
+  min-height: 4.25rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: .9rem clamp(1rem, 4vw, 3.5rem);
+  border-top: 1px solid var(--agent-line);
+  color: var(--agent-muted);
+  font-size: .78rem;
+}
+
+.footer a { color: #164b38; font-weight: 650; text-underline-offset: .2em; }
+
+@media (max-width: 720px) {
+  .header {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: .75rem;
+    padding: .75rem 1rem;
+  }
+
+  .navigation {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    justify-content: flex-start;
+    overflow-x: auto;
+    margin-inline: -.25rem;
+    padding: .15rem .25rem;
+    scrollbar-width: thin;
+  }
+
+  .navigation a { flex: 0 0 auto; }
+  .storeLink { grid-column: 2; grid-row: 1; padding-inline: .55rem; }
+  .accessLabel { grid-column: 1; grid-row: 2; justify-self: start; }
+  .main { width: min(100% - 1.5rem, 86rem); padding-block: 1.75rem; }
+  .footer { align-items: flex-start; flex-direction: column; justify-content: center; }
+}

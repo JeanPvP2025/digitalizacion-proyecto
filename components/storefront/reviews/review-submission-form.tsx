@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { useRouter } from "next/navigation";
 import type { ReviewableOrderItem } from "@/lib/reviews/contracts";
 
 export function ReviewSubmissionForm({
@@ -11,10 +10,10 @@ export function ReviewSubmissionForm({
   productId: string;
   orderItems: ReviewableOrderItem[];
 }) {
-  const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [submitted, setSubmitted] = useState(false);
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -45,12 +44,21 @@ export function ReviewSubmissionForm({
       }
       form.reset();
       setSuccess("Opinión enviada. Se publicará cuando termine la revisión de moderación.");
-      router.refresh();
+      setSubmitted(true);
     } catch {
       setError("No se pudo enviar la opinión. Comprueba la conexión e inténtalo de nuevo.");
     } finally {
       setIsSubmitting(false);
     }
+  }
+
+  if (submitted) {
+    return (
+      <div className="review-submission-result">
+        <p role="status" className="review-form-success">{success}</p>
+        <p role="status">No hay compras entregadas de este producto disponibles para reseñar en esta cuenta.</p>
+      </div>
+    );
   }
 
   return (

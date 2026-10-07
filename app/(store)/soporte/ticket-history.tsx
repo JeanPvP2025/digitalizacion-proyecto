@@ -155,19 +155,19 @@ export function TicketHistory({
   }
 
   return (
-    <section className={styles.history} aria-labelledby={agentMode ? "support-inbox-title" : "support-history-title"}>
+    <section className={styles.history} aria-labelledby={agentMode ? "support-inbox-title" : "support-history-title"} aria-busy={loading}>
       <div className={styles.sectionHeading}>
         <div>
           <p className="eyebrow">{agentMode ? "BANDEJA DE AGENTES" : "TUS CONVERSACIONES"}</p>
           <h2 id={agentMode ? "support-inbox-title" : "support-history-title"}>{agentMode ? "Tickets de soporte" : "Historial de soporte"}</h2>
         </div>
         <button className="text-button" type="button" onClick={() => void loadTickets()} disabled={loading}>
-          {loading ? <LoaderCircle className="spin-icon" size={15} /> : <RefreshCw size={14} />} Actualizar
+          {loading ? <LoaderCircle className="spin-icon" size={15} aria-hidden="true" /> : <RefreshCw size={14} aria-hidden="true" />} Actualizar
         </button>
       </div>
       {error && <p className="checkout-error" role="alert">{error}</p>}
       <div className={styles.historyLayout}>
-        <div className={styles.ticketList} aria-label={agentMode ? "Cola de tickets" : "Tus tickets"}>
+        <div className={styles.ticketList} role="group" aria-label={agentMode ? "Cola de tickets" : "Tus tickets"}>
           {loading && tickets.length === 0 && <p className="support-empty-state">Cargando tickets…</p>}
           {!loading && tickets.length === 0 && <p className="support-empty-state">{agentMode ? "No hay tickets en la bandeja." : "Todavía no has abierto ningún ticket conectado."}</p>}
           {tickets.map((ticket) => (
@@ -184,8 +184,9 @@ export function TicketHistory({
             </button>
           ))}
         </div>
-        <div className={styles.conversation} aria-live="polite">
+        <div className={styles.conversation} aria-busy={loadingDetails}>
           {loadingDetails && <p className="support-empty-state">Cargando conversación…</p>}
+          {!loadingDetails && tickets.length === 0 && !error && <p className="support-empty-state">Cuando llegue un ticket, la conversación aparecerá aquí.</p>}
           {!loadingDetails && !visibleDetails && tickets.length > 0 && <p className="support-empty-state">Elige un ticket para ver la conversación y su historial.</p>}
           {!loadingDetails && visibleDetails && <>
             <div className={styles.conversationHeading}>

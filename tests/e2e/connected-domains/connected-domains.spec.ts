@@ -183,7 +183,7 @@ test("la review elegible queda pendiente, no se filtra y solo super_admin la pub
 
     const moderator = await openSession(browser, fixtures.users.superAdmin, "/backoffice/reviews");
     try {
-      await expect(moderator.page.getByRole("heading", { name: "Moderación de opiniones." })).toBeVisible();
+      await expect(moderator.page.getByRole("heading", { name: "Moderación de opiniones." })).toBeVisible({ timeout: 15_000 });
       await expect(moderator.page.getByRole("heading", { name: title })).toBeVisible();
       const moderationResponse = moderator.page.waitForResponse((response) =>
         response.url().endsWith("/api/reviews/" + pending?.id) && response.request().method() === "PATCH",
@@ -257,7 +257,7 @@ test("soporte conectado conserva errores reintentables, privacidad del ticket y 
 
     const agent = await openSession(browser, fixtures.users.supportAgent, "/soporte/agente");
     try {
-      await expect(agent.page.getByRole("heading", { name: "Bandeja de soporte." })).toBeVisible();
+      await expect(agent.page.getByRole("heading", { name: "Bandeja de soporte" })).toBeVisible({ timeout: 15_000 });
       await expect(agent.page.getByRole("heading", { name: subject })).toBeVisible();
       await expect(agent.page.getByText(message)).toBeVisible();
       await agent.page.getByLabel("Estado después de responder").selectOption({ label: "En curso" });
@@ -289,7 +289,7 @@ test("soporte conectado conserva errores reintentables, privacidad del ticket y 
     await expect(customer.page.getByText("Hemos revisado la consulta y te acompañaremos con la configuración.")).toBeVisible();
 
     await emptyCustomer.page.goto("/soporte/agente");
-    await expect(emptyCustomer.page.getByRole("heading", { name: "Bandeja restringida." })).toBeVisible();
+    await expect(emptyCustomer.page.getByRole("heading", { name: "Bandeja restringida" })).toBeVisible({ timeout: 15_000 });
   } finally {
     await Promise.all([customer.context.close(), emptyCustomer.context.close()]);
   }

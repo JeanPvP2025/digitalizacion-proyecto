@@ -99,11 +99,11 @@ export function SupportAgentWorkspace() {
   return (
     <div className={styles.agentWorkspace}>
       <TicketHistory connected authenticated agentMode />
-      <section className={styles.history} aria-labelledby="return-review-title">
+      <section className={styles.history} aria-labelledby="return-review-title" aria-busy={loading}>
         <div className={styles.sectionHeading}>
           <div><p className="eyebrow">DEVOLUCIONES</p><h2 id="return-review-title">Solicitudes por revisar</h2></div>
           <button className="text-button" type="button" onClick={() => void loadQueue()} disabled={loading}>
-            {loading ? <LoaderCircle className="spin-icon" size={14} /> : <RefreshCw size={14} />} Actualizar
+            {loading ? <LoaderCircle className="spin-icon" size={14} aria-hidden="true" /> : <RefreshCw size={14} aria-hidden="true" />} Actualizar
           </button>
         </div>
         {error && <p className="checkout-error" role="alert">{error}</p>}
@@ -129,10 +129,10 @@ export function SupportAgentWorkspace() {
             </div>
             <div className={styles.reviewActions}>
               <button className="button button--dark" type="button" onClick={() => void decide(request, "approved")} disabled={busyId === request.id}>
-                {busyId === request.id ? <LoaderCircle className="spin-icon" size={14} /> : <Check size={14} />} Aprobar
+                {busyId === request.id ? <LoaderCircle className="spin-icon" size={14} aria-hidden="true" /> : <Check size={14} aria-hidden="true" />} Aprobar
               </button>
               <button className="button button--outline" type="button" onClick={() => void decide(request, "rejected")} disabled={busyId === request.id || (notes[request.id] ?? "").trim().length < 10}>
-                {busyId === request.id ? <LoaderCircle className="spin-icon" size={14} /> : <X size={14} />} Rechazar
+                {busyId === request.id ? <LoaderCircle className="spin-icon" size={14} aria-hidden="true" /> : <X size={14} aria-hidden="true" />} Rechazar
               </button>
             </div>
           </article>)}

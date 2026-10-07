@@ -264,6 +264,77 @@
   gap: .65rem;
 }
 
+.agentWorkspace .history {
+  margin-top: 1.75rem;
+  border-color: #cdd5cd;
+  background: #f8f9f5;
+  scroll-margin-top: 1rem;
+}
+
+.agentWorkspace .historyLayout {
+  grid-template-columns: minmax(15rem, .8fr) minmax(0, 1.5fr);
+  align-items: start;
+}
+
+.agentWorkspace .ticketList {
+  max-height: 42rem;
+  overflow: auto;
+  overscroll-behavior: contain;
+  padding: .15rem;
+  scrollbar-gutter: stable;
+}
+
+.agentWorkspace .ticketCard {
+  min-width: 0;
+  min-height: 5.5rem;
+  overflow-wrap: anywhere;
+  border-radius: .25rem;
+}
+
+.agentWorkspace .returnLines,
+.agentWorkspace .returnTimeline,
+.agentWorkspace .timeline {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.agentWorkspace .ticketCard:focus-visible {
+  outline: 3px solid #6b5900;
+  outline-offset: 2px;
+}
+
+.agentWorkspace .conversation,
+.agentWorkspace .reviewCard {
+  min-width: 0;
+  border-color: #cdd5cd;
+  border-radius: .25rem;
+}
+
+.agentWorkspace .status {
+  white-space: normal;
+}
+
+.agentWorkspace :global(.text-button),
+.agentWorkspace :global(.button) {
+  min-height: 2.75rem;
+}
+
+.agentWorkspace :global(.field textarea),
+.agentWorkspace :global(.field select) {
+  width: 100%;
+  min-width: 0;
+}
+
+@media (max-width: 760px) {
+  .agentWorkspace .historyLayout { grid-template-columns: minmax(0, 1fr); }
+  .agentWorkspace .ticketList {
+    max-height: 19rem;
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .agentWorkspace .returnTimeline li { grid-template-columns: minmax(0, 1fr); }
+  .agentWorkspace .returnTimeline time { grid-column: 1; }
+}
+
 @media (max-width: 760px) {
   .historyLayout { grid-template-columns: 1fr; }
   .ticketList { grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr)); }
