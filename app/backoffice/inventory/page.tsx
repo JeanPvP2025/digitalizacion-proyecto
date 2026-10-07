@@ -58,6 +58,7 @@ function InventoryShell({ children }: { children: React.ReactNode }) {
         <Link className={styles.backLink} href="/backoffice">
           <ArrowLeft size={15} aria-hidden="true" /> Volver al centro de operaciones
         </Link>
+        <Link className={styles.procurementLink} href="/backoffice/procurement">Proveedores y órdenes de compra <span aria-hidden="true">→</span></Link>
         <p className={styles.eyebrow}>OPERACIONES / INVENTARIO</p>
         <div className={styles.titleLine}>
           <h1>Stock por almacén<span>.</span></h1>
@@ -222,7 +223,7 @@ function InventoryTable({
 
         <footer className={styles.panelFooter}>
           <span><i aria-hidden="true" /> Solo lectura · métricas calculadas desde las filas recibidas</span>
-          <small>El inventario no registra historial de movimientos</small>
+          <small>Historial persistido en el ledger de movimientos</small>
         </footer>
       </section>
     </>

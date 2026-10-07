@@ -21,6 +21,15 @@ erDiagram
   PRODUCT_VARIANTS ||--o{ INVENTORY : almacena
   WAREHOUSES ||--o{ INVENTORY : contiene
   INVENTORY ||--o{ INVENTORY_MOVEMENTS : ledger
+  INVENTORY_SUPPLIERS ||--o{ PURCHASE_ORDERS : suministra
+  WAREHOUSES ||--o{ PURCHASE_ORDERS : recibe
+  PURCHASE_ORDERS ||--|{ PURCHASE_ORDER_LINES : detalla
+  PRODUCT_VARIANTS ||--o{ PURCHASE_ORDER_LINES : solicita
+  PURCHASE_ORDERS ||--o{ PURCHASE_ORDER_RECEIPTS : recibe
+  PURCHASE_ORDER_RECEIPTS ||--|{ PURCHASE_ORDER_RECEIPT_LINES : registra
+  PURCHASE_ORDER_LINES ||--o{ PURCHASE_ORDER_RECEIPT_LINES : cumple
+  INVENTORY_MOVEMENTS ||--o| PURCHASE_ORDER_RECEIPT_LINES : vincula
+  PURCHASE_ORDERS ||--o{ PURCHASE_ORDER_EVENTS : timeline
   ORGANIZATIONS ||--o{ QUOTES : solicita
   QUOTES ||--|{ QUOTE_ITEMS : cotiza
   QUOTES ||--o| BUSINESS_QUOTE_CONVERSIONS : snapshot
@@ -46,6 +55,9 @@ erDiagram
 - `order_items` conserva SKU, nombres, variante, cantidad, precio, moneda e impuestos del momento de compra. No depende de que el catálogo conserve el mismo producto.
 - `inventory` deriva disponible de `on_hand - reserved`. El pedido reserva unidades en la transacción de checkout; pago aprobado conserva la reserva hasta expedición; pago rechazado libera unidades. `inventory_reservations` vincula esas cantidades con líneas de pedido y almacenes.
 - `inventory_movements` registra cambios append-only de checkout/fulfillment y recepciones/ajustes. Movimientos manuales guardan actor, motivo/proveedor/albarán, UUID idempotente y fingerprint; actualizan `on_hand`, nunca modifican `reserved`, y bloquean ajuste por debajo de reservas.
+- `inventory_suppliers` conserva datos maestros con desactivación lógica. `purchase_orders` copia el nombre del proveedor y las líneas copian SKU, producto, variante, cantidad, coste unitario y EUR para preservar el historial.
+- Las órdenes de compra pasan de `draft` a `ordered`, pueden cancelarse antes de finalizar o recibir una o más recepciones hasta `received`. Cada recepción aceptada vincula sus líneas a exactamente un movimiento de inventario; el RPC de recepción actualiza stock, cantidades recibidas, estado y timeline en una transacción.
+- La recepción por PO usa UUID idempotente y fingerprint: la misma clave y payload reproduce el resultado, una carga distinta entra en conflicto, y una cantidad o estado no receivable persiste el rechazo sin alterar stock. No se permiten recepciones por encima de la cantidad pendiente.
 - `receive_inventory` y `adjust_inventory` rechazan un reintento con clave ya asociada a otro payload. Un mismo payload devuelve el movimiento anterior sin duplicar unidades ni ledger.
 - `payment_transactions` pertenece al pedido. `private.demo_payment_attempts` asocia un event ID único a pedido y resultado. El RPC de pago acepta únicamente resultado simulado en el servidor y escribe transición, auditoría/timeline y estado de forma atómica.
 - `quotes` y `quote_items` guardan snapshots de organización/contacto, producto, precio solicitado/ofertado, moneda e impuestos. `sales_owner_id` define la propiedad comercial; el equipo comercial puede reclamar solicitudes sin asignar mediante RPC.
@@ -70,5 +82,6 @@ erDiagram
 - `20261007133000_inventory_receipts_idempotent_movements.sql` — recepciones/ajustes autorizados con ledger, proveedor/albarán e idempotencia.
 - `20261007134000_crm_business_quote_conversion_audit.sql` — registro de conversión B2B aceptada a snapshots auditables tenant-scoped.
 - `20261007140000_checkout_retry_lookup.sql` — lookup autenticado por fingerprint que permite reintentar checkout sin mutar/crear otro carrito.
+- `20261007145943_procurement_purchase_orders.sql` — proveedores, órdenes de compra, snapshots de líneas, intentos y líneas de recepción, eventos y RPCs de escritura autorizadas; cambios en espera de integración coordinadora.
 
 El esquema no convierte por sí solo procurement, pedido B2B formal, fulfillment UI completo o efectos de RMA en flujos terminados.

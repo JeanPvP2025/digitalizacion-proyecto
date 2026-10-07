@@ -2,6 +2,8 @@
 .header { padding: 0 0 28px; border-bottom: 1px solid #e1e7df; }
 .backLink { display: inline-flex; align-items: center; gap: 8px; color: #637067; font-size: 11px; transition: color .18s ease; }
 .backLink:hover { color: #17392b; }
+.procurementLink { float: right; display: inline-flex; min-height: 34px; align-items: center; gap: 8px; padding: 0 10px; color: #34533c; border: 1px solid #dfe8d9; background: #f7faf4; font-size: 10px; font-weight: 600; }
+.procurementLink:hover { color: #17392b; background: #edf3e7; }
 .eyebrow, .panelEyebrow { margin: 30px 0 10px; color: #7d897f; font: 500 9px var(--font-mono); letter-spacing: .12em; }
 .titleLine { display: flex; align-items: center; gap: 18px; }
 .titleLine h1 { margin: 0; color: #17231d; font: 500 clamp(36px, 5vw, 58px)/1.08 var(--font-display); letter-spacing: -.07em; }
@@ -87,6 +89,7 @@
   .page { width: min(100% - 36px, 680px); padding-top: 21px; }
   .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .panelHeading { align-items: flex-start; flex-direction: column; gap: 10px; }
+  .procurementLink { float: none; margin: 12px 0 0; }
   .actionForms { grid-template-columns: 1fr; }
   .actionsPanel { padding: 17px 14px; }
   .inventoryPanel { padding: 17px 14px 0; }

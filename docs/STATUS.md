@@ -7,6 +7,7 @@ Estado observado el **2026-10-07** tras integrar la quinta ola. Se contrastaron 
 - ✅ **Checkout conectado:** sesión GoTrue, `variantId`, precio/stock desde servidor, pedido con snapshots y reserva transaccional, pago demo autorizado solo en servidor, rechazo/retry/concurrencia. El lookup idempotente valida clave y fingerprint antes de crear o mutar un carrito. E2E local conectado cubre aprobado, rechazado, refresh/retry y dos compras concurrentes.
 - ✅ **Auth/RLS boundary local:** 78 probes HTTP GoTrue/PostgREST pasan, incluidos anon, perfiles/pedidos/tickets, aislamiento de cliente y organización, roles persistidos, RPCs privilegiadas, prioridad Supabase sobre `DEMO_MODE`, fallo conectado sin fallback y scan de secretos cliente. La matriz CRUD completa de cada tabla/columna/rol sigue abierta.
 - ✅ **Inventario operativo básico:** almacén puede recibir stock y ajustar cantidades por RPC, con actor, motivo/proveedor/albarán, ledger append-only, idempotencia de payload y protección de reservas. Los movimientos no suplantan el ledger de checkout/fulfillment.
+- 🚧 **Procurement (slice en worktree, pendiente de integración):** proveedores con archivo lógico, borradores/órdenes de compra y recepciones parciales/finales vinculadas al ledger por RPC transaccional. La prueba runtime local y pruebas de rutas cubren roles, replay, conflictos, exceso y snapshots. No incluye factura/impuestos/pagos a proveedor ni integración externa.
 - ✅ **PC Builder comprable:** seis componentes ficticios vendibles con atributos tipados; compatibility selection y carrito preservan los `variantId` exactos. Checkout vuelve a validar producto, variante, precio y stock.
 - ✅ **Reviews en PDP:** enlace a opiniones y conteo exacto solo cuando los datos conectados están disponibles; el workflow verificado/moderado mantiene estados de carga, vacío y error.
 - ✅ **CRM/B2B — conversión auditada:** una oferta aceptada puede registrarse una sola vez con snapshots tenant-scoped e historial. 🚧 No emite todavía un `orders` formal ni reserva stock.
@@ -34,7 +35,7 @@ Estado observado el **2026-10-07** tras integrar la quinta ola. Se contrastaron 
 ### P1
 
 - [ ] Completar pedido B2B formal desde oferta aceptada: dirección/facturación, condiciones de pago, precio negociado como snapshot e integración de stock/reservas sin eludir checkout.
-- [ ] Extender inventario a proveedores maestros y órdenes de compra; la ola actual cubre recepciones directas y ajustes, no procurement completo.
+- [ ] Integrar el slice de procurement descrito abajo; después acordar si el producto requiere facturas, impuestos, pagos o integración externa de proveedor.
 - [ ] Cerrar fulfillment con picking/packing/expedición y timeline conectado a la cola operacional.
 - [ ] Definir y ejecutar efectos de RMA aprobado sobre devolución, reembolso simulado y stock de forma idempotente.
 - [ ] Validar origen de cada KPI y sus filtros con casos de negocio reproducibles; completar escenarios operativos restantes de analytics.
@@ -69,6 +70,21 @@ Estado observado el **2026-10-07** tras integrar la quinta ola. Se contrastaron 
 | Auth/PostgREST boundary runner | ✅ 78 probes HTTP; 0 fallos; cleanup verificado |
 | `supabase db lint --local --fail-on error` | ✅ sin errores de esquema |
 | `git diff --check` | ✅ sin errores; Git puede mostrar LF/CRLF de Windows |
+
+## Verificación del slice de procurement en el worktree
+
+Este slice implementado todavía necesita revisión e integración coordinadora; sus resultados no sustituyen los gates de despliegue ni convierten el estado global del producto en `Done`.
+
+| Check | Resultado |
+|---|---|
+| `pnpm test` | ✅ 166 Vitest + 18 Node; repetición completa tras timeout de preparación concurrente |
+| `pnpm exec tsc --noEmit` | ✅ |
+| `pnpm lint` | ✅ sin diagnósticos |
+| `pnpm build` | ✅ producción, incluida nueva página y seis rutas API procurement |
+| `supabase db reset --local --yes` | ✅ migración procurement y seed aplicados en reset local |
+| `tests/integration/procurement/procurement.sql` | ✅ runtime PostgreSQL local; permisos, lifecycle, replay, persistencia de rechazos y vínculo a ledger; rollback |
+| `supabase db lint --local --fail-on error` | ✅ sin errores de esquema |
+| Route tests procurement | ✅ 6 casos unitarios, incluidos rol, validación, origen, RPC y errores persistidos |
 
 ## Criterio de cierre
 

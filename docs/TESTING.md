@@ -35,6 +35,7 @@ Get-Content tests\integration\auth-boundaries\postgres-role-escalation.sql -Raw 
 Get-Content tests\integration\support-rma\postgres.sql -Raw | docker exec -i supabase_db_nodria-commerce psql -U postgres -d postgres -v ON_ERROR_STOP=1
 Get-Content tests\integration\support-flow\postgres.sql -Raw | docker exec -i supabase_db_nodria-commerce psql -U postgres -d postgres -v ON_ERROR_STOP=1
 Get-Content tests\integration\inventory\inventory-movements.sql -Raw | docker exec -i supabase_db_nodria-commerce psql -U postgres -d postgres -v ON_ERROR_STOP=1
+Get-Content tests\integration\procurement\procurement.sql -Raw | docker exec -i supabase_db_nodria-commerce psql -U postgres -d postgres -v ON_ERROR_STOP=1
 ```
 
 Para boundary HTTP con tokens reales, después del reset:
@@ -49,6 +50,7 @@ La quinta ola pasó reset/seed; **189** aserciones pgTAP; RLS/security/RBAC/auth
 
 - Checkout SQL/E2E: precio/stock de servidor, snapshots, reserva única, estados approved/declined/processing/error, recuperación, payload distinto bajo clave existente, refresh y concurrencia de stock.
 - Inventario SQL: autorización warehouse/sales, recepción/ajuste idempotente, conflicto de fingerprint, no consumo de reserva y fulfillment que consume la reserva una sola vez.
+- Procurement SQL/rutas: solo fulfillment/superadmin ven proveedores y órdenes; las escrituras usan RPC. Prueba creación/edición/colocación/cancelación, recepción parcial/final vinculada a un movimiento, replay/conflicto por clave, sobre-recepción, archivo de proveedor y permisos de sales/buyer.
 - RLS/Auth HTTP: anon, customer A/B, business admin/buyer, catalog, support, sales, fulfillment y superadmin; perfil/pedido/ticket/tenant aislados; escalation y RPCs privilegiadas denegadas; demo no hace fallback conectado.
 - Conversión CRM/B2B: quote aceptado produce snapshots e historial una sola vez; el registro no se confunde con un pedido comercial.
 - Reviews/RMA: elegibilidad por línea, moderación, intake atómico, límite de cantidades y transitions por RPC.
@@ -58,4 +60,4 @@ La quinta ola pasó reset/seed; **189** aserciones pgTAP; RLS/security/RBAC/auth
 - La matriz Auth/RLS no cubre CRUD de cada columna/tabla/endpoint para cada rol; roles `manager` y `marketing` requieren probes HTTP adicionales. Ver `RBAC_MATRIX.md`.
 - No se probó configuración Supabase remota, despliegue, secretos de producción o migración remota.
 - Falta E2E conectado para pedido en cuenta, portal B2B, reseña elegible, ticket/mensajes y roles de backoffice.
-- Operations/picking, procurement completo, pedido formal B2B y efectos de RMA no están completos; gates de las capas existentes no prueban esos flujos.
+- El slice de procurement está implementado en un worktree pero espera integración coordinadora; no incluye facturas/impuestos/pagos de proveedor ni sincronización externa. Operations/picking, pedido formal B2B y efectos de RMA tampoco están completos.

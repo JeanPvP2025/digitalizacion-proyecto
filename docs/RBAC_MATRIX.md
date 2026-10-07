@@ -35,6 +35,7 @@ Estado al 2026-10-07 tras la quinta ola. La autorización efectiva combina sesi�
 | Pagos | — | R de pago propio | R propio | R de pedidos de su org | R mínimo de contexto permitido | — | R operativo | — | R |
 | Crear pedido / checkout | — | C por RPC autenticada; precios y stock servidor | Igual, vinculado a org miembro | Igual | — | — | — | — | Solo por flujo/autorización explícita |
 | Stock/reservas/fulfillment | — | — | — | — | — | — | R; recepción/ajuste por RPC idempotente; fulfillment consume reserva por RPC | R de catálogo, sin mutación de stock | R y RPC según acción |
+| Procurement | — | — | — | — | — | — | R de proveedores/PO/recepciones; CRUD de proveedor, borrador/estado de PO y recepción por RPC | — | R y RPCs de procurement según acción |
 | Tickets y mensajes | — | C por RPC; R/mensaje propio permitido | Propio/org | Propio/org | R/U y respuesta por RPC; DML directo revocado | — | — | — | R/U por RPC según acción |
 | Devoluciones/RMA | — | C por RPC; R propia | Propia/org | Propia/org | R/U operativa de soporte | — | R/U por RPC operativa | — | R/U según acción |
 | Auditoría/timeline | — | R de timeline propio permitido | Propio/org | Propio/org | R de caso autorizado | Actividad interna comercial autorizada | Eventos de pedidos operativos | — | R |
@@ -44,6 +45,7 @@ Las celdas “—” significan sin permiso por el contrato actual. Para movimie
 ## Evidencia y cobertura
 
 - Ejecutados en PostgreSQL local: `tests/integration/postgres-rls.sql`, `security/postgres-object-isolation.sql`, `rbac/postgres-role-action-matrix.sql`, `auth-boundaries/postgres-role-escalation.sql`, `support-rma/postgres.sql`, `support-flow/postgres.sql`, `inventory/inventory-movements.sql`, `reviews/product-reviews.sql`, `tests/database/*.sql` y `commerce/checkout-flow.sql`.
+- La prueba `tests/integration/procurement/procurement.sql` verifica RPCs y RLS: fulfillment opera, sales y buyer no leen las tablas procurement, no hay DML directo de navegador, y los movimientos recibidos quedan enlazados a la orden.
 - Además, `pwsh -File tests/integration/auth-boundaries/run-local.ps1` ejercita 78 requests con access JWT de GoTrue en PostgREST; 0 fallos. Cubre `anon`, customer A/B, business admin/buyer, `catalog_manager`, `support_agent`, `sales_manager`, `fulfillment_manager` y `super_admin` para salud, filas propias/tenant, roles persistidos, escalation y RPCs restringidas.
 - La matriz SQL y HTTP prueba aislamiento cliente/organización, grants, acciones de catálogo, soporte, CRM/pagos, inventario, devoluciones, checkout y escalada.
 - La matriz inicial se corrigió al detectar que el RPC, no el DML directo, es el contrato para transición de ticket. No se añadió permiso directo.

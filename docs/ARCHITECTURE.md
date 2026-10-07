@@ -1,6 +1,6 @@
 # Arquitectura inicial de NODRIA
 
-**Estado de este documento:** snapshot integrado de quinta ola al 2026-10-07. El repo contiene storefront, Auth SSR, checkout conectado, CRM/B2B, soporte/RMA, reseñas, operaciones, analytics, inventario básico y PC Builder conectado a variantes. Procurement completo, pedido B2B formal y fulfillment visual quedan abiertos. La integración ejecutó 160 Vitest, 18 Node, 21 E2E demo/UX+connected, 189 pgTAP, 78 probes HTTP Auth/PostgREST y runtime role/RLS. No hay entorno Supabase remoto ni despliegue probado. Ver límites en `STATUS.md`, `SECURITY.md`, `RBAC_MATRIX.md` y `TESTING.md`.
+**Estado de este documento:** snapshot integrado de quinta ola al 2026-10-07. El repo contiene storefront, Auth SSR, checkout conectado, CRM/B2B, soporte/RMA, reseñas, operaciones, analytics, inventario básico y PC Builder conectado a variantes. El worktree actual añade el slice de proveedores/órdenes de compra/recepciones de procurement, aún pendiente de integración coordinadora; pedido B2B formal y fulfillment visual siguen abiertos. Los gates de ambas etapas y sus límites constan en `STATUS.md`. No hay entorno Supabase remoto ni despliegue probado. Ver límites en `SECURITY.md`, `RBAC_MATRIX.md` y `TESTING.md`.
 
 ## Objetivo y restricciones
 

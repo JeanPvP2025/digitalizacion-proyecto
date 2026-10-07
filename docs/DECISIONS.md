@@ -167,3 +167,12 @@ Las decisiones de alcance heredadas de la misión se marcan **Confirmada**. Las 
 - **Contexto:** El Route Handler podía crear un segundo carrito y escribir sus líneas antes de que checkout hallara un pedido idempotente ya existente.
 - **Decisión:** `find_checkout_order` exige identidad, valida el payload y compara su fingerprint contra el pedido antes de resolver pago. El retry igual reusa el evento/pedido; la clave con payload distinto produce conflicto y no crea carrito.
 - **Consecuencias:** E2E conectado comprueba una sola cesta, un pago, una reserva y eventos consistentes en retries. El RPC es autenticado y no devuelve pedidos de otro usuario.
+
+## D-018 — Las recepciones de procurement completan órdenes de compra mediante el ledger
+
+- **Fecha:** 2026-10-07
+- **Estado:** Slice implementado en worktree; pendiente de integración coordinadora.
+- **Contexto:** Las recepciones directas de inventario ya generan movimientos idempotentes, pero no conservaban el proveedor, la orden de compra ni cantidades recibidas contra una solicitud.
+- **Decisión:** Gestionar proveedores con desactivación lógica y órdenes de compra con snapshots de proveedor/producto. Solo `fulfillment_manager` y `super_admin` leen y mutan procurement; cambios pasan por RPCs acotadas. Una recepción parcial/final aplica `receive_inventory` por línea dentro de la misma transacción, vincula cada línea al movimiento resultante y actualiza estado/timeline de PO.
+- **Alternativas:** alterar inventario desde la UI o mantener recibos desconectados del ledger, lo que permitiría saltarse autorización, idempotencia o reconciliación.
+- **Consecuencias:** Clave UUID más fingerprint evita duplicados y conflictos de payload; excesos y órdenes no receivables quedan registrados como rechazados sin modificar stock. La moneda del coste es EUR. Facturas, impuestos de proveedor, pagos, devoluciones a proveedor y sincronización con sistemas externos no forman parte del slice. Ver `20261007145943_procurement_purchase_orders.sql` y `tests/integration/procurement/procurement.sql`.
