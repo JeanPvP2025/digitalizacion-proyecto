@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
-import { ArrowLeft, Boxes, CircleHelp, Search, ShieldCheck } from "lucide-react";
+import { ArrowLeft, Boxes, Search } from "lucide-react";
 import { getInventorySnapshot, type InventoryRow, type InventorySnapshot } from "@/lib/inventory";
+import { InventoryActions } from "./InventoryActions";
 import styles from "./inventory.module.css";
 
 export const metadata: Metadata = {
@@ -60,24 +61,12 @@ function InventoryShell({ children }: { children: React.ReactNode }) {
         <p className={styles.eyebrow}>OPERACIONES / INVENTARIO</p>
         <div className={styles.titleLine}>
           <h1>Stock por almacén<span>.</span></h1>
-          <span className={styles.readOnly}><ShieldCheck size={13} aria-hidden="true" /> SOLO LECTURA</span>
+          <span className={styles.readOnly}>RECEPCIONES · AJUSTES</span>
         </div>
-        <p className={styles.intro}>Consulta existencias físicas, reservas y unidades disponibles a partir del inventario conectado.</p>
+        <p className={styles.intro}>Consulta el inventario conectado y registra recepciones de proveedor o ajustes con autorización de almacén.</p>
       </header>
       {children}
     </main>
-  );
-}
-
-function WorkflowNotice() {
-  return (
-    <aside className={styles.workflowNotice} aria-labelledby="workflow-notice-title">
-      <span className={styles.noticeIcon}><CircleHelp size={17} aria-hidden="true" /></span>
-      <div>
-        <h2 id="workflow-notice-title">Movimientos y recepción pendientes de contrato</h2>
-        <p>El esquema actual no define un libro de movimientos, órdenes de compra ni una RPC atómica para recibir o ajustar unidades. Esta vista no modifica stock; la recepción requiere una migración revisada con permisos, auditoría y actualización transaccional.</p>
-      </div>
-    </aside>
   );
 }
 
@@ -132,7 +121,6 @@ async function InventoryContent({ searchParams }: { searchParams: SearchParams }
 
   return (
     <InventoryShell>
-      <WorkflowNotice />
       {snapshot.status !== "ready" ? <InventoryState status={snapshot.status} /> : (
         <InventoryTable snapshot={snapshot} query={query} normalizedQuery={normalizedQuery} />
       )}
@@ -158,6 +146,7 @@ function InventoryTable({
 
   return (
     <>
+      <InventoryActions rows={rows} />
       <section className={styles.metrics} aria-label="Resumen de stock consultado">
         <article className={styles.metric}>
           <span>UNIDADES FÍSICAS</span>

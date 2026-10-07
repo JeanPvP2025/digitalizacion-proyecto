@@ -29,6 +29,21 @@
 .panelHeading h2 { margin: 0; color: #1a2b21; font: 500 21px var(--font-display); letter-spacing: -.05em; }
 .panelHeading h2 span { margin-left: 5px; color: #93a095; font: 10px var(--font-mono); letter-spacing: 0; vertical-align: middle; }
 .sourceBadge { padding: 6px 8px; color: #526b52; background: #eff4eb; font: 500 7px var(--font-mono); letter-spacing: .04em; white-space: nowrap; }
+.actionsPanel { padding: 21px 22px; margin: 22px 0; border: 1px solid #dfe8d8; background: #f9fbf6; }
+.actionIntro { max-width: 760px; margin: 10px 0 16px; color: #718071; font-size: 10px; line-height: 1.6; }
+.actionForms { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.actionForm { display: grid; align-content: start; gap: 11px; padding: 16px; border: 1px solid #e2e8df; background: #fff; }
+.actionForm h3 { display: flex; align-items: center; gap: 8px; margin: 0 0 2px; color: #25402e; font: 550 14px var(--font-display); }
+.actionForm label { display: grid; gap: 5px; color: #667367; font-size: 9px; font-weight: 600; }
+.actionForm input, .actionForm select { width: 100%; min-height: 36px; padding: 0 9px; color: #29392e; border: 1px solid #dfe5dd; border-radius: 0; background: #fbfcfa; font: 10px var(--font-body); }
+.actionForm button { min-height: 38px; padding: 0 14px; color: #fff; border: 1px solid #17392b; background: #17392b; cursor: pointer; font-size: 10px; font-weight: 650; }
+.actionForm button:hover:not(:disabled) { background: #10291f; }
+.actionForm button:disabled { opacity: .58; cursor: wait; }
+.formPair { display: grid; grid-template-columns: minmax(90px, .55fr) minmax(0, 1fr); gap: 9px; }
+.actionSuccess, .actionError { padding: 10px 12px; margin: 0 0 12px; font-size: 10px; line-height: 1.55; }
+.actionSuccess { color: #31543d; background: #edf4e8; }
+.actionError { color: #8e3e34; background: #fbefec; }
+.actionEmpty { margin: 0; padding: 13px; color: #7a857b; border: 1px solid #e5e9e3; background: #fff; font-size: 10px; }
 .searchForm { display: flex; align-items: center; gap: 8px; margin: 18px 0 14px; }
 .searchField { display: flex; align-items: center; gap: 9px; width: min(450px, 100%); min-height: 37px; padding: 0 11px; color: #8b958b; background: #f8f9f5; border: 1px solid #e5e9e2; }
 .searchField input { width: 100%; min-width: 0; color: #28362b; border: 0; outline: 0; background: transparent; font-size: 10px; }
@@ -72,6 +87,8 @@
   .page { width: min(100% - 36px, 680px); padding-top: 21px; }
   .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .panelHeading { align-items: flex-start; flex-direction: column; gap: 10px; }
+  .actionForms { grid-template-columns: 1fr; }
+  .actionsPanel { padding: 17px 14px; }
   .inventoryPanel { padding: 17px 14px 0; }
   .sourceBadge { align-self: flex-start; }
   .panelFooter { align-items: flex-start; flex-direction: column; justify-content: center; gap: 4px; padding: 9px 0; }
