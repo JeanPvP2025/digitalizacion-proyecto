@@ -81,6 +81,7 @@ Warnings no bloqueantes conocidos: Node reporta `MODULE_TYPELESS_PACKAGE_JSON` e
 - [x] Walkthrough responsive autenticado de roles internos en Supabase local efímero: support, sales, fulfillment, catalog (denegación documentada) y superadmin; evidencia en `docs/UX_FINAL_AUDIT.md`.
 - [ ] Completar recorrido con sesión de cliente y membresías buyer/viewer/owner/admin; las vistas de portal B2B y cuenta siguen sin prueba visual autenticada por rol.
 - [ ] Añadir una UI interna de catálogo para `catalog_manager` o retirar la expectativa de gestión de catálogo como capacidad visual del demo.
+- [ ] Unificar la navegación interna de `/soporte/agente` y verificar accesibilidad del backoffice más allá de nombres accesibles y overflow; slice asignado en ola 8.
 - [ ] Configurar dominio público para verificar `robots.txt`, sitemap, schema y metadatos en despliegue. En local se bloquea indexación deliberadamente para evitar publicar una demo sin dominio real.
 - [ ] Identificar el origen del estilo `caret-color: transparent` que Playwright registra en la hidratación y resolver warnings de entorno sin alterar semántica del producto.
 
@@ -115,3 +116,10 @@ Una feature solo es ✅ cuando su contrato, autorización servidor/DB, persisten
 - `pnpm install --frozen-lockfile`, `pnpm exec tsc --noEmit`, `pnpm lint`, `pnpm test` (179 Vitest + 18 Node), `pnpm test:e2e` (17/17), `pnpm build` (38 rutas) y `pwsh -File tests/e2e/ux-audit/run-roles.ps1` (1/1 en Supabase efímero) pasan sobre la integración.
 - La suite Auth vuelve a mostrar `The destination stream errored while writing data` durante navegación; el test terminó aprobado y el runner detuvo su proyecto Supabase aislado. El origen del mensaje sigue sin atribuirse.
 - `git diff --check` pasa tras quitar espacios finales del nuevo informe. Warnings restantes de Node `MODULE_TYPELESS_PACKAGE_JSON` y Playwright `NO_COLOR`/`FORCE_COLOR` no afectan los resultados.
+
+## Siguiente trabajo local — ola 8
+
+- `client-new-thread:53b855ee-f47b-4eb5-9726-b93abd5fe11e`: shell de staff/accesibilidad de soporte.
+- `client-new-thread:9e92853d-ba58-4e3c-9f55-5473a6d86c16`: gestión real de catálogo para `catalog_manager`, condicionada a contratos y RLS existentes.
+- `client-new-thread:677c01bd-00ed-4f2a-a1e7-390fb544934c`: QA Auth visual de cliente y memberships B2B, sin cambios de producto.
+- Los tres worktrees partirán del commit integrado `26d3536`; integración y cierre quedan pendientes hasta recibir sus resultados.

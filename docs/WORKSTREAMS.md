@@ -76,6 +76,14 @@ Se inspeccionaron los cinco worktrees, su estado Git, commits y cambios. Procure
 | UX final audit (finished) | QA/Accessibility Agent | Barrido anónimo de 27 rutas y walkthrough responsive de roles internos; quedan cliente/B2B Auth, UI de catálogo y shell de soporte | `tests/e2e/ux-audit/**`, `docs/UX_FINAL_AUDIT.md`, navegación de moderación | Supabase local efímero; contratos de roles actuales | ✅ Integrado; E2E 17/17, roles 1/1, typecheck/lint pasan; límites restantes registrados en `STATUS.md` |
 | Pendiente | Public SEO/CWV validation | Confirmar indexación, CWV de campo, schema y sitemap tras configurar el dominio público real | `robots.ts`, metadata, sitemap | URL/despliegue remoto y Search Console/CrUX | Bloqueado por entorno |
 
+## Ola 8 — iniciada 2026-10-08
+
+| Conversation | Role | Task | Ownership | Dependencies | State |
+|---|---|---|---|---|---|
+| `client-new-thread:53b855ee-f47b-4eb5-9726-b93abd5fe11e` | Support UX Agent | Navegación de staff y accesibilidad de `/soporte/agente` | `app/(store)/soporte/agente/**`, componentes/estilos propios, tests, `docs/UX_STAFF_SHELL.md` | Auth/RBAC existentes | 🚧 Worktree solicitado; cambios aislados |
+| `client-new-thread:9e92853d-ba58-4e3c-9f55-5473a6d86c16` | Catalog Manager Agent | UI operativa protegida de catálogo con persistencia si el contrato actual lo permite | `app/backoffice/catalog/**`, `app/api/backoffice/catalog/**`, `lib/catalog/admin/**`, tests, `docs/CATALOG_MANAGER.md` | Verificar grants, schema y RLS existentes; no ampliar migraciones unilateralmente | 🚧 Worktree solicitado; cambios aislados |
+| `client-new-thread:677c01bd-00ed-4f2a-a1e7-390fb544934c` | Customer/B2B UX QA Agent | Recorridos Auth de customer y membresías buyer/viewer/owner/admin | `tests/e2e/ux-audit/customer-b2b.*`, runner aislado, `docs/UX_CUSTOMER_B2B_AUDIT.md` | Supabase local efímero con puertos/proyecto exclusivos | 🚧 Worktree solicitado; tests/documentación solamente |
+
 ## Ola 7 — cierre RMA por Tech Lead
 
 | Conversation | Role | Task | Ownership | Dependencies | State |
