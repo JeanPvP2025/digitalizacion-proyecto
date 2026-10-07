@@ -4,6 +4,10 @@
 -- order, stock reservation, and audit event is rolled back at the end.
 BEGIN;
 
+CREATE TEMP TABLE nodria_qa_seed_inventory_count ON COMMIT DROP AS
+SELECT count(*)::integer AS row_count FROM public.inventory;
+GRANT SELECT ON pg_temp.nodria_qa_seed_inventory_count TO authenticated;
+
 INSERT INTO auth.users (id, aud, role, email, encrypted_password, raw_app_meta_data, raw_user_meta_data)
 VALUES
   ('00000000-0000-4000-8000-00000000a001', 'authenticated', 'authenticated', 'qa-customer-a@nodria.test', '', '{}', '{}'),
@@ -228,7 +232,9 @@ BEGIN
   PERFORM set_config('request.jwt.claim.sub', '00000000-0000-4000-8000-00000000a004', true);
   PERFORM set_config('request.jwt.claims', '{"sub":"00000000-0000-4000-8000-00000000a004","role":"authenticated"}', true);
   SELECT count(*) INTO v_count FROM public.inventory;
-  IF v_count <> 6 THEN RAISE EXCEPTION 'Fulfillment manager cannot read the six seeded stock rows'; END IF;
+  IF v_count <> (SELECT row_count FROM pg_temp.nodria_qa_seed_inventory_count) THEN
+    RAISE EXCEPTION 'Fulfillment manager cannot read all seeded stock rows';
+  END IF;
   SELECT i.reserved, baseline.reserved INTO v_reserved, v_initial_reserved
   FROM public.inventory AS i
   JOIN public.product_variants AS v ON v.id = i.variant_id

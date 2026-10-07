@@ -4,6 +4,10 @@
 -- tests/integration/postgres-rls.sql. All fixtures and writes are rolled back.
 BEGIN;
 
+CREATE TEMP TABLE nodria_security_seed_order_count ON COMMIT DROP AS
+SELECT count(*)::integer AS row_count FROM public.orders;
+GRANT SELECT ON pg_temp.nodria_security_seed_order_count TO authenticated;
+
 INSERT INTO auth.users (id, aud, role, email, encrypted_password, raw_app_meta_data, raw_user_meta_data)
 VALUES
   ('00000000-0000-4000-8000-00000000a011', 'authenticated', 'authenticated', 'sec-customer-a@nodria.test', '', '{}', '{}'),
@@ -231,7 +235,9 @@ BEGIN
   PERFORM set_config('request.jwt.claim.sub', '00000000-0000-4000-8000-00000000a014', true);
   PERFORM set_config('request.jwt.claims', '{"sub":"00000000-0000-4000-8000-00000000a014","role":"authenticated"}', true);
   SELECT count(*) INTO v_count FROM public.orders;
-  IF v_count <> 2 THEN RAISE EXCEPTION 'Fulfillment role cannot read the operations order queue'; END IF;
+  IF v_count <> (SELECT row_count + 2 FROM pg_temp.nodria_security_seed_order_count) THEN
+    RAISE EXCEPTION 'Fulfillment role cannot read the complete operations order queue';
+  END IF;
   SELECT count(*) INTO v_count FROM public.inventory;
   IF v_count = 0 THEN RAISE EXCEPTION 'Fulfillment role cannot read stock'; END IF;
   SELECT count(*) INTO v_count FROM public.quote_inquiries;
