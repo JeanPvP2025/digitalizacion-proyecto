@@ -79,3 +79,22 @@ Los cinco worktrees estaban limpios y cada uno tenía un commit sobre el padre `
 - `git diff --check`: exit 0; Git muestra avisos habituales de LF→CRLF en SQL bajo Windows.
 
 La siguiente ronda no debe empezar auditoría final definitiva. Prioriza los slices P0/P1 reflejados en `STATUS.md`; la cuarta ola está preparada en `WORKSTREAMS.md`.
+
+## Ola 4 despachada — 2026-10-07
+
+Se crearon conversaciones independientes sobre worktrees desde el snapshot integrado y committed. Cada prompt incluye bootstrap obligatorio de `/docs/PROJECT_BRIEF.md`, `ARCHITECTURE.md`, `DECISIONS.md`, `STATUS.md`, `WORKSTREAMS.md`, `AGENT_HANDOFF.md`, `DATA_MODEL.md` y `RBAC_MATRIX.md`, además de inspección de Git/dominio/contratos.
+
+| Conversación | ID | Ownership primario | Estado al despacho |
+|---|---|---|---|
+| NODRIA — Checkout conectado E2E | `client-new-thread:4fe81487-2ea9-442d-b6e0-3634eee95c8c` | `tests/e2e/checkout-connected/**`, fixtures/config aislados | Creada; worktree setup pendiente |
+| NODRIA — Matriz Auth/RLS runtime | `client-new-thread:ffc77f43-5f78-43fe-bb2e-43026833e6b8` | `tests/integration/rbac/**`, auth-boundaries y audit report | Creada; worktree setup pendiente |
+| NODRIA — PC Builder vertical slice | `client-new-thread:c202586e-bbf1-4458-9651-d9bd2b94153f` | Configurador, `lib/pc-builder/**`, tests | Creada; worktree setup pendiente |
+| NODRIA — Operations Center conectado | `client-new-thread:e5961205-6651-41a7-99fd-917d5b0dda32` | Operations dashboard y `lib/operations/**` | Creada; worktree setup pendiente |
+| NODRIA — Inventario y procurement | `client-new-thread:951a64c9-ac93-4719-9dc2-130680f6ebcd` | Inventory UI, `lib/inventory/**`, migración/tests si se necesitan | Creada; worktree setup pendiente |
+| NODRIA — Support y RMA workflow | `client-new-thread:9f4a375d-4b1a-4562-9dd4-12959c6bc09a` | Support UI/API/domain y migración/tests dedicados | Creada; worktree setup pendiente |
+| NODRIA — Analytics con datos operativos | `client-new-thread:7dadc2de-e249-4342-8a61-271571907134` | Analytics route/module/queries/tests | Creada; worktree setup pendiente |
+| NODRIA — Auditoría accesibilidad y responsive | `client-new-thread:01debabe-0686-458b-9f9e-9375ddabe4cf` | `docs/UX_A11Y_AUDIT.md`, tests audit aislados | Creada; worktree setup pendiente |
+| NODRIA — Reseñas y moderación | `client-new-thread:1ca9a917-ce10-4b14-b838-d4095a18ae93` | Reviews route/domain/migration/tests | Creada; worktree setup pendiente |
+| NODRIA — Documentación y guion de demo | `client-new-thread:94b87bfe-6237-4d90-a00a-4a6ad3dd52d6` | `docs/DEMO_SCRIPT.md`, `docs/SETUP.md`, README | Creada; worktree setup pendiente |
+
+Los IDs `client-new-thread` identifican el despacho asíncrono. La conversación coordinadora no atribuirá archivos/commits antes de confirmar setup y luego recogerá estado/worktrees al cerrar esta ola.
