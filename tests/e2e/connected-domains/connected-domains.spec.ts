@@ -1,6 +1,5 @@
 import { expect, test, type Browser, type Page } from "@playwright/test";
 import {
-  createAdminClient,
   createAnalyticsFixtures,
   createInconsistentAnalyticsFixture,
   createUserClient,
