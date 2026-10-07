@@ -230,16 +230,22 @@ BEGIN
   EXCEPTION WHEN insufficient_privilege THEN NULL;
   END;
 
-  -- Support owns the support queue, may update tickets, and does not inherit
-  -- sales or warehouse visibility.
+  -- Support owns the support queue and changes ticket state through the
+  -- audited RPC; direct table DML stays revoked for authenticated clients.
   PERFORM set_config('request.jwt.claim.sub', '00000000-0000-4000-8000-00000000b104', true);
   PERFORM set_config('request.jwt.claims', '{"sub":"00000000-0000-4000-8000-00000000b104","role":"authenticated"}', true);
   SELECT count(*) INTO v_count FROM public.support_tickets
   WHERE id IN ('00000000-0000-4000-8000-00000000c101', '00000000-0000-4000-8000-00000000c102');
   IF v_count <> 2 THEN RAISE EXCEPTION 'support agent cannot read support queue'; END IF;
-  UPDATE public.support_tickets SET status = 'in_progress' WHERE id = '00000000-0000-4000-8000-00000000c101';
-  GET DIAGNOSTICS v_rows = ROW_COUNT;
-  IF v_rows <> 1 THEN RAISE EXCEPTION 'support agent cannot update an authorized ticket'; END IF;
+  PERFORM public.send_support_message(
+    '00000000-0000-4000-8000-00000000c101',
+    'Role matrix status transition.',
+    'in_progress',
+    '00000000-0000-4000-8000-00000000f104'
+  );
+  SELECT count(*) INTO v_rows FROM public.support_tickets
+  WHERE id = '00000000-0000-4000-8000-00000000c101' AND status = 'in_progress';
+  IF v_rows <> 1 THEN RAISE EXCEPTION 'support agent cannot transition an authorized ticket through the RPC'; END IF;
   SELECT count(*) INTO v_count FROM public.inventory;
   IF v_count <> 0 THEN RAISE EXCEPTION 'support agent can read inventory'; END IF;
   SELECT count(*) INTO v_count FROM public.quote_inquiries WHERE email = 'rbac-inquiry@nodria.test';
