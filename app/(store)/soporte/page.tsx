@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowUpRight, LifeBuoy, Wrench } from "lucide-react";
-import { ReturnRequestForm } from "./return-request-form";
-import { SupportForm } from "@/components/storefront/support-form";
+import { ReturnsWorkspace } from "./returns-workspace";
+import { SupportIntakeForm } from "./support-intake-form";
+import { TicketHistory } from "./ticket-history";
 import { getServerDataMode } from "@/lib/server/data-mode";
-import { getServerAuthState } from "@/lib/supabase/auth";
+import { getServerAuthState, getStaffRoleGrants } from "@/lib/supabase/auth";
 
 export const metadata: Metadata = {
   title: "Soporte técnico",
@@ -17,9 +18,12 @@ export default async function SupportPage() {
   const mode = getServerDataMode();
   const auth = await getServerAuthState();
   const authenticated = auth.kind === "signed-in";
+  let canAccessAgentQueue = false;
   let organizations: OrganizationOption[] = [];
 
   if (authenticated) {
+    const roles = await getStaffRoleGrants(auth.supabase, auth.user.id);
+    canAccessAgentQueue = !roles.error && (roles.roles.includes("support_agent") || roles.roles.includes("super_admin"));
     const { data: memberships, error: membershipError } = await auth.supabase
       .from("organization_memberships")
       .select("organization_id")
@@ -42,6 +46,7 @@ export default async function SupportPage() {
       <p className="eyebrow">PERSONAS EXPERTAS, AL OTRO LADO</p>
       <h1 className="page-title">Estamos contigo<span className="title-period">.</span></h1>
       <p className="page-intro">Registra una consulta asociada a tu cuenta, pedido o empresa. También puedes revisar si un pedido cumple las condiciones de devolución.</p>
+      {canAccessAgentQueue && <p style={{ marginTop: "1rem" }}><Link className="text-button" href="/soporte/agente">Abrir bandeja de soporte <ArrowUpRight size={14} /></Link></p>}
       <section className="support-contact">
         <aside className="support-aside">
           <span className="support-icon"><LifeBuoy size={20} /></span>
@@ -53,7 +58,7 @@ export default async function SupportPage() {
         <div className="support-form-wrap">
           <p className="eyebrow">ABRIR UNA SOLICITUD</p>
           <h2>¿En qué podemos ayudarte?</h2>
-          <SupportForm
+          <SupportIntakeForm
             demoMode={demoMode}
             requiresAuth={mode === "supabase" && !authenticated}
             unavailable={mode === "unavailable"}
@@ -70,9 +75,10 @@ export default async function SupportPage() {
         <div className="support-form-wrap">
           <p className="eyebrow">DEVOLUCIÓN O RMA</p>
           <h2>Solicitar una devolución</h2>
-          <ReturnRequestForm connected={mode === "supabase"} authenticated={authenticated} />
+          <ReturnsWorkspace connected={mode === "supabase"} authenticated={authenticated} />
         </div>
       </section>
+      <TicketHistory connected={mode === "supabase"} authenticated={authenticated} />
     </main>
   );
 }

@@ -15,7 +15,7 @@ type ReturnableItem = {
 
 type ReturnDraft = { orderNumber: string; reason: string; items: Array<{ orderItemId: string; quantity: number }> };
 
-export function ReturnRequestForm({ connected, authenticated }: { connected: boolean; authenticated: boolean }) {
+export function ReturnRequestForm({ connected, authenticated, onRequestCreated }: { connected: boolean; authenticated: boolean; onRequestCreated?: () => void }) {
   const [orderNumber, setOrderNumber] = useState("");
   const [items, setItems] = useState<ReturnableItem[]>([]);
   const [quantities, setQuantities] = useState<Record<string, number>>({});
@@ -67,6 +67,7 @@ export function ReturnRequestForm({ connected, authenticated }: { connected: boo
       if (!response.ok || !body.persisted || !body.returnNumber) throw new Error(body.error ?? "No se confirmó la devolución.");
       setConfirmation(body.returnNumber);
       idempotency.current = null;
+      onRequestCreated?.();
       setItems([]);
       setQuantities({});
       setReason("");

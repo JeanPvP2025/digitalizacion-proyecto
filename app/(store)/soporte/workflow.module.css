@@ -1,0 +1,272 @@
+.history {
+  margin-top: 2.5rem;
+  padding: clamp(1rem, 3vw, 2rem);
+  border: 1px solid var(--line, #d7ddd6);
+  background: var(--paper, #f8f8f2);
+}
+
+.sectionHeading,
+.returnCardHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  max-width: 100%;
+  padding: .28rem .48rem;
+  border: 1px solid #d4ddd5;
+  border-radius: 999px;
+  color: #344c3b;
+  background: #f2f6ee;
+  font-size: .65rem;
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.status[data-status="waiting_customer"],
+.status[data-status="requested"] { color: #705217; border-color: #e7d9a7; background: #fbf6df; }
+.status[data-status="resolved"],
+.status[data-status="approved"],
+.status[data-status="received"],
+.status[data-status="refunded"] { color: #20523b; border-color: #bfd7c6; background: #edf6ef; }
+.status[data-status="closed"],
+.status[data-status="rejected"] { color: #65433e; border-color: #e0c9c3; background: #faf0ed; }
+
+.sectionHeading h2,
+.sectionHeading h3 {
+  margin: 0;
+  font: 500 clamp(1.35rem, 2.5vw, 1.8rem) var(--font-display, sans-serif);
+  letter-spacing: -.04em;
+}
+
+.historyLayout {
+  display: grid;
+  grid-template-columns: minmax(14rem, .7fr) minmax(0, 1.3fr);
+  gap: 1.25rem;
+  margin-top: 1.25rem;
+}
+
+.ticketList {
+  display: grid;
+  align-content: start;
+  gap: .55rem;
+}
+
+.ticketCard {
+  display: grid;
+  gap: .55rem;
+  width: 100%;
+  padding: .9rem;
+  border: 1px solid var(--line, #d7ddd6);
+  color: inherit;
+  background: white;
+  text-align: left;
+  cursor: pointer;
+}
+
+.ticketCard:hover,
+.ticketCard:focus-visible,
+.ticketCardSelected {
+  border-color: var(--forest, #174c3c);
+  outline: 2px solid color-mix(in srgb, var(--accent, #d7ed45) 55%, transparent);
+  outline-offset: 1px;
+}
+
+.ticketCardTop,
+.conversationHeading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .75rem;
+}
+
+.ticketCard strong {
+  font-size: .9rem;
+  line-height: 1.35;
+}
+
+.ticketCard small,
+.ticketCard code,
+.conversationHeading code {
+  color: #66736b;
+  font-size: .72rem;
+}
+
+.conversation {
+  min-width: 0;
+  padding: clamp(.9rem, 2vw, 1.25rem);
+  border: 1px solid var(--line, #d7ddd6);
+  background: white;
+}
+
+.conversationHeading {
+  padding-bottom: .9rem;
+  border-bottom: 1px solid var(--line, #d7ddd6);
+}
+
+.conversationHeading h3 {
+  margin: .35rem 0 0;
+  font: 500 1.2rem var(--font-display, sans-serif);
+}
+
+.timeline,
+.returnTimeline {
+  display: grid;
+  gap: .75rem;
+  margin: 1rem 0;
+  padding: 0;
+  list-style: none;
+}
+
+.timelineMessage,
+.timelineEvent {
+  max-width: min(90%, 42rem);
+  padding: .75rem .85rem;
+  border: 1px solid var(--line, #d7ddd6);
+  background: #f8f8f2;
+}
+
+.timelineMessage.isAgent {
+  margin-left: auto;
+  border-color: #b9d1c4;
+  background: #eff6f0;
+}
+
+.timelineMessage p,
+.timelineEvent span {
+  margin: .4rem 0 0;
+  font-size: .88rem;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.timelineMeta {
+  color: #66736b;
+  font-size: .7rem;
+}
+
+.timelineEvent {
+  max-width: 100%;
+  padding: .55rem .75rem;
+  color: #536057;
+  background: #f1f2eb;
+}
+
+.replyForm {
+  display: grid;
+  gap: .85rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line, #d7ddd6);
+}
+
+.returnHistory {
+  display: grid;
+  gap: 1rem;
+  margin-top: 2rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--line, #d7ddd6);
+}
+
+.returnList {
+  display: grid;
+  gap: .75rem;
+}
+
+.returnCard {
+  padding: .9rem;
+  border: 1px solid var(--line, #d7ddd6);
+  background: white;
+}
+
+.returnCardHeader p {
+  margin: .35rem 0 0;
+  color: #66736b;
+  font-size: .75rem;
+}
+
+.returnReason {
+  margin: .85rem 0;
+  font-size: .88rem;
+  line-height: 1.5;
+}
+
+.returnLines {
+  display: grid;
+  gap: .4rem;
+  margin: 0;
+  padding-left: 1.15rem;
+  font-size: .78rem;
+}
+
+.decisionReason {
+  display: flex;
+  align-items: flex-start;
+  gap: .45rem;
+  margin: .9rem 0 0;
+  padding: .65rem;
+  color: #234f39;
+  background: #eff6f0;
+  font-size: .78rem;
+  line-height: 1.45;
+}
+
+.returnTimeline {
+  gap: .5rem;
+  margin-bottom: 0;
+  padding-left: .8rem;
+  border-left: 1px solid #b9c5bb;
+}
+
+.returnTimeline li {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: .2rem .75rem;
+  font-size: .74rem;
+}
+
+.returnTimeline time {
+  color: #66736b;
+  font-size: .68rem;
+}
+
+.returnTimeline p {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: #536057;
+  line-height: 1.45;
+}
+
+.agentWorkspace {
+  display: grid;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.reviewCard {
+  display: grid;
+  gap: .8rem;
+  padding: 1rem;
+  border: 1px solid var(--line, #d7ddd6);
+  background: white;
+}
+
+.reviewActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .65rem;
+}
+
+@media (max-width: 760px) {
+  .historyLayout { grid-template-columns: 1fr; }
+  .ticketList { grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr)); }
+  .ticketCard { min-height: 6rem; }
+  .timelineMessage { max-width: 100%; }
+}

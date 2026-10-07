@@ -9,6 +9,7 @@ export const supportSubmissionSchema = z.object({
   email: z.string().trim().max(200).optional().default(""),
   orderNumber: z.string().trim().max(40).optional().default(""),
   organizationSlug: z.string().trim().max(96).optional().default(""),
+  idempotencyKey: z.uuid().optional(),
   privacyAccepted: z.literal(true),
 }).strict();
 
@@ -19,7 +20,7 @@ type SupabaseServerClient = NonNullable<Awaited<ReturnType<typeof createSupabase
 
 export type PersistSupportTicketResult =
   | { ok: true; ticketId: string; ticketNumber: string }
-  | { ok: false; reason: "order_not_owned" | "organization_not_owned" | "database_error" | "ticket_not_created" };
+  | { ok: false; reason: "order_not_owned" | "organization_not_owned" | "idempotency_conflict" | "database_error" | "ticket_not_created" };
 
 /** Creates a session-owned ticket and its first message in one PostgreSQL RPC. */
 export async function persistAuthenticatedSupportTicket(
@@ -82,13 +83,20 @@ export async function persistAuthenticatedSupportTicket(
     organizationId = orderOrganizationId;
   }
 
-  const { data, error } = await supabase.rpc("create_support_ticket", {
+  const rpcArgs = {
     p_subject: submission.subject,
     p_message: submission.message,
     p_order_id: orderId,
     p_organization_id: organizationId,
-  });
-  if (error) return { ok: false, reason: "database_error" };
+    ...(submission.idempotencyKey ? { p_idempotency_key: submission.idempotencyKey } : {}),
+  };
+  const { data, error } = await supabase.rpc("create_support_ticket", rpcArgs);
+  if (error) {
+    if (error.code === "22023" && error.message.toLowerCase().includes("idempotency key")) {
+      return { ok: false, reason: "idempotency_conflict" };
+    }
+    return { ok: false, reason: "database_error" };
+  }
 
   const ticket = Array.isArray(data) ? data[0] : data;
   if (!ticket || typeof ticket !== "object" || !("ticket_id" in ticket) || !("ticket_number" in ticket)) {

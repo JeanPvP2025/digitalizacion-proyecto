@@ -25,7 +25,15 @@ export async function POST(request: Request) {
 
     const ticketId = `TCK-${new Date().getFullYear()}-${crypto.randomUUID().slice(0, 8).toUpperCase()}`;
     try {
-      await saveDemoSupportTicket({ id: ticketId, createdAt: new Date().toISOString(), status: "open", ...result.data, email: email.data });
+      await saveDemoSupportTicket({
+        id: ticketId,
+        createdAt: new Date().toISOString(),
+        status: "open",
+        subject: result.data.subject,
+        message: result.data.message,
+        email: email.data,
+        orderNumber: result.data.orderNumber,
+      });
       return NextResponse.json({ persisted: true, mode: "demo", ticketId }, { status: 201 });
     } catch (error) {
       console.error("NODRIA demo support persistence failed", error);
@@ -53,6 +61,9 @@ export async function POST(request: Request) {
       }
       if (persisted.reason === "organization_not_owned") {
         return NextResponse.json({ error: "No encontramos esa organización entre tus cuentas empresariales." }, { status: 400 });
+      }
+      if (persisted.reason === "idempotency_conflict") {
+        return NextResponse.json({ error: "La clave de reintento ya se utilizó con otros datos. Actualiza el formulario antes de volver a enviarlo." }, { status: 409 });
       }
       return NextResponse.json({ error: "No se pudo confirmar el guardado del ticket en Supabase. Inténtalo más tarde." }, { status: 500 });
     }
