@@ -7,6 +7,9 @@ BEGIN;
 CREATE TEMP TABLE nodria_security_seed_order_count ON COMMIT DROP AS
 SELECT count(*)::integer AS row_count FROM public.orders;
 GRANT SELECT ON pg_temp.nodria_security_seed_order_count TO authenticated;
+CREATE TEMP TABLE nodria_security_seed_role_grant_count ON COMMIT DROP AS
+SELECT count(*)::integer AS row_count FROM public.user_role_grants;
+GRANT SELECT ON pg_temp.nodria_security_seed_role_grant_count TO authenticated;
 
 INSERT INTO auth.users (id, aud, role, email, encrypted_password, raw_app_meta_data, raw_user_meta_data)
 VALUES
@@ -258,7 +261,9 @@ BEGIN
   SELECT count(*) INTO v_count FROM public.support_messages;
   IF v_count <> 3 THEN RAISE EXCEPTION 'Support role cannot read internal and public messages'; END IF;
   SELECT count(*) INTO v_count FROM public.orders;
-  IF v_count <> 2 THEN RAISE EXCEPTION 'Support role cannot read orders needed for case handling'; END IF;
+  IF v_count <> (SELECT row_count + 2 FROM pg_temp.nodria_security_seed_order_count) THEN
+    RAISE EXCEPTION 'Support role cannot read the complete case order history';
+  END IF;
   SELECT count(*) INTO v_count FROM public.inventory;
   IF v_count <> 0 THEN RAISE EXCEPTION 'Support role can read inventory'; END IF;
   SELECT count(*) INTO v_count FROM public.payment_transactions;
@@ -273,11 +278,15 @@ BEGIN
   PERFORM set_config('request.jwt.claim.sub', '00000000-0000-4000-8000-00000000a019', true);
   PERFORM set_config('request.jwt.claims', '{"sub":"00000000-0000-4000-8000-00000000a019","role":"authenticated"}', true);
   SELECT count(*) INTO v_count FROM public.user_role_grants;
-  IF v_count <> 4 THEN RAISE EXCEPTION 'Superadmin cannot inspect staff grants'; END IF;
+  IF v_count <> (SELECT row_count + 4 FROM pg_temp.nodria_security_seed_role_grant_count) THEN
+    RAISE EXCEPTION 'Superadmin cannot inspect the complete staff grant list';
+  END IF;
   SELECT count(*) INTO v_count FROM public.audit_events;
   IF v_count = 0 THEN RAISE EXCEPTION 'Superadmin cannot inspect audit events'; END IF;
   SELECT count(*) INTO v_count FROM public.orders;
-  IF v_count <> 2 THEN RAISE EXCEPTION 'Superadmin cannot inspect orders'; END IF;
+  IF v_count <> (SELECT row_count + 2 FROM pg_temp.nodria_security_seed_order_count) THEN
+    RAISE EXCEPTION 'Superadmin cannot inspect the complete order history';
+  END IF;
 END;
 $$;
 

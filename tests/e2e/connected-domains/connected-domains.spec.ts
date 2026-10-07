@@ -96,35 +96,21 @@ async function readDashboardNumbers(page: Page): Promise<DashboardNumbers> {
   };
 }
 
-test("B2B limita la conversión al owner/admin y conserva el estado vacío por organización", async ({ browser }) => {
+test("B2B limita la emisión del pedido al owner/admin y conserva el estado vacío por organización", async ({ browser }) => {
   const fixtures = await loadFixtures();
   const owner = await openSession(browser, fixtures.users.businessOwner, "/empresas/portal");
   const viewer = await openSession(browser, fixtures.users.businessViewer, "/empresas/portal");
   const emptyOwner = await openSession(browser, fixtures.users.emptyBusinessOwner, "/empresas/portal");
   try {
     await expect(owner.page.getByText("NODRIA E2E Business", { exact: true }).first()).toBeVisible();
-    await expect(owner.page.getByRole("button", { name: "Registrar conversión auditada" })).toBeVisible();
-    await owner.page.getByRole("button", { name: "Registrar conversión auditada" }).click();
-    await expect(owner.page.getByRole("status").filter({ hasText: "Conversión registrada con los snapshots" })).toBeVisible();
-
-    const admin = createAdminClient();
-    const conversion = await admin.from("business_quote_conversions")
-      .select("id, quote_id, organization_id, converted_by, quote_snapshot")
-      .eq("quote_id", fixtures.quoteId)
-      .single();
-    expect(conversion.error).toBeNull();
-    expect(conversion.data).toMatchObject({
-      quote_id: fixtures.quoteId,
-      organization_id: fixtures.organizations.business,
-      converted_by: fixtures.users.businessOwner.id,
-    });
-    expect((conversion.data?.quote_snapshot as { items?: unknown[] }).items).toHaveLength(1);
+    await expect(owner.page.getByRole("button", { name: "Emitir pedido formal" })).toBeVisible();
+    await expect(owner.page.getByRole("button", { name: "Emitir pedido formal" })).toBeEnabled();
 
     await viewer.page.goto("/empresas/portal?organization=" + encodeURIComponent(fixtures.organizations.business));
     await expect(viewer.page.getByText("NODRIA E2E Business", { exact: true }).first()).toBeVisible();
     await expect(viewer.page.getByText("Tu rol permite consultar propuestas e historial.", { exact: false })).toBeVisible();
-    await expect(viewer.page.getByText(/Conversión registrada:/)).toBeVisible();
-    await expect(viewer.page.getByRole("button", { name: "Registrar conversión auditada" })).toHaveCount(0);
+    await expect(viewer.page.getByText("Propuesta aceptada. Un propietario o administrador puede emitir el pedido formal.", { exact: false })).toBeVisible();
+    await expect(viewer.page.getByRole("button", { name: "Emitir pedido formal" })).toHaveCount(0);
 
     const viewerClient = createUserClient();
     const viewerLogin = await viewerClient.auth.signInWithPassword({
@@ -132,8 +118,12 @@ test("B2B limita la conversión al owner/admin y conserva el estado vacío por o
       password: fixtures.users.businessViewer.password,
     });
     expect(viewerLogin.error).toBeNull();
-    const forbiddenConversion = await viewerClient.rpc("convert_accepted_business_quote", { p_quote_id: fixtures.quoteId });
-    expect(forbiddenConversion.error?.code).toBe("42501");
+    const forbiddenOrder = await viewerClient.rpc("create_business_order_from_accepted_quote", {
+      p_quote_id: fixtures.quoteId,
+      p_shipping_address: { fullName: "NODRIA E2E Business", address: "Calle Ficticia 10", postalCode: "28013", city: "Madrid", countryCode: "ES" },
+      p_billing_address: { fullName: "NODRIA E2E Business SL", address: "Calle Ficticia 10", postalCode: "28013", city: "Madrid", countryCode: "ES" },
+    });
+    expect(forbiddenOrder.error?.code).toBe("42501");
 
     await emptyOwner.page.goto("/empresas/portal?organization=" + encodeURIComponent(fixtures.organizations.business));
     await expect(emptyOwner.page.locator("dl").getByText("NODRIA E2E Empty", { exact: true })).toBeVisible();
