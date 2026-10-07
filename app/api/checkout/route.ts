@@ -8,6 +8,11 @@ import { pcBuilderComponents } from "@/lib/pc-builder";
 import { consumeRateLimit } from "@/lib/server/rate-limit";
 import { persistDemoOrder, type DemoOrderRecord } from "@/lib/server/demo-orders";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import {
+  createSupabasePaymentAdminClient,
+  getDemoPaymentEventId,
+  toDatabaseDemoPaymentOutcome,
+} from "@/lib/commerce/payment-admin";
 
 const demoOrderStatusSchema = z.enum(["confirmed", "payment_processing", "pending"]);
 const databaseOrderStatusSchema = z.enum(["pending_payment", "paid", "processing", "shipped", "delivered", "cancelled", "refunded"]);
@@ -28,8 +33,8 @@ const rpcOrderSchema = z.array(z.object({
   grand_total: amountSchema,
   currency: currencySchema,
 }).strict()).length(1);
+const rpcPaymentStatusSchema = z.enum(["pending", "paid", "failed"]);
 const variantRowsSchema = z.array(z.object({ id: z.uuid(), product_id: z.string().min(1) }).strict());
-const cartRowsSchema = z.array(z.object({ variant_id: z.uuid() }).strict());
 const cartIdSchema = z.uuid();
 
 const MAX_ATTEMPTS_PER_MINUTE = 6;
@@ -70,7 +75,20 @@ function checkoutErrorResponse(error: unknown) {
     return NextResponse.json({ error: "No se ha podido validar el acceso al carrito. Comprueba tu sesión." }, { status: 403 });
   }
   if (code === "23505") {
-    return NextResponse.json({ error: "El pedido ya se está registrando. Repite la solicitud con la misma referencia." }, { status: 409 });
+    const message = typeof error === "object" && error !== null && "message" in error && typeof error.message === "string"
+      ? error.message
+      : "";
+    return NextResponse.json({
+      error: message.includes("different payload")
+        ? "Esta referencia ya se usó con otros artículos o una dirección distinta. Inicia otra compra."
+        : "El pedido ya se está registrando. Repite la solicitud con la misma referencia.",
+    }, { status: 409 });
+  }
+  if (code === "22023") {
+    return NextResponse.json({ error: "Revisa los datos de entrega antes de continuar." }, { status: 400 });
+  }
+  if (code === "23514") {
+    return NextResponse.json({ error: "Este pedido ya no admite otro resultado de pago." }, { status: 409 });
   }
   return NextResponse.json({ error: "No se ha podido confirmar el pedido con Supabase. Conserva la misma referencia al reintentar." }, { status: 503 });
 }
@@ -106,32 +124,6 @@ async function getOrCreateActiveCart(supabase: NonNullable<Awaited<ReturnType<ty
   throw new Error("Supabase did not return the created cart.");
 }
 
-async function writeCartItems(
-  supabase: NonNullable<Awaited<ReturnType<typeof createSupabaseServerClient>>>,
-  cartId: string,
-  items: Array<{ variant_id: string; quantity: number }>,
-) {
-  const { data: currentRows, error: readError } = await supabase.from("cart_items")
-    .select("variant_id")
-    .eq("cart_id", cartId);
-  if (readError) throw readError;
-  const current = cartRowsSchema.safeParse(currentRows);
-  if (!current.success) throw new Error("Supabase returned an invalid cart response.");
-
-  const desiredIds = new Set(items.map((item) => item.variant_id));
-  const staleIds = current.data.map((item) => item.variant_id).filter((id) => !desiredIds.has(id));
-  if (staleIds.length > 0) {
-    const { error } = await supabase.from("cart_items").delete().eq("cart_id", cartId).in("variant_id", staleIds);
-    if (error) throw error;
-  }
-
-  const { error } = await supabase.from("cart_items").upsert(
-    items.map((item) => ({ cart_id: cartId, variant_id: item.variant_id, quantity: item.quantity })),
-    { onConflict: "cart_id,variant_id" },
-  );
-  if (error) throw error;
-}
-
 async function findExistingOrder(
   supabase: NonNullable<Awaited<ReturnType<typeof createSupabaseServerClient>>>,
   userId: string,
@@ -147,17 +139,30 @@ async function findExistingOrder(
   return databaseOrderSchema.parse(data);
 }
 
-function supabaseOrderResponse(order: z.infer<typeof databaseOrderSchema>, idempotencyKey: string, status = 200) {
+function supabaseOrderResponse(
+  order: z.infer<typeof databaseOrderSchema>,
+  idempotencyKey: string,
+  paymentStatus: NonNullable<CheckoutRequest["paymentMethod"]>,
+  status = 200,
+) {
+  const paymentMessage = paymentStatus === "approved"
+    ? "Pago ficticio aprobado. El pedido y su reserva de stock están confirmados."
+    : paymentStatus === "declined" || paymentStatus === "insufficient_funds"
+      ? "Resultado ficticio rechazado. El pedido se ha cancelado y el stock reservado se ha liberado."
+      : paymentStatus === "processing"
+        ? "El pago demo sigue en revisión. El pedido y su reserva permanecen pendientes; puedes reintentar con la misma referencia."
+        : "Error temporal simulado. El pedido y su reserva permanecen pendientes; puedes reintentar con la misma referencia.";
+
   return NextResponse.json({
     mode: "supabase",
     orderId: order.id,
     orderNumber: order.order_number,
     idempotencyKey,
-    paymentStatus: "pending",
+    paymentStatus,
     orderStatus: order.status,
     total: order.grand_total,
     currency: order.currency,
-    message: "Pedido guardado con pago pendiente. No se ha realizado ningún cargo; los resultados de pago demo aún no se pueden conciliar en Supabase.",
+    message: `${paymentMessage} No se ha realizado ningún cargo ni se han usado datos de tarjeta.`,
   }, { status });
 }
 
@@ -174,12 +179,22 @@ async function createSupabaseOrder(checkout: CheckoutRequest) {
     return NextResponse.json({ error: "Inicia sesión para finalizar el pedido en Supabase." }, { status: 401 });
   }
   const userId = authData.user.id;
+  if (!checkout.paymentMethod) {
+    return NextResponse.json({ error: "Elige un resultado para la simulación de pago." }, { status: 400 });
+  }
+
+  // The RPC is intentionally limited to service_role. Resolve its outcome only
+  // after authenticating the customer through the publishable-key session.
+  const paymentAdmin = createSupabasePaymentAdminClient();
+  if (!paymentAdmin) {
+    return NextResponse.json({ error: "Falta configurar una clave secreta de Supabase solo para servidor; el pedido no se ha creado." }, { status: 503 });
+  }
+
   if (!consumeRateLimit(`checkout:user:${userId}`, MAX_ATTEMPTS_PER_MINUTE, 60_000)) {
     return NextResponse.json({ error: "Has realizado demasiados intentos. Espera un minuto y vuelve a probar." }, { status: 429 });
   }
 
   const existingOrder = await findExistingOrder(supabase, userId, checkout.idempotencyKey);
-  if (existingOrder) return supabaseOrderResponse(existingOrder, checkout.idempotencyKey);
 
   try {
     const items = consolidateCheckoutItems(checkout.items);
@@ -197,7 +212,6 @@ async function createSupabaseOrder(checkout: CheckoutRequest) {
     const cartItems = resolveCheckoutCartItems(items, variants.data);
 
     const cart = await getOrCreateActiveCart(supabase, userId);
-    await writeCartItems(supabase, cart.id, cartItems);
 
     const shippingAddress = {
       fullName: checkout.customer.name,
@@ -209,9 +223,10 @@ async function createSupabaseOrder(checkout: CheckoutRequest) {
       province: checkout.customer.province,
       countryCode: "ES",
     };
-    const { data: rpcData, error: rpcError } = await supabase.rpc("place_order", {
+    const { data: rpcData, error: rpcError } = await supabase.rpc("place_order_from_checkout", {
       p_cart_id: cart.id,
       p_idempotency_key: checkout.idempotencyKey,
+      p_items: cartItems,
       p_shipping_address: shippingAddress,
       p_billing_address: shippingAddress,
     });
@@ -219,17 +234,40 @@ async function createSupabaseOrder(checkout: CheckoutRequest) {
     const result = rpcOrderSchema.safeParse(rpcData);
     if (!result.success) throw new Error("Supabase returned an invalid place_order response.");
     const [row] = result.data;
-    return supabaseOrderResponse({
+    const resolvedOrder: z.infer<typeof databaseOrderSchema> = {
       id: row.order_id,
       order_number: row.order_number,
       status: "pending_payment",
       grand_total: row.grand_total,
       currency: row.currency,
-    }, checkout.idempotencyKey, 201);
+    };
+    const paymentEventId = getDemoPaymentEventId(userId, checkout.idempotencyKey, checkout.paymentMethod);
+    const { data: paymentData, error: paymentError } = await paymentAdmin.rpc("resolve_demo_payment", {
+      p_order_id: row.order_id,
+      p_outcome: toDatabaseDemoPaymentOutcome(checkout.paymentMethod),
+      p_event_id: paymentEventId,
+    });
+    if (paymentError) throw paymentError;
+    const parsedPayment = rpcPaymentStatusSchema.safeParse(paymentData);
+    if (!parsedPayment.success) throw new Error("Supabase returned an invalid resolve_demo_payment response.");
+
+    const paymentStatus = parsedPayment.data === "paid"
+      ? "approved"
+      : parsedPayment.data === "failed"
+        ? checkout.paymentMethod === "insufficient_funds" ? "insufficient_funds" : "declined"
+        : checkout.paymentMethod;
+    resolvedOrder.status = parsedPayment.data === "paid"
+      ? "paid"
+      : parsedPayment.data === "failed"
+        ? "cancelled"
+        : "pending_payment";
+
+    if (paymentStatus === "temporary_error" && parsedPayment.data === "pending") {
+      return NextResponse.json({ error: "El pago demo tuvo un error temporal. El pedido sigue pendiente; cambia el resultado o reintenta con la misma referencia." }, { status: 503 });
+    }
+
+    return supabaseOrderResponse(resolvedOrder, checkout.idempotencyKey, paymentStatus, existingOrder ? 200 : 201);
   } catch (error) {
-    // A concurrent request using the same key may commit and convert the cart before this request writes it.
-    const concurrentOrder = await findExistingOrder(supabase, userId, checkout.idempotencyKey).catch(() => null);
-    if (concurrentOrder) return supabaseOrderResponse(concurrentOrder, checkout.idempotencyKey);
     throw error;
   }
 }

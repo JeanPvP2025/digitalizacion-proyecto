@@ -44,7 +44,7 @@ const supabaseCheckoutResponseSchema = z.object({
   orderId: z.uuid(),
   orderNumber: z.string().min(8).max(64),
   idempotencyKey: z.uuid(),
-  paymentStatus: z.literal("pending"),
+  paymentStatus: z.enum(["approved", "declined", "insufficient_funds", "processing", "temporary_error"]),
   orderStatus: z.enum(["pending_payment", "paid", "processing", "shipped", "delivered", "cancelled", "refunded"]),
   total: z.number().finite().nonnegative(),
   currency: z.string().regex(/^[A-Z]{3}$/),

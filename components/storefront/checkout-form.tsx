@@ -10,11 +10,11 @@ import { clearCart, readCart, type CartLine } from "@/components/storefront/stor
 const IDEMPOTENCY_STORAGE_KEY = "nodria.checkout.idempotency.v1";
 
 const paymentMethods = [
-  { value: "approved", title: "DEMO-APROBADO", copy: "Pago simulado como aprobado · pedido demo confirmado" },
-  { value: "declined", title: "DEMO-RECHAZADO", copy: "Resultado de prueba · pedido demo pendiente" },
-  { value: "insufficient_funds", title: "DEMO-FONDOS", copy: "Resultado de prueba · sin cargo" },
-  { value: "processing", title: "DEMO-PROCESANDO", copy: "Resultado de prueba · pedido demo en revisión" },
-  { value: "temporary_error", title: "DEMO-ERROR", copy: "Resultado de prueba · sin cargo" },
+  { value: "approved", title: "DEMO-APROBADO", copy: "Pago ficticio aprobado · pedido confirmado" },
+  { value: "declined", title: "DEMO-RECHAZADO", copy: "Pago ficticio rechazado · reserva liberada" },
+  { value: "insufficient_funds", title: "DEMO-FONDOS", copy: "Resultado ficticio · reserva liberada" },
+  { value: "processing", title: "DEMO-PROCESANDO", copy: "Resultado ficticio · pedido pendiente" },
+  { value: "temporary_error", title: "DEMO-ERROR", copy: "Error temporal · puedes reintentar" },
 ] as const;
 
 type CheckoutCustomer = {
@@ -35,9 +35,9 @@ function cartFingerprint(lines: CartLine[]) {
   return JSON.stringify(lines.map(({ id, quantity }) => ({ id, quantity })).sort((left, right) => left.id.localeCompare(right.id)));
 }
 
-async function requestFingerprint(items: Array<{ productId: string; quantity: number }>, customer: CheckoutCustomer, method?: string) {
+async function requestFingerprint(items: Array<{ productId: string; quantity: number }>, customer: CheckoutCustomer) {
   if (!globalThis.crypto?.subtle) return null;
-  const content = JSON.stringify({ items: [...items].sort((left, right) => left.productId.localeCompare(right.productId)), customer, method });
+  const content = JSON.stringify({ items: [...items].sort((left, right) => left.productId.localeCompare(right.productId)), customer });
   const digest = await globalThis.crypto.subtle.digest("SHA-256", new TextEncoder().encode(content));
   return [...new Uint8Array(digest)].map((byte) => byte.toString(16).padStart(2, "0")).join("");
 }
@@ -119,7 +119,7 @@ export function CheckoutForm({ mode }: { mode: CheckoutMode }) {
 
     setSubmitting(true);
     try {
-      const attemptFingerprint = await requestFingerprint(items, customer, mode === "demo" ? method : undefined);
+      const attemptFingerprint = await requestFingerprint(items, customer);
       const idempotencyKey = getRequestIdempotencyKey(attemptFingerprint, idempotencyRef.current);
       idempotencyRef.current = { fingerprint: attemptFingerprint, key: idempotencyKey };
       const response = await fetch("/api/checkout", {
@@ -129,7 +129,7 @@ export function CheckoutForm({ mode }: { mode: CheckoutMode }) {
           items,
           customer,
           idempotencyKey,
-          ...(mode === "demo" ? { paymentMethod: method } : {}),
+          paymentMethod: method,
         }),
       });
       const responseBody: unknown = await response.json().catch(() => null);
@@ -143,10 +143,16 @@ export function CheckoutForm({ mode }: { mode: CheckoutMode }) {
       if (!parsed.success) throw new Error("La respuesta del checkout no se ha podido validar. Puedes reintentar con la misma referencia.");
 
       const checkoutResult = parsed.data;
+      if (checkoutResult.mode === "supabase" && checkoutResult.orderStatus === "pending_payment") {
+        setError(checkoutResult.message);
+        return;
+      }
+
       setResult(checkoutResult);
       clearRequestIdempotencyKey(idempotencyKey);
       idempotencyRef.current = null;
-      if (checkoutResult.mode === "supabase" || checkoutResult.paymentStatus === "approved" || checkoutResult.paymentStatus === "processing") {
+      if ((checkoutResult.mode === "supabase" && checkoutResult.orderStatus !== "pending_payment") ||
+          (checkoutResult.mode === "demo" && (checkoutResult.paymentStatus === "approved" || checkoutResult.paymentStatus === "processing"))) {
         if (cartFingerprint(readCart()) === submittedCart) {
           clearCart();
           setCart([]);
@@ -160,15 +166,21 @@ export function CheckoutForm({ mode }: { mode: CheckoutMode }) {
   }
 
   if (result?.mode === "supabase") {
+    const approved = result.paymentStatus === "approved";
+    const headline = approved
+      ? "El pago demo está aprobado."
+      : result.paymentStatus === "insufficient_funds"
+        ? "La simulación indica fondos insuficientes."
+        : "La simulación ha rechazado el pago.";
     return <section className="order-confirmation" aria-live="polite">
-      <span className="confirmation-mark confirmation-mark--muted"><CreditCard size={22} /></span>
-      <p className="eyebrow">PEDIDO GUARDADO · PAGO PENDIENTE</p>
-      <h1>Tu pedido está guardado.</h1>
+      <span className={`confirmation-mark${approved ? "" : " confirmation-mark--muted"}`}>{approved ? <Check size={24} /> : <CreditCard size={22} />}</span>
+      <p className="eyebrow">PEDIDO SUPABASE · {result.paymentStatus.toUpperCase()}</p>
+      <h1>{headline}</h1>
       <p>{result.message} El servidor confirmó el total con el catálogo actual: <strong>{money(result.total)}</strong>.</p>
       <span className="order-id">REFERENCIA · {result.orderNumber}</span>
       <span className="order-id">ESTADO · {result.orderStatus}</span>
       <div className="confirmation-actions"><Link className="button button--accent" href="/mi-cuenta">Ver mi espacio <ArrowRight size={14} /></Link></div>
-      <div className="demo-payment-warning"><ShieldCheck size={13} /> Pedido autenticado en Supabase. Sin pasarela, cargo ni datos de tarjeta.</div>
+      <div className="demo-payment-warning"><ShieldCheck size={13} /> Pedido autenticado en Supabase. Simulación local del resultado; sin pasarela, cargo ni datos de tarjeta.</div>
     </section>;
   }
 
@@ -186,9 +198,9 @@ export function CheckoutForm({ mode }: { mode: CheckoutMode }) {
         {mode === "supabase" && <p className="checkout-auth-note">El checkout conectado requiere una sesión de cliente. <Link href="/acceso">Iniciar sesión o crear cuenta</Link></p>}
         {mode === "unavailable" && <p className="checkout-error" role="status">El checkout está desactivado porque este entorno de producción no tiene credenciales Supabase.</p>}
         <section className="form-section"><h2>¿A quién enviamos el pedido?</h2><div className="form-grid"><div className="field"><label htmlFor="name">Nombre y apellidos</label><input id="name" name="name" autoComplete="name" required defaultValue={mode === "demo" ? "Alex García" : ""} /></div><div className="field"><label htmlFor="email">Correo electrónico</label><input id="email" name="email" type="email" autoComplete="email" required defaultValue={mode === "demo" ? "alex.garcia@demo.nodria.test" : ""} /></div><div className="field"><label htmlFor="phone">Teléfono</label><input id="phone" name="phone" type="tel" autoComplete="tel" defaultValue={mode === "demo" ? "600 000 000" : ""} /></div><div className="field field--wide"><label htmlFor="address">Dirección de entrega y facturación</label><input id="address" name="address" autoComplete="street-address" required defaultValue={mode === "demo" ? "Calle de la Innovación, 12" : ""} /></div><div className="field"><label htmlFor="postalCode">Código postal</label><input id="postalCode" name="postalCode" autoComplete="postal-code" inputMode="numeric" required defaultValue={mode === "demo" ? "28013" : ""} pattern="[0-9]{5}" title="Introduce un código postal de cinco cifras" /></div><div className="field"><label htmlFor="city">Municipio</label><input id="city" name="city" autoComplete="address-level2" required defaultValue={mode === "demo" ? "Madrid" : ""} /></div><div className="field"><label htmlFor="province">Provincia</label><input id="province" name="province" autoComplete="address-level1" required defaultValue={mode === "demo" ? "Madrid" : ""} /></div></div></section>
-        <section className="form-section"><h2>{mode === "demo" ? "Simulación de pago" : "Estado del pago"}</h2>{mode === "demo" ? <><p className="payment-intro">Entorno académico local. Elige una respuesta ficticia para recorrer el flujo.</p><div className="checkout-payments">{paymentMethods.map((item) => <label className={`payment-option${method === item.value ? " payment-option--active" : ""}`} key={item.value}><input checked={method === item.value} name="paymentMethod" onChange={() => setMethod(item.value)} type="radio" value={item.value} /><span className="payment-option-copy"><strong>{item.title}</strong><small>{item.copy}</small></span></label>)}</div><p className="demo-payment-warning"><ShieldCheck size={13} /> SIMULACIÓN LOCAL: no introduzcas datos bancarios. No existe una pasarela y nunca se solicita ni almacena un número de tarjeta.</p></> : <><p className="payment-intro">El RPC de Supabase registra el pedido y deja el pago pendiente. Esta aplicación no incluye una pasarela ni una acción segura para reconciliar resultados demo.</p><p className="demo-payment-warning"><ShieldCheck size={13} /> No se realizará ningún cargo. No introduzcas datos bancarios ni datos de tarjeta.</p></>}</section>
+        <section className="form-section"><h2>Simulación de pago</h2><p className="payment-intro">{mode === "demo" ? "Entorno académico local. Elige una respuesta ficticia para recorrer el flujo." : "Checkout conectado a Supabase. Elige un resultado de prueba; los errores temporales mantienen el pedido pendiente para reintentar."}</p><div className="checkout-payments">{paymentMethods.map((item) => <label className={`payment-option${method === item.value ? " payment-option--active" : ""}`} key={item.value}><input checked={method === item.value} name="paymentMethod" onChange={() => setMethod(item.value)} type="radio" value={item.value} /><span className="payment-option-copy"><strong>{item.title}</strong><small>{item.copy}</small></span></label>)}</div><p className="demo-payment-warning"><ShieldCheck size={13} /> SIMULACIÓN: no introduzcas datos bancarios. No existe una pasarela y nunca se solicita ni almacena un número de tarjeta.</p></section>
         {error && <p className="checkout-error" role="alert">{error}</p>}
-        <button className="button button--accent checkout-submit" type="submit" disabled={submitting || mode === "unavailable"}>{submitting ? <><LoaderCircle className="spin-icon" size={15} /> Guardando pedido…</> : mode === "demo" ? <>Confirmar compra demo <ArrowRight size={15} /></> : <>Guardar pedido pendiente <ArrowRight size={15} /></>}</button>
+        <button className="button button--accent checkout-submit" type="submit" disabled={submitting || mode === "unavailable"}>{submitting ? <><LoaderCircle className="spin-icon" size={15} /> Guardando pedido…</> : mode === "demo" ? <>Confirmar compra demo <ArrowRight size={15} /></> : <>Simular resultado de pago <ArrowRight size={15} /></>}</button>
       </div>
       <aside className="cart-summary"><span className="mono-label">TU PEDIDO</span>{cart.map((item) => <div className="checkout-summary-line" key={item.id}><span>{item.quantity} × {item.name}</span><strong>{money(item.price * item.quantity)}</strong></div>)}<div><span>Productos</span><strong>{money(subtotal)}</strong></div><div><span>Envío</span><strong>{shipping === 0 ? "Gratis" : money(shipping)}</strong></div><div><span>IVA</span><strong>Incluido</strong></div><div className="summary-total"><span>Total estimado</span><strong>{money(subtotal + shipping)}</strong></div><span className="checkout-assurance">{mode === "supabase" ? "Importe estimado; el servidor confirma el total." : "Precios de demostración con impuestos incluidos."}</span></aside>
     </form>
