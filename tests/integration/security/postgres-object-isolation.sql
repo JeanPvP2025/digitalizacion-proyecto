@@ -34,15 +34,25 @@ VALUES
   ('00000000-0000-4000-8000-00000000d011', '00000000-0000-4000-8000-00000000a017', 'buyer', '00000000-0000-4000-8000-00000000a016'),
   ('00000000-0000-4000-8000-00000000d012', '00000000-0000-4000-8000-00000000a012', 'owner', '00000000-0000-4000-8000-00000000a012');
 
-INSERT INTO public.quotes (id, quote_number, requested_by, organization_id, request_note)
+INSERT INTO public.quotes (id, quote_number, requested_by, organization_id, request_note, status)
 VALUES
-  ('00000000-0000-4000-8000-00000000e011', 'SEC-Q-ORG-A', '00000000-0000-4000-8000-00000000a017', '00000000-0000-4000-8000-00000000d011', 'Oferta privada de organización A'),
-  ('00000000-0000-4000-8000-00000000e012', 'SEC-Q-ORG-B', '00000000-0000-4000-8000-00000000a012', '00000000-0000-4000-8000-00000000d012', 'Oferta privada de organización B');
+  ('00000000-0000-4000-8000-00000000e011', 'SEC-Q-ORG-A', '00000000-0000-4000-8000-00000000a017', '00000000-0000-4000-8000-00000000d011', 'Oferta privada de organización A', 'requested'),
+  ('00000000-0000-4000-8000-00000000e012', 'SEC-Q-ORG-B', '00000000-0000-4000-8000-00000000a012', '00000000-0000-4000-8000-00000000d012', 'Oferta privada de organización B', 'requested'),
+  ('00000000-0000-4000-8000-00000000e013', 'SEC-Q-PUBLIC', '00000000-0000-4000-8000-00000000a011', null, 'Solicitud comercial pública', 'requested');
 
-INSERT INTO public.quote_items (quote_id, variant_id, quantity)
-SELECT '00000000-0000-4000-8000-00000000e011', id, 1 FROM public.product_variants WHERE sku = 'NOD-LM27-4K';
-INSERT INTO public.quote_items (quote_id, variant_id, quantity)
-SELECT '00000000-0000-4000-8000-00000000e012', id, 1 FROM public.product_variants WHERE sku = 'NOD-FS-02';
+INSERT INTO public.quote_items (quote_id, variant_id, quantity, product_name, product_sku, variant_title, requested_unit_price, tax_rate, currency)
+SELECT '00000000-0000-4000-8000-00000000e011', v.id, 1, p.name, v.sku, v.title, v.current_price, v.tax_rate, v.currency
+FROM public.product_variants v JOIN public.products p ON p.id = v.product_id WHERE v.sku = 'NOD-LM27-4K';
+INSERT INTO public.quote_items (quote_id, variant_id, quantity, product_name, product_sku, variant_title, requested_unit_price, tax_rate, currency)
+SELECT '00000000-0000-4000-8000-00000000e012', v.id, 1, p.name, v.sku, v.title, v.current_price, v.tax_rate, v.currency
+FROM public.product_variants v JOIN public.products p ON p.id = v.product_id WHERE v.sku = 'NOD-FS-02';
+INSERT INTO public.quote_items (quote_id, variant_id, quantity, product_name, product_sku, variant_title, requested_unit_price, tax_rate, currency)
+SELECT '00000000-0000-4000-8000-00000000e013', v.id, 1, p.name, v.sku, v.title, v.current_price, v.tax_rate, v.currency
+FROM public.product_variants v JOIN public.products p ON p.id = v.product_id WHERE v.sku = 'NOD-FS-02';
+INSERT INTO public.crm_activities (organization_id, quote_id, actor_user_id, event_key, title, visibility)
+VALUES
+  ('00000000-0000-4000-8000-00000000d011', '00000000-0000-4000-8000-00000000e011', '00000000-0000-4000-8000-00000000a016', 'quote_note', 'Nota privada B2B', 'organization'),
+  (null, '00000000-0000-4000-8000-00000000e013', '00000000-0000-4000-8000-00000000a011', 'quote_received', 'Nueva solicitud pública', 'internal');
 
 INSERT INTO public.support_tickets (id, ticket_number, customer_id, subject)
 VALUES
@@ -56,12 +66,12 @@ VALUES
   ('00000000-0000-4000-8000-00000000c012', '00000000-0000-4000-8000-00000000a012', 'Mensaje público de B', false);
 
 INSERT INTO public.orders (
-  id, order_number, customer_id, idempotency_key, status, subtotal, tax_total,
+  id, order_number, customer_id, idempotency_key, checkout_fingerprint, status, subtotal, tax_total,
   shipping_total, discount_total, grand_total, shipping_address, billing_address, delivered_at
 )
 VALUES
-  ('00000000-0000-4000-8000-00000000f011', 'SEC-NOD-ORDER-A', '00000000-0000-4000-8000-00000000a011', 'sec-order-a-001', 'delivered', 10, 0, 0, 0, 10, '{}', '{}', now()),
-  ('00000000-0000-4000-8000-00000000f012', 'SEC-NOD-ORDER-B', '00000000-0000-4000-8000-00000000a012', 'sec-order-b-001', 'delivered', 10, 0, 0, 0, 10, '{}', '{}', now());
+  ('00000000-0000-4000-8000-00000000f011', 'SEC-NOD-ORDER-A', '00000000-0000-4000-8000-00000000a011', 'sec-order-a-001', repeat(md5('SEC-NOD-ORDER-A'), 2), 'delivered', 10, 0, 0, 0, 10, '{}', '{}', now()),
+  ('00000000-0000-4000-8000-00000000f012', 'SEC-NOD-ORDER-B', '00000000-0000-4000-8000-00000000a012', 'sec-order-b-001', repeat(md5('SEC-NOD-ORDER-B'), 2), 'delivered', 10, 0, 0, 0, 10, '{}', '{}', now());
 
 INSERT INTO public.payment_transactions (order_id, provider, provider_reference, status, amount)
 VALUES ('00000000-0000-4000-8000-00000000f011', 'demo_gateway', 'sec-private-payment-ref-a', 'paid', 10);
@@ -128,21 +138,24 @@ BEGIN
   SELECT count(*) INTO v_count FROM public.organization_memberships;
   IF v_count <> 2 THEN RAISE EXCEPTION 'Business admin cannot see only its organization roster'; END IF;
 
-  INSERT INTO public.organization_memberships (organization_id, user_id, role, added_by)
-  VALUES ('00000000-0000-4000-8000-00000000d011', '00000000-0000-4000-8000-00000000a018', 'viewer', '00000000-0000-4000-8000-00000000a016');
+  PERFORM public.add_organization_member(
+    '00000000-0000-4000-8000-00000000d011', 'sec-org-outsider@nodria.test', 'viewer'
+  );
 
   BEGIN
-    INSERT INTO public.organization_memberships (organization_id, user_id, role, added_by)
-    VALUES ('00000000-0000-4000-8000-00000000d012', '00000000-0000-4000-8000-00000000a018', 'buyer', '00000000-0000-4000-8000-00000000a016');
+    PERFORM public.add_organization_member(
+      '00000000-0000-4000-8000-00000000d012', 'sec-org-outsider@nodria.test', 'buyer'
+    );
     RAISE EXCEPTION USING ERRCODE = 'ZX000', MESSAGE = 'Business admin added a member to another organization';
   EXCEPTION WHEN insufficient_privilege THEN NULL;
   END;
 
   BEGIN
-    INSERT INTO public.organization_memberships (organization_id, user_id, role, added_by)
-    VALUES ('00000000-0000-4000-8000-00000000d011', '00000000-0000-4000-8000-00000000a018', 'owner', '00000000-0000-4000-8000-00000000a016');
+    PERFORM public.add_organization_member(
+      '00000000-0000-4000-8000-00000000d011', 'sec-org-outsider@nodria.test', 'owner'
+    );
     RAISE EXCEPTION USING ERRCODE = 'ZX000', MESSAGE = 'Business admin assigned an owner role';
-  EXCEPTION WHEN insufficient_privilege THEN NULL;
+  EXCEPTION WHEN SQLSTATE '22023' THEN NULL;
   END;
 END;
 $$;
@@ -181,18 +194,25 @@ DECLARE
 BEGIN
   PERFORM set_config('request.jwt.claim.sub', '00000000-0000-4000-8000-00000000a013', true);
   PERFORM set_config('request.jwt.claims', '{"sub":"00000000-0000-4000-8000-00000000a013","role":"authenticated"}', true);
-  -- Evidence of current SEC-01 scope, not an approval of global sales visibility.
+  -- Formal tenant records stay private until the quote is assigned; sales can
+  -- still work the separate inbound quote inquiry queue.
   SELECT count(*) INTO v_count FROM public.organizations;
-  IF v_count <> 2 THEN RAISE EXCEPTION 'Sales role no longer matches its documented global organization scope'; END IF;
+  IF v_count <> 0 THEN RAISE EXCEPTION 'Sales role can read tenant organizations'; END IF;
   SELECT count(*) INTO v_count FROM public.organizations
   WHERE tax_id IN ('B12345678', 'B87654321') AND billing_email LIKE 'billing-%@nodria.test';
-  IF v_count <> 2 THEN RAISE EXCEPTION 'Sales role cannot read cross-tenant tax and billing fields'; END IF;
+  IF v_count <> 0 THEN RAISE EXCEPTION 'Sales role can read cross-tenant tax and billing fields'; END IF;
   SELECT count(*) INTO v_count FROM public.organization_memberships;
-  IF v_count <> 4 THEN RAISE EXCEPTION 'Sales role no longer matches its documented global membership scope'; END IF;
+  IF v_count <> 0 THEN RAISE EXCEPTION 'Sales role can read tenant memberships'; END IF;
   SELECT count(*) INTO v_count FROM public.quotes;
-  IF v_count <> 2 THEN RAISE EXCEPTION 'Sales role cannot read both organizations’ quotes'; END IF;
+  IF v_count <> 3 THEN RAISE EXCEPTION 'Sales role cannot read the unassigned quote work queue'; END IF;
   SELECT count(*) INTO v_count FROM public.quote_items;
-  IF v_count <> 2 THEN RAISE EXCEPTION 'Sales role cannot read both organizations’ quote lines'; END IF;
+  IF v_count <> 3 THEN RAISE EXCEPTION 'Sales role cannot read the unassigned quote line work queue'; END IF;
+  SELECT count(*) INTO v_count FROM public.crm_activities
+  WHERE quote_id IN ('00000000-0000-4000-8000-00000000e011', '00000000-0000-4000-8000-00000000e012');
+  IF v_count <> 0 THEN RAISE EXCEPTION 'Sales role can read organization-only quote activities'; END IF;
+  SELECT count(*) INTO v_count FROM public.crm_activities
+  WHERE quote_id = '00000000-0000-4000-8000-00000000e013';
+  IF v_count < 1 THEN RAISE EXCEPTION 'Sales role cannot read internal activity on its public intake queue'; END IF;
   SELECT count(*) INTO v_count FROM public.orders;
   IF v_count <> 0 THEN RAISE EXCEPTION 'Sales role can read customer orders'; END IF;
   SELECT count(*) INTO v_count FROM public.payment_transactions;
