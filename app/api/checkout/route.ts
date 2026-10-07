@@ -33,6 +33,13 @@ const rpcOrderSchema = z.array(z.object({
   grand_total: amountSchema,
   currency: currencySchema,
 }).strict()).length(1);
+const existingCheckoutOrderSchema = z.array(z.object({
+  order_id: z.uuid(),
+  order_number: z.string().regex(/^NOD-\d{8}-[A-F0-9]{10}$/i),
+  status: databaseOrderStatusSchema,
+  grand_total: amountSchema,
+  currency: currencySchema,
+}).strict()).max(1);
 const rpcPaymentStatusSchema = z.enum(["pending", "paid", "failed"]);
 const variantRowsSchema = z.array(z.object({
   id: z.uuid(),
@@ -163,19 +170,23 @@ async function getOrCreateActiveCart(supabase: NonNullable<Awaited<ReturnType<ty
   throw new Error("Supabase did not return the created cart.");
 }
 
-async function findExistingOrder(
-  supabase: NonNullable<Awaited<ReturnType<typeof createSupabaseServerClient>>>,
+async function resolveConnectedPayment(
+  paymentAdmin: NonNullable<ReturnType<typeof createSupabasePaymentAdminClient>>,
+  orderId: string,
   userId: string,
   idempotencyKey: string,
+  paymentMethod: NonNullable<CheckoutRequest["paymentMethod"]>,
 ) {
-  const { data, error } = await supabase.from("orders")
-    .select("id,order_number,status,grand_total,currency")
-    .eq("customer_id", userId)
-    .eq("idempotency_key", idempotencyKey)
-    .maybeSingle();
+  const paymentEventId = getDemoPaymentEventId(userId, idempotencyKey, paymentMethod);
+  const { data, error } = await paymentAdmin.rpc("resolve_demo_payment", {
+    p_order_id: orderId,
+    p_outcome: toDatabaseDemoPaymentOutcome(paymentMethod),
+    p_event_id: paymentEventId,
+  });
   if (error) throw error;
-  if (!data) return null;
-  return databaseOrderSchema.parse(data);
+  const parsed = rpcPaymentStatusSchema.safeParse(data);
+  if (!parsed.success) throw new Error("Supabase returned an invalid resolve_demo_payment response.");
+  return parsed.data;
 }
 
 function supabaseOrderResponse(
@@ -233,8 +244,6 @@ async function createSupabaseOrder(checkout: CheckoutRequest) {
     return NextResponse.json({ error: "Has realizado demasiados intentos. Espera un minuto y vuelve a probar." }, { status: 429 });
   }
 
-  const existingOrder = await findExistingOrder(supabase, userId, checkout.idempotencyKey);
-
   try {
     const items = consolidateCheckoutItems(checkout.items);
     if (items.some((item) => "productId" in item && item.productId.startsWith("builder:"))) {
@@ -243,8 +252,6 @@ async function createSupabaseOrder(checkout: CheckoutRequest) {
 
     const variants = await loadSellableCheckoutVariants(supabase, items);
     const cartItems = resolveCheckoutCartItems(items, variants);
-
-    const cart = await getOrCreateActiveCart(supabase, userId);
 
     const shippingAddress = {
       fullName: checkout.customer.name,
@@ -256,6 +263,43 @@ async function createSupabaseOrder(checkout: CheckoutRequest) {
       province: checkout.customer.province,
       countryCode: "ES",
     };
+    const { data: existingData, error: existingError } = await supabase.rpc("find_checkout_order", {
+      p_idempotency_key: checkout.idempotencyKey,
+      p_items: cartItems,
+      p_shipping_address: shippingAddress,
+      p_billing_address: shippingAddress,
+    });
+    if (existingError) throw existingError;
+    const existingResult = existingCheckoutOrderSchema.safeParse(existingData);
+    if (!existingResult.success) throw new Error("Supabase returned an invalid idempotent checkout lookup response.");
+    const existing = existingResult.data[0];
+    if (existing) {
+      const paymentState = await resolveConnectedPayment(
+        paymentAdmin, existing.order_id, userId, checkout.idempotencyKey, checkout.paymentMethod,
+      );
+      const paymentStatus = paymentState === "paid"
+        ? "approved"
+        : paymentState === "failed"
+          ? checkout.paymentMethod === "insufficient_funds" ? "insufficient_funds" : "declined"
+          : checkout.paymentMethod;
+      const existingOrder = databaseOrderSchema.parse({
+        id: existing.order_id,
+        order_number: existing.order_number,
+        status: paymentState === "paid"
+          ? "paid"
+          : paymentState === "failed"
+            ? "cancelled"
+            : existing.status,
+        grand_total: existing.grand_total,
+        currency: existing.currency,
+      });
+      if (paymentStatus === "temporary_error" && paymentState === "pending") {
+        return NextResponse.json({ error: "El pago demo tuvo un error temporal. El pedido sigue pendiente; cambia el resultado o reintenta con la misma referencia." }, { status: 503 });
+      }
+      return supabaseOrderResponse(existingOrder, checkout.idempotencyKey, paymentStatus, 200);
+    }
+
+    const cart = await getOrCreateActiveCart(supabase, userId);
     const { data: rpcData, error: rpcError } = await supabase.rpc("place_order_from_checkout", {
       p_cart_id: cart.id,
       p_idempotency_key: checkout.idempotencyKey,
@@ -274,32 +318,25 @@ async function createSupabaseOrder(checkout: CheckoutRequest) {
       grand_total: row.grand_total,
       currency: row.currency,
     };
-    const paymentEventId = getDemoPaymentEventId(userId, checkout.idempotencyKey, checkout.paymentMethod);
-    const { data: paymentData, error: paymentError } = await paymentAdmin.rpc("resolve_demo_payment", {
-      p_order_id: row.order_id,
-      p_outcome: toDatabaseDemoPaymentOutcome(checkout.paymentMethod),
-      p_event_id: paymentEventId,
-    });
-    if (paymentError) throw paymentError;
-    const parsedPayment = rpcPaymentStatusSchema.safeParse(paymentData);
-    if (!parsedPayment.success) throw new Error("Supabase returned an invalid resolve_demo_payment response.");
-
-    const paymentStatus = parsedPayment.data === "paid"
+    const paymentState = await resolveConnectedPayment(
+      paymentAdmin, row.order_id, userId, checkout.idempotencyKey, checkout.paymentMethod,
+    );
+    const paymentStatus = paymentState === "paid"
       ? "approved"
-      : parsedPayment.data === "failed"
+      : paymentState === "failed"
         ? checkout.paymentMethod === "insufficient_funds" ? "insufficient_funds" : "declined"
         : checkout.paymentMethod;
-    resolvedOrder.status = parsedPayment.data === "paid"
+    resolvedOrder.status = paymentState === "paid"
       ? "paid"
-      : parsedPayment.data === "failed"
+      : paymentState === "failed"
         ? "cancelled"
         : "pending_payment";
 
-    if (paymentStatus === "temporary_error" && parsedPayment.data === "pending") {
+    if (paymentStatus === "temporary_error" && paymentState === "pending") {
       return NextResponse.json({ error: "El pago demo tuvo un error temporal. El pedido sigue pendiente; cambia el resultado o reintenta con la misma referencia." }, { status: 503 });
     }
 
-    return supabaseOrderResponse(resolvedOrder, checkout.idempotencyKey, paymentStatus, existingOrder ? 200 : 201);
+    return supabaseOrderResponse(resolvedOrder, checkout.idempotencyKey, paymentStatus, 201);
   } catch (error) {
     throw error;
   }

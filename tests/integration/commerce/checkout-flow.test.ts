@@ -74,6 +74,7 @@ function makeConnectedClients(options: {
   let orderExists = false;
   let placeCallCount = 0;
   let orderCreateCount = 0;
+  let cartCreateCount = 0;
   let cartItems: Array<{ variant_id: string; quantity: number }> = [];
   const placeOrderArgs: Array<Record<string, unknown>> = [];
   const paymentArgs: Array<Record<string, unknown>> = [];
@@ -86,7 +87,7 @@ function makeConnectedClients(options: {
   }];
   const paymentResults = [...(options.paymentResults ?? [{ data: "paid", error: null }])];
 
-  const query = (result: unknown) => {
+  const query = (result: unknown, table = "") => {
     let currentData = result;
     const filterRows = (predicate: (row: Record<string, unknown>) => boolean) => {
       if (Array.isArray(currentData)) currentData = currentData.filter((row) => predicate(row as Record<string, unknown>));
@@ -109,7 +110,10 @@ function makeConnectedClients(options: {
         filterRows((row) => expected.includes(row[column]));
         return value;
       },
-      insert: () => value,
+      insert: () => {
+        if (table === "carts") cartCreateCount += 1;
+        return value;
+      },
       delete: () => value,
       upsert: (rows: Array<{ variant_id: string; quantity: number }>) => {
         cartItems = rows;
@@ -132,12 +136,23 @@ function makeConnectedClients(options: {
         grand_total: "629.00",
         currency: "EUR",
       } : null);
-      if (table === "product_variants") return query(variants);
-      if (table === "carts") return query(null);
-      if (table === "cart_items") return query(cartItems.map(({ variant_id }) => ({ variant_id })));
+      if (table === "product_variants") return query(variants, table);
+      if (table === "carts") return query(null, table);
+      if (table === "cart_items") return query(cartItems.map(({ variant_id }) => ({ variant_id })), table);
       throw new Error(`Unexpected table ${table}`);
     },
     rpc: async (name: string, args: Record<string, unknown>) => {
+      if (name === "find_checkout_order") {
+        if (!orderExists) return { data: [], error: null };
+        const initial = placeOrderArgs[0];
+        const payloadMatches = JSON.stringify(args.p_items) === JSON.stringify(initial.p_items)
+          && JSON.stringify(args.p_shipping_address) === JSON.stringify(initial.p_shipping_address)
+          && JSON.stringify(args.p_billing_address) === JSON.stringify(initial.p_billing_address);
+        if (options.rejectSecondPlace && !payloadMatches) {
+          return { data: null, error: { code: "23505", message: "Checkout idempotency key was reused with a different payload" } };
+        }
+        return { data: [{ order_id: orderId, order_number: "NOD-20261007-ABCDEF1234", status: "pending_payment", grand_total: "629.00", currency: "EUR" }], error: null };
+      }
       if (name !== "place_order_from_checkout") throw new Error(`Unexpected user RPC ${name}`);
       placeCallCount += 1;
       placeOrderArgs.push(args);
@@ -163,7 +178,7 @@ function makeConnectedClients(options: {
     },
   };
 
-  return { userId, orderId, userClient, paymentAdmin, placeOrderArgs, paymentArgs, variantSelects, getOrderCreateCount: () => orderCreateCount };
+  return { userId, orderId, userClient, paymentAdmin, placeOrderArgs, paymentArgs, variantSelects, getOrderCreateCount: () => orderCreateCount, getCartCreateCount: () => cartCreateCount };
 }
 
 function request(body: unknown) {
@@ -204,6 +219,7 @@ describe("connected Supabase checkout", () => {
       currency: "EUR",
     });
     expect(clients.getOrderCreateCount()).toBe(1);
+    expect(clients.getCartCreateCount()).toBe(1);
     expect(clients.placeOrderArgs[0]).toMatchObject({
       p_items: [{ variant_id: "11111111-1111-4111-8111-111111111111", quantity: 1 }],
       p_shipping_address: expect.objectContaining({ postalCode: "28013", countryCode: "ES" }),
@@ -359,6 +375,7 @@ describe("connected Supabase checkout", () => {
     expect(first.status).toBe(201);
     expect(retry.status).toBe(200);
     expect(clients.getOrderCreateCount()).toBe(1);
+    expect(clients.getCartCreateCount()).toBe(1);
     expect(clients.paymentArgs).toHaveLength(2);
     expect(clients.paymentArgs[1].p_event_id).toBe(clients.paymentArgs[0].p_event_id);
   });
@@ -376,6 +393,7 @@ describe("connected Supabase checkout", () => {
     expect(changed.status).toBe(409);
     expect((await changed.json()).error).toContain("otros artículos o una dirección distinta");
     expect(clients.getOrderCreateCount()).toBe(1);
+    expect(clients.getCartCreateCount()).toBe(1);
     expect(clients.paymentArgs).toHaveLength(1);
   });
 
@@ -397,6 +415,7 @@ describe("connected Supabase checkout", () => {
     expect(retry.status).toBe(200);
     expect((await retry.json()).orderStatus).toBe("paid");
     expect(clients.getOrderCreateCount()).toBe(1);
+    expect(clients.getCartCreateCount()).toBe(1);
     expect(clients.paymentArgs[1].p_event_id).toBe(clients.paymentArgs[0].p_event_id);
   });
 

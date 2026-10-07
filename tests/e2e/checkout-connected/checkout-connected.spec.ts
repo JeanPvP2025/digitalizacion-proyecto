@@ -94,6 +94,8 @@ test("aprueba una compra variantId y mantiene pedido, pago, reserva, stock y tim
   expect(state?.inventory).toMatchObject([{ on_hand: 30, reserved: 1 }]);
   expect(state?.events.map((event) => event.event_key)).toEqual(["order_created", "payment_paid"]);
   expect(state?.carts.map((cart) => cart.status)).toContain("converted");
+  expect(state?.carts).toHaveLength(1);
+  expect(state?.cartItems).toHaveLength(1);
 });
 
 test("rechaza el pago, libera la reserva y no duplica pedido, pago ni timeline al repetir", async ({ page }) => {
@@ -119,6 +121,8 @@ test("rechaza el pago, libera la reserva y no duplica pedido, pago ni timeline a
   expect(state?.reservations[0].released_at).toBeTruthy();
   expect(state?.inventory).toMatchObject([{ on_hand: 30, reserved: 0 }]);
   expect(state?.events.map((event) => event.event_key)).toEqual(["order_created", "payment_failed"]);
+  expect(state?.carts).toHaveLength(1);
+  expect(state?.cartItems).toHaveLength(1);
 });
 
 test("un refresh conserva la clave del formulario y permite reintentar el mismo checkout tras error temporal", async ({ page }) => {

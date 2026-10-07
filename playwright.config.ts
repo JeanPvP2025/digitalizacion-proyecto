@@ -5,6 +5,9 @@ const baseURL = `http://127.0.0.1:${port}`;
 
 export default defineConfig({
   testDir: "./tests/e2e",
+  // This suite requires local Supabase credentials and owns a destructive local fixture lifecycle.
+  // It has its own config/runner and must not be discovered by the demo-only E2E gate.
+  testIgnore: "**/checkout-connected/**",
   outputDir: ".data/playwright-results",
   fullyParallel: false,
   forbidOnly: Boolean(process.env.CI),
