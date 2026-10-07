@@ -28,6 +28,18 @@ Las seis conversaciones indicadas por el usuario se consideran finalizadas. Se i
 - El contrato de RLS/grants para datos operativos está probado localmente; continúan revisiones por endpoint y matriz completa.
 - La ola 3 puede comenzar desde este estado para checkout, boundaries storefront, CRM/B2B, Support/RMA y auditoría de seguridad.
 
+## Ola 3 despachada
+
+Los siguientes cinco chats independientes se crearon sobre worktrees nuevos desde el estado integrado y committed. Se asignó ownership no solapado; las migraciones nuevas son específicas de dominio y no deben editar las existentes.
+
+| Chat | ID de creación | Dominio / ownership | Dependencias / estado |
+|---|---|---|---|
+| NODRIA — Checkout conectado e integridad de pedidos | `client-new-thread:937a74f0-776b-4bdf-8eb2-ff9fc9a2b490` | Checkout, `lib/commerce/**`, API/UI y migración dedicada | RPC SQL existente; queued |
+| NODRIA — Límites de datos del storefront | `client-new-thread:ce1c38a8-f6a8-46b9-9c44-5752d35ec180` | Catálogo/búsqueda, fixture boundaries y sus pruebas | Data-mode resuelto; queued |
+| NODRIA — Completar CRM y B2B | `client-new-thread:988de7b3-8ba9-4123-aa7b-447d514c45da` | CRM/B2B, quote workflow y migraciones específicas | Schema/RLS actual; queued |
+| NODRIA — Soporte y devoluciones RMA | `client-new-thread:09d903b8-13f2-4bd6-b01e-90d39e807d26` | Ticket/mensaje atómico, soporte/RMA y migración específica | Tablas/RPC existentes; queued |
+| NODRIA — Auditoría independiente de seguridad | `client-new-thread:a855f9c6-4ee8-41af-aa81-2cbd00b75974` | Revisión independiente y tests propios; sin cambios de producto | DB local/migraciones; queued |
+
 ## Regla de entrega para la siguiente ola
 
 Cada conversación debe reportar trabajo, archivos, commit/worktree, decisiones y contratos, comandos/resultados, bugs/riesgos, dependencias desbloqueadas y siguientes pasos. El tech lead valida cada cambio contra Git y ejecuta los gates relevantes antes de actualizar este documento y el tablero.
