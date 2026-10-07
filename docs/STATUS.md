@@ -10,7 +10,7 @@ Estado observado el **2026-10-07** tras integrar la tercera ola. Git, migracione
 - ✅ **CRM/B2B base:** organizaciones/membresías, portal, solicitud con snapshots, cola de ventas, claim y oferta/aceptación, actividades y políticas tenant. No es CRM completo ni hay conversión automática de oferta aceptada a pedido.
 - ✅ **Soporte/RMA base:** alta de ticket + primer mensaje atómica; solicitud de devolución idempotente y con límite acumulado comprado/entregado. Aún no existe un recorrido UI completo de agente/mensajes/resolución y revisión RMA.
 - 🚧 **RBAC/RLS:** pruebas runtime PostgreSQL para anon, customers, B2B buyer/admin, support, sales, fulfillment y superadmin. Scope de roles está documentado en `RBAC_MATRIX.md`; `catalog_manager` no tiene recorrido runtime amplio; no hay roles `marketing`/`manager` genérico. CRUD exhaustivo y pruebas con tokens GoTrue siguen pendientes.
-- 🚧 **Storefront y cuenta:** catálogo, PDP, búsqueda, favoritos/comparador, carrito y guardados funcionan parcialmente con demo/browser storage. PC Builder sigue sin validación completa de compatibilidad y conversión persistida a variantes vendibles.
+- 🚧 **Storefront y cuenta:** catálogo, PDP, búsqueda, favoritos/comparador, carrito y guardados funcionan parcialmente con demo/browser storage. PC Builder ahora carga solo variantes publicadas con `attributes.pc_builder` completos, valida compatibilidad cubierta y guarda/recupera selecciones por `variantId`. El catálogo actual no contiene componentes PC con ese schema, así que muestra estado vacío y mantiene deshabilitada la compra; el puente requiere primero catálogo vendible y el nuevo contrato de checkout por `variantId`.
 - 🚧 **Backoffice:** CRM/B2B e inventario conectado en lectura. Operations Center, analytics, compras/recepciones y dashboards siguen demo o parciales.
 - 🚧 **Calidad visual:** 8 E2E demo, sin E2E conectado para pagos/portal; responsive y accesibilidad requieren recorrido manual global. Performance, SEO, reviews/contenido y polish permanecen abiertos.
 
@@ -32,7 +32,7 @@ Estado observado el **2026-10-07** tras integrar la tercera ola. Git, migracione
 
 ### P1
 
-- [ ] Completar PC Builder: compatibilidad de componentes, persistencia, selección de variantes y adición segura al carrito.
+- [ ] Publicar variantes reales CPU/placa/RAM/caja/fuente con `attributes.pc_builder`; integrar el checkout por `variantId` y completar la compra del PC Builder.
 - [ ] Conectar Operations Center a eventos y pedidos reales; workflow de picking, envío y timeline.
 - [ ] Implementar recepción/movimientos de inventario y procurement con ledger idempotente.
 - [ ] Completar ciclo de soporte/RMA con bandeja de agentes, mensajes, revisión y resolución.
@@ -58,8 +58,8 @@ Estado observado el **2026-10-07** tras integrar la tercera ola. Git, migracione
 | `pnpm install --frozen-lockfile` | ✅ |
 | `pnpm exec tsc --noEmit` | ✅ después del build |
 | `pnpm lint` | ✅ sin diagnósticos; runner tardó por carga de procesos externos |
-| `pnpm test` | ✅ 71 Vitest + 18 Node |
-| `pnpm test:e2e` | ✅ 8 Playwright de catálogo/demo |
+| `pnpm test` | ✅ 86 Vitest + 18 Node, tras integrar PC Builder |
+| `pnpm test:e2e` | ✅ 8 Playwright de catálogo/demo, repetidos tras integrar PC Builder |
 | `pnpm build` | ✅ Next.js producción, 26 páginas estáticas |
 | `supabase db reset --local --yes` | ✅ migraciones y seed |
 | pgTAP `tests/database` + checkout-flow | ✅ 156 aserciones |

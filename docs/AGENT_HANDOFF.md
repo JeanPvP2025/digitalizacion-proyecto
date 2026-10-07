@@ -103,3 +103,12 @@ Los IDs `client-new-thread` identifican el despacho asíncrono. La conversación
 ### Contrato cruzado PC Builder → checkout
 
 La inspección del agente PC Builder confirmó que el seed actual no tiene categorías PC con piezas/variantes vendibles y atributos estructurados. El producto conectado no debe aceptar una compra sustituyendo `builder:*` por un `productId` genérico. Se decidió que la unidad de compra será `variantId`; una conversación separada valida/acepta ese ID en checkout, y el RPC server/database seguirá mandando sobre precio/stock. El agente PC Builder continúa compatibilidad/guardados, mantiene el botón de compra bloqueado y reporta atributos mínimos requeridos. No se declara conectado el bridge hasta integrar ambos lados y tener catálogo vendible.
+
+### Handoff PC Builder recibido e integrado — 2026-10-07
+
+- Conversación activa observada por `read_thread`: `01a1163b-c932-7541-8979-3ac75ff244fd`, worktree `C:\Users\lopez\.codex\worktrees\740c\digitalizacion-web`, commit worker `d557d12 feat(pc-builder): load sellable variants and persist builds`, worktree limpio.
+- Commit integrado en master: `f2f806f feat(pc-builder): use sellable catalog variants and saved builds`; no se copiaron cambios compartidos de `AGENT_HANDOFF.md`/`WORKSTREAMS.md` desde el worktree.
+- El servidor lee únicamente productos publicados, categorías activas Componentes/Almacenamiento y variantes EUR activas con `attributes.pc_builder` tipado/completo. Error Supabase produce estado de error, no fixtures. Compatibilidad consume el catálogo explícito y valida las reglas cubiertas (socket, generación/capacidad RAM, form factor, espacio GPU, socket cooler y estimación/margen PSU).
+- Configuraciones guardadas (hasta 10) persisten en localStorage v2 usando variant IDs exactos; las selecciones fuera del catálogo al restaurar no se remapean. UI informa omisiones/errores/vacío y bloquea compra.
+- El seed no contiene componentes PC con `attributes.pc_builder`; el slice es honesto pero no seleccionable en local demo ni comprable hasta tener datos. Checkout sigue separado y tiene una conversación dedicada para el input `variantId`; el cliente no envía precios.
+- Verificación repetida en el checkout coordinador: `pnpm test` 86 Vitest + 18 Node, `pnpm exec tsc --noEmit`, `pnpm lint`, `pnpm build` y `pnpm test:e2e` 8/8 pasan. La feature se mantiene 🚧 hasta catálogo de componentes y handoff del checkout.
