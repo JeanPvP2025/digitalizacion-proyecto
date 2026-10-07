@@ -6,6 +6,7 @@ import { Suspense } from "react";
 import { getServerAuthState, getStaffRoleGrants } from "@/lib/supabase/auth";
 import { getServerDataMode } from "@/lib/server/data-mode";
 import { hasStaffSurfaceRole } from "@/lib/supabase/policies";
+import styles from "./staff-nav.module.css";
 
 export default function BackofficeLayout({ children }: { children: ReactNode }) {
   return <Suspense fallback={<AccessMessage title="Comprobando acceso…">Verificando tu sesión con NODRIA.</AccessMessage>}><BackofficeGate>{children}</BackofficeGate></Suspense>;
@@ -32,7 +33,7 @@ async function BackofficeGate({ children }: { children: ReactNode }) {
     return <AccessMessage title="No tienes acceso al portal de equipo.">El portal requiere un rol de personal asignado mediante una vía administrativa confiable.</AccessMessage>;
   }
 
-  return <>{dataMode === "local-demo" && <div className="staff-demo-data-notice" role="status">Acceso validado con Supabase. Los pedidos del centro de operaciones son datos ficticios locales de desarrollo.</div>}{children}</>;
+  return <>{roles.includes("catalog_manager") && <nav className={styles.catalogNav} aria-label="Herramientas de catálogo"><Link className="button button--dark" href="/backoffice/catalog">Gestión de catálogo</Link></nav>}{dataMode === "local-demo" && <div className="staff-demo-data-notice" role="status">Acceso validado con Supabase. Los pedidos del centro de operaciones son datos ficticios locales de desarrollo.</div>}{children}</>;
 }
 
 function AccessMessage({ title, children }: { title: string; children: ReactNode }) {

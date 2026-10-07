@@ -52,10 +52,12 @@ describe("server authorization policies", () => {
   it("allows only the roles assigned to each staff surface", () => {
     expect(hasStaffSurfaceRole(["sales_manager"], "backoffice")).toBe(true);
     expect(hasStaffSurfaceRole(["fulfillment_manager"], "backoffice")).toBe(true);
+    expect(hasStaffSurfaceRole(["catalog_manager"], "backoffice")).toBe(true);
     expect(hasStaffSurfaceRole(["sales_manager"], "crm")).toBe(true);
     expect(hasStaffSurfaceRole(["fulfillment_manager"], "crm")).toBe(false);
     expect(hasStaffSurfaceRole(["fulfillment_manager"], "inventory")).toBe(true);
     expect(hasStaffSurfaceRole(["sales_manager"], "inventory")).toBe(false);
+    expect(hasStaffSurfaceRole(["catalog_manager"], "inventory")).toBe(false);
     expect(hasStaffSurfaceRole(["super_admin"], "operations")).toBe(true);
     expect(hasStaffSurfaceRole(["support_agent"], "operations")).toBe(false);
   });

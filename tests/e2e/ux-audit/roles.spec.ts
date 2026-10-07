@@ -78,12 +78,33 @@ test("staff roles see only their authorized workspace states; superadmin views s
 
   await signIn(page, accountFor("support_agent"));
   await visitHeading(page, "/soporte/agente", /Bandeja de soporte/);
+  await expect(page.locator("[data-support-agent-shell]")).toBeVisible();
+  await expect(page.locator(".site-header")).toBeHidden();
+  await expect(page.locator(".site-footer")).toBeHidden();
+  await expect(page.locator(".announcement-bar")).toBeHidden();
+  await expect(page.getByRole("navigation", { name: "Navegación de soporte" })).toBeVisible();
+  const ticketNavigation = page.getByRole("link", { name: "Ir a la cola de tickets" });
+  await ticketNavigation.focus();
+  await expect(ticketNavigation).toBeFocused();
+  await page.keyboard.press("Enter");
+  await expect(page).toHaveURL(/#support-inbox-title$/);
+  const returnsNavigation = page.getByRole("link", { name: "Ir a las devoluciones por revisar" });
+  await returnsNavigation.focus();
+  await expect(returnsNavigation).toBeFocused();
+  await page.keyboard.press("Enter");
+  await expect(page).toHaveURL(/#return-review-title$/);
+  await expect(page.getByText("Cuando llegue un ticket, la conversación aparecerá aquí.")).toBeVisible();
+  await page.locator("#staff-main").focus();
   await inspectResponsivePage(page, "/soporte/agente", "support-agent", testInfo);
   await visitHeading(page, "/backoffice", /No tienes acceso al portal de equipo/);
   await inspectResponsivePage(page, "/backoffice", "support-agent-denied", testInfo);
 
   await signOut(page);
   await signIn(page, accountFor("sales_manager"));
+  await visitHeading(page, "/soporte/agente", /Bandeja restringida/);
+  await expect(page.getByRole("navigation", { name: "Navegación de soporte" })).toHaveCount(0);
+  await expect(page.getByRole("link", { name: "Ver tienda" })).toBeVisible();
+  await inspectResponsivePage(page, "/soporte/agente", "sales-manager-support-denied", testInfo);
   await visitHeading(page, "/backoffice/crm", /Personas y oportunidades/);
   await inspectResponsivePage(page, "/backoffice/crm", "sales-manager", testInfo);
   await visitHeading(page, "/backoffice", /Acceso restringido/);
@@ -109,9 +130,26 @@ test("staff roles see only their authorized workspace states; superadmin views s
 
   await signOut(page);
   await signIn(page, accountFor("catalog_manager"));
-  await visitHeading(page, "/backoffice", /No tienes acceso al portal de equipo/);
-  await inspectResponsivePage(page, "/backoffice", "catalog-manager-denied", testInfo);
-  await page.screenshot({ path: testInfo.outputPath("catalog-manager-denied.png"), fullPage: true });
+  await visitHeading(page, "/backoffice/catalog", /Gestión de catálogo/);
+  await inspectResponsivePage(page, "/backoffice/catalog", "catalog-manager", testInfo);
+  const firstProduct = page.locator("article").filter({ has: page.locator("details") }).first();
+  await firstProduct.getByText("Editar contenido").click();
+  const summary = firstProduct.getByLabel("Resumen");
+  const originalSummary = await summary.inputValue();
+  const editedSummary = `${originalSummary} · edición verificada`;
+  await summary.fill(editedSummary);
+  await firstProduct.getByRole("button", { name: "Guardar cambios" }).click();
+  await expect(firstProduct.getByRole("status")).toContainText("Cambios guardados");
+  await expect(firstProduct).toContainText(editedSummary);
+  await firstProduct.getByLabel("Resumen").fill(originalSummary);
+  await firstProduct.getByRole("button", { name: "Guardar cambios" }).click();
+  await expect(firstProduct.getByRole("status")).toContainText("Cambios guardados");
+  await visitHeading(page, "/backoffice", /Acceso restringido/);
+  await inspectResponsivePage(page, "/backoffice", "catalog-manager-operations-denied", testInfo);
+  for (const route of ["/backoffice/crm", "/backoffice/inventory", "/backoffice/procurement", "/backoffice/returns", "/backoffice/analytics", "/backoffice/reviews"]) {
+    await page.goto(route);
+    await expect(page.locator("body")).toContainText(/Acceso restringido|tu cuenta no tiene acceso/i);
+  }
 
   await signOut(page);
   await signIn(page, accountFor("super_admin"));

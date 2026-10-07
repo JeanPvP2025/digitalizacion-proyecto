@@ -1,0 +1,11 @@
+.catalogNav {
+  display: flex;
+  justify-content: flex-end;
+  width: min(1280px, calc(100% - 72px));
+  margin: 0 auto;
+  padding-top: 14px;
+}
+
+@media (max-width: 600px) {
+  .catalogNav { width: calc(100% - 36px); padding-top: 8px; }
+}
