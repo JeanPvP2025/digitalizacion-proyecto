@@ -338,3 +338,25 @@ No queda P0 local reproducible. Quedan como P1: inspección/disposición RMA, an
 - Reset local: 17 migraciones + seed. pgTAP: 230 aserciones; RLS/RBAC/Auth-escalation/support/RMA/inventory/procurement/fulfillment runtime SQL pasan; DB lint sin errores; 78 probes HTTP autenticados, cero fallos.
 - No queda P0 local reproducible ni P1 local abierto. P2 pendientes: revisión manual de todos los roles, auditoría responsive/accesible/performance/fake completeness y SEO/contenido público. Producción remota sigue bloqueada por falta de proyecto/credenciales; no se afirma que esté desplegada ni certificada.
 - El árbol de trabajo de esta ronda contiene el bootstrap local, la suite E2E conectada de RMA y la documentación reconciliada; no se incluyen secretos ni los usuarios Auth temporales de las pruebas.
+
+## Cierre de auditoría local visual, accesible y de rendimiento — 2026-10-07
+
+### Trabajo realizado
+
+- Lighthouse 13.5.0 contra el build production local en portada móvil y catálogo desktop.
+- Se migraron las imágenes demo al optimizador responsive de Next con tamaños de viewport y carga prioritaria eager para la imagen LCP.
+- Se eliminó el fade-in de hero-art que retrasaba el paint de la imagen LCP; la animación flotante decorativa se conserva.
+- Se corrigieron los contrastes y objetivos táctiles que fallaban, y se alinearon los nombres accesibles con el contenido visible. La auditoría E2E acepta `alt` de imagen como nombre de un enlace gráfico.
+- Se repitió E2E: 17/17, incluido el control de enlaces sin nombre.
+
+### Evidencia
+
+- `/` móvil: rendimiento 92, accesibilidad 100, mejores prácticas 100; LCP simulado 3,2 s, observado en la traza local 557 ms, CLS 0,003 y TBT 50 ms.
+- `/catalogo` desktop: rendimiento/accesibilidad/mejores prácticas 100; LCP simulado 0,6 s, observado 239 ms, CLS 0,011 y TBT 0 ms.
+- Contraste, etiqueta/nombre, tamaño táctil y entrega de imágenes pasan en las rutas medidas. No hay dato CrUX ni INP.
+- El SEO local queda no indexable por falta deliberada de dominio público y `robots.txt` cerrado en ese caso.
+- Ver detalles y limitaciones en `docs/PERFORMANCE_AUDIT.md`; caché completa ignorada bajo `.seo-cache/`.
+
+### Pendiente externo
+
+No existe proyecto Supabase remoto, dominio, credenciales de despliegue ni datos CrUX. La aplicación está cerrada para pruebas locales; no se afirma que esté desplegada, indexable o certificada para producción. La auditoría visual del backoffice y de todos los estados/roles permanece como calidad manual pendiente.

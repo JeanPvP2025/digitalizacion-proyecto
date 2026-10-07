@@ -22,6 +22,12 @@ El runner obtiene claves solo en memoria desde el status de Supabase local, rech
 
 Resultado del cierre actual: 179 Vitest + 18 Node; 17/17 E2E demo/UX; 4/4 E2E checkout conectado; 6/6 dominios conectados con cleanup limpio, incluyendo el recorrido RMA cliente → soporte → warehouse; 1/1 B2B browser aislado con anticipo aprobado/rechazado, replay y permisos; TypeScript, ESLint y build pasan. La route suite RMA es 4/4. El E2E demo informa de un atributo `caret-color: transparent` inyectado en inputs, sin origen identificado en la aplicación; hay que confirmar en navegador limpio. Windows también informa `NO_COLOR`/`FORCE_COLOR`.
 
+## Rendimiento y accesibilidad medidos
+
+Lighthouse 13.5.0 se ejecutó contra el build de producción local. La portada móvil obtuvo rendimiento 92, accesibilidad 100, mejores prácticas 100, LCP simulado 3,2 s, CLS 0,003 y TBT 50 ms. La traza observada del navegador local registró LCP 557 ms; no se interpreta como dato de campo. El catálogo desktop obtuvo 100 en rendimiento, accesibilidad y mejores prácticas, con LCP 0,6 s, CLS 0,011 y TBT 0 ms. Lighthouse no publicó INP. `docs/PERFORMANCE_AUDIT.md` documenta el perfil de simulación y límites.
+
+Las auditorías de contraste, nombre accesible, tamaño de objetivos táctiles y entrega de imágenes pasan en las dos páginas medidas. Estas dos muestras no certifican el backoffice ni todas las rutas. Lighthouse marca ambas como no indexables porque no se configuró un dominio público y la política local de `robots.txt` bloquea el rastreo deliberadamente.
+
 El bootstrap `scripts/demo/assign-staff-roles.ps1` se ejecutó contra Supabase local con cinco cuentas Auth ficticias: creó exactamente un grant para `super_admin`, `catalog_manager`, `support_agent`, `sales_manager` y `fulfillment_manager`. Después se hizo `db reset --local`; las cuentas de test desaparecieron junto con sus grants.
 
 ## Supabase/PostgreSQL local

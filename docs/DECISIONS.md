@@ -183,7 +183,7 @@ Las decisiones de alcance heredadas de la misión se marcan **Confirmada**. Las 
 - **Estado:** Implementada localmente en `20261007200000_return_inspection_disposition.sql`.
 - **Contexto:** Aprobar una devolución puede autorizar un reembolso simulado, pero el producto aún no se ha recibido ni se ha comprobado su estado.
 - **Decisión:** La aprobación crea un efecto de reembolso idempotente y marca unidades `pending_inspection`. El rol `fulfillment_manager` inspecciona la cantidad completa aprobada por línea y elige reponer o desechar con motivo. Reponer actualiza inventario y ledger en la misma transacción; desechar no aumenta stock. Claves iguales con mismo fingerprint hacen replay; una clave o línea reutilizada con datos distintos se rechaza. La última línea inspeccionada cierra la devolución y genera timeline; solo la RPC autorizada puede realizar esa transición.
-- **Consecuencias:** Nunca incrementar stock al aprobar una solicitud. El ledger cambia solo tras inspección física autorizada. El panel necesita recorrido de navegador autenticado antes de cerrar la cobertura UX.
+- **Consecuencias:** Nunca incrementar stock al aprobar una solicitud. El ledger cambia solo tras inspección física autorizada. El recorrido autenticado cliente → soporte → warehouse está cubierto por `tests/e2e/connected-domains` (6/6), además de pruebas SQL y route.
 
 ## D-020 — Los pedidos B2B requieren anticipo antes de fulfillment
 
@@ -192,3 +192,11 @@ Las decisiones de alcance heredadas de la misión se marcan **Confirmada**. Las 
 - **Contexto:** Las condiciones de la oferta B2B establecen pago anticipado; la simulación de checkout B2C no representa el cobro de una factura comercial.
 - **Decisión:** La orden B2B se crea con estado `pending_payment` y reservas. Owner/admin puede elegir aprobado o rechazado en un paso identificado como demo; no se piden datos de tarjeta. La RPC valida membresía del tenant, guarda fingerprint idempotente y registra el resultado en pedido, pago y actividad de CRM. El rechazo cancela el pedido y libera la reserva. Fulfillment sigue exigiendo pago `paid`.
 - **Consecuencias:** El escenario académico de anticipo funciona de punta a punta; no equivale a un proveedor de pago real ni procesa dinero.
+
+## D-021 — Optimizar imágenes de catálogo demo sin ampliar orígenes conectados
+
+- **Fecha:** 2026-10-07
+- **Estado:** Integrado en portada, tarjetas y PDP de datos demo.
+- **Contexto:** Lighthouse encontró imágenes mayores que su tamaño de render y el hero LCP estaba diferido por lazy loading y una animación de opacidad.
+- **Decisión:** Las imágenes demo de Unsplash usan `next/image` con `sizes` y eager/high priority solo para la imagen LCP. Las imágenes conectadas conservan `<img>` porque sus URL pueden venir de hosts que no están incluidos en `remotePatterns`.
+- **Consecuencias:** La entrega responsive pasa el audit en las rutas medidas; Lighthouse marca cero ahorro estimado. Mantener el allowlist de hosts y revisar el origen antes de migrar imágenes conectadas.
