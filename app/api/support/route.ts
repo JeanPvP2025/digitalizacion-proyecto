@@ -51,12 +51,8 @@ export async function POST(request: Request) {
       if (persisted.reason === "order_not_owned") {
         return NextResponse.json({ error: "No encontramos ese pedido en tu cuenta. Comprueba la referencia o deja el campo vacío." }, { status: 400 });
       }
-      if (persisted.failedAt === "message" && persisted.ticketNumber) {
-        return NextResponse.json({
-          code: "INITIAL_MESSAGE_NOT_CONFIRMED",
-          ticketNumber: persisted.ticketNumber,
-          error: `Se creó el ticket ${persisted.ticketNumber}, pero no se confirmó el mensaje. Contacta con soporte indicando esa referencia y no reenvíes el formulario.`,
-        }, { status: 502 });
+      if (persisted.reason === "organization_not_owned") {
+        return NextResponse.json({ error: "No encontramos esa organización entre tus cuentas empresariales." }, { status: 400 });
       }
       return NextResponse.json({ error: "No se pudo confirmar el guardado del ticket en Supabase. Inténtalo más tarde." }, { status: 500 });
     }

@@ -293,34 +293,38 @@ describe("public route integration", () => {
     setNodeEnv("development");
   });
 
-  it("reports a ticket separately when its first connected message fails", async () => {
+  it("creates a connected ticket only through the atomic RPC", async () => {
     process.env.NEXT_PUBLIC_SUPABASE_URL = "http://127.0.0.1:56201";
     process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY = "qa-publishable-key";
     setNodeEnv("production");
 
-    const calls: string[] = [];
-    const ticketQuery = {
-      insert: () => ticketQuery,
-      select: () => ticketQuery,
-      single: async () => ({ data: { id: randomUUID(), ticket_number: "SUP-20261007-QA000001" }, error: null }),
-    };
-    const messageQuery = {
-      insert: () => messageQuery,
-      select: () => messageQuery,
-      single: async () => ({ data: null, error: { code: "42501" } }),
-    };
+    const userId = randomUUID();
+    const rpc = vi.fn().mockResolvedValueOnce({
+      data: [{ ticket_id: randomUUID(), ticket_number: "SUP-20261007-QA000001" }],
+      error: null,
+    });
     supabaseMock.createClient.mockResolvedValueOnce({
-      auth: { getUser: async () => ({ data: { user: { id: randomUUID() } }, error: null }) },
-      from: (table: string) => { calls.push(table); return table === "support_tickets" ? ticketQuery : messageQuery; },
+      auth: { getUser: async () => ({ data: { user: { id: userId } }, error: null }) },
+      rpc,
     });
 
     const response = await supportRoute.POST(request("/api/support", support));
-    expect(response.status).toBe(502);
+    expect(response.status).toBe(201);
     expect(await response.json()).toMatchObject({
-      code: "INITIAL_MESSAGE_NOT_CONFIRMED",
+      persisted: true,
+      mode: "supabase",
       ticketNumber: "SUP-20261007-QA000001",
     });
-    expect(calls).toEqual(["support_tickets", "support_messages"]);
+
+    const failedRpc = vi.fn().mockResolvedValueOnce({ data: null, error: { code: "23514" } });
+    supabaseMock.createClient.mockResolvedValueOnce({
+      auth: { getUser: async () => ({ data: { user: { id: randomUUID() } }, error: null }) },
+      rpc: failedRpc,
+    });
+    const failed = await supportRoute.POST(request("/api/support", support));
+    expect(failed.status).toBe(500);
+    expect((await failed.json()).persisted).toBeUndefined();
+    expect(failedRpc).toHaveBeenCalledTimes(1);
 
     delete process.env.NEXT_PUBLIC_SUPABASE_URL;
     delete process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
