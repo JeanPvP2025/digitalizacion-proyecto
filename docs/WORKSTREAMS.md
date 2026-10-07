@@ -72,11 +72,17 @@ Se inspeccionaron los cinco worktrees, su estado Git, commits y cambios. Procure
 
 | Conversation | Role | Task | Ownership | Dependencies | State |
 |---|---|---|---|---|---|
-| Pendiente de crear | RMA Warehouse Agent | Recepción, inspección y disposición autorizada de devolución | `support`/inventory migrations, endpoint/UI de inspección y pruebas | `pending_inspection` y ledger actual | Ready |
 | Pendiente de crear | Demo Mode Agent | Demo repetible por rol con reset determinista y límites de autorización | Demo auth/fixtures/UI/docs/tests | Auth boundary y fixtures actuales | Ready |
 | Pendiente de crear | Security Matrix Agent | Ampliar matriz route/RPC/tabla y revisar permiso de cada rol | `tests/integration/auth-boundaries/**`, `RBAC_MATRIX.md`, `SECURITY.md` | Roles actuales y contratos de endpoint | Ready |
 | Pendiente de crear | Analytics Integrity Agent | Reconciliar KPIs, filtros y rangos con SQL de referencia | `lib/analytics/**`, `docs/ANALYTICS.md`, tests | Datos de pedidos, inventario, soporte/CRM | Ready |
 | Pendiente de crear | UX/Performance Audit Agent | Auditoría responsive/accesible, Lighthouse y rutas con fake completeness | Reportes, E2E/a11y/perf sin cambios de dominio | Build integrado | Ready |
+| Pendiente de crear | B2B Advance Payment Agent | Registrar anticipo demo auditable y habilitar fulfillment solo tras liquidación | `lib/commerce/b2b/**`, order RPC/migration, tests/docs | B2B formal order en `pending_payment` | Ready |
+
+## Ola 7 — cierre RMA por Tech Lead
+
+| Conversation | Role | Task | Ownership | Dependencies | State |
+|---|---|---|---|---|---|
+| Tech Lead (current) | RMA Warehouse Agent | Inspección/disposición de cada línea con permiso de almacén, ledger, idempotencia, cierre/timeline | `app/backoffice/returns/**`, API, `lib/inventory/returns.ts`, nueva migración, tests | Aprobación RMA y `pending_inspection` | ✅ Implementado en worktree coordinador; reset local + SQL runtime + route 4/4; recorrido browser warehouse pendiente |
 
 ## Definition of Done por conversación
 

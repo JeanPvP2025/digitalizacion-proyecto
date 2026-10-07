@@ -180,10 +180,10 @@ Las decisiones de alcance heredadas de la misión se marcan **Confirmada**. Las 
 ## D-019 — La aprobación RMA no equivale a inspección ni reposición
 
 - **Fecha:** 2026-10-07
-- **Estado:** Confirmada para el slice integrado; flujo de inspección pendiente.
+- **Estado:** Implementada localmente en `20261007200000_return_inspection_disposition.sql`.
 - **Contexto:** Aprobar una devolución puede autorizar un reembolso simulado, pero el producto aún no se ha recibido ni se ha comprobado su estado.
-- **Decisión:** La aprobación crea un efecto de reembolso idempotente y marca unidades `pending_inspection`. No cambia `on_hand` ni libera unidades al catálogo. La disposición futura (reponer/desechar) requiere actor autorizado de almacén, evento auditable e idempotencia propia.
-- **Consecuencias:** Nunca incrementar stock al aprobar una solicitud. El ledger solo cambia después de recepción e inspección física.
+- **Decisión:** La aprobación crea un efecto de reembolso idempotente y marca unidades `pending_inspection`. El rol `fulfillment_manager` inspecciona la cantidad completa aprobada por línea y elige reponer o desechar con motivo. Reponer actualiza inventario y ledger en la misma transacción; desechar no aumenta stock. Claves iguales con mismo fingerprint hacen replay; una clave o línea reutilizada con datos distintos se rechaza. La última línea inspeccionada cierra la devolución y genera timeline; solo la RPC autorizada puede realizar esa transición.
+- **Consecuencias:** Nunca incrementar stock al aprobar una solicitud. El ledger cambia solo tras inspección física autorizada. El panel necesita recorrido de navegador autenticado antes de cerrar la cobertura UX.
 
 ## D-020 — Los pedidos B2B requieren anticipo antes de fulfillment
 

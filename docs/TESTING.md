@@ -20,7 +20,7 @@ pwsh -File tests/e2e/checkout-connected/run.ps1
 
 El runner obtiene claves solo en memoria desde el status de Supabase local, rechaza URLs no loopback, ejecuta Chromium con `DEMO_MODE=false` y limpia fixtures. Cubre aprobado, rechazado, misma clave/payload, clave/payload distinto, refresh/retry y dos sesiones concurrentes con una unidad. Nunca ejecutar simultáneamente con otros tests que muten el mismo proyecto local.
 
-Resultado tras la sexta ola: 175 Vitest + 18 Node; 17/17 E2E demo/UX; 4/4 E2E checkout conectado; 5/5 dominios conectados con cleanup limpio; 1/1 B2B browser aislado; TypeScript, ESLint y build pasan. El E2E demo informa de un atributo `caret-color: transparent` inyectado en inputs, sin origen identificado en la aplicación; hay que confirmar en navegador limpio. Windows también informa `NO_COLOR`/`FORCE_COLOR`.
+Resultado después del cierre RMA: 179 Vitest + 18 Node; 17/17 E2E demo/UX; 4/4 E2E checkout conectado; 5/5 dominios conectados con cleanup limpio; 1/1 B2B browser aislado; TypeScript, ESLint y build pasan en esta cadena. La nueva route suite RMA es 4/4. El E2E demo informa de un atributo `caret-color: transparent` inyectado en inputs, sin origen identificado en la aplicación; hay que confirmar en navegador limpio. Windows también informa `NO_COLOR`/`FORCE_COLOR`.
 
 ## Supabase/PostgreSQL local
 
@@ -34,6 +34,7 @@ Get-Content tests\integration\rbac\postgres-role-action-matrix.sql -Raw | docker
 Get-Content tests\integration\auth-boundaries\postgres-role-escalation.sql -Raw | docker exec -i supabase_db_nodria-commerce psql -U postgres -d postgres -v ON_ERROR_STOP=1
 Get-Content tests\integration\support-rma\postgres.sql -Raw | docker exec -i supabase_db_nodria-commerce psql -U postgres -d postgres -v ON_ERROR_STOP=1
 Get-Content tests\integration\support-flow\postgres.sql -Raw | docker exec -i supabase_db_nodria-commerce psql -U postgres -d postgres -v ON_ERROR_STOP=1
+Get-Content tests\integration\support-flow\return-inspection.sql -Raw | docker exec -i supabase_db_nodria-commerce psql -U postgres -d postgres -v ON_ERROR_STOP=1
 Get-Content tests\integration\inventory\inventory-movements.sql -Raw | docker exec -i supabase_db_nodria-commerce psql -U postgres -d postgres -v ON_ERROR_STOP=1
 Get-Content tests\integration\procurement\procurement.sql -Raw | docker exec -i supabase_db_nodria-commerce psql -U postgres -d postgres -v ON_ERROR_STOP=1
 ```
@@ -44,7 +45,7 @@ Para boundary HTTP con tokens reales, después del reset:
 pwsh -File tests/integration/auth-boundaries/run-local.ps1
 ```
 
-La sexta ola pasó reset/seed (15 migraciones); **265** aserciones pgTAP; RLS/security/RBAC/auth-escalation/support/inventory/procurement/fulfillment runtime SQL; **78** probes HTTP GoTrue/PostgREST; y DB lint sin errores. Los scripts de conteo RLS toman baseline dentro de la transacción para no depender de un número fijo de filas en seed. Todos los scripts runtime revierten fixtures.
+La integración pasó reset/seed (16 migraciones); **230** aserciones pgTAP; RLS/security/RBAC/auth-escalation/support/inventory/procurement/fulfillment runtime SQL y el nuevo runtime SQL RMA; **78** probes HTTP GoTrue/PostgREST; y DB lint sin errores. Los scripts de conteo RLS toman baseline dentro de la transacción para no depender de un número fijo de filas en seed. Todos los scripts runtime reversibles revierten fixtures; la prueba concurrente RMA se limpia explícitamente al finalizar.
 
 ## Qué verifican
 
@@ -54,10 +55,11 @@ La sexta ola pasó reset/seed (15 migraciones); **265** aserciones pgTAP; RLS/se
 - RLS/Auth HTTP: anon, customer A/B, business admin/buyer, catalog, support, sales, fulfillment y superadmin; perfil/pedido/ticket/tenant aislados; escalation y RPCs privilegiadas denegadas; demo no hace fallback conectado.
 - B2B formal: owner/admin emite desde cotización aceptada; snapshots, organización, idempotencia, pedido y reserva quedan enlazados; el anticipo sigue pendiente hasta su flujo.
 - Reviews/RMA: elegibilidad por línea, moderación, intake atómico, límite de cantidades y transitions por RPC.
+- Inspección RMA: solo almacén/superadmin, cantidad exacta aprobada, reposición incrementa stock y crea un único ledger, desecho no cambia stock, retry igual incluso después del cierre, payload distinto/segunda disposición denegados y timeline completo.
 
 ## Límites pendientes
 
 - La matriz Auth/RLS no cubre CRUD de cada columna/tabla/endpoint para cada rol; roles `manager` y `marketing` requieren probes HTTP adicionales. Ver `RBAC_MATRIX.md`.
 - No se probó configuración Supabase remota, despliegue, secretos de producción o migración remota.
 - La suite conectada cubre pedidos en cuenta, autorización B2B, reseña elegible, ticket/mensajes y analytics. El pedido B2B real se prueba en un proyecto Supabase aislado para no dejar fixtures persistentes en el stack compartido.
-- Procurement, etapas de fulfillment, emisión B2B formal y efectos de aprobación RMA están integrados. Faltan disposición física RMA, anticipo B2B, auditoría exhaustiva de permisos y pruebas remotas. Facturas/impuestos/pagos de proveedor e integraciones externas están fuera del alcance actual.
+- Procurement, etapas de fulfillment, emisión B2B formal, reembolso aprobado e inspección/disposición RMA están integrados. Faltan anticipo B2B, auditoría exhaustiva de permisos, recorrido browser warehouse autenticado y pruebas remotas. Facturas/impuestos/pagos de proveedor e integraciones externas están fuera del alcance actual.

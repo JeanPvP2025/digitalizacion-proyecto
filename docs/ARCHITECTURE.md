@@ -23,7 +23,7 @@ flowchart LR
   Server --> DemoPay[Simulador de pago ficticio]
 ```
 
-El simulador no es una pasarela externa ni procesa dinero. Checkout autentica en servidor, acepta `variantId`, relee catálogo/stock, valida retries por fingerprint antes de mutar la cesta, persiste por RPC y resuelve el resultado con secreto server-only. La emisión B2B valida tenant/stock y deja pedido pendiente de anticipo. Fulfillment consume reservas al expedir; procurement conecta recepciones con el ledger. Aprobar una devolución crea reembolso simulado y unidades `pending_inspection`, pero la inspección/disposición física aún no está implementada. CSS global usa PostCSS Tailwind; `.module.css` usa el procesamiento nativo de Next/Turbopack.
+El simulador no es una pasarela externa ni procesa dinero. Checkout autentica en servidor, acepta `variantId`, relee catálogo/stock, valida retries por fingerprint antes de mutar la cesta, persiste por RPC y resuelve el resultado con secreto server-only. La emisión B2B valida tenant/stock y deja pedido pendiente de anticipo. Fulfillment consume reservas al expedir; procurement conecta recepciones con el ledger. Aprobar una devolución crea reembolso simulado y unidades `pending_inspection`; el almacén puede inspeccionarlas y reponer/desechar con autorización, ledger idempotente y cierre auditado. CSS global usa PostCSS Tailwind; `.module.css` usa el procesamiento nativo de Next/Turbopack.
 
 ## Límites de dominio
 
@@ -74,7 +74,7 @@ No se deben duplicar reglas de negocio en componentes cliente, Server Actions, R
 7. El pago demo no recoge ni almacena datos de tarjetas reales. Los estados aprobados, rechazados o temporales son fixtures de simulación y generan un intento y trazabilidad ficticios.
 8. No se suben secretos ni datos personales reales al repositorio o a seeds. Preview, desarrollo y producción usan proyectos/credenciales separados.
 
-Las migraciones habilitan RLS/grants, checkout por variante/fingerprint, movimientos y procurement, pedido B2B formal, fulfillment, reembolso RMA y reviews. Auth UI/callback/sesión SSR y guards están integrados. El gate local ejercita GoTrue/PostgREST con JWT reales y 78 probes, además de scripts PostgreSQL para RBAC/RLS. Los `.data/` y fixtures son solo demo local. La matriz CRUD no es exhaustiva y no hay entorno remoto probado; no considerar el producto apto para producción.
+Las migraciones habilitan RLS/grants, checkout por variante/fingerprint, movimientos y procurement, pedido B2B formal, fulfillment, reembolso e inspección/disposición RMA y reviews. Auth UI/callback/sesión SSR y guards están integrados. El gate local ejercita GoTrue/PostgREST con JWT reales y 78 probes, además de scripts PostgreSQL para RBAC/RLS e inspección RMA. Los `.data/` y fixtures son solo demo local. La matriz CRUD no es exhaustiva y no hay entorno remoto probado; no considerar el producto apto para producción.
 
 ## Configuración local y despliegue previsto
 
@@ -100,4 +100,4 @@ Vercel Preview debe usar datos no productivos y credenciales separadas. Los camb
 
 ## Verificación y calidad
 
-Los scripts declaran `pnpm lint`, `pnpm build`, `pnpm test` y `pnpm test:e2e`; typecheck usa `pnpm exec tsc --noEmit`. La integración actual tiene 175 Vitest, 18 Node, 17 E2E demo/UX, 4 E2E checkout GoTrue/PostgREST, 5 E2E dominios, un E2E B2B aislado, 265 aserciones pgTAP y 78 probes HTTP Auth, además de SQL runtime de RLS/role/auth/support/inventory/procurement/fulfillment. Un build o una pantalla renderizada no demuestra integridad funcional ni seguridad.
+Los scripts declaran `pnpm lint`, `pnpm build`, `pnpm test` y `pnpm test:e2e`; typecheck usa `pnpm exec tsc --noEmit`. La integración actual tiene 179 Vitest, 18 Node, 17 E2E demo/UX, 4 E2E checkout GoTrue/PostgREST, 5 E2E dominios, un E2E B2B aislado, 230 aserciones pgTAP y 78 probes HTTP Auth, además de SQL runtime de RLS/role/auth/support/inventory/procurement/fulfillment/RMA inspection. Un build o una pantalla renderizada no demuestra integridad funcional ni seguridad.

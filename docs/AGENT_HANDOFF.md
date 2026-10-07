@@ -264,3 +264,33 @@ El estado y ownership están en `WORKSTREAMS.md`. Setup de worktrees/conversacio
 ### Estado global tras la sexta ola
 
 No queda P0 local reproducible. Quedan como P1: inspección/disposición RMA, anticipo B2B, Demo Mode por rol/reset, cobertura exhaustiva de permisos y reconciliación de KPIs. P2: auditoría visual/accesible completa, medición CWV/bundle e inspección de navegación/contenido. No se configuró/probó Supabase remoto ni producción. El siguiente backlog y ownership candidato están en `WORKSTREAMS.md`.
+
+## Ola 7 — RMA warehouse inspection y disposición
+
+### Trabajo realizado
+
+- Se añadió una cola SSR de devoluciones aprobadas en `/backoffice/returns`, limitada a `fulfillment_manager`/`super_admin`, con almacenes activos y cantidad aprobada por línea.
+- La RPC `inspect_return_item` exige cantidad completa, motivo e idempotency key. `restocked` actualiza inventario y crea movimiento `return_restock` en la misma transacción; `disposed` deja stock sin cambio.
+- El fingerprint impide reusar una clave con payload distinto. Reintentar la misma operación devuelve replay incluso después de que el RMA se cierre. Una segunda disposición de la línea se rechaza.
+- Al disponer todas las líneas, el RMA pasa a `closed`, se registra el cambio en timeline y un trigger prohíbe cerrar por otro camino.
+- La vista de historial del cliente muestra timeline y disposición por producto.
+
+### Archivos y contratos
+
+- `supabase/migrations/20261007200000_return_inspection_disposition.sql`
+- `lib/inventory/returns.ts`, `app/api/backoffice/returns/inspection/route.ts`, `app/backoffice/returns/**`
+- `app/(store)/soporte/return-history.tsx`, navegación de inventario backoffice
+- `tests/integration/support-flow/return-inspection.sql`, `inspection-route.test.ts`
+- Contratos nuevos: movement type `return_restock`; `inventory_movements.return_request_id/return_item_id`; tabla privada `return_inspection_attempts`; RPC pública `inspect_return_item`. No hay DML de navegador.
+
+### Verificación ejecutada
+
+- Supabase local reset: 16 migraciones y seed aplicados.
+- PostgreSQL runtime RMA: pasó con autorización por rol, cantidad, restock, desecho, replay antes/después de cierre, conflicto de fingerprint, segunda disposición, stock y timeline.
+- Route tests: 4/4.
+
+### Bugs, límites y siguientes pasos
+
+- El flujo aún no tiene browser E2E con sesión warehouse; el producto cuenta con prueba de route y PostgreSQL.
+- Pendientes del proyecto: anticipo B2B, recorrido/reset Demo Mode por rol, matriz de permisos más exhaustiva, reconciliación de analytics, auditoría responsive/performance/fake completeness y pruebas de despliegue remoto.
+- No hay commit coordinador para esta séptima ola todavía; debe ejecutarse el gate completo, revisar diff y crear commits lógicos.

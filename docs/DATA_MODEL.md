@@ -88,5 +88,6 @@ erDiagram
 - `20261007150000_order_fulfillment_stages.sql` — picking, packing y expedición con transición autorizada, eventos y consumo de reservas.
 - `20261007160000_crm_b2b_formal_order.sql` — emisión idempotente de pedidos desde cotización B2B aceptada, snapshots y límites por membresía.
 - `20261007180727_rma_approval_refund_inspection.sql` — reembolso demo calculado desde snapshots de pago/precio y estado de inspección pendiente.
+- `20261007200000_return_inspection_disposition.sql` — inspección de almacén idempotente; reposición/desecho por línea, ledger y cierre auditado al completar las líneas.
 
-El esquema no sustituye la recepción física/disposición de RMA, liquidación del anticipo B2B, configuración remota o auditoría exhaustiva de permisos.
+El esquema ya incluye inspección/disposición de RMA. Siguen fuera de este slice la liquidación del anticipo B2B, configuración remota y auditoría exhaustiva de permisos.
