@@ -68,12 +68,12 @@ Se incorporaron los commits worker `473bff1`, `6011f77`, `bb20ce8` y `2f8d264`, 
 
 Se inspeccionaron los cinco worktrees, su estado Git, commits y cambios. Procurement, B2B, fulfillment y RMA tenían commits; el QA E2E y ajustes de fixtures no estaban completamente comprometidos en su worktree y se revisaron/rescataron. Se actualizó el fixture de aislamiento de pedidos/grants para tomar baseline de seed. En el E2E cruzado B2B se valida visibilidad/autorización sin crear un pedido persistente; el recorrido de emisión real está en el runner B2B aislado. `tests/e2e/connected-domains/run.ps1` terminó 5/5 en la integración original; tras la inspección autenticada de ola 7 queda 6/6 con cleanup correcto.
 
-## Backlog local priorizado (sin conversaciones activas)
+## QA final y backlog local
 
 | Conversation | Role | Task | Ownership | Dependencies | State |
 |---|---|---|---|---|---|
 | Tech Lead | Performance/accessibility closeout | Lighthouse local en portada móvil y catálogo desktop; corregir contraste, labels, targets, carga LCP e imágenes responsive | `app/globals.css`, storefront media, `tests/e2e/ux-audit/**`, `docs/PERFORMANCE_AUDIT.md` | Build production local | ✅ 92/100 móvil, 100/100 desktop; accesibilidad 100/100 en ambos; medición de laboratorio y sin CrUX |
-| Pendiente | Manual visual/functional audit | Completar walkthrough de todos los estados/roles y breakpoints en storefront/backoffice | QA report y suites E2E/a11y | Cuentas locales por rol; build | P2 |
+| `client-new-thread:3a1d25c7-1f18-4045-b82d-e7976bd49063` | Final UX QA Agent | Walkthrough de todos los estados/roles y breakpoints; fake-completeness audit | `docs/UX_FINAL_AUDIT.md`, pruebas UX, fixes acotados | Cuentas ficticias/Supabase local, build integrado | 🚧 Conversación creada; worktree en preparación |
 | Pendiente | Public SEO/CWV validation | Confirmar indexación, CWV de campo, schema y sitemap tras configurar el dominio público real | `robots.ts`, metadata, sitemap | URL/despliegue remoto y Search Console/CrUX | Bloqueado por entorno |
 
 ## Ola 7 — cierre RMA por Tech Lead

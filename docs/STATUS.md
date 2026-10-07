@@ -77,7 +77,7 @@ Warnings no bloqueantes conocidos: Node reporta `MODULE_TYPELESS_PACKAGE_JSON` e
 
 - [x] Medir Lighthouse local en portada móvil y catálogo desktop; corregir contraste, nombres accesibles, objetivos táctiles e imágenes responsive. Evidencia detallada en `docs/PERFORMANCE_AUDIT.md` y `.seo-cache/`.
 - [ ] Repetir CWV con la URL de producción y datos de campo cuando exista despliegue; el perfil Lighthouse móvil simulado aún da LCP 3,2 s, mientras que su traza observada en localhost da 0,56 s.
-- [ ] Completar auditoría manual visual/responsive de todos los estados del backoffice y storefront; la automatización existente cubre rutas primarias, teclado y viewport móvil, no toda combinación de rol/estado.
+- [ ] 🚧 Auditoría manual visual/responsive de todos los estados del backoffice y storefront asignada al QA final independiente `client-new-thread:3a1d25c7-1f18-4045-b82d-e7976bd49063`; la automatización existente no cubre toda combinación de rol/estado.
 - [ ] Terminar walkthrough manual por cada rol demo; ya hay 78 probes Auth/PostgREST y recorridos de dominio, pero no equivalen a revisar cada pantalla y Server Action.
 - [ ] Configurar dominio público para verificar `robots.txt`, sitemap, schema y metadatos en despliegue. En local se bloquea indexación deliberadamente para evitar publicar una demo sin dominio real.
 - [ ] Identificar el origen del estilo de caret inyectado en el navegador Playwright y resolver warnings de entorno sin alterar semántica del producto.
