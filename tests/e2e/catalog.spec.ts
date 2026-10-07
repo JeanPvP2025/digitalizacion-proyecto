@@ -29,6 +29,42 @@ test("favorites and compare resolve only products from the active demo catalogue
   await expect(page.getByText("DEMO", { exact: false }).first()).toBeVisible();
 });
 
+test("PDP opens the honest read-only opinions route in demo mode", async ({ page }) => {
+  await page.goto("/producto/loom-27-4k");
+
+  await expect(page.getByRole("link", { name: "Leer opiniones y opinar" })).toHaveAttribute(
+    "href",
+    "/producto/loom-27-4k/opiniones",
+  );
+  await expect(page.getByText("Elena V.")).toHaveCount(0);
+  await expect(page.getByText("5/5")).toHaveCount(0);
+  await expect(page.getByLabel(/Valoración de ejemplo/)).toHaveCount(0);
+
+  const opinionsLink = page.getByRole("link", { name: "Leer opiniones y opinar" });
+  await expect(opinionsLink).toBeVisible();
+  await page.waitForLoadState("networkidle");
+  await opinionsLink.click();
+  await expect(page).toHaveURL(/\/producto\/loom-27-4k\/opiniones$/);
+  await expect(page.getByRole("heading", { name: "Opiniones de Loom 27 4K" })).toBeVisible();
+  await expect(page.getByRole("status").filter({ hasText: "La demo no guarda opiniones" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Enviar opinión" })).toHaveCount(0);
+});
+
+test("opinions route stays keyboard reachable and fits a mobile viewport", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/producto/loom-27-4k/opiniones");
+
+  await expect(page.getByRole("heading", { name: "Opiniones de Loom 27 4K" })).toBeVisible();
+  const pageWidth = await page.evaluate(() => document.documentElement.scrollWidth);
+  expect(pageWidth).toBeLessThanOrEqual(390);
+
+  const returnLink = page.getByRole("link", { name: "Volver al producto" });
+  await returnLink.focus();
+  await expect(returnLink).toBeFocused();
+  await page.keyboard.press("Enter");
+  await expect(page).toHaveURL(/\/producto\/loom-27-4k$/);
+});
+
 test("catalog sorting orders products by server-rendered price", async ({ page }) => {
   await page.goto("/catalogo?orden=precio-asc");
 

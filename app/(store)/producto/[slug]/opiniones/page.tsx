@@ -69,7 +69,7 @@ export default async function ProductReviewsPage({ params }: RouteProps) {
         <p className={styles.eyebrow}>COMUNIDAD NODRIA · OPINIONES VERIFICADAS</p>
         <h1>Opiniones de {product.name}<span>.</span></h1>
         <p>Solo las personas que recibieron este producto pueden opinar. Cada opinión se revisa antes de publicarse.</p>
-        {published?.ok && <span className={styles.reviewCount}>{published.data.total} opiniones publicadas</span>}
+        {published?.ok && <span className={styles.reviewCount}>{published.data.total} {published.data.total === 1 ? "opinión publicada" : "opiniones publicadas"}</span>}
       </header>
 
       <section className={styles.reviewSection} aria-labelledby="published-reviews">

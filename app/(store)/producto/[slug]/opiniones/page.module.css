@@ -45,6 +45,16 @@
   font: 11px var(--font-mono);
 }
 
+.loadingState {
+  max-width: 560px;
+  margin: 24px 0;
+  padding: 18px 20px;
+  border: 1px solid #dce2d9;
+  background: #f5f7f1;
+  color: #53675e;
+  line-height: 1.6;
+}
+
 .reviewSection, .submitSection { padding: 36px 0; border-bottom: 1px solid #dce2d9; }
 
 .sectionHeading {

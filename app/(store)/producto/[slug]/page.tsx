@@ -2,12 +2,15 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
-import { ArrowRight, Check, RotateCcw, ShieldCheck, Star, Truck } from "lucide-react";
+import { ArrowRight, Check, MessageCircle, RotateCcw, ShieldCheck, Truck } from "lucide-react";
 import { ProductActions } from "@/components/storefront/store-interactions";
 import { ProductCard } from "@/components/storefront/product-card";
 import { ConnectedCollectionActions, ConnectedProductCard } from "@/components/storefront/connected-product-card";
 import { formatPrice } from "@/lib/catalog";
 import { getCatalogData, getCatalogSourceNotice } from "@/lib/catalog-repository";
+import { listPublishedProductReviews } from "@/lib/reviews/data";
+import { getServerDataMode } from "@/lib/server/data-mode";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
 
@@ -30,6 +33,12 @@ async function ProductContent({ params }: { params: PageProps<"/producto/[slug]"
   if (!product) notFound();
   const related = data.products.filter((item) => item.id !== product.id && (item.category === product.category || item.featured)).slice(0, 4);
   const sourceNotice = getCatalogSourceNotice(data.source);
+  const connected = data.source === "supabase" && getServerDataMode() === "supabase";
+  const supabase = connected ? await createSupabaseServerClient() : null;
+  const publishedReviews = connected && supabase
+    ? await listPublishedProductReviews(supabase, product.id)
+    : null;
+  const opinionsHref = `/producto/${product.slug}/opiniones`;
 
   return (
     <main className="page-wrap product-page">
@@ -44,7 +53,11 @@ async function ProductContent({ params }: { params: PageProps<"/producto/[slug]"
         <section className="product-detail-copy" aria-labelledby="product-name">
           <p className="eyebrow">{product.brand} <span>·</span> {product.category}</p>
           <h1 id="product-name">{product.name}<span className="title-period">.</span></h1>
-          <div className="detail-rating">{product.reviewCount > 0 ? <><Star size={13} fill="currentColor" /> {product.rating.toFixed(1)} <span>({product.reviewCount} valoraciones)</span>{data.source === "demo" && <a href="#reviews">Ver reseñas</a>}</> : <span>Sin valoraciones</span>}</div>
+          <div className="detail-rating" aria-label="Opiniones del producto">
+            <MessageCircle size={14} aria-hidden="true" />
+            {data.source === "demo" ? <span>Consulta las opiniones</span> : !publishedReviews?.ok ? <span>Opiniones no disponibles</span> : publishedReviews.data.total === 0 ? <span>Sin opiniones publicadas</span> : <span>{publishedReviews.data.total} {publishedReviews.data.total === 1 ? "opinión publicada" : "opiniones publicadas"}</span>}
+            <Link href={opinionsHref}>Leer opiniones y opinar</Link>
+          </div>
           <p className="detail-summary">{product.summary} Elegido por nuestro equipo y acompañado por soporte técnico especializado.</p>
           <div className="detail-price-line"><strong>{formatPrice(product.price)}</strong>{product.previousPrice !== undefined && <del>{formatPrice(product.previousPrice)}</del>}<span>IVA incluido</span></div>
           {data.source === "demo" ? <><div className="detail-availability"><i /> {product.stock > 0 ? `Disponible · ${product.stock} unidades en stock` : "Sin stock disponible"}</div><ProductActions product={product} /></> : <><div className="detail-availability">Disponibilidad por confirmar</div><p className="detail-summary">La tienda no publica unidades exactas de inventario; la compra desde el catálogo conectado aún no está habilitada.</p><ConnectedCollectionActions product={product} /><p className="page-intro">Favoritos y comparativas se guardan solo en este navegador.</p></>}
@@ -53,8 +66,7 @@ async function ProductContent({ params }: { params: PageProps<"/producto/[slug]"
         </section>
       </div>
       <section className="detail-content"><p className="eyebrow">UNA ELECCIÓN INFORMADA</p><h2>Diseñado para durar.</h2><p>{product.summary} En NODRIA revisamos cada referencia por calidad, compatibilidad y soporte. Si tienes dudas antes de comprar, nuestro equipo técnico puede ayudarte a elegir la configuración adecuada para tu caso.</p><p className="product-assurance-note"><Check size={14} /> Producto nuevo, con garantía oficial y asistencia posventa de NODRIA.</p></section>
-      <section className="related-section"><div className="section-heading-row"><div><p className="eyebrow">TAMBIÉN PUEDE INTERESARTE</p><h2>Más de nuestra selección.</h2></div><Link className="section-link" href="/catalogo">Ver catálogo <ArrowRight size={14} /></Link></div><div className="product-grid">{related.map((item, index) => data.source === "demo" ? <ProductCard key={item.id} product={item} index={index} /> : <ConnectedProductCard key={item.id} product={item} index={index} />)}</div></section>
-      {data.source === "demo" && <section className="proof-section" id="reviews"><div className="section-heading-row"><div><p className="eyebrow">COMUNIDAD NODRIA · DEMO</p><h2>Opiniones con contexto.</h2><p>Las valoraciones y opiniones se muestran como datos de demostración y no implican compras reales.</p></div></div><div className="review-detail-card"><div className="proof-stars">{Array.from({ length: 5 }).map((_, index) => <Star key={index} size={13} fill="currentColor" />)}</div><blockquote>“Una elección que encaja con lo que necesitaba. El equipo me explicó qué características sí iban a marcar una diferencia en mi día a día.”</blockquote><div className="proof-author"><span className="proof-avatar">EV</span><div><strong>Elena V.</strong><small>Compra verificada · demostración</small></div></div></div></section>}
+      <section className="related-section"><div className="section-heading-row"><div><p className="eyebrow">TAMBIÉN PUEDE INTERESARTE</p><h2>Más de nuestra selección.</h2></div><Link className="section-link" href="/catalogo">Ver catálogo <ArrowRight size={14} /></Link></div><div className="product-grid">{related.map((item, index) => data.source === "demo" ? <ProductCard key={item.id} product={item} index={index} showRating={false} /> : <ConnectedProductCard key={item.id} product={item} index={index} />)}</div></section>
     </main>
   );
 }

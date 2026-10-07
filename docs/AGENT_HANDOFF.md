@@ -80,6 +80,16 @@ Los cinco worktrees estaban limpios y cada uno tenía un commit sobre el padre `
 
 La siguiente ronda no debe empezar auditoría final definitiva. Prioriza los slices P0/P1 reflejados en `STATUS.md`; la cuarta ola está preparada en `WORKSTREAMS.md`.
 
+## Integración Reviews PDP — 2026-10-07
+
+- Partida de `master` en `96194c7`, worktree limpio y sin cambios previos.
+- La PDP enlaza `/producto/[slug]/opiniones`; solo consulta el total exacto de reseñas publicadas en Supabase y ya no muestra ratings del catálogo conectado como reseñas verificadas. El testimonio y contador ficticios de demo se retiraron.
+- La ruta de opiniones tiene estado de carga (`loading.tsx`), conserva estados de lista publicada/vacía/error y mantiene acceso al formulario sujeto a sesión y línea entregada. La API/RLS y moderación previa no cambiaron; modo demo comunica que no persiste.
+- Archivos: `app/(store)/producto/[slug]/page.tsx`, `app/(store)/producto/[slug]/opiniones/loading.tsx`, estilos de opiniones, `components/storefront/product-card.tsx` (prop opcional para omitir rating solo en relacionados de PDP), pruebas `tests/integration/reviews/ui.test.ts` y recorrido `tests/e2e/catalog.spec.ts`; estado reconciliado en `STATUS.md` y `WORKSTREAMS.md`.
+- Verificaciones: `pnpm test` (155 Vitest + 18 Node), `pnpm exec vitest run tests/integration/reviews` (23/23), `pnpm exec tsc --noEmit`, `pnpm lint`, `pnpm build` y los dos E2E del recorrido (PDP→opiniones por click y opiniones móvil/teclado) pasan. Playwright espera `networkidle` antes del click para dar tiempo a la hidratación del App Router.
+- Contratos/decisiones: sin cambio de API, schema, RLS ni elegibilidad; agregado solo usa `product_reviews.status = published` a través del repositorio existente. No se calcula promedio en PDP porque la consulta está limitada a 50 reseñas.
+- Riesgo/dependencia: el recorrido con usuario Auth real en navegador y Supabase conectado sigue sin verificación; la demo es explícitamente de solo lectura. No hay bug de migración/API demostrado.
+
 ## Ola 4 despachada — 2026-10-07
 
 Se crearon conversaciones independientes sobre worktrees desde el snapshot integrado y committed. Cada prompt incluye bootstrap obligatorio de `/docs/PROJECT_BRIEF.md`, `ARCHITECTURE.md`, `DECISIONS.md`, `STATUS.md`, `WORKSTREAMS.md`, `AGENT_HANDOFF.md`, `DATA_MODEL.md` y `RBAC_MATRIX.md`, además de inspección de Git/dominio/contratos.
