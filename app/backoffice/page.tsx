@@ -1,78 +1,75 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { connection } from "next/server";
-import { getDemoOrderRecords } from "@/lib/server/demo-orders";
-import { demoProducts } from "@/lib/catalog";
 import { OperationsCenter } from "@/components/backoffice/operations-center";
-import { getServerDataMode } from "@/lib/server/data-mode";
-import { getServerAuthState, getStaffRoleGrants } from "@/lib/supabase/auth";
-import { hasStaffSurfaceRole } from "@/lib/supabase/policies";
+import styles from "@/components/backoffice/operations-center.module.css";
+import { getOperationsWorkspace, type OperationsWorkspace } from "@/lib/operations/data";
 
 export const metadata: Metadata = {
-  title: "Centro de operaciones",
-  description: "Vista interna de pedidos persistidos e inventario de catálogo demo de NODRIA.",
+  title: "Centro de operaciones | NODRIA",
+  description: "Pedidos, expediciones y eventos operativos conectados de NODRIA.",
 };
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
-type BackofficeStatus = "all" | "confirmed" | "pending" | "payment_processing";
+type QueueFilter = "all" | "ready" | "shipped";
 
 function firstValue(value: string | string[] | undefined): string {
   return Array.isArray(value) ? value[0] ?? "" : value ?? "";
 }
 
-export default async function BackofficePage({ searchParams }: { searchParams: SearchParams }) {
-  await connection();
-  const auth = await getServerAuthState();
-  if (auth.kind !== "signed-in") {
-    return <main className="page-wrap"><h1>Centro de operaciones no disponible</h1><p>Se requiere una sesión autenticada de personal.</p></main>;
-  }
-  const { roles, error } = await getStaffRoleGrants(auth.supabase, auth.user.id);
-  if (error || !hasStaffSurfaceRole(roles, "operations")) {
-    return <main className="page-wrap"><h1>Acceso restringido</h1><p>El centro de operaciones requiere fulfillment_manager o super_admin.</p></main>;
-  }
-
-  if (getServerDataMode() !== "local-demo") {
-    return <main className="page-wrap"><h1>Centro de operaciones no disponible</h1><p>Esta vista aún no consulta pedidos de Supabase. Los pedidos demo solo se muestran en desarrollo local con DEMO_MODE=true.</p></main>;
-  }
-
-  const [params, orders] = await Promise.all([searchParams, getDemoOrderRecords()]);
-  const query = firstValue(params.q).trim().slice(0, 120);
-  const requestedStatus = firstValue(params.status);
-  const validStatuses = ["confirmed", "pending", "payment_processing"] as const;
-  const status: BackofficeStatus = validStatuses.includes(requestedStatus as (typeof validStatuses)[number])
-    ? requestedStatus as BackofficeStatus
-    : "all";
-  const normalizedQuery = query.toLocaleLowerCase("es-ES");
-
-  const sortedOrders = [...orders].sort((left, right) => {
-    const rightTime = Date.parse(right.createdAt);
-    const leftTime = Date.parse(left.createdAt);
-    return (Number.isFinite(rightTime) ? rightTime : 0) - (Number.isFinite(leftTime) ? leftTime : 0);
-  });
-
-  const visibleOrders = sortedOrders.filter((order) => {
-    if (status !== "all" && order.status !== status) return false;
-    if (!normalizedQuery) return true;
-
-    const searchableValues = [
-      order.orderNumber,
-      order.id,
-      order.customer.name,
-      order.customer.email,
-      order.customer.city,
-      order.customer.postalCode,
-      ...order.items.flatMap((item) => [item.name, item.sku]),
-    ];
-
-    return searchableValues.some((value) => value.toLocaleLowerCase("es-ES").includes(normalizedQuery));
-  });
+function OperationsState({ status }: { status: Exclude<OperationsWorkspace["status"], "ready"> }) {
+  const messages = {
+    unconfigured: {
+      title: "Operaciones conectadas no disponibles",
+      body: "Configura Supabase para consultar pedidos y eventos. Este centro no sustituye la información conectada por registros demo.",
+    },
+    unauthenticated: {
+      title: "Inicia sesión para continuar",
+      body: "Consulta pedidos con una sesión de personal autenticada.",
+    },
+    forbidden: {
+      title: "Acceso restringido",
+      body: "El centro operativo requiere el rol fulfillment_manager o super_admin.",
+    },
+    error: {
+      title: "No se pudo cargar la cola operativa",
+      body: "Una consulta a Supabase ha fallado. No se han cambiado pedidos; vuelve a cargar cuando se recupere el servicio.",
+    },
+  } as const;
+  const message = messages[status];
 
   return (
-    <OperationsCenter
-      allOrders={sortedOrders}
-      visibleOrders={visibleOrders}
-      products={demoProducts}
-      query={query}
-      status={status}
-    />
+    <main className="page-wrap staff-access-message" role={status === "error" ? "alert" : "status"}>
+      <p className="eyebrow">NODRIA · CENTRO DE OPERACIONES</p>
+      <h1 className="page-title">{message.title}</h1>
+      <p>{message.body}</p>
+      {status === "error" && <a className="button button--dark" href="/backoffice">Volver a cargar</a>}
+    </main>
   );
+}
+
+function OperationsLoading() {
+  return (
+    <main className={styles.loading} aria-label="Cargando pedidos y eventos operativos" role="status">
+      <span className={styles.loadingLine} />
+      <span className={styles.loadingCards}><i /><i /><i /><i /></span>
+      <span className={styles.loadingPanel} />
+    </main>
+  );
+}
+
+async function OperationsContent({ searchParams }: { searchParams: SearchParams }) {
+  await connection();
+  const [params, workspace] = await Promise.all([searchParams, getOperationsWorkspace()]);
+  if (workspace.status !== "ready") return <OperationsState status={workspace.status} />;
+
+  const query = firstValue(params.q).trim().slice(0, 100);
+  const requestedFilter = firstValue(params.queue);
+  const queue: QueueFilter = requestedFilter === "ready" || requestedFilter === "shipped" ? requestedFilter : "all";
+
+  return <OperationsCenter workspace={workspace} query={query} queue={queue} />;
+}
+
+export default function BackofficePage({ searchParams }: { searchParams: SearchParams }) {
+  return <Suspense fallback={<OperationsLoading />}><OperationsContent searchParams={searchParams} /></Suspense>;
 }
