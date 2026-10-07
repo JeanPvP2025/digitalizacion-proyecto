@@ -87,6 +87,7 @@ Se crearon conversaciones independientes sobre worktrees desde el snapshot integ
 | Conversación | ID | Ownership primario | Estado al despacho |
 |---|---|---|---|
 | NODRIA — Checkout conectado E2E | `client-new-thread:4fe81487-2ea9-442d-b6e0-3634eee95c8c` | `tests/e2e/checkout-connected/**`, fixtures/config aislados | Creada; worktree setup pendiente |
+| NODRIA — Checkout acepta variante seleccionada | `client-new-thread:5f74c955-61f6-49d7-a802-e07bf96279b2` | `app/api/checkout/route.ts`, commerce contracts/cart y route/domain tests | Creada; worktree setup pendiente |
 | NODRIA — Matriz Auth/RLS runtime | `client-new-thread:ffc77f43-5f78-43fe-bb2e-43026833e6b8` | `tests/integration/rbac/**`, auth-boundaries y audit report | Creada; worktree setup pendiente |
 | NODRIA — PC Builder vertical slice | `client-new-thread:c202586e-bbf1-4458-9651-d9bd2b94153f` | Configurador, `lib/pc-builder/**`, tests | Creada; worktree setup pendiente |
 | NODRIA — Operations Center conectado | `client-new-thread:e5961205-6651-41a7-99fd-917d5b0dda32` | Operations dashboard y `lib/operations/**` | Creada; worktree setup pendiente |
@@ -98,3 +99,7 @@ Se crearon conversaciones independientes sobre worktrees desde el snapshot integ
 | NODRIA — Documentación y guion de demo | `client-new-thread:94b87bfe-6237-4d90-a00a-4a6ad3dd52d6` | `docs/DEMO_SCRIPT.md`, `docs/SETUP.md`, README | Creada; worktree setup pendiente |
 
 Los IDs `client-new-thread` identifican el despacho asíncrono. La conversación coordinadora no atribuirá archivos/commits antes de confirmar setup y luego recogerá estado/worktrees al cerrar esta ola.
+
+### Contrato cruzado PC Builder → checkout
+
+La inspección del agente PC Builder confirmó que el seed actual no tiene categorías PC con piezas/variantes vendibles y atributos estructurados. El producto conectado no debe aceptar una compra sustituyendo `builder:*` por un `productId` genérico. Se decidió que la unidad de compra será `variantId`; una conversación separada valida/acepta ese ID en checkout, y el RPC server/database seguirá mandando sobre precio/stock. El agente PC Builder continúa compatibilidad/guardados, mantiene el botón de compra bloqueado y reporta atributos mínimos requeridos. No se declara conectado el bridge hasta integrar ambos lados y tener catálogo vendible.
