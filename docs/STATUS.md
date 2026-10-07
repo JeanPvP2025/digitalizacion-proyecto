@@ -10,7 +10,7 @@ Estado observado el **2026-10-07** después de integrar la sexta ola y cerrar lo
 - ✅ **CRM/B2B hasta pago demo:** cotización aceptada emite pedido formal tenant-scoped con snapshots/reserva; owner/admin simula anticipo aprobado o rechazado. Aprobado guarda pago, pedido, actividad CRM y eventos idempotentes; rechazado cancela y libera reserva. No se recogen datos de tarjeta ni se procesa dinero real.
 - ✅ **Inventario y procurement básico:** ledger idempotente de movimientos, proveedores, órdenes de compra, recepciones parciales/finales vinculadas al movimiento y control de sobre-recepción.
 - ✅ **Fulfillment:** pedido pagado pasa por picking, packing y expedición con timeline y consumo de reserva. La secuencia y autorización están cubiertas en PostgreSQL.
-- ✅ **Support/RMA local:** ticket, conversación, revisión/reembolso demo, inspección de almacén y disposición por línea funcionan. Reponer incrementa `on_hand` una sola vez mediante ledger; desechar no incrementa stock; al inspeccionar todas las líneas la devolución se cierra con evento de timeline. Falta recorrido browser autenticado del panel de almacén.
+- ✅ **Support/RMA local:** ticket, conversación, revisión/reembolso demo, inspección de almacén y disposición por línea funcionan. Reponer incrementa `on_hand` una sola vez mediante ledger; desechar no incrementa stock; al inspeccionar todas las líneas la devolución se cierra con evento de timeline. El recorrido browser conectado cliente → soporte → almacén queda cubierto.
 - ✅ **Analytics del alcance publicado:** pedidos, ventas brutas aprobadas, aprobación de pago, inventario disponible y conversión de solicitudes CRM tienen fórmula, fuente, periodo de 30 días Europe/Madrid, límites y fixtures puros/SQL/E2E; el dashboard falla cerrado ante discrepancias. Ventas netas, margen, visitas y conversión específica de cotizaciones B2B no se presentan como KPIs todavía.
 - ✅ **Demo Mode local:** modo de archivos limitado a desarrollo y sin Auth; Supabase configurado siempre gana y falla cerrado. La guía cubre reset local y organización ficticia; `scripts/demo/assign-staff-roles.ps1` asigna en loopback grants de los cinco roles internos a cuentas Auth locales ya creadas, sin crear ni almacenar contraseñas. Se ejecutó y verificó que escribe exactamente un grant por rol; `db reset --local` los elimina.
 - ✅ **Seguridad/Auth local:** aislamiento, escalada, permisos sensibles y boundaries HTTP verificados con matriz documentada, suites SQL y 78 probes autenticados; esto no certifica un entorno remoto ni prueba CRUD exhaustivo por cada campo/endpoint. `manager` y `marketing` no son roles persistidos y no reciben permisos implícitos.
@@ -38,7 +38,7 @@ La prueba E2E transversal verifica permisos de emisión B2B sin crear pedidos re
 | `pnpm lint` | ✅ |
 | `pnpm test` | ✅ 179 Vitest + 18 Node |
 | `pnpm test:e2e` | ✅ 17/17 |
-| `pwsh -File tests/e2e/connected-domains/run.ps1` | ✅ 5/5 y teardown limpio |
+| `pwsh -File tests/e2e/connected-domains/run.ps1` | ✅ 6/6 y teardown limpio; incluye cliente → aprobación soporte → inspección warehouse |
 | `pwsh -File tests/e2e/checkout-connected/run.ps1` | ✅ 4/4; aprobado, rechazado, refresh/retry, payload distinto y concurrencia |
 | `pwsh -File tests/e2e/connected-domains/run.ps1` | ✅ 5/5; teardown limpio |
 | `pwsh -File tests/integration/b2b-connected/run.ps1` | ✅ 1/1; anticipo aprobado/rechazado, tenant, replay y fulfillment |
@@ -78,7 +78,7 @@ Warnings no bloqueantes conocidos: Node reporta `MODULE_TYPELESS_PACKAGE_JSON` e
 - [ ] Hacer auditoría visual/manual responsive y accesible en storefront y backoffice, con navegación teclado, diálogos, formularios, tablas, errores, carga y vacío.
 - [ ] Medir Lighthouse/CWV y revisar bundle/imagenes/consultas con resultados reproducibles.
 - [ ] Auditar navegación, filtros y acciones de rutas restantes para localizar fake completeness; priorizar controles visibles que no persisten.
-- [ ] Completar un recorrido browser autenticado de almacén/RMA y una revisión manual de todos los roles demo después del bootstrap local.
+- [ ] Completar una revisión manual de todos los roles demo después del bootstrap local.
 - [ ] Completar metadatos, schema/sitemap y contenido público; blog/CMS se mantiene fuera de alcance si no es requisito académico.
 - [ ] Confirmar el warning de caret en navegador limpio y reducir warnings Node si se puede sin cambiar semántica del proyecto.
 

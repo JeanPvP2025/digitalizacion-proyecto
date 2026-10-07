@@ -334,7 +334,7 @@ No queda P0 local reproducible. Quedan como P1: inspección/disposición RMA, an
 
 - `pnpm install --frozen-lockfile`, `pnpm exec tsc --noEmit`, `pnpm lint`, `pnpm test` (179 Vitest + 18 Node), `pnpm build` (38 rutas), parser del script y `git diff --check`: pasan.
 - `pnpm test:e2e`: 17/17. La suite registró advertencias ambientales `NO_COLOR`/`FORCE_COLOR` y una diferencia de hidratación por `style="caret-color: transparent"` inyectado al navegador; no aparece en el código del repositorio.
-- Checkout conectado: 4/4; dominios conectados: 5/5; B2B aislado con anticipo: 1/1.
+- Checkout conectado: 4/4; dominios conectados: 6/6 (incluye cliente → aprobación de soporte → inspección warehouse); B2B aislado con anticipo: 1/1.
 - Reset local: 17 migraciones + seed. pgTAP: 230 aserciones; RLS/RBAC/Auth-escalation/support/RMA/inventory/procurement/fulfillment runtime SQL pasan; DB lint sin errores; 78 probes HTTP autenticados, cero fallos.
-- No queda P0 local reproducible ni P1 local abierto. P2 pendientes: recorrido browser warehouse y de todos los roles, auditoría manual responsive/accesible/performance/fake completeness y SEO/contenido público. Producción remota sigue bloqueada por falta de proyecto/credenciales; no se afirma que esté desplegada ni certificada.
-- El árbol de trabajo de esta ronda contiene solo el script de bootstrap local y la documentación reconciliada; no se incluyen secretos ni los usuarios Auth temporales de las pruebas.
+- No queda P0 local reproducible ni P1 local abierto. P2 pendientes: revisión manual de todos los roles, auditoría responsive/accesible/performance/fake completeness y SEO/contenido público. Producción remota sigue bloqueada por falta de proyecto/credenciales; no se afirma que esté desplegada ni certificada.
+- El árbol de trabajo de esta ronda contiene el bootstrap local, la suite E2E conectada de RMA y la documentación reconciliada; no se incluyen secretos ni los usuarios Auth temporales de las pruebas.
