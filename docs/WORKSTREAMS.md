@@ -16,7 +16,7 @@ Tablero de conversaciones. El repositorio y las migraciones son fuente de verdad
 
 | Conversation | Role | Task | Ownership | Dependencies | State |
 |---|---|---|---|---|---|
-| Tech Lead (current) | Integration Lead | Cross-wave integration, fixes, docs, gates | Shared contracts, docs, integration | Completed ola 4 | ✅ Gates passed; ola 4 commits include `c03e63b`, `f5a1b9d`, `b79cc99`, `53309bf`, `1307d17`, `ac6714b`, `3a95052`, `38312b6`, `eea8856`, `fa8777d` |
+| Tech Lead (current) | Integration Lead | Cross-wave integration, fixes, docs, gates | Shared contracts, docs, integration | Completed ola 4 | ✅ Gates passed; ola 4 commits include `c03e63b`, `f5a1b9d`, `b79cc99`, `53309bf`, `1307d17`, `ac6714b`, `3a95052`, `38312b6`, `eea8856`, `fa8777d`, `96194c7` |
 | Tech Lead (current) | Security/RLS | Fix private activity and payment role scope | New migration + RLS regression fixtures | Audit finding SEC-03/SEC-02 | ✅ Added `20261007114945_limit_sales_queue_activity_visibility.sql`; local reset/tests pass |
 
 ## Ola 4 — finalizada; integración coordinadora
@@ -43,12 +43,12 @@ Los worktrees limpios produjeron commits para checkout variante, RBAC/Auth bound
 
 | Conversation | Role | Task | Ownership | Dependencies | State |
 |---|---|---|---|---|---|
-| Checkout conectado E2E | QA/Commerce Agent | Auth/PostgREST checkout approved/declined, retry/refresh/concurrency | `tests/e2e/checkout-connected/**` | Checkout `variantId` integration `c03e63b`, Supabase local | ⏳ Ready |
-| Inventory/procurement | Inventory Agent | Receive/adjust stock, ledger idempotente y reconcile reservations | `lib/inventory/**`, inventory APIs/UI, migration/tests si son necesarias | Order/reservation contracts, existing RLS | ⏳ Ready |
-| PC Builder catalog bridge | Catalog/PC Agent | Fictitious typed sellable components, PDP/cart/checkout via variantId, compatibility purchase flow | catalog seed/data + PC Builder files/tests | Checkout variant contract, compatibility types | ⏳ Ready |
-| B2B conversion | CRM/Commerce Agent | Accepted quote → audited conversion/order path and tests | CRM quote actions/domain, focused migration/tests if needed | organization/order/payment contracts | ⏳ Ready |
-| Reviews PDP integration | Storefront Reviews Agent | Link eligible reviews from PDP and verify purchased-review flow/moderation | product detail + opinions UI tests | Existing reviews API/migration | ⏳ Ready |
-| Security connected boundary | Auth/RLS QA Agent | GoTrue/PostgREST role claims and demo/connected boundary checks | auth-boundary integration tests + report | Existing local Supabase and role matrix | ⏳ Ready |
+| `client-new-thread:6d108c32-268b-4335-b373-3d7b7ae77f33` — Checkout conectado E2E | QA/Commerce Agent | Auth/PostgREST checkout approved/declined, retry/refresh/concurrency | `tests/e2e/checkout-connected/**` | Checkout `variantId` integration `c03e63b`, Supabase local | 🚧 Dispatched; worktree setup queued |
+| `client-new-thread:6e8348a3-3ecb-45f0-9c45-f7480cabf131` — Inventory y procurement vertical slice | Inventory Agent | Receive/adjust stock, ledger idempotente y reconcile reservations | `lib/inventory/**`, inventory APIs/UI, migration/tests; no seed | Order/reservation contracts, existing RLS | 🚧 Dispatched; worktree setup queued |
+| `client-new-thread:b2c76fe0-03f7-47fd-915c-5f35089f189e` — PC Builder comprable por variantes | Catalog/PC Agent | Typed sellable components, compatibility and cart bridge via variantId | `supabase/seed.sql`, PC Builder files/tests | Checkout variant contract, compatibility types | 🚧 Dispatched; worktree setup queued |
+| `client-new-thread:aaaf527a-401d-41ab-b56b-57e1496b87b1` — Conversión de presupuesto B2B a pedido | CRM/Commerce Agent | Accepted quote → audited conversion/order path and tests | CRM quote actions/domain, focused migration/tests if needed | organization/order/payment contracts | 🚧 Dispatched; worktree setup queued |
+| `client-new-thread:3d06f4bc-5697-45b4-9bfd-1cb1a674b096` — Reviews integradas en PDP | Storefront Reviews Agent | Link eligible reviews from PDP and verify purchased-review flow/moderation | product detail + opinions UI tests | Existing reviews API/migration | 🚧 Dispatched; worktree setup queued |
+| `client-new-thread:03e546f1-aeb2-4364-9d87-6a383cc4281c` — Auth/PostgREST boundary audit | Auth/RLS QA Agent | GoTrue/PostgREST role claims and demo/connected boundary checks | `tests/integration/auth-boundaries/**`, `docs/AUTH_BOUNDARIES.md` | Existing local Supabase and role matrix | 🚧 Dispatched; worktree setup queued |
 
 ## Definition of Done por conversación
 

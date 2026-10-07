@@ -159,3 +159,16 @@ La conversación de checkout conectado E2E y la de inventario/procurement no dej
 - Reviews tiene API/RLS/página/moderación, pero la PDP no enlaza aún el recorrido de opiniones.
 - Falta E2E conectado GoTrue/PostgREST de checkout (approved/declined/retry/concurrency) y matriz API Auth con tokens reales.
 - Workstreams y próximos owners están en `docs/WORKSTREAMS.md`; alcance y gates se reflejan en `STATUS.md`, `SECURITY.md`, `RBAC_MATRIX.md` y `TESTING.md`.
+
+## Ola 5 despachada — 2026-10-07
+
+Se crearon en paralelo seis conversaciones independientes con worktrees desde `master` (`96194c7`), cada una con bootstrap de seis documentos, dominio/ownership y DoD:
+
+- `client-new-thread:6d108c32-268b-4335-b373-3d7b7ae77f33` — checkout conectado E2E (tests browser/Auth).
+- `client-new-thread:6e8348a3-3ecb-45f0-9c45-f7480cabf131` — inventario/procurement (ledger, recepciones; excluye seed para evitar conflicto).
+- `client-new-thread:b2c76fe0-03f7-47fd-915c-5f35089f189e` — catálogo PC Builder (solo `supabase/seed.sql` y configurador; checkout `variantId`).
+- `client-new-thread:aaaf527a-401d-41ab-b56b-57e1496b87b1` — conversión de presupuesto B2B a pedido.
+- `client-new-thread:3d06f4bc-5697-45b4-9bfd-1cb1a674b096` — integración de reviews en PDP.
+- `client-new-thread:03e546f1-aeb2-4364-9d87-6a383cc4281c` — Auth/PostgREST role boundary.
+
+Los seis despachos retornaron `clientThreadId` con host local; la creación/setup de worktrees es asíncrona. El tablero los marca `worktree setup queued`; no se afirma que ya hayan empezado cambios.
