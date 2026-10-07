@@ -10,7 +10,7 @@ export function StoreHeader() {
   return (
     <>
       <a className="skip-link" href="#main-content">Saltar al contenido principal</a>
-      <div className="announcement-bar">
+      <div className="announcement-bar" id="page-top">
         <span className="announcement-dot" />
         <span>Conocimiento técnico. Atención humana.</span>
         <Link href="/empresas">Descubre NODRIA Empresas <ArrowUpRight size={13} /></Link>

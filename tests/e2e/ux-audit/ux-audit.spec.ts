@@ -166,7 +166,6 @@ test("B2B field errors are announced, associated, and focus the first invalid fi
 });
 
 test("B2B landing and portal apply their CSS-module root classes", async ({ page }) => {
-  test.fail(true, "Known P1 audit finding: B2B CSS-module root classes are absent from the rendered DOM.");
   const missingRootClasses: string[] = [];
   for (const route of ["/empresas", "/empresas/portal"]) {
     await page.goto(route, { waitUntil: "domcontentloaded" });
@@ -177,13 +176,11 @@ test("B2B landing and portal apply their CSS-module root classes", async ({ page
 });
 
 test("empty checkout disables the demo purchase action", async ({ page }) => {
-  test.fail(true, "Known P2 audit finding: checkout keeps its submit action enabled with a zero-value cart.");
   await page.goto("/checkout", { waitUntil: "domcontentloaded" });
   await expect(page.getByRole("button", { name: /confirmar compra demo/i })).toBeDisabled();
 });
 
 test("footer back-to-top affordance is keyboard operable", async ({ page }) => {
-  test.fail(true, "Known P2 audit finding: the footer back-to-top label is a non-interactive span.");
   await page.goto("/", { waitUntil: "domcontentloaded" });
   const affordance = page.locator("footer .back-top");
   await expect(affordance).toBeVisible();
