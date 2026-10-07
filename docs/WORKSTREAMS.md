@@ -73,7 +73,7 @@ Se inspeccionaron los cinco worktrees, su estado Git, commits y cambios. Procure
 | Conversation | Role | Task | Ownership | Dependencies | State |
 |---|---|---|---|---|---|
 | Tech Lead | Performance/accessibility closeout | Lighthouse local en portada móvil y catálogo desktop; corregir contraste, labels, targets, carga LCP e imágenes responsive | `app/globals.css`, storefront media, `tests/e2e/ux-audit/**`, `docs/PERFORMANCE_AUDIT.md` | Build production local | ✅ 92/100 móvil, 100/100 desktop; accesibilidad 100/100 en ambos; medición de laboratorio y sin CrUX |
-| `client-new-thread:3a1d25c7-1f18-4045-b82d-e7976bd49063` | Final UX QA Agent | Walkthrough de todos los estados/roles y breakpoints; fake-completeness audit | `docs/UX_FINAL_AUDIT.md`, pruebas UX, fixes acotados | Cuentas ficticias/Supabase local, build integrado | 🚧 Conversación creada; worktree en preparación |
+| UX final audit (finished) | QA/Accessibility Agent | Barrido anónimo de 27 rutas y walkthrough responsive de roles internos; quedan cliente/B2B Auth, UI de catálogo y shell de soporte | `tests/e2e/ux-audit/**`, `docs/UX_FINAL_AUDIT.md`, navegación de moderación | Supabase local efímero; contratos de roles actuales | ✅ Integrado; E2E 17/17, roles 1/1, typecheck/lint pasan; límites restantes registrados en `STATUS.md` |
 | Pendiente | Public SEO/CWV validation | Confirmar indexación, CWV de campo, schema y sitemap tras configurar el dominio público real | `robots.ts`, metadata, sitemap | URL/despliegue remoto y Search Console/CrUX | Bloqueado por entorno |
 
 ## Ola 7 — cierre RMA por Tech Lead

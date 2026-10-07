@@ -5,6 +5,23 @@
   color: #20372f;
 }
 
+.backLink {
+  display: inline-flex;
+  min-height: 40px;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 28px;
+  padding: 8px 10px;
+  border: 1px solid #dce2d9;
+  color: #385a3f;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.backLink:hover { background: #edf2e8; }
+.backLink:focus-visible { outline: 3px solid #809c3f; outline-offset: 3px; }
+
 .eyebrow {
   margin: 0 0 12px;
   color: #6f8255;

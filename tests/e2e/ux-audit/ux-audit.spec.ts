@@ -5,16 +5,29 @@ const primaryRoutes = [
   "/catalogo",
   "/catalogo?q=nvme",
   "/producto/fluxbook-14-pro",
+  "/producto/fluxbook-14-pro/opiniones",
   "/carrito",
   "/checkout",
   "/acceso",
   "/mi-cuenta",
+  "/favoritos",
+  "/comparar",
+  "/configurador",
   "/empresas",
   "/empresas/portal",
+  "/envios",
+  "/garantia",
+  "/legal/privacidad",
+  "/servicios",
   "/soporte",
+  "/soporte/agente",
   "/backoffice",
   "/backoffice/crm",
   "/backoffice/inventory",
+  "/backoffice/procurement",
+  "/backoffice/returns",
+  "/backoffice/reviews",
+  "/backoffice/analytics",
 ];
 
 test.beforeEach(async ({ page }) => {
@@ -192,30 +205,35 @@ test("footer back-to-top affordance is keyboard operable", async ({ page }) => {
   expect(interactive).toBe(true);
 });
 
-test("primary routes fit a 390px mobile viewport", async ({ page }, testInfo) => {
+test("primary routes fit mobile and tablet viewports", async ({ page }, testInfo) => {
   test.setTimeout(180_000);
-  await page.setViewportSize({ width: 390, height: 844 });
   const overflow: string[] = [];
 
-  for (const route of primaryRoutes) {
-    const response = await page.goto(route, { waitUntil: "domcontentloaded" });
-    expect(response?.status(), `HTTP status for mobile ${route}`).toBeLessThan(400);
-    await expect(page.locator("main h1:visible"), `mobile main heading for ${route}`).toHaveCount(1);
-    const dimensions = await page.evaluate(() => ({
-      viewportWidth: document.documentElement.clientWidth,
-      documentWidth: document.documentElement.scrollWidth,
-    }));
-    if (dimensions.documentWidth > dimensions.viewportWidth) {
-      overflow.push(`${route}: document ${dimensions.documentWidth}px > viewport ${dimensions.viewportWidth}px`);
-    }
+  for (const viewport of [
+    { label: "mobile", width: 390, height: 844 },
+    { label: "tablet", width: 768, height: 1024 },
+  ]) {
+    await page.setViewportSize({ width: viewport.width, height: viewport.height });
+    for (const route of primaryRoutes) {
+      const response = await page.goto(route, { waitUntil: "domcontentloaded" });
+      expect(response?.status(), `HTTP status for ${viewport.label} ${route}`).toBeLessThan(400);
+      await expect(page.locator("main h1:visible"), `${viewport.label} main heading for ${route}`).toHaveCount(1);
+      const dimensions = await page.evaluate(() => ({
+        viewportWidth: document.documentElement.clientWidth,
+        documentWidth: document.documentElement.scrollWidth,
+      }));
+      if (dimensions.documentWidth > dimensions.viewportWidth) {
+        overflow.push(`${viewport.label} ${route}: document ${dimensions.documentWidth}px > viewport ${dimensions.viewportWidth}px`);
+      }
 
-    if (route === "/") {
-      await page.screenshot({ path: testInfo.outputPath("home-mobile.png") });
-    }
-    if (route === "/empresas") {
-      await page.screenshot({ path: testInfo.outputPath("business-mobile.png"), fullPage: true });
+      if (viewport.label === "mobile" && route === "/") {
+        await page.screenshot({ path: testInfo.outputPath("home-mobile.png") });
+      }
+      if (viewport.label === "mobile" && route === "/empresas") {
+        await page.screenshot({ path: testInfo.outputPath("business-mobile.png"), fullPage: true });
+      }
     }
   }
 
-  expect(overflow, "page-level horizontal overflow at mobile width").toEqual([]);
+  expect(overflow, "page-level horizontal overflow at mobile and tablet widths").toEqual([]);
 });

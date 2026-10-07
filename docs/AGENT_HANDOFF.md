@@ -359,4 +359,23 @@ No queda P0 local reproducible. Quedan como P1: inspección/disposición RMA, an
 
 ### Pendiente externo
 
-No existe proyecto Supabase remoto, dominio, credenciales de despliegue ni datos CrUX. La aplicación está cerrada para pruebas locales; no se afirma que esté desplegada, indexable o certificada para producción. La auditoría visual del backoffice y de todos los estados/roles permanece como calidad manual pendiente.
+No existe proyecto Supabase remoto, dominio, credenciales de despliegue ni datos CrUX. La aplicación está cerrada para pruebas locales; no se afirma que esté desplegada, indexable o certificada para producción. Los límites UX pendientes (cliente/B2B Auth, contraste, UI de catálogo y shell de soporte) quedan en `docs/UX_FINAL_AUDIT.md`.
+
+## Handoff: auditoría UX local — 2026-10-07
+
+- Rama de trabajo: `codex/ux-final-audit` en worktree propio.
+- Cambio: el barrido anónimo cubre 27 rutas en desktop, móvil y tablet. Se añadió runner Supabase local efímero y walkthrough Auth de cinco roles internos, además del retorno por teclado desde moderación de opiniones. Se añadió `docs/UX_FINAL_AUDIT.md` y se reconciliaron este handoff, `STATUS.md` y `WORKSTREAMS.md`.
+- Verificación: `pnpm test:e2e` 17/17; `pwsh -File tests/e2e/ux-audit/run-roles.ps1` 1/1; `pnpm exec tsc --noEmit` y `pnpm lint` pasan.
+- No hubo cambios de schema/migraciones/RLS/CSS global ni se tocó el stack NODRIA compartido o un proyecto remoto. El runner creó y limpió únicamente `nodria-ux-audit` en loopback con Auth/grants ficticios.
+- Límite: customer, memberships B2B y buyer/viewer/owner/admin no se recorrieron con Auth. Tampoco hay UI de gestión de catálogo para `catalog_manager`; soporte interno conserva el chrome del storefront; contraste de backoffice sigue sin medición de Lighthouse/axe.
+- Hallazgo corregido: moderación de opiniones no ofrecía salida; “Volver a operaciones” ya está visible en estados demo/error/denegado y contenido, y se verifica con Enter.
+- Riesgos ambientales: Playwright muestra style de caret durante hidratación y `NO_COLOR`/`FORCE_COLOR`; Next dev registró `destination stream errored` durante el recorrido, aunque las páginas cargaron y E2E pasó. Origen del caret/stream no atribuido al producto.
+- Siguiente paso: ampliar customer/B2B, implementar o retirar la expectativa de UI de catálogo, evaluar el shell de soporte y revisar contraste con herramientas accesibles; mantener producción como no validada.
+
+## Handoff de integración UX final — 2026-10-08
+
+- Rama integrada: `codex/ux-final-audit`; commit de trabajo `1be8e1f`, integrado con resolución documental en esta rama.
+- Revisado el diff completo y se conservaron las suites de 27 rutas, cinco roles staff, el runner Supabase efímero y la salida por teclado en moderación de opiniones. El workstream anterior se marca finalizado; sus límites se mantienen explícitos como P2.
+- Verificación repetida en la rama integrada: instalación congelada; TypeScript; lint; 179 Vitest + 18 Node; E2E 17/17; build 38 rutas; runner Auth UX 1/1; diff check sin whitespace errors.
+- El runner Auth detuvo `nodria-ux-audit`; no quedaron cambios de Git ajenos a la integración. Next reportó un error de stream durante navegación sin fallo del caso; se conserva como riesgo ambiental pendiente de reproducir en build/servidor estable.
+- No se afirma cierre total: siguen pendientes sesión visual customer/B2B, contraste y lector de pantalla del backoffice, navegación interna de soporte, destino operativo de `catalog_manager`, CWV/SEO de producción y la configuración externa necesaria para desplegar.
