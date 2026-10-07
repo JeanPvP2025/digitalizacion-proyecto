@@ -112,3 +112,50 @@ La inspección del agente PC Builder confirmó que el seed actual no tiene categ
 - Configuraciones guardadas (hasta 10) persisten en localStorage v2 usando variant IDs exactos; las selecciones fuera del catálogo al restaurar no se remapean. UI informa omisiones/errores/vacío y bloquea compra.
 - El seed no contiene componentes PC con `attributes.pc_builder`; el slice es honesto pero no seleccionable en local demo ni comprable hasta tener datos. Checkout sigue separado y tiene una conversación dedicada para el input `variantId`; el cliente no envía precios.
 - Verificación repetida en el checkout coordinador: `pnpm test` 86 Vitest + 18 Node, `pnpm exec tsc --noEmit`, `pnpm lint`, `pnpm build` y `pnpm test:e2e` 8/8 pasan. La feature se mantiene 🚧 hasta catálogo de componentes y handoff del checkout.
+
+## Integración ola 4 — 2026-10-07
+
+### Inspección y commits rescatados
+
+Los worktrees limpios con commits verificables se revisaron contra el HEAD y diffs. Se integraron estos cambios:
+
+- `c03e63b feat(checkout): accept explicit sellable variant IDs` (worker `087353b`): route/cart/contracts y pruebas de variante. Contrato integrado en `D-012`.
+- `f5a1b9d test(security): expand RBAC role action coverage` (worker `9b80b8b`): matriz role/action y claim escalation.
+- `b79cc99 feat(support): complete ticket and RMA workflows` (worker `fdf5908`): bandeja de agente, mensajes, timeline y decisión de devolución.
+- `53309bf feat(reviews): add verified product review workflow` (worker `55586ed`): reseña elegible por pedido/línea, moderación, API/UI y RLS.
+- `1307d17 feat(operations): connect fulfillment center to order data` (worker `66e86fc`): queue de pedidos y acciones operativas protegidas.
+- `ac6714b feat(analytics): add connected operational metrics` (worker `2d01e2a`): métricas operativas y tests.
+- `3a95052 test(ux): audit accessibility and primary flows` (worker `23edb99`): reporte y E2E para rutas, teclado, responsive y regressions.
+- `38312b6 docs: add demo script and setup guide` (worker `5349ede`): setup y guion de demo ficticia.
+- `1a433b7 docs(project): record PC Builder partial integration` se mantiene como handoff anterior de PC Builder.
+
+La conversación de checkout conectado E2E y la de inventario/procurement no dejaron un commit ni diff atribuible/verificable en los worktrees inspeccionables. No se copiaron worktrees antiguos con HEAD previo a la tercera ola ni snapshots masivos no relacionados; checkout Auth E2E y procurement siguen abiertos. Las ramas/trabajos sin evidencia se registran en `WORKSTREAMS.md` como backlog, no como completados.
+
+### Integración y defectos encontrados
+
+- La matriz RBAC falló al intentar `UPDATE support_tickets` como `authenticated`. Esto era una expectativa de test incorrecta: el modelo revoca DML de navegador y exige `send_support_message`; el test se corrigió para invocar el RPC y verificar el estado resultante. No se añadió grant directo.
+- E2E marcó como `test.fail` tres problemas reales: CSS Modules vacíos, acción de checkout habilitada con carrito sin productos y footer “Volver arriba” no interactivo. Se quitaron los expected-failure y se corrigió todo.
+- La causa raíz CSS era el loader Turbopack `*.css`, que transformaba también `.module.css` como CSS global. Se migró a `@tailwindcss/postcss` + `postcss.config.mjs`, eliminando `@tailwindcss/turbopack` del pipeline y restaurando exports/hashing de módulos.
+- Checkout deshabilita submit si no hay líneas o el subtotal no es positivo; el footer usa enlace a `#page-top` y el header publica el destino.
+- El smoke E2E registró un warning de hidratación por estilos `caret-color: transparent` que aparecen inyectados sobre inputs en el navegador Playwright. No se encontró una prop de aplicación que los establezca; revisar en navegador limpio si persiste.
+
+### Gates de integración
+
+- `pnpm install --frozen-lockfile`: pasó después de sincronizar `@tailwindcss/postcss` en lockfile.
+- `pnpm test`: 148 Vitest + 18 Node, pasó.
+- `pnpm exec tsc --noEmit`: pasó.
+- `pnpm lint`: pasó.
+- `pnpm build`: pasó después del fix CSS (32 rutas estáticas/dinámicas enumeradas por Next).
+- `pnpm test:e2e`: 15/15 pasan después de CSS Modules, checkout vacío y footer; 8 catálogo/demo + 7 UX.
+- `pnpm dlx supabase@latest db reset --local --yes`: migraciones/seed pasaron, incluidas product reviews y soporte/RMA agent workflow.
+- pgTAP `tests/database`, checkout y reviews: 179 aserciones pasan.
+- PostgreSQL runtime `postgres-rls.sql`, `postgres-object-isolation.sql`, RBAC role/action, Auth claim escalation, support-rma y support-flow: pasan con rollback.
+- `supabase db lint --local --fail-on error`: sin errores de esquema.
+
+### Backlog abierto / dependencias desbloqueadas
+
+- Checkout por `variantId` desbloquea el lado de compra PC Builder, pero seed no contiene CPU/placa/RAM/caja/fuente con `attributes.pc_builder`; no activar botón hasta integrar esos datos y verificar stock/precio.
+- Operaciones/analytics ya consumen datos operativos en slices; recepción/procurement, picking/dispatch completo y conversión oferta B2B → pedido siguen parciales.
+- Reviews tiene API/RLS/página/moderación, pero la PDP no enlaza aún el recorrido de opiniones.
+- Falta E2E conectado GoTrue/PostgREST de checkout (approved/declined/retry/concurrency) y matriz API Auth con tokens reales.
+- Workstreams y próximos owners están en `docs/WORKSTREAMS.md`; alcance y gates se reflejan en `STATUS.md`, `SECURITY.md`, `RBAC_MATRIX.md` y `TESTING.md`.

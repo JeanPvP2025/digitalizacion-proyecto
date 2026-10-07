@@ -16,24 +16,39 @@ Tablero de conversaciones. El repositorio y las migraciones son fuente de verdad
 
 | Conversation | Role | Task | Ownership | Dependencies | State |
 |---|---|---|---|---|---|
-| Tech Lead (current) | Integration Lead | Cross-wave integration, fixes, docs, gates | Shared contracts, docs, integration | Completed ola 3 | ✅ Gates passed; `f180ec5`, `98ccb4f`, `24171d9`, `53dbaa3`, `8df49c4`, `f2f806f` committed |
+| Tech Lead (current) | Integration Lead | Cross-wave integration, fixes, docs, gates | Shared contracts, docs, integration | Completed ola 4 | ✅ Gates passed; ola 4 commits include `c03e63b`, `f5a1b9d`, `b79cc99`, `53309bf`, `1307d17`, `ac6714b`, `3a95052`, `38312b6`, `eea8856`, `fa8777d` |
 | Tech Lead (current) | Security/RLS | Fix private activity and payment role scope | New migration + RLS regression fixtures | Audit finding SEC-03/SEC-02 | ✅ Added `20261007114945_limit_sales_queue_activity_visibility.sql`; local reset/tests pass |
 
-## Ola 4 — ready for dispatch
+## Ola 4 — finalizada; integración coordinadora
 
 | Conversation | Role | Task | Ownership | Dependencies | State |
 |---|---|---|---|---|---|
-| `client-new-thread:4fe81487-2ea9-442d-b6e0-3634eee95c8c` — Checkout conectado E2E | QA/Commerce Agent | Browser/Auth end-to-end checkout, approved/declined, retry, concurrency | New `tests/e2e/checkout-connected/**`; test-only fixtures/config; no route redesign without handoff | Supabase local/Auth, current checkout RPC | 🚧 Dispatched; worktree setup queued |
-| `client-new-thread:5f74c955-61f6-49d7-a802-e07bf96279b2` — Checkout acepta variante seleccionada | Commerce Contract Agent | Accept and validate explicit variantId in connected checkout | `app/api/checkout/route.ts`, `lib/commerce/contracts.ts`, `lib/commerce/cart.ts`, commerce unit tests | Existing checkout RPC; PC Builder variant contract | 🚧 Dispatched; worktree setup queued |
-| `client-new-thread:ffc77f43-5f78-43fe-bb2e-43026833e6b8` — Matriz Auth/RLS runtime | Security/QA Agent | Expand real role/action/RPC coverage and Auth boundary | `tests/integration/rbac/**`, `tests/integration/auth-boundaries/**`, own report | Current policies and local Supabase | 🚧 Dispatched; worktree setup queued |
+| `client-new-thread:4fe81487-2ea9-442d-b6e0-3634eee95c8c` — Checkout conectado E2E | QA/Commerce Agent | Browser/Auth end-to-end checkout, approved/declined, retry, concurrency | `tests/e2e/checkout-connected/**` | Supabase local/Auth, current checkout RPC | ⚠️ No matching E2E diff or commit found in the finished worktrees; P0 requeued |
+| `client-new-thread:5f74c955-61f6-49d7-a802-e07bf96279b2` — Checkout acepta variante seleccionada | Commerce Contract Agent | Accept and validate explicit variantId in connected checkout | `app/api/checkout/route.ts`, commerce contracts/cart/tests | Existing checkout RPC; PC Builder variant contract | ✅ Integrated `c03e63b`; route/contract tests pass; server keeps price/stock authority |
+| `client-new-thread:ffc77f43-5f78-43fe-bb2e-43026833e6b8` — Matriz Auth/RLS runtime | Security/QA Agent | Expand real role/action/RPC coverage and Auth boundary | RBAC/auth-boundary SQL + report | Current policies and local Supabase | ✅ Integrated `f5a1b9d`; runtime matrix and escalation probes pass after RPC-contract correction |
 | `client-new-thread:c202586e-bbf1-4458-9651-d9bd2b94153f` — PC Builder vertical slice | Product Domain Agent | Compatibility, saved builds, published variants/cart | Configurator/PC Builder UI, `lib/pc-builder/**`, own tests | Catalog PC variants/structured attributes + checkout `variantId` handoff | ✅ Partial slice integrated as `f2f806f`; overall feature 🚧 until data/contract exists |
-| `client-new-thread:e5961205-6651-41a7-99fd-917d5b0dda32` — Operations Center conectado | Operations Agent | Real order/event queue and protected fulfillment actions | Operations dashboard/components, `lib/operations/**`, own tests | Checkout/order/event contracts | 🚧 Dispatched; worktree setup queued |
-| `client-new-thread:951a64c9-ac93-4719-9dc2-130680f6ebcd` — Inventario y procurement | Inventory Agent | Receive/adjust/ledger and reserved/on-hand reconciliation | Inventory surface, `lib/inventory/**`, migration/tests if needed | Existing inventory RPCs/reservations | 🚧 Dispatched; worktree setup queued |
-| `client-new-thread:9f4a375d-4b1a-4562-9dd4-12959c6bc09a` — Support y RMA workflow | Support Agent | Agent messages/resolution and reviewed return decision | support UI/API/domain, dedicated migration/tests | Atomic intake and return request | 🚧 Dispatched; worktree setup queued |
-| `client-new-thread:7dadc2de-e249-4342-8a61-271571907134` — Analytics con datos operativos | Analytics Agent | Replace demo KPIs with defined operational queries | analytics route/module and own tests | CRM/order/inventory contracts | 🚧 Dispatched; worktree setup queued |
-| `client-new-thread:01debabe-0686-458b-9f9e-9375ddabe4cf` — Auditoría accesibilidad y responsive | QA/Accessibility Agent | Browser audit of keyboard, responsive, controls and states | Own report and isolated audit tests; no shared styling changes | Integrated storefront/backoffice | 🚧 Dispatched; worktree setup queued |
-| `client-new-thread:1ca9a917-ce10-4b14-b838-d4095a18ae93` — Reseñas y moderación | Reviews Agent | Purchase-eligible review, persistence, moderation and RLS | review routes/components, `lib/reviews/**`, own migration/tests | Customer/order/product contract | 🚧 Dispatched; worktree setup queued |
-| `client-new-thread:94b87bfe-6237-4d90-a00a-4a6ad3dd52d6` — Documentación y guion de demo | Documentation Agent | Setup and honest 10–15 minute fictional-data demo | `docs/DEMO_SCRIPT.md`, `docs/SETUP.md`, README if stale | Current contracts/status | 🚧 Dispatched; worktree setup queued |
+| `client-new-thread:e5961205-6651-41a7-99fd-917d5b0dda32` — Operations Center conectado | Operations Agent | Real order/event queue and protected fulfillment actions | Operations dashboard/components, `lib/operations/**`, tests | Checkout/order/event contracts | ✅ Slice integrated `1307d17`; queue/actions connected; picking/dispatch remains P1 |
+| `client-new-thread:951a64c9-ac93-4719-9dc2-130680f6ebcd` — Inventario y procurement | Inventory Agent | Receive/adjust/ledger and reserved/on-hand reconciliation | Inventory surface, `lib/inventory/**`, migration/tests | Existing inventory RPCs/reservations | ⚠️ No matching new worktree diff/commit found; current inventory remains read-only; requeued |
+| `client-new-thread:9f4a375d-4b1a-4562-9dd4-12959c6bc09a` — Support y RMA workflow | Support Agent | Agent messages/resolution and reviewed return decision | support UI/API/domain, migration/tests | Atomic intake and return request | ✅ Slice integrated `b79cc99`; RMA effects beyond review remain out of scope |
+| `client-new-thread:7dadc2de-e249-4342-8a61-271571907134` — Analytics con datos operativos | Analytics Agent | Replace demo KPIs with defined operational queries | analytics route/module and tests | CRM/order/inventory contracts | ✅ Integrated `ac6714b`; operational metrics are connected; scope remains partial |
+| `client-new-thread:01debabe-0686-458b-9f9e-9375ddabe4cf` — Auditoría accesibilidad y responsive | QA/Accessibility Agent | Browser audit of keyboard, responsive, controls and states | UX report + E2E | Integrated storefront/backoffice | ✅ `3a95052`; integration found and fixed CSS Modules, empty checkout and keyboard action regressions |
+| `client-new-thread:1ca9a917-ce10-4b14-b838-d4095a18ae93` — Reseñas y moderación | Reviews Agent | Purchase-eligible review, persistence, moderation and RLS | review routes/components, `lib/reviews/**`, migration/tests | Customer/order/product contract | ✅ Integrated `53309bf`; PDP link/integration still open |
+| `client-new-thread:94b87bfe-6237-4d90-a00a-4a6ad3dd52d6` — Documentación y guion de demo | Documentation Agent | Setup and honest 10–15 minute fictional-data demo | `docs/DEMO_SCRIPT.md`, `docs/SETUP.md`, README | Current contracts/status | ✅ Integrated `38312b6` |
+
+### Integración de la cuarta ola
+
+Los worktrees limpios produjeron commits para checkout variante, RBAC/Auth boundary, soporte/RMA, reseñas, Operations Center, analytics, UX E2E y documentación. No se encontró diff integrable de checkout browser/Auth ni de inventario/procurement. El worktree de PC Builder se integró previamente en `f2f806f`. La integración añadió además `postcss.config.mjs` y corrigió la regla CSS global que anulaba los CSS Modules; pruebas E2E cubren las regresiones halladas. Gates registrados en `STATUS.md` y handoff en `AGENT_HANDOFF.md`.
+
+## Ola 5 — backlog listo para despacho
+
+| Conversation | Role | Task | Ownership | Dependencies | State |
+|---|---|---|---|---|---|
+| Checkout conectado E2E | QA/Commerce Agent | Auth/PostgREST checkout approved/declined, retry/refresh/concurrency | `tests/e2e/checkout-connected/**` | Checkout `variantId` integration `c03e63b`, Supabase local | ⏳ Ready |
+| Inventory/procurement | Inventory Agent | Receive/adjust stock, ledger idempotente y reconcile reservations | `lib/inventory/**`, inventory APIs/UI, migration/tests si son necesarias | Order/reservation contracts, existing RLS | ⏳ Ready |
+| PC Builder catalog bridge | Catalog/PC Agent | Fictitious typed sellable components, PDP/cart/checkout via variantId, compatibility purchase flow | catalog seed/data + PC Builder files/tests | Checkout variant contract, compatibility types | ⏳ Ready |
+| B2B conversion | CRM/Commerce Agent | Accepted quote → audited conversion/order path and tests | CRM quote actions/domain, focused migration/tests if needed | organization/order/payment contracts | ⏳ Ready |
+| Reviews PDP integration | Storefront Reviews Agent | Link eligible reviews from PDP and verify purchased-review flow/moderation | product detail + opinions UI tests | Existing reviews API/migration | ⏳ Ready |
+| Security connected boundary | Auth/RLS QA Agent | GoTrue/PostgREST role claims and demo/connected boundary checks | auth-boundary integration tests + report | Existing local Supabase and role matrix | ⏳ Ready |
 
 ## Definition of Done por conversación
 

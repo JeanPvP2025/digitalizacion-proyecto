@@ -27,9 +27,14 @@ erDiagram
   AUTH_USERS ||--o{ SUPPORT_TICKETS : abre
   ORDERS o|--o{ SUPPORT_TICKETS : contexto
   SUPPORT_TICKETS ||--o{ SUPPORT_MESSAGES : conversa
+  SUPPORT_TICKETS ||--o{ SUPPORT_TICKET_EVENTS : timeline
   ORDERS ||--o{ RETURN_REQUESTS : devuelve
   RETURN_REQUESTS ||--|{ RETURN_ITEMS : detalla
   ORDER_ITEMS ||--o{ RETURN_ITEMS : limita
+  RETURN_REQUESTS ||--o{ RETURN_REQUEST_EVENTS : timeline
+  PRODUCTS ||--o{ PRODUCT_REVIEWS : recibe
+  ORDER_ITEMS ||--o| PRODUCT_REVIEWS : verifica
+  AUTH_USERS ||--o{ PRODUCT_REVIEWS : escribe
 ```
 
 ## Invariantes operativas
@@ -41,6 +46,9 @@ erDiagram
 - `quotes` y `quote_items` guardan snapshots de organización/contacto, producto, precio solicitado/ofertado, moneda e impuestos. `sales_owner_id` define la propiedad comercial; el equipo comercial puede reclamar solicitudes sin asignar mediante RPC.
 - `crm_activities` vincula actividad a lead, solicitud, presupuesto u organización. Las notas `organization` solo son visibles a miembros de la organización antes de que el presupuesto sea reclamado; la cola comercial sin asignar expone actividad `internal`.
 - `create_support_ticket` guarda ticket y primer mensaje juntos. `request_return` valida cliente, pedido entregado, ventana y suma acumulada por línea; la clave idempotente impide duplicar una devolución.
+- Mensajes/transiciones de agente y review de RMA pasan por RPC idempotente; `support_ticket_events` y `return_request_events` registran timeline sin habilitar DML directo al navegador.
+- `product_reviews` exige una línea entregada del autor para ese producto, una review por línea/autor-producto y moderación única desde `pending`. La pública solo expone el estado `published`.
+- El payload de checkout usa `variantId`; el pedido mantiene snapshots de variante, SKU y precio. Product IDs legacy solo se aceptan cuando el servidor resuelve exactamente una variante vendible.
 - Las membresías usan `owner`, `admin`, `buyer` y `viewer`. La administración se realiza mediante RPCs con validación; la escritura directa a tablas de transición está revocada.
 
 ## Migraciones que definen el estado
@@ -51,5 +59,7 @@ erDiagram
 - `20261007094816_crm_b2b_quote_workflow.sql` — presupuestos, snapshots, actividades y membresías B2B.
 - `20261007095121_checkout_order_payment_integrity.sql` — fingerprint, dirección, reserva y pagos demo conectados.
 - `20261007114945_limit_sales_queue_activity_visibility.sql` — acota notas de actividad visibles a ventas y elimina acceso de ventas a datos de pago.
+- `20261007120621_product_reviews.sql` — reviews verificadas, moderación y RLS.
+- `20261007120753_support_agent_rma_review_workflow.sql` — timeline y transiciones idempotentes de ticket/agente y revisión de devoluciones.
 
 El esquema no convierte por sí solo pantallas todavía demo (Operations Center, compras, analítica o PC Builder) en flujos conectados.

@@ -46,11 +46,11 @@ Las decisiones de alcance heredadas de la misión se marcan **Confirmada**. Las 
 
 - **Fecha:** 2026-10-07
 - **Estado:** Confirmada; schema/seed y checkout conectado implementados contra los RPCs existentes. Auth E2E remota y recorrido browser conectado pendientes.
-- **Contexto:** La misión requiere Supabase para Postgres, Auth, Storage y RLS. La migración y el seed inicial ya existen, pero no hay credenciales ni ejecución local verificada.
+- **Contexto:** La misión requiere Supabase para Postgres, Auth, Storage y RLS. Migraciones/reset/seed y pruebas locales pasan, pero no hay credenciales remotas ni ejecución de producción.
 - **Decisión:** Diseñar persistencia alrededor de PostgreSQL gestionado por Supabase, con migraciones reproducibles y RLS. Las migraciones y objetos de base pertenecen a `supabase/**`.
 - **Alternativas:** Datos solo locales/mock, cambios manuales en dashboard o un backend separado.
 - **Motivo:** Cumple el requisito del producto y permite integridad relacional, políticas y despliegue reproducible.
-- **Consecuencias:** Migraciones definen tablas, roles, policies y RPCs; reset/seed, 156 pgTAP y pruebas PostgreSQL locales pasan. Storefront conectado, checkout, CRM y soporte consumen contratos conectados en partes; Operations, PC Builder, compras y analytics siguen demo/parciales. No presentar `.data/` como PostgreSQL. El arranque local usa puertos alternativos en `supabase/config.toml` por exclusiones de Windows.
+- **Consecuencias:** Migraciones definen tablas, roles, policies y RPCs; reset/seed, 179 pgTAP y pruebas PostgreSQL locales pasan. Storefront, checkout, CRM, soporte, reviews, operations y analytics consumen contratos conectados por slices; inventario/procurement y PC Builder permanecen parciales. No presentar `.data/` como PostgreSQL. El arranque local usa puertos alternativos en `supabase/config.toml` por exclusiones de Windows.
 
 ## D-010 — Modo de datos demo resuelto en servidor
 
@@ -117,3 +117,27 @@ Las decisiones de alcance heredadas de la misión se marcan **Confirmada**. Las 
 - **Alternativas:** negar toda cola y exigir asignación previa manual; o permitir lectura global de todas las tablas CRM/B2B.
 - **Motivo:** conserva el flujo comercial de claim/oferta sin mantener el hallazgo de enumeración de organizaciones y notas privadas.
 - **Consecuencias:** políticas se prueban en `tests/integration/security/postgres-object-isolation.sql`; si se requieren vistas/campos distintos en producción, crear un contrato dedicado y pruebas antes de ampliar acceso.
+
+## D-012 — El checkout identifica la variante vendible
+
+- **Fecha:** 2026-10-07
+- **Estado:** Confirmada e integrada en `c03e63b`.
+- **Contexto:** Un producto puede tener varias variantes; un `productId` genérico no identifica con seguridad la línea de compra.
+- **Decisión:** El cliente envía `variantId` y cantidad. El servidor exige una variante activa/publicada y vuelve a resolver precio y stock; nunca acepta importes de cliente. Se conserva compatibilidad `productId` solo cuando hay exactamente una variante vendible no ambigua.
+- **Consecuencias:** PC Builder podrá usar la misma identidad al añadirse catálogo PC; hasta entonces la compra permanece bloqueada. Ver `tests/integration/commerce/checkout-cart.test.ts`.
+
+## D-013 — Las transiciones de soporte/RMA usan RPC
+
+- **Fecha:** 2026-10-07
+- **Estado:** Confirmada e integrada en `b79cc99`.
+- **Contexto:** Mensajes de agentes, estado de tickets y decisiones de devolución deben producir timeline y mantener invariantes en una sola transacción.
+- **Decisión:** Revocar DML directo de `authenticated` sobre tickets/mensajes y exigir RPCs autorizadas, con idempotencia para mensaje y resolución de RMA.
+- **Consecuencias:** La matriz SQL debe probar la acción por RPC; no debe intentar un `UPDATE support_tickets` directo. Eventos del ticket y RMA son consultables con policies por propietario/equipo.
+
+## D-014 — Tailwind global y CSS Modules usan pipelines compatibles
+
+- **Fecha:** 2026-10-07
+- **Estado:** Confirmada; corrección integrada durante la cuarta ola.
+- **Contexto:** La regla Turbopack `*.css` aplicaba el loader global también a `*.module.css`, dejándolos sin exports de clase en HTML.
+- **Decisión:** Procesar Tailwind 4 por `@tailwindcss/postcss` en `postcss.config.mjs` y dejar CSS Modules en el pipeline nativo de Next/Turbopack.
+- **Consecuencias:** B2B y otras superficies recuperan sus clases; E2E verifica root classes y responsive. No volver a aplicar una regla global de loader CSS a todos los módulos.
