@@ -22,6 +22,8 @@ Las seis conversaciones indicadas por el usuario se consideran finalizadas. Se i
 - Se cambió `<img>` a `next/image` en comparación/carrito y se quitaron disables no usados. `git diff --check` solo reporta avisos de conversión LF/CRLF de Windows.
 - No hay credenciales remotas ni cambios sobre Supabase remoto. La búsqueda del repositorio no encontró claves/service-role o secretos `NEXT_PUBLIC`.
 
+Commits de integración (en orden): `411a752` database/RLS; `9398f75` Auth/data-mode; `ead041c` quality tooling; `35783b1` storefront; `3d0ae4e` commerce/backoffice; `2e1d764` integration/E2E tests; `669d180` status/review docs; `c6cb1a9` dispatch de ola 3.
+
 ## Dependencias desbloqueadas
 
 - DB define `resolve_demo_payment`, `fulfill_order`, `mark_order_delivered` y `adjust_inventory`; ahora puede implementarse su consumidor de servidor con ownership separado.
