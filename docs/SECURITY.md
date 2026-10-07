@@ -1,6 +1,6 @@
 # Seguridad y RLS
 
-Estado del **2026-10-07** tras la sexta ola. Migraciones, código y pruebas locales fueron revisados. No se probaron credenciales remotas ni JWT de un proyecto de producción.
+Estado del **2026-10-07** tras la sexta ola y los cierres locales de RMA, B2B y Demo Mode. Migraciones, código y pruebas locales fueron revisados. No se probaron credenciales remotas ni JWT de un proyecto de producción.
 
 ## Controles integrados
 

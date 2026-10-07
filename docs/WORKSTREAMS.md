@@ -68,14 +68,12 @@ Se incorporaron los commits worker `473bff1`, `6011f77`, `bb20ce8` y `2f8d264`, 
 
 Se inspeccionaron los cinco worktrees, su estado Git, commits y cambios. Procurement, B2B, fulfillment y RMA tenían commits; el QA E2E y ajustes de fixtures no estaban completamente comprometidos en su worktree y se revisaron/rescataron. Se actualizó el fixture de aislamiento de pedidos/grants para tomar baseline de seed. En el E2E cruzado B2B se valida visibilidad/autorización sin crear un pedido persistente; el recorrido de emisión real está en el runner B2B aislado. `tests/e2e/connected-domains/run.ps1` termina 5/5 con cleanup correcto.
 
-## Siguiente ronda — lista para despacho
+## Backlog local priorizado (sin conversaciones activas)
 
 | Conversation | Role | Task | Ownership | Dependencies | State |
 |---|---|---|---|---|---|
-| Pendiente de crear | Demo Mode Agent | Demo repetible por rol con reset determinista y límites de autorización | Demo auth/fixtures/UI/docs/tests | Auth boundary y fixtures actuales | Ready |
-| Pendiente de crear | Security Matrix Agent | Ampliar matriz route/RPC/tabla y revisar permiso de cada rol | `tests/integration/auth-boundaries/**`, `RBAC_MATRIX.md`, `SECURITY.md` | Roles actuales y contratos de endpoint | Ready |
-| Pendiente de crear | Analytics Integrity Agent | Reconciliar KPIs, filtros y rangos con SQL de referencia | `lib/analytics/**`, `docs/ANALYTICS.md`, tests | Datos de pedidos, inventario, soporte/CRM | Ready |
-| Pendiente de crear | UX/Performance Audit Agent | Auditoría responsive/accesible, Lighthouse y rutas con fake completeness | Reportes, E2E/a11y/perf sin cambios de dominio | Build integrado | Ready |
+| Pendiente | Security/RBAC follow-up | Añadir pruebas por Server Action/RPC según cambios futuros; la matriz por dominio y 78 probes HTTP ya están integrados | `tests/integration/auth-boundaries/**`, `RBAC_MATRIX.md`, `SECURITY.md` | Contratos y roles persistidos actuales | P2 |
+| Pendiente | Visual/performance audit | Revisar todos los breakpoints, navegación restante, Lighthouse/CWV y fake completeness | Reporte, E2E/a11y/perf sin cambios de dominio | Build integrado | P2 |
 
 ## Ola 7 — cierre RMA por Tech Lead
 
@@ -83,6 +81,8 @@ Se inspeccionaron los cinco worktrees, su estado Git, commits y cambios. Procure
 |---|---|---|---|---|---|
 | Tech Lead (current) | RMA Warehouse Agent | Inspección/disposición de cada línea con permiso de almacén, ledger, idempotencia, cierre/timeline | `app/backoffice/returns/**`, API, `lib/inventory/returns.ts`, nueva migración, tests | Aprobación RMA y `pending_inspection` | ✅ Implementado en worktree coordinador; reset local + SQL runtime + route 4/4; recorrido browser warehouse pendiente |
 | Tech Lead (current) | B2B Advance Payment | Anticipo demo aprobado/rechazado, aislamiento tenant, idempotencia, auditoría y reserva | Portal B2B, migration, isolated E2E/docs | Pedido B2B formal en `pending_payment` | ✅ Aprobado/rechazado cubiertos en runner aislado; se exige owner/admin, retry no duplica y rechazo libera stock |
+| Tech Lead (current) | Demo role bootstrap | Reset local y grants de cuentas Auth ficticias para ensayar roles internos | `scripts/demo/assign-staff-roles.ps1`, `docs/SETUP.md`, `docs/DEMO_SCRIPT.md` | Supabase local, cuentas creadas desde `/acceso` | ✅ Script loopback ejecutado; cinco grants confirmados y eliminados con reset local |
+| Tech Lead (current) | Project state reconciliation | Alinear estado global, backlog y handoffs con código y pruebas reales | `docs/STATUS.md`, `docs/WORKSTREAMS.md`, `docs/AGENT_HANDOFF.md`, `docs/RBAC_MATRIX.md` | Séptima ola integrada | ✅ Slices locales cerrados; quality gate final registrado en el estado |
 
 ## Definition of Done por conversación
 

@@ -292,7 +292,7 @@ No queda P0 local reproducible. Quedan como P1: inspección/disposición RMA, an
 ### Bugs, límites y siguientes pasos
 
 - El flujo aún no tiene browser E2E con sesión warehouse; el producto cuenta con prueba de route y PostgreSQL.
-- Pendientes del proyecto: anticipo B2B, recorrido/reset Demo Mode por rol, matriz de permisos más exhaustiva, reconciliación de analytics, auditoría responsive/performance/fake completeness y pruebas de despliegue remoto.
+- Pendientes del proyecto: matriz de permisos más exhaustiva, auditoría responsive/performance/fake completeness, browser E2E warehouse autenticado y pruebas de despliegue remoto.
 - Commits coordinadores: `df259a4` RMA warehouse inspection, `4ef4800` estado/docs, `9273a32` limpieza E2E y `bd33a72` anticipo B2B.
 
 ## Ola 7 — anticipo B2B demo
@@ -321,4 +321,20 @@ No queda P0 local reproducible. Quedan como P1: inspección/disposición RMA, an
 
 - No es una pasarela ni procesa dinero real; es un paso de simulación para la demo académica.
 - La reserva B2B pendiente no tiene caducidad automática.
-- Demo Mode por rol/reset, matrix exhaustiva, reconciliación de métricas y auditoría de navegación/performance continúan pendientes. No se configuró Supabase remoto.
+- La matriz de roles/dominios tiene cobertura documentada y 78 probes HTTP, pero no CRUD exhaustivo por columna ni prueba cada Server Action. Auditoría visual/performance y walkthrough por todos los roles siguen en backlog. No se configuró Supabase remoto.
+
+## Preparación Demo Mode por roles — 2026-10-07
+
+- Se añadió `scripts/demo/assign-staff-roles.ps1`: comprueba que `.env.local` y el Supabase activo sean el mismo loopback, obtiene la clave local solo a memoria, exige cinco cuentas Auth ya creadas con emails ficticios `.test`, y upsert de grants para los cinco roles internos.
+- El script no crea ni almacena credenciales; la creación y contraseñas de cuentas siguen en Auth local. El usuario debe usar cuentas distintas por rol.
+- Se creó temporalmente un `.env.local` sin secretos y cinco usuarios con contraseñas aleatorias descartables para verificar el script. La consulta confirmó exactamente un grant por rol. Después `db reset --local` quitó todos esos usuarios/grants y el `.env.local` temporal se eliminó; no se alteró configuración preexistente.
+- Parser de PowerShell y ejecución real pasaron. Instrucciones y límites están en `docs/SETUP.md`, `docs/DEMO_SCRIPT.md` y `docs/SECURITY.md`.
+
+## Gate final de integración local — 2026-10-07
+
+- `pnpm install --frozen-lockfile`, `pnpm exec tsc --noEmit`, `pnpm lint`, `pnpm test` (179 Vitest + 18 Node), `pnpm build` (38 rutas), parser del script y `git diff --check`: pasan.
+- `pnpm test:e2e`: 17/17. La suite registró advertencias ambientales `NO_COLOR`/`FORCE_COLOR` y una diferencia de hidratación por `style="caret-color: transparent"` inyectado al navegador; no aparece en el código del repositorio.
+- Checkout conectado: 4/4; dominios conectados: 5/5; B2B aislado con anticipo: 1/1.
+- Reset local: 17 migraciones + seed. pgTAP: 230 aserciones; RLS/RBAC/Auth-escalation/support/RMA/inventory/procurement/fulfillment runtime SQL pasan; DB lint sin errores; 78 probes HTTP autenticados, cero fallos.
+- No queda P0 local reproducible ni P1 local abierto. P2 pendientes: recorrido browser warehouse y de todos los roles, auditoría manual responsive/accesible/performance/fake completeness y SEO/contenido público. Producción remota sigue bloqueada por falta de proyecto/credenciales; no se afirma que esté desplegada ni certificada.
+- El árbol de trabajo de esta ronda contiene solo el script de bootstrap local y la documentación reconciliada; no se incluyen secretos ni los usuarios Auth temporales de las pruebas.

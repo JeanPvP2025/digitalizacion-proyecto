@@ -22,6 +22,8 @@ El runner obtiene claves solo en memoria desde el status de Supabase local, rech
 
 Resultado de la integración actual: 179 Vitest + 18 Node; 17/17 E2E demo/UX; 4/4 E2E checkout conectado; 5/5 dominios conectados con cleanup limpio; 1/1 B2B browser aislado con anticipo aprobado/rechazado, replay y permisos; TypeScript, ESLint y build pasan. La route suite RMA es 4/4. El E2E demo informa de un atributo `caret-color: transparent` inyectado en inputs, sin origen identificado en la aplicación; hay que confirmar en navegador limpio. Windows también informa `NO_COLOR`/`FORCE_COLOR`.
 
+El bootstrap `scripts/demo/assign-staff-roles.ps1` se ejecutó contra Supabase local con cinco cuentas Auth ficticias: creó exactamente un grant para `super_admin`, `catalog_manager`, `support_agent`, `sales_manager` y `fulfillment_manager`. Después se hizo `db reset --local`; las cuentas de test desaparecieron junto con sus grants.
+
 ## Supabase/PostgreSQL local
 
 ```powershell
@@ -45,7 +47,7 @@ Para boundary HTTP con tokens reales, después del reset:
 pwsh -File tests/integration/auth-boundaries/run-local.ps1
 ```
 
-La integración pasó reset/seed (17 migraciones); **230** aserciones pgTAP; RLS/security/RBAC/auth-escalation/support/inventory/procurement/fulfillment runtime SQL y runtime SQL RMA; **78** probes HTTP GoTrue/PostgREST; y DB lint sin errores. Los scripts de conteo RLS toman baseline dentro de la transacción para no depender de un número fijo de filas en seed. Los scripts runtime reversibles revierten fixtures; la prueba concurrente RMA se limpia explícitamente al finalizar.
+La integración pasó reset/seed (17 migraciones); **230** aserciones pgTAP; RLS/security/RBAC/auth-escalation/support/inventory/procurement/fulfillment runtime SQL y runtime SQL RMA; **78** probes HTTP GoTrue/PostgREST; y DB lint sin errores. En el cierre actual se repitieron pgTAP, todos los scripts runtime SQL enumerados y los 78 probes HTTP con cero fallos. Los scripts de conteo RLS toman baseline dentro de la transacción para no depender de un número fijo de filas en seed. Los scripts runtime reversibles revierten fixtures; la prueba concurrente RMA se limpia explícitamente al finalizar.
 
 ## Qué verifican
 
@@ -59,7 +61,7 @@ La integración pasó reset/seed (17 migraciones); **230** aserciones pgTAP; RLS
 
 ## Límites pendientes
 
-- La matriz Auth/RLS no cubre CRUD de cada columna/tabla/endpoint para cada rol; roles `manager` y `marketing` requieren probes HTTP adicionales. Ver `RBAC_MATRIX.md`.
+- La matriz Auth/RLS no cubre CRUD de cada columna/tabla/endpoint para cada rol; `manager` y `marketing` no son roles persistidos y no deben recibir permisos implícitos. Ver `RBAC_MATRIX.md`.
 - No se probó configuración Supabase remota, despliegue, secretos de producción o migración remota.
 - La suite conectada cubre pedidos en cuenta, autorización B2B, reseña elegible, ticket/mensajes y analytics. El pedido B2B real se prueba en un proyecto Supabase aislado para no dejar fixtures persistentes en el stack compartido.
-- Procurement, etapas de fulfillment, emisión B2B formal, reembolso aprobado e inspección/disposición RMA están integrados. Faltan anticipo B2B, auditoría exhaustiva de permisos, recorrido browser warehouse autenticado y pruebas remotas. Facturas/impuestos/pagos de proveedor e integraciones externas están fuera del alcance actual.
+- Procurement, etapas de fulfillment, emisión B2B formal y anticipo demo, reembolso aprobado e inspección/disposición RMA están integrados. Quedan revisión manual de los roles demo, recorrido browser warehouse autenticado, evaluación visual/performance y pruebas remotas. Facturas/impuestos/pagos de proveedor e integraciones externas están fuera del alcance actual.

@@ -1,6 +1,6 @@
 # Arquitectura inicial de NODRIA
 
-**Estado de este documento:** snapshot coordinado tras la sexta ola y cierres locales de RMA/B2B (2026-10-07). El repo contiene storefront, Auth SSR, checkout conectado, CRM/B2B con pedido y anticipo demo, soporte/RMA con reembolso e inspección, reseñas, fulfillment por etapas, analytics, inventario/procurement y PC Builder conectado a variantes. Demo Mode por rol, cobertura exhaustiva de permisos y reconciliación completa de analytics siguen parciales. Gates/límites constan en `STATUS.md`; no hay entorno Supabase remoto ni despliegue probado. Ver `SECURITY.md`, `RBAC_MATRIX.md` y `TESTING.md`.
+**Estado de este documento:** snapshot coordinado tras la sexta ola y cierres locales de RMA/B2B/analytics/demo bootstrap (2026-10-07). El repo contiene storefront, Auth SSR, checkout conectado, CRM/B2B con pedido y anticipo demo, soporte/RMA con reembolso e inspección, reseñas, fulfillment por etapas, KPIs analíticos reconciliados, inventario/procurement y PC Builder conectado a variantes. Demo Mode conectado es repetible con grants locales; cobertura exhaustiva de permisos sigue parcial. Gates/límites constan en `STATUS.md`; no hay entorno Supabase remoto ni despliegue probado. Ver `SECURITY.md`, `RBAC_MATRIX.md` y `TESTING.md`.
 
 ## Objetivo y restricciones
 

@@ -1,6 +1,6 @@
 # Matriz de roles y permisos
 
-Estado al 2026-10-07 tras la sexta ola. La autorización efectiva combina sesión Auth, `user_role_grants`, `organization_memberships`, grants SQL, RLS y validaciones de RPC. Ocultar una acción en UI no concede ni deniega acceso.
+Estado al 2026-10-07 tras la sexta ola y los cierres integrados de RMA y B2B. La autorización efectiva combina sesión Auth, `user_role_grants`, `organization_memberships`, grants SQL, RLS y validaciones de RPC. Ocultar una acción en UI no concede ni deniega acceso.
 
 ## Nombres de rol
 

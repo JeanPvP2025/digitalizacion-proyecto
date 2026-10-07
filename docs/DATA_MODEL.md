@@ -91,4 +91,4 @@ erDiagram
 - `20261007200000_return_inspection_disposition.sql` — inspección de almacén idempotente; reposición/desecho por línea, ledger y cierre auditado al completar las líneas.
 - `20261007210000_b2b_demo_advance_payment.sql` — anticipo B2B demo tenant-scoped; owner/admin, pago/evento/actividad auditados, rechazo que cancela y libera reserva.
 
-El esquema ya incluye inspección/disposición de RMA. Siguen fuera de este slice la liquidación del anticipo B2B, configuración remota y auditoría exhaustiva de permisos.
+El esquema ya incluye inspección/disposición de RMA y resolución de anticipo B2B demo con límites por tenant. La configuración remota y las pruebas CRUD exhaustivas de permisos siguen fuera de la verificación local realizada.

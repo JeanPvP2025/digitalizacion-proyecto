@@ -40,7 +40,7 @@ La fixture incluye una repetición de pago aprobado, pago parcialmente reembolsa
 - Ventas netas tras devolución: falta un ledger de reembolsos con importe y fecha.
 - Margen bruto: falta el coste histórico de compra del producto en el snapshot de pedido.
 - Conversión de visita a pedido: no hay eventos de sesión o analítica web conectados.
-- Conversión de presupuesto B2B a pedido: la conversión auditada actual conserva snapshots, pero no emite orders ni reserva stock.
+- Conversión de presupuesto B2B a pedido: orders y reservas ya quedan enlazados por `business_quote_orders`, pero todavía no hay un KPI que mida esa conversión en este dashboard. El KPI actual de CRM mide `quote_inquiries` y no debe interpretarse como conversión comercial B2B.
 - No se ha probado la conexión contra un proyecto Supabase remoto ni un despliegue.
 
 Un KPI futuro debe declarar fuente, numerador, denominador, ventana, zona horaria, estados y comportamiento ante inconsistencias antes de aparecer en el dashboard. Debe incluir fixture SQL y expectativa de cálculo antes de marcarse verificado.
