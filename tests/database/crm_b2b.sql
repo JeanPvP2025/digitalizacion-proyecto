@@ -1,5 +1,5 @@
 begin;
-select plan(66);
+select plan(96);
 
 insert into auth.users (id, aud, role, email, encrypted_password, raw_app_meta_data, raw_user_meta_data)
 values
@@ -38,7 +38,8 @@ values ('CRM Test Contact', 'crm-inquiry@nodria.test', 'CRM Inquiry SL', 'Necesi
 create temporary table crm_b2b_test_state (
   quote_id uuid not null,
   quote_item_id uuid,
-  conversion_id uuid
+  conversion_id uuid,
+  order_id uuid
 );
 grant select, insert, update on crm_b2b_test_state to authenticated;
 
@@ -143,9 +144,77 @@ select is((select organization_snapshot ->> 'legal_name' from public.business_qu
 select is((select quote_snapshot -> 'items' -> 0 ->> 'sku' from public.business_quote_conversions where id = (select conversion_id from pg_temp.crm_b2b_test_state)), 'NOD-FS-02', 'Conversion keeps the accepted item SKU snapshot');
 select is((select (quote_snapshot -> 'items' -> 0 ->> 'unit_price')::numeric from public.business_quote_conversions where id = (select conversion_id from pg_temp.crm_b2b_test_state)), 108.25::numeric, 'Conversion keeps the accepted offered price snapshot');
 select is((select count(*)::int from public.crm_activities where quote_id = (select quote_id from pg_temp.crm_b2b_test_state) and event_key = 'quote_conversion_recorded'), 1, 'Conversion writes a single organization-visible CRM event');
+
+select ok(not has_table_privilege('authenticated', 'public.business_quote_orders', 'INSERT'), 'Business orders cannot be inserted directly by a tenant');
+select lives_ok($$select * from public.create_business_order_from_accepted_quote(
+  (select quote_id from pg_temp.crm_b2b_test_state),
+  '{"fullName":"CRM Org A SL","address":"Calle de prueba 42","postalCode":"28013","city":"Madrid","countryCode":"ES"}'::jsonb,
+  '{"fullName":"CRM Org A SL","address":"Avenida de prueba 19","postalCode":"28014","city":"Madrid","countryCode":"ES"}'::jsonb
+)$$, 'Organization admin emits a formal pending-payment order from the accepted quote');
+update pg_temp.crm_b2b_test_state s set order_id = bqo.order_id
+from public.business_quote_orders bqo where bqo.quote_id = s.quote_id;
+select is((select count(*)::int from public.business_quote_orders where quote_id = (select quote_id from pg_temp.crm_b2b_test_state)), 1, 'Accepted quote has one formal business order');
+select is((select status::text from public.orders where id = (select order_id from pg_temp.crm_b2b_test_state)), 'pending_payment', 'Business order waits for its agreed advance payment');
+select is((select organization_id from public.orders where id = (select order_id from pg_temp.crm_b2b_test_state)), '00000000-0000-4000-8000-00000000f001'::uuid, 'Formal order is attached to the quote organization');
+select is((select grand_total from public.orders where id = (select order_id from pg_temp.crm_b2b_test_state)), 216.50::numeric, 'Order total uses the accepted quote amount');
+select is((select unit_price from public.order_items where order_id = (select order_id from pg_temp.crm_b2b_test_state)), 108.25::numeric, 'Order line snapshots the accepted negotiated price');
+select is((select shipping_address ->> 'postalCode' from public.orders where id = (select order_id from pg_temp.crm_b2b_test_state)), '28013', 'Order snapshots its validated shipping address');
+select is((select billing_address ->> 'postalCode' from public.orders where id = (select order_id from pg_temp.crm_b2b_test_state)), '28014', 'Order snapshots its validated billing address');
+select is((select payment_terms_code from public.business_quote_orders where order_id = (select order_id from pg_temp.crm_b2b_test_state)), 'prepaid_before_dispatch', 'Order stores the explicit payment condition');
+select ok((select payment_terms_snapshot like '%no procesa pagos%' from public.business_quote_orders where order_id = (select order_id from pg_temp.crm_b2b_test_state)), 'Payment snapshot discloses that this portal step does not process a payment');
+select ok((select delivery_terms_snapshot like '%excluido del total%' from public.business_quote_orders where order_id = (select order_id from pg_temp.crm_b2b_test_state)), 'Delivery snapshot states that transport is excluded pending a separate quote');
+select is((select count(*)::int from public.payment_transactions where order_id = (select order_id from pg_temp.crm_b2b_test_state) and status = 'pending' and amount = 216.50 and currency = 'EUR'), 1, 'Order has one pending payment record matching its accepted total');
+reset role;
+select is((select coalesce(sum(ir.quantity), 0)::int from public.inventory_reservations ir join public.order_items oi on oi.id = ir.order_item_id where oi.order_id = (select order_id from pg_temp.crm_b2b_test_state) and ir.released_at is null and ir.fulfilled_at is null), 2, 'Order reserves the quoted quantity atomically');
+select is((select coalesce(sum(i.reserved), 0)::int from public.inventory i join public.product_variants v on v.id = i.variant_id where v.sku = 'NOD-FS-02'), 2, 'The inventory reserved counter matches the business order reservation');
+set local role authenticated;
+select is((select conversion_id from public.business_quote_orders where order_id = (select order_id from pg_temp.crm_b2b_test_state)), (select conversion_id from pg_temp.crm_b2b_test_state), 'Formal order links to the existing audit conversion');
+select is((select count(*)::int from public.crm_activities where quote_id = (select quote_id from pg_temp.crm_b2b_test_state) and event_key = 'business_order_created' and visibility = 'organization'), 1, 'Order creation adds one organization-visible CRM activity');
+select is((select count(*)::int from public.order_events where order_id = (select order_id from pg_temp.crm_b2b_test_state) and event_key = 'business_order_created'), 1, 'Order creation adds one order timeline event');
+select is((select order_id from public.create_business_order_from_accepted_quote(
+  (select quote_id from pg_temp.crm_b2b_test_state),
+  '{"fullName":"CRM Org A SL","address":"Calle de prueba 42","postalCode":"28013","city":"Madrid","countryCode":"ES"}'::jsonb,
+  '{"fullName":"CRM Org A SL","address":"Avenida de prueba 19","postalCode":"28014","city":"Madrid","countryCode":"ES"}'::jsonb
+)), (select order_id from pg_temp.crm_b2b_test_state), 'Same quote and addresses return the existing order idempotently');
+select throws_ok($$select * from public.create_business_order_from_accepted_quote(
+  (select quote_id from pg_temp.crm_b2b_test_state),
+  '{"fullName":"CRM Org A SL","address":"Calle distinta 90","postalCode":"28013","city":"Madrid","countryCode":"ES"}'::jsonb,
+  '{"fullName":"CRM Org A SL","address":"Avenida de prueba 19","postalCode":"28014","city":"Madrid","countryCode":"ES"}'::jsonb
+)$$, '23505', null, 'A retry with a different address is rejected instead of changing the existing order');
+select throws_ok($$select * from public.create_business_order_from_accepted_quote(
+  (select quote_id from pg_temp.crm_b2b_test_state), '{}'::jsonb, '{}'::jsonb
+)$$, '22023', null, 'Incomplete addresses are rejected');
+
 select set_config('request.jwt.claim.sub', '00000000-0000-4000-8000-00000000e005', true);
 select set_config('request.jwt.claims', '{"sub":"00000000-0000-4000-8000-00000000e005","role":"authenticated"}', true);
 select is((select count(*)::int from public.business_quote_conversions where id = (select conversion_id from pg_temp.crm_b2b_test_state)), 0, 'Tenant B cannot read Tenant A conversion snapshot');
+select is((select count(*)::int from public.business_quote_orders where order_id = (select order_id from pg_temp.crm_b2b_test_state)), 0, 'Tenant B cannot read Tenant A business order snapshot');
+select is((select count(*)::int from public.orders where id = (select order_id from pg_temp.crm_b2b_test_state)), 0, 'Tenant B cannot read Tenant A formal order');
+select is((select count(*)::int from public.order_items where order_id = (select order_id from pg_temp.crm_b2b_test_state)), 0, 'Tenant B cannot read Tenant A order lines');
+select throws_ok($$select * from public.create_business_order_from_accepted_quote(
+  (select quote_id from pg_temp.crm_b2b_test_state),
+  '{"fullName":"CRM Org A SL","address":"Calle de prueba 42","postalCode":"28013","city":"Madrid","countryCode":"ES"}'::jsonb,
+  '{"fullName":"CRM Org A SL","address":"Avenida de prueba 19","postalCode":"28014","city":"Madrid","countryCode":"ES"}'::jsonb
+)$$, '42501', null, 'Tenant B cannot emit an order from another tenant quote');
+
+select set_config('request.jwt.claim.sub', '00000000-0000-4000-8000-00000000e003', true);
+select set_config('request.jwt.claims', '{"sub":"00000000-0000-4000-8000-00000000e003","role":"authenticated"}', true);
+select is((select count(*)::int from public.orders where id = (select order_id from pg_temp.crm_b2b_test_state)), 1, 'Organization buyer can read the organization order');
+select is((select count(*)::int from public.order_items where order_id = (select order_id from pg_temp.crm_b2b_test_state)), 1, 'Organization buyer can read the organization order lines');
+select throws_ok($$select * from public.create_business_order_from_accepted_quote(
+  (select quote_id from pg_temp.crm_b2b_test_state),
+  '{"fullName":"CRM Org A SL","address":"Calle de prueba 42","postalCode":"28013","city":"Madrid","countryCode":"ES"}'::jsonb,
+  '{"fullName":"CRM Org A SL","address":"Avenida de prueba 19","postalCode":"28014","city":"Madrid","countryCode":"ES"}'::jsonb
+)$$, '42501', null, 'Organization buyer cannot issue the order');
+
+select set_config('request.jwt.claim.sub', '00000000-0000-4000-8000-00000000e004', true);
+select set_config('request.jwt.claims', '{"sub":"00000000-0000-4000-8000-00000000e004","role":"authenticated"}', true);
+select is((select count(*)::int from public.orders where id = (select order_id from pg_temp.crm_b2b_test_state)), 1, 'Organization viewer can read the organization order');
+select throws_ok($$select * from public.create_business_order_from_accepted_quote(
+  (select quote_id from pg_temp.crm_b2b_test_state),
+  '{"fullName":"CRM Org A SL","address":"Calle de prueba 42","postalCode":"28013","city":"Madrid","countryCode":"ES"}'::jsonb,
+  '{"fullName":"CRM Org A SL","address":"Avenida de prueba 19","postalCode":"28014","city":"Madrid","countryCode":"ES"}'::jsonb
+)$$, '42501', null, 'Organization viewer cannot issue the order');
 
 select set_config('request.jwt.claim.sub', '00000000-0000-4000-8000-00000000e006', true);
 select set_config('request.jwt.claims', '{"sub":"00000000-0000-4000-8000-00000000e006","role":"authenticated"}', true);

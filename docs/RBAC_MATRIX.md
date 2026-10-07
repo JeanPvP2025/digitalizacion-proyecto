@@ -31,7 +31,7 @@ Estado al 2026-10-07 tras la quinta ola. La autorización efectiva combina sesi�
 | Carrito | — | R/C/U/D propio | R/C/U/D propio | R/C/U/D propio | — | — | — | — | R interno |
 | Presupuestos B2B | — | C por RPC/intake público acotado | R/C de su org | R/C y respuesta en su org | — | R de cola solicitada sin asignar y presupuestos propios; reclamar/enviar por RPC; sin D | — | — | R y transiciones permitidas por RPC |
 | CRM leads/inquiries | C acotada con consentimiento | — | — | — | — | R/U vía server action/RPC | — | — | R/U vía rutas autorizadas |
-| Pedidos y líneas | — | R propio | R propio | R de pedidos de su org cuando está asociado | R mínimo necesario por política/soporte | — | R operativa | — | R |
+| Pedidos y líneas | — | R propio | R de pedidos de su organización; sin mutación | R de la organización; owner/admin emite desde quote aceptado por RPC | R mínimo necesario por política/soporte | — | R operativa | — | R |
 | Pagos | — | R de pago propio | R propio | R de pedidos de su org | R mínimo de contexto permitido | — | R operativo | — | R |
 | Crear pedido / checkout | — | C por RPC autenticada; precios y stock servidor | Igual, vinculado a org miembro | Igual | — | — | — | — | Solo por flujo/autorización explícita |
 | Stock/reservas/fulfillment | — | — | — | — | — | — | R; recepción/ajuste por RPC idempotente; fulfillment consume reserva por RPC | R de catálogo, sin mutación de stock | R y RPC según acción |
@@ -48,6 +48,7 @@ Las celdas “—” significan sin permiso por el contrato actual. Para movimie
 - La prueba `tests/integration/procurement/procurement.sql` verifica RPCs y RLS: fulfillment opera, sales y buyer no leen las tablas procurement, no hay DML directo de navegador, y los movimientos recibidos quedan enlazados a la orden.
 - Además, `pwsh -File tests/integration/auth-boundaries/run-local.ps1` ejercita 78 requests con access JWT de GoTrue en PostgREST; 0 fallos. Cubre `anon`, customer A/B, business admin/buyer, `catalog_manager`, `support_agent`, `sales_manager`, `fulfillment_manager` y `super_admin` para salud, filas propias/tenant, roles persistidos, escalation y RPCs restringidas.
 - La matriz SQL y HTTP prueba aislamiento cliente/organización, grants, acciones de catálogo, soporte, CRM/pagos, inventario, devoluciones, checkout y escalada.
+- `create_business_order_from_accepted_quote` solo admite owner/admin; `orders`, `order_items`, `order_events`, pagos y `business_quote_orders` se leen por membresía de organización o por los roles internos ya permitidos. `tests/database/crm_b2b.sql` verifica buyer/viewer lectura, bloqueo de emisión para esos roles y aislamiento tenant B.
 - La matriz inicial se corrigió al detectar que el RPC, no el DML directo, es el contrato para transición de ticket. No se añadió permiso directo.
 - No existen roles persistidos `marketing` ni `manager` genérico; sus pruebas son por ausencia de enum/grant, no por usuario con un rol inventado.
 - No se ha ejecutado CRUD exhaustivo en cada columna/tabla, ni pruebas HTTP de cada Server Action. Roles `marketing` y `manager` genérico no existen como grants persistidos y aún no tienen usuarios/probes dedicados. El gate cubre escenarios seleccionados y no constituye certificación de producción.

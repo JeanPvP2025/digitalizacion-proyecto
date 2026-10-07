@@ -3,7 +3,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { ArrowRight, Building2, CalendarClock, Check, CircleAlert, ContactRound, FileText, Plus, ShieldCheck, UserRound } from "lucide-react";
 import { BusinessQuoteRequest, type BusinessProductOption } from "@/components/business/business-quote-request";
-import { addOrganizationMember, convertAcceptedBusinessQuote, removeOrganizationMember, respondToBusinessQuote, setOrganizationMemberRole, createOrganization } from "./actions";
+import { addOrganizationMember, createBusinessOrderFromAcceptedQuote, removeOrganizationMember, respondToBusinessQuote, setOrganizationMemberRole, createOrganization } from "./actions";
 import styles from "./business-portal.module.css";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
@@ -26,6 +26,14 @@ type QuoteRow = {
   currency: string; request_note: string; requester_name: string; grand_total: string; valid_until: string | null; created_at: string;
 };
 type QuoteConversionRow = { id: string; quote_id: string; conversion_number: string; created_at: string };
+type BusinessQuoteOrderRow = {
+  order_id: string; quote_id: string; payment_terms_code: string;
+  payment_terms_snapshot: string; delivery_terms_snapshot: string; created_at: string;
+};
+type BusinessOrderRow = {
+  id: string; order_number: string; status: "pending_payment" | "paid" | "processing" | "shipped" | "delivered" | "cancelled" | "refunded";
+  grand_total: string; currency: string; created_at: string;
+};
 type ActivityRow = { id: number; title: string; subject_name: string; body: string; created_at: string; event_key: string };
 type VariantRow = {
   id: string; sku: string; title: string; current_price: string; currency: string;
@@ -46,6 +54,16 @@ const quoteStatusLabels: Record<QuoteRow["status"], string> = {
   accepted: "Aceptada",
   rejected: "Rechazada",
   expired: "Caducada",
+};
+
+const orderStatusLabels: Record<BusinessOrderRow["status"], string> = {
+  pending_payment: "Pendiente de anticipo",
+  paid: "Pagado",
+  processing: "En preparación",
+  shipped: "Expedido",
+  delivered: "Entregado",
+  cancelled: "Cancelado",
+  refunded: "Reembolsado",
 };
 
 function firstValue(value: string | string[] | undefined) {
@@ -71,7 +89,10 @@ function noticeMessage(notice: string) {
     case "member-removed": return "La persona se ha retirado de la organización.";
     case "quote-requested": return "Solicitud enviada. Ventas preparará una propuesta sobre estas líneas.";
     case "quote-accepted": return "Propuesta aceptada y guardada en el historial de la organización.";
-    case "quote-converted": return "Conversión registrada con los snapshots de la propuesta y la empresa. El pedido formal queda pendiente de definir pago, dirección y reserva de stock.";
+    case "quote-converted": return "Conversión registrada con los snapshots de la propuesta y la empresa.";
+    case "business-order-created": return "Pedido formal creado con el precio aceptado y la reserva de stock. El anticipo demo sigue pendiente; el transporte se cotizará por separado.";
+    case "stock-unavailable": return "El stock disponible ya no cubre la propuesta aceptada. No se creó el pedido ni se reservó ninguna unidad.";
+    case "order-conflict": return "Ya existe un pedido para esta propuesta con otra dirección. Revisa el pedido existente antes de reintentar.";
     case "quote-rejected": return "Decisión registrada en el historial de la organización.";
     case "expired": return "La propuesta ya no estaba vigente; su estado se ha actualizado a caducada.";
     case "forbidden": return "Tu rol no permite esta acción en la organización o la cotización.";
@@ -144,13 +165,23 @@ export default async function BusinessPortalPage({ searchParams }: { searchParam
     supabase.from("crm_activities").select("id, title, subject_name, body, created_at, event_key").eq("organization_id", organization.id).eq("visibility", "organization").order("created_at", { ascending: false }).limit(12),
     quoteIds.length ? supabase.from("business_quote_conversions").select("id, quote_id, conversion_number, created_at").in("quote_id", quoteIds) : Promise.resolve({ data: [], error: null }),
   ]);
-  if (memberResult.error || quoteResult.error || variantResult.error || lineResult.error || activityResult.error || conversionResult.error) {
+  const businessOrderResult = quoteIds.length
+    ? await supabase.from("business_quote_orders").select("order_id, quote_id, payment_terms_code, payment_terms_snapshot, delivery_terms_snapshot, created_at").in("quote_id", quoteIds)
+    : { data: [], error: null };
+  const businessOrderRows = (businessOrderResult.data ?? []) as BusinessQuoteOrderRow[];
+  const orderIds = businessOrderRows.map((row) => row.order_id);
+  const orderResult = orderIds.length
+    ? await supabase.from("orders").select("id, order_number, status, grand_total, currency, created_at").in("id", orderIds)
+    : { data: [], error: null };
+  if (memberResult.error || quoteResult.error || variantResult.error || lineResult.error || activityResult.error || conversionResult.error || businessOrderResult.error || orderResult.error) {
     return <main className={styles.page}><section className={styles.stateCard} role="alert"><span className={styles.stateIcon}><CircleAlert size={22} /></span><p className={styles.eyebrow}>NODRIA · EMPRESAS</p><h1>No se pudo cargar el espacio</h1><p>La base de datos no confirmó todos los miembros, cotizaciones o eventos. Actualiza para volver a intentarlo.</p><Link className={styles.backLink} href={`/empresas/portal?organization=${organization.id}`}>Reintentar <ArrowRight size={14} /></Link></section></main>;
   }
 
   const members = (memberResult.data ?? []) as MemberRow[];
   const quoteItems = (lineResult.data ?? []) as QuoteItemRow[];
   const quoteConversions = (conversionResult.data ?? []) as QuoteConversionRow[];
+  const businessOrders = businessOrderRows;
+  const orderRows = (orderResult.data ?? []) as BusinessOrderRow[];
   const activities = (activityResult.data ?? []) as ActivityRow[];
   const variantRows = (variantResult.data ?? []) as unknown as VariantRow[];
   const products: BusinessProductOption[] = variantRows.map((variant) => ({
@@ -176,7 +207,7 @@ export default async function BusinessPortalPage({ searchParams }: { searchParam
       </section>
 
       {organizations.length > 1 && <nav aria-label="Organizaciones disponibles" className={styles.organizationTabs}>{organizations.map((row) => <Link aria-current={row.id === organization.id ? "page" : undefined} className={row.id === organization.id ? styles.organizationTabActive : styles.organizationTab} href={`/empresas/portal?organization=${row.id}`} key={row.id}>{row.display_name}<small>{roleLabels[memberships.find((item) => item.organization_id === row.id)?.role ?? "viewer"]}</small></Link>)}</nav>}
-      {notice && <p className={styles.notice} role={firstValue(params.notice) === "quote-requested" || firstValue(params.notice) === "member-added" || firstValue(params.notice) === "quote-accepted" || firstValue(params.notice) === "quote-converted" || firstValue(params.notice) === "quote-rejected" || firstValue(params.notice) === "member-updated" || firstValue(params.notice) === "member-removed" || firstValue(params.notice) === "organization-created" ? "status" : "alert"}><CircleAlert aria-hidden="true" size={15} />{notice}</p>}
+      {notice && <p className={styles.notice} role={["quote-requested", "member-added", "quote-accepted", "quote-converted", "business-order-created", "quote-rejected", "member-updated", "member-removed", "organization-created"].includes(firstValue(params.notice)) ? "status" : "alert"}><CircleAlert aria-hidden="true" size={15} />{notice}</p>}
 
       <div className={styles.workspace}>
         <div className={styles.primaryColumn}>
@@ -190,6 +221,8 @@ export default async function BusinessPortalPage({ searchParams }: { searchParam
             {quoteRows.length ? <div className={styles.quoteList}>{quoteRows.map((quote) => {
               const lines = quoteItems.filter((item) => item.quote_id === quote.id);
               const conversion = quoteConversions.find((item) => item.quote_id === quote.id);
+              const businessOrder = businessOrders.find((item) => item.quote_id === quote.id);
+              const order = orderRows.find((item) => item.id === businessOrder?.order_id);
               const hasOffer = quote.status !== "requested" && quote.status !== "in_review";
               return <article className={styles.quoteCard} key={quote.id}>
                 <div className={styles.quoteTop}><div><span className={styles.quoteNumber}>{quote.quote_number}</span><h3>{quote.status === "sent" ? "Propuesta para revisión" : "Solicitud de compra"}</h3></div><span className={`${styles.quoteStatus} ${styles[`quote_${quote.status}`]}`}>{quoteStatusLabels[quote.status]}</span></div>
@@ -198,7 +231,32 @@ export default async function BusinessPortalPage({ searchParams }: { searchParam
                 <ul className={styles.quoteLines}>{lines.map((line) => <li key={line.id}><span><strong>{line.quantity} × {line.product_name}</strong><small>{line.variant_title} · {line.product_sku}</small></span><span>{money(line.offered_unit_price ?? line.requested_unit_price, line.currency)}</span></li>)}</ul>
                 <div className={styles.quoteTotal}><span>{hasOffer ? "TOTAL PROPUESTO · IVA INCLUIDO" : "REFERENCIA DE CATÁLOGO · IVA INCLUIDO"}</span><strong>{money(quote.grand_total, quote.currency)}</strong></div>
                 {canManage && quote.status === "sent" && <div className={styles.decisionRow}><form action={respondToBusinessQuote}><input name="quoteId" type="hidden" value={quote.id} /><input name="organizationId" type="hidden" value={organization.id} /><input name="decision" type="hidden" value="accepted" /><button className={styles.acceptButton} type="submit"><Check size={14} /> Aceptar propuesta</button></form><form action={respondToBusinessQuote}><input name="quoteId" type="hidden" value={quote.id} /><input name="organizationId" type="hidden" value={organization.id} /><input name="decision" type="hidden" value="rejected" /><button className={styles.rejectButton} type="submit">Rechazar</button></form></div>}
-                {quote.status === "accepted" && (conversion ? <p className={styles.quoteMeta}>Conversión registrada: <strong>{conversion.conversion_number}</strong> · {dateLabel(conversion.created_at)}. Pedido formal pendiente de confirmar condiciones de pago, dirección y stock.</p> : canManage ? <div className={styles.decisionRow}><form action={convertAcceptedBusinessQuote}><input name="quoteId" type="hidden" value={quote.id} /><input name="organizationId" type="hidden" value={organization.id} /><button className={styles.acceptButton} type="submit"><Check size={14} /> Registrar conversión auditada</button></form></div> : <p className={styles.quoteMeta}>Propuesta aceptada. Un propietario o administrador puede registrar su conversión a compras.</p>)}
+                {quote.status === "accepted" && (businessOrder && order ? <div className={styles.businessOrderSummary}>
+                  <p className={styles.quoteMeta}>Pedido formal <strong>{order.order_number}</strong> · {dateLabel(order.created_at)} · {orderStatusLabels[order.status]}</p>
+                  {conversion && <p className={styles.quoteMeta}>Conversión auditada: {conversion.conversion_number} · {dateLabel(conversion.created_at)}</p>}
+                  <p className={styles.orderTerms}>{businessOrder.payment_terms_snapshot} {businessOrder.delivery_terms_snapshot}</p>
+                </div> : canManage ? <div className={styles.businessOrderFormWrap}>
+                  {conversion && <p className={styles.quoteMeta}>Conversión auditada: <strong>{conversion.conversion_number}</strong> · {dateLabel(conversion.created_at)}.</p>}
+                  <p className={styles.orderTerms}>Al emitir, el pedido conservará el precio aceptado y reservará el stock disponible. Pago anticipado antes de expedición; el transporte se cotizará por separado.</p>
+                  <form action={createBusinessOrderFromAcceptedQuote} className={styles.fields}>
+                    <input name="quoteId" type="hidden" value={quote.id} />
+                    <input name="organizationId" type="hidden" value={organization.id} />
+                    <fieldset className={styles.orderAddressGroup}>
+                      <legend>Dirección de entrega · España</legend>
+                      <label><span>Persona o empresa destinataria</span><input autoComplete="organization" maxLength={120} minLength={2} name="shippingName" required /></label>
+                      <label><span>Dirección</span><input autoComplete="street-address" maxLength={200} minLength={5} name="shippingAddress" required /></label>
+                      <div className={styles.fieldPair}><label><span>Código postal</span><input autoComplete="postal-code" inputMode="numeric" maxLength={5} minLength={5} name="shippingPostalCode" pattern="[0-9]{5}" required /></label><label><span>Localidad</span><input autoComplete="address-level2" maxLength={80} minLength={2} name="shippingCity" required /></label></div>
+                    </fieldset>
+                    <fieldset className={styles.orderAddressGroup}>
+                      <legend>Dirección de facturación · España</legend>
+                      <label><span>Razón social o destinatario</span><input autoComplete="organization" maxLength={120} minLength={2} name="billingName" required defaultValue={organization.legal_name} /></label>
+                      <label><span>Dirección</span><input autoComplete="street-address" maxLength={200} minLength={5} name="billingAddress" required /></label>
+                      <div className={styles.fieldPair}><label><span>Código postal</span><input autoComplete="postal-code" inputMode="numeric" maxLength={5} minLength={5} name="billingPostalCode" pattern="[0-9]{5}" required /></label><label><span>Localidad</span><input autoComplete="address-level2" maxLength={80} minLength={2} name="billingCity" required /></label></div>
+                    </fieldset>
+                    <label className={styles.orderAgreement}><input name="confirmTerms" type="checkbox" value="accepted" required /><span>Confirmo el pedido con pago anticipado y acepto que el transporte se cotice aparte.</span></label>
+                    <button className={styles.acceptButton} type="submit"><Check size={14} /> Emitir pedido formal</button>
+                  </form>
+                </div> : <p className={styles.quoteMeta}>Propuesta aceptada. Un propietario o administrador puede emitir el pedido formal.</p>)}
               </article>;
             })}</div> : <div className={styles.emptyQuotes}><span><FileText size={19} /></span><strong>Todavía no hay cotizaciones</strong><p>Las solicitudes y propuestas aparecerán aquí con sus precios, estado e historial.</p></div>}
           </section>

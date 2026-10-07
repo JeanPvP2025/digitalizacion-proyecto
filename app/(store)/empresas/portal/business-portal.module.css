@@ -59,6 +59,16 @@
 .decisionRow form { margin: 0; }
 .acceptButton, .rejectButton { display: inline-flex; min-height: 30px; align-items: center; justify-content: center; gap: 5px; padding: 0 10px; color: #f4f7f1; border: 0; background: #2b5238; font-size: 8px; cursor: pointer; }
 .rejectButton { color: #765f54; border: 1px solid #e8dfda; background: #fff; }
+.businessOrderFormWrap, .businessOrderSummary { display: flex; flex-direction: column; gap: 9px; margin-top: 12px; }
+.businessOrderFormWrap .fields { gap: 9px; }
+.businessOrderFormWrap .acceptButton { align-self: flex-start; min-height: 34px; margin-top: 2px; }
+.orderTerms { margin: 0; color: #718075; font-size: 8px; line-height: 1.55; }
+.orderAddressGroup { display: flex; min-width: 0; flex-direction: column; gap: 9px; padding: 10px; border: 1px solid #e8ede6; background: #fbfcfa; }
+.orderAddressGroup legend { padding: 0 4px; color: #546958; font: 7px var(--font-mono); letter-spacing: .04em; }
+.orderAddressGroup > label { display: flex; min-width: 0; flex-direction: column; gap: 5px; color: #748176; font-size: 8px; }
+.orderAgreement { display: flex; align-items: flex-start; gap: 7px; color: #657368; font-size: 8px; line-height: 1.5; }
+.orderAgreement input { width: 14px; height: 14px; flex: 0 0 auto; margin: 0; accent-color: #2b5238; }
+.orderAgreement span { padding-top: 1px; }
 .emptyQuotes { display: flex; min-height: 130px; flex-direction: column; align-items: center; justify-content: center; padding: 20px; color: #8c988e; text-align: center; }
 .emptyQuotes > span { display: grid; width: 34px; height: 34px; margin-bottom: 8px; place-items: center; color: #61804e; background: #edf3e8; border-radius: 50%; }
 .emptyQuotes strong { color: #495d4d; font-size: 9px; }

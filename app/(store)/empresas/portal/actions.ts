@@ -19,6 +19,19 @@ const quoteLinesSchema = z.array(z.object({
   variantId: z.string().uuid(),
   quantity: z.coerce.number().int().min(1).max(10000),
 }).strict()).min(1).max(30);
+const businessOrderSchema = z.object({
+  quoteId: z.string().uuid(),
+  organizationId: z.string().uuid(),
+  shippingName: z.string().trim().min(2).max(120),
+  shippingAddress: z.string().trim().min(5).max(200),
+  shippingPostalCode: z.string().trim().regex(/^\d{5}$/),
+  shippingCity: z.string().trim().min(2).max(80),
+  billingName: z.string().trim().min(2).max(120),
+  billingAddress: z.string().trim().min(5).max(200),
+  billingPostalCode: z.string().trim().regex(/^\d{5}$/),
+  billingCity: z.string().trim().min(2).max(80),
+  confirmTerms: z.literal("accepted"),
+}).strict();
 
 function noticeFor(error: { code?: string; message?: string } | null): string {
   if (!error) return "error";
@@ -167,4 +180,57 @@ export async function convertAcceptedBusinessQuote(formData: FormData) {
   });
   if (error) finish(noticeFor(error), organizationId.data);
   finish("quote-converted", organizationId.data);
+}
+
+export async function createBusinessOrderFromAcceptedQuote(formData: FormData) {
+  const input = businessOrderSchema.safeParse({
+    quoteId: formData.get("quoteId"),
+    organizationId: formData.get("organizationId"),
+    shippingName: formData.get("shippingName"),
+    shippingAddress: formData.get("shippingAddress"),
+    shippingPostalCode: formData.get("shippingPostalCode"),
+    shippingCity: formData.get("shippingCity"),
+    billingName: formData.get("billingName"),
+    billingAddress: formData.get("billingAddress"),
+    billingPostalCode: formData.get("billingPostalCode"),
+    billingCity: formData.get("billingCity"),
+    confirmTerms: formData.get("confirmTerms"),
+  });
+  if (!input.success) finish("invalid", organizationIdFrom(formData));
+
+  const supabase = await getSignedInClient();
+  const { data, error } = await supabase.rpc("create_business_order_from_accepted_quote", {
+    p_quote_id: input.data.quoteId,
+    p_shipping_address: {
+      fullName: input.data.shippingName,
+      address: input.data.shippingAddress,
+      postalCode: input.data.shippingPostalCode,
+      city: input.data.shippingCity,
+      countryCode: "ES",
+    },
+    p_billing_address: {
+      fullName: input.data.billingName,
+      address: input.data.billingAddress,
+      postalCode: input.data.billingPostalCode,
+      city: input.data.billingCity,
+      countryCode: "ES",
+    },
+  });
+  if (error) {
+    const notice = error.code === "42501" ? "forbidden"
+      : error.code === "P0002" ? "not-found"
+        : error.code === "P0001" ? "stock-unavailable"
+          : error.code === "23505" ? "order-conflict"
+            : ["22023", "23514"].includes(error.code ?? "") ? "invalid" : "error";
+    finish(notice, input.data.organizationId);
+  }
+  if (!Array.isArray(data) || data.length !== 1 || !z.string().uuid().safeParse(data[0]?.order_id).success) {
+    finish("error", input.data.organizationId);
+  }
+  finish("business-order-created", input.data.organizationId);
+}
+
+function organizationIdFrom(formData: FormData) {
+  const parsed = organizationIdSchema.safeParse(formData.get("organizationId"));
+  return parsed.success ? parsed.data : undefined;
 }

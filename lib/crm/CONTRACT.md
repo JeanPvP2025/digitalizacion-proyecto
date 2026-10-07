@@ -20,7 +20,13 @@ Una oferta aceptada no se convierte automáticamente en pedido. Owner/admin disp
 
 La conversión conserva snapshots inmutables de identidad legal/fiscal y facturación de la organización, datos de la propuesta y cada línea aceptada (producto, SKU/variante, atributos, cantidad, precio ofrecido o solicitado, impuesto, moneda y totales). Solo la organización y `super_admin` pueden leer estos registros; no hay DML directo de cliente. La misma transacción añade `quote_conversion_recorded` al historial visible de la organización.
 
-El registro **no es todavía un pedido comercial ni reserva stock**. `orders` hoy se crea por el contrato del checkout: requiere direcciones completas, usa idempotencia/fingerprint de carrito, comprueba precio/stock de catálogo y reserva inventario; además deja el pago en el flujo demo pendiente. Forzar la oferta negociada en ese camino eludiría precio autoritativo, dirección, condiciones de pago y reservas. Hasta que Commerce/Tech Lead acuerde el contrato B2B para direcciones, pago y reserva/revalidación de stock, el portal identifica honestamente la conversión como auditada y deja pendiente la emisión del pedido formal. No se altera la cotización aceptada ni sus precios.
+### Emisión de pedido empresarial formal
+
+Owner/admin puede emitir un pedido desde una propuesta `accepted` mediante `create_business_order_from_accepted_quote`. La acción solicita direcciones española de entrega y facturación, y PostgreSQL vuelve a validar identidad, rol, tenant, estado y dirección. Las condiciones actuales son fijas: anticipo antes de expedición; el portal no procesa pagos ni pide datos de tarjeta; el transporte queda excluido del total y se cotiza por separado.
+
+El RPC crea o recupera una sola fila de `orders` por cotización. `business_quote_orders` enlaza pedido, conversión, propuesta y organización, y conserva snapshots de empresa, oferta, condiciones y fingerprint de direcciones. `order_items` copia las líneas aceptadas y sus precios negociados sin reconsultar el precio comercial actual. La transacción bloquea filas de inventario, comprueba disponibilidad, reserva todas las cantidades, crea el pago pendiente y escribe `order_events` más la actividad visible `business_order_created`. Si falta stock, la transacción completa revierte. Un retry idéntico devuelve el mismo pedido; otra dirección para esa propuesta devuelve conflicto sin editar el pedido original.
+
+Los miembros de la organización pueden leer el pedido y sus líneas/eventos; solo owner/admin puede emitirlo. La orden nace en `pending_payment` y no puede expedirse hasta que el pago se resuelva por el mecanismo autorizado. El portal aún no ofrece el paso de liquidación demo ni una caducidad automática de reservas pendientes; ambas cosas siguen separadas de la emisión formal. No se altera la cotización aceptada ni se usa el precio actual del catálogo.
 
 ## CRM e historial
 
