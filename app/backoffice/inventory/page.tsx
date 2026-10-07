@@ -59,6 +59,7 @@ function InventoryShell({ children }: { children: React.ReactNode }) {
           <ArrowLeft size={15} aria-hidden="true" /> Volver al centro de operaciones
         </Link>
         <Link className={styles.procurementLink} href="/backoffice/procurement">Proveedores y órdenes de compra <span aria-hidden="true">→</span></Link>
+        <Link className={styles.inspectionLink} href="/backoffice/returns">Inspección de devoluciones <span aria-hidden="true">→</span></Link>
         <p className={styles.eyebrow}>OPERACIONES / INVENTARIO</p>
         <div className={styles.titleLine}>
           <h1>Stock por almacén<span>.</span></h1>
