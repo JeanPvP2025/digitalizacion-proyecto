@@ -45,12 +45,12 @@ Las decisiones de alcance heredadas de la misión se marcan **Confirmada**. Las 
 ## D-005 — Supabase/PostgreSQL como fuente de verdad prevista
 
 - **Fecha:** 2026-10-07
-- **Estado:** Confirmada; schema, seed y suites locales aplicadas. Conexión Supabase remota y recorrido Auth conectado pendientes.
+- **Estado:** Confirmada; schema/seed y checkout conectado implementados contra los RPCs existentes. Auth E2E remota y recorrido browser conectado pendientes.
 - **Contexto:** La misión requiere Supabase para Postgres, Auth, Storage y RLS. La migración y el seed inicial ya existen, pero no hay credenciales ni ejecución local verificada.
 - **Decisión:** Diseñar persistencia alrededor de PostgreSQL gestionado por Supabase, con migraciones reproducibles y RLS. Las migraciones y objetos de base pertenecen a `supabase/**`.
 - **Alternativas:** Datos solo locales/mock, cambios manuales en dashboard o un backend separado.
 - **Motivo:** Cumple el requisito del producto y permite integridad relacional, políticas y despliegue reproducible.
-- **Consecuencias:** La migración define tablas, roles, policies y RPC; reset/seed y gates locales pasan. Algunas rutas consumen contratos conectados; otras siguen siendo demo. No presentar `.data/` como persistencia PostgreSQL. El arranque local usa puertos alternativos en `supabase/config.toml` por exclusiones de Windows.
+- **Consecuencias:** Migraciones definen tablas, roles, policies y RPCs; reset/seed, 156 pgTAP y pruebas PostgreSQL locales pasan. Storefront conectado, checkout, CRM y soporte consumen contratos conectados en partes; Operations, PC Builder, compras y analytics siguen demo/parciales. No presentar `.data/` como PostgreSQL. El arranque local usa puertos alternativos en `supabase/config.toml` por exclusiones de Windows.
 
 ## D-010 — Modo de datos demo resuelto en servidor
 
@@ -71,22 +71,22 @@ Las decisiones de alcance heredadas de la misión se marcan **Confirmada**. Las 
 ## D-006 — Pago únicamente simulado
 
 - **Fecha:** 2026-10-07
-- **Estado:** Confirmada como límite del producto académico; simulación local implementada. SQL conectado puede resolver outcome pero app conectada deja pago pendiente.
+- **Estado:** Confirmada como límite del producto académico; outcomes de prueba se resuelven desde servidor conectado y nunca procesan dinero.
 - **Contexto:** La demo debe mostrar un checkout defendible sin procesar dinero.
 - **Decisión:** Mantener simulador server-side con resultados de prueba, intentos persistidos, pedido relacionado e historial ficticio. No usar pasarela real y no solicitar números bancarios reales.
 - **Alternativas:** Stripe/pasarela bancaria real, o checkout que solo aparenta confirmar pedidos.
 - **Motivo:** Evita dinero real y permite enseñar estados de aprobación, rechazo y reintento con trazabilidad.
-- **Consecuencias:** UI y documentación advierten que no se introduzcan datos bancarios. RPC Supabase de outcome ficticio y liberación/consumo existen y pasan pgTAP; falta invocarlos desde una operación segura del servidor y completar recorrido E2E conectado.
+- **Consecuencias:** UI y documentación advierten no introducir datos bancarios. Route Handler autenticado crea/recupera el pedido; `payment-admin.ts` llama RPC de resultado con clave secreta solo servidor; RPC vincula outcome/evento, pago, pedido, timeline y reserva atómicamente. pgTAP y pruebas de ruta cubren retry/rollback; falta E2E con Auth/PostgREST conectado.
 
 ## D-007 — Inventario derivado y checkout transaccional
 
 - **Fecha:** 2026-10-07
-- **Estado:** Materializada parcialmente por `public.place_order`, `resolve_demo_payment` y RPCs de fulfillment; validada localmente. Integración de aplicación y pruebas de concurrencia pendiente.
+- **Estado:** Materializada por `place_order_from_checkout`, `resolve_demo_payment` y RPCs de fulfillment; validada en base local. Pruebas de concurrencia separada pendientes.
 - **Contexto:** Pedidos simultáneos, cancelaciones y devoluciones pueden dejar stock incoherente.
 - **Decisión:** Modelar disponibilidad como físico menos reservado y coordinar reserva/liberación y cambios de pedido de manera atómica en base de datos. El servidor confirma precios y stock al checkout.
 - **Alternativas:** Tratar el stock enviado por el cliente como autoridad o mantener contadores duplicados sin reconciliación.
 - **Motivo:** Protege invariantes de negocio bajo concurrencia y deja el histórico auditable.
-- **Consecuencias:** `docs/database.md` documenta contratos; SQL tests verifican sobreventa, retry, liberación y reconciliación del contador. No hay aún flujo UI/API conectado de pago u operaciones; la vista sigue de solo lectura aunque existe ledger/RPC.
+- **Consecuencias:** `docs/DATA_MODEL.md` documenta snapshots y relaciones; SQL verifica sobreventa, retry, liberación, rollback y reconciliación. Checkout API conectado está integrado; Operations/fulfillment UI e inventario continúan parciales.
 
 ## D-008 — Datos de demostración siempre ficticios
 
@@ -107,3 +107,13 @@ Las decisiones de alcance heredadas de la misión se marcan **Confirmada**. Las 
 - **Alternativas:** Forzar la migración de todas las rutas al modelo de Cache Components en esta entrega.
 - **Motivo:** La aplicación todavía no tiene caché de datos que aproveche esa opción; mantener el patrón estándar reduce configuración sin uso y permite compilar los flujos actuales.
 - **Consecuencias:** `next.config.ts` no habilita `cacheComponents` ni `partialPrefetching`. Revisar esta decisión si se incorpora caché de dominio.
+
+## D-011 — Ventana comercial B2B y privacidad de actividad
+
+- **Fecha:** 2026-10-07
+- **Estado:** Confirmada para la cola actual; requiere revisión si se amplía el equipo.
+- **Contexto:** ventas necesita reclamar solicitudes empresariales no asignadas para que el presupuesto pueda avanzar a oferta; una cuenta de ventas no requiere un directorio global de organizaciones, rosters ni datos de pago.
+- **Decisión:** `sales_manager` puede leer la cola de presupuestos formales `requested` sin propietario y los presupuestos asignados a su usuario. No puede enumerar organizaciones/membresías, pedidos o pagos. Antes del claim, puede ver actividad `internal`; las notas `organization` solo las ven miembros de la organización. Después de reclamar, la actividad de trabajo pertenece a la superficie asignada.
+- **Alternativas:** negar toda cola y exigir asignación previa manual; o permitir lectura global de todas las tablas CRM/B2B.
+- **Motivo:** conserva el flujo comercial de claim/oferta sin mantener el hallazgo de enumeración de organizaciones y notas privadas.
+- **Consecuencias:** políticas se prueban en `tests/integration/security/postgres-object-isolation.sql`; si se requieren vistas/campos distintos en producción, crear un contrato dedicado y pruebas antes de ampliar acceso.

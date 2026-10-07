@@ -1,6 +1,6 @@
 # Arquitectura inicial de NODRIA
 
-**Estado de este documento:** arquitectura objetivo y snapshot integrado al 2026-10-07. El repo contiene storefront, Auth SSR, guards por rol, CRM, inventario de solo lectura, soporte, B2B, checkout y migraciones/seed. Pasa typecheck, lint, 42 Vitest, 18 Node, 7 E2E, build, reset/seed, 60 pgTAP, DB lint y un gate PostgreSQL runtime de roles/checkout seleccionado. El modo y las fronteras de `.data/` se resuelven en servidor. No hay credenciales remotas y el checkout conectado aún no orquesta los RPC de outcomes de pago. Ver gates y límites en `STATUS.md`, `SECURITY.md` y `TESTING.md`.
+**Estado de este documento:** snapshot integrado de tercera ola al 2026-10-07. El repo contiene storefront, Auth SSR, CRM/B2B, soporte/RMA y checkout conectado con pago demo server-side; operaciones/analytics/compras siguen parciales. Build, typecheck, lint, 71 Vitest + 18 Node, 8 E2E demo, reset/seed, 156 pgTAP, gates PostgreSQL runtime y DB lint pasan. No hay entorno remoto ni checkout browser E2E con Auth real. Ver límites en `STATUS.md`, `SECURITY.md`, `RBAC_MATRIX.md` y `TESTING.md`.
 
 ## Objetivo y restricciones
 
@@ -23,7 +23,7 @@ flowchart LR
   Server --> DemoPay[Simulador de pago ficticio]
 ```
 
-El simulador no es una pasarela externa ni procesa dinero. El catálogo/PDP, solicitudes B2B, soporte, CRM, inventario de solo lectura y parte del checkout tienen integración Supabase condicionada a credenciales; los modos locales persisten en `.data/` y son demo. La pantalla del centro de operaciones todavía consume datos demo. Pago conectado, reservas terminales, workflow de fulfillment/RMA y autorización efectiva de cada policy requieren gates de PostgreSQL local.
+El simulador no es una pasarela externa ni procesa dinero. En checkout, el Route Handler usa identidad Auth, persiste carrito por cliente, llama la RPC de pedido/fingerprint/reserva y resuelve el outcome por RPC server-only; el secreto de servicio no se incluye en el bundle cliente. Support/RMA y quote CRM tienen RPCs transaccionales. La pantalla del centro de operaciones sigue con datos demo; inventario backoffice es mayormente lectura.
 
 ## Límites de dominio
 
@@ -74,7 +74,7 @@ No se deben duplicar reglas de negocio en componentes cliente, Server Actions, R
 7. El pago demo no recoge ni almacena datos de tarjetas reales. Los estados aprobados, rechazados o temporales son fixtures de simulación y generan un intento y trazabilidad ficticios.
 8. No se suben secretos ni datos personales reales al repositorio o a seeds. Preview, desarrollo y producción usan proyectos/credenciales separados.
 
-La migración habilita RLS en 27 tablas, define grants y funciones de permisos/checkout. La UI Auth, callback, sesión SSR y guards de backoffice están integrados; las políticas se probaron en escenarios locales seleccionados, no para todas las operaciones y roles. SQL ofrece pago demo y consume/libera reservas en transacción, pero la ruta/UI conectada aún deja el pedido pendiente y no llama ese RPC. Los `.data/` y fixtures son solo demostración local y algunas lecturas de storefront aún requieren auditoría de boundaries. No hay entorno remoto probado; no considerar el producto apto para producción.
+Las migraciones habilitan RLS/grants y funciones de permisos/checkout. Auth UI, callback, sesión SSR y guards de backoffice están integrados. La integración tercera ola añadió fingerprint de checkout, pago demo server-side, soporte/RMA atómico, CRM/B2B y boundary storefront. Las policies se probaron en escenarios locales seleccionados, no para todas las operaciones/roles; las rutas frontend aún carecen de E2E conectado con token Auth. Los `.data/` y fixtures son solo demo local. No hay entorno remoto probado; no considerar el producto apto para producción.
 
 ## Configuración local y despliegue previsto
 
@@ -100,4 +100,4 @@ Vercel Preview debe usar datos no productivos y credenciales separadas. Los camb
 
 ## Verificación y calidad
 
-Los scripts declaran `pnpm lint`, `pnpm build`, `pnpm test` y `pnpm test:e2e`; el typecheck se ejecuta con `pnpm exec tsc --noEmit`. La base integrada tiene 10 pruebas Vitest, 19 pruebas contractuales Node y 2 E2E de catálogo. El siguiente gate debe cubrir reglas monetarias, autorización, policies RLS, transiciones de estado, concurrencia de stock y más flujos E2E antes de marcar un dominio como completo. Un build o una pantalla renderizada no demuestra integridad funcional ni seguridad.
+Los scripts declaran `pnpm lint`, `pnpm build`, `pnpm test` y `pnpm test:e2e`; typecheck usa `pnpm exec tsc --noEmit`. La integración actual tiene 71 Vitest, 18 Node, 8 E2E de catálogo/demo y 156 pgTAP con pruebas runtime seleccionadas. No hay E2E conectado ni prueba de concurrencia con dos sesiones. Un build o una pantalla renderizada no demuestra integridad funcional ni seguridad.

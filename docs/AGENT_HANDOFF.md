@@ -45,3 +45,37 @@ Los siguientes cinco chats independientes se crearon sobre worktrees nuevos desd
 ## Regla de entrega para la siguiente ola
 
 Cada conversación debe reportar trabajo, archivos, commit/worktree, decisiones y contratos, comandos/resultados, bugs/riesgos, dependencias desbloqueadas y siguientes pasos. El tech lead valida cada cambio contra Git y ejecuta los gates relevantes antes de actualizar este documento y el tablero.
+
+## Ola 3 recibida, contrastada e integrada — 2026-10-07
+
+Los cinco worktrees estaban limpios y cada uno tenía un commit sobre el padre `00fb56e`. Los IDs `client-new-thread` no pudieron abrirse por la herramienta de lectura como thread IDs ordinarios, por lo que el handoff se contrastó con los commits/diffs/worktrees reales. Las notas `docs/WORKSTREAMS.md` duplicadas por los workers se reconciliaron en el documento del coordinador.
+
+| Conversación / dominio | Commit del worker → commit integrado | Trabajo verificado y archivos principales | Tests/gates relevantes observados en integración | Deuda o riesgo restante |
+|---|---|---|---|---|
+| Checkout `937a74f0…` | `d3ce6e0` → `01f2b1f` | `app/api/checkout/route.ts`, `components/storefront/checkout-form.tsx`, `lib/commerce/payment-admin.ts`, contracts, migration `20261007095121_checkout_order_payment_integrity.sql`, checkout pgTAP y Route Handler tests. Auth de servidor, pedido fingerprint, retry, service-only payment outcome, reserva/liberación. | 156 pgTAP incluyen 40 checkout assertions; route/admin unit tests; RLS SQL; build/typecheck. | No E2E browser con Auth/PostgREST; concurrency real con dos sesiones no probada.
+| Storefront `ce1c38a8…` | `dedb2f6` → `b4fd7cf` | Boundary entre fixtures y datos conectados para catálogo, PDP, search, compare/favorites; `connected-product-card.tsx`, repository/mapping y `catalog-search-boundaries.test.ts`. | 71 Vitest y 8 E2E demo pasan; rutas conectadas consultan Supabase/fallan cerradas sin fixture fallback según route tests. | Playwright no prueba Supabase conectado ni modo producción remoto.
+| CRM/B2B `988de7b3…` | `439414a` → `57aea0e` | Portal empresa, miembros mediante RPC, quote request con snapshots, CRM queue/claim/send/respond, actividades; migration `20261007094816_crm_b2b_quote_workflow.sql`, CRM pgTAP/action tests. | CRM pgTAP dentro de 156 assertions; route/action tests y runtime RLS/security probes. | Aceptada la cola de presupuestos `requested` global a sales para claim; no convierte oferta aceptada automáticamente en pedido B2B.
+| Support/RMA `09d903b8…` | `f6510d4` → `e0e992a` | Ticket+primer mensaje atómicos, formulario/API de devolución y regla acumulada de unidades; migration `20261007094750_support_returns_atomic_intake.sql`, SQL runtime y route tests. | Support/RMA PostgreSQL transaction gate y route tests pasan. | Bandeja/diálogo agente, conversación y resolución final siguen parciales.
+| Security `a855f9c6…` | `b2101c8` → `37a5df7` | `docs/SECURITY_FOLLOWUP.md`, `tests/integration/security/postgres-object-isolation.sql`; audita roles, pagos, quotes, orgs, support y RMA. | Probe security runtime se reejecutó tras actualizar fixtures; encuentra/satisface boundaries actuales. | Sin proyecto remoto/GoTrue JWT; matriz CRUD por tabla/columna no exhaustiva.
+
+### Cambios de integración adicionales
+
+- Se actualizaron fixtures de `tests/integration/postgres-rls.sql`, `tests/integration/security/postgres-object-isolation.sql` y `tests/integration/support-rma/postgres.sql` a las restricciones vigentes: checkout address completo, fingerprint requerido, quote item snapshots y membership RPC en vez de DML directo.
+- La revalidación reprodujo acceso a notas `organization` de quote no asignado en la cola de ventas. La migración `20261007114945_limit_sales_queue_activity_visibility.sql` mantiene el acceso de ventas a la cola formal necesaria, pero solo a actividades `internal` antes del claim. La misma migración saca `sales_manager` del SELECT de pago.
+- No se integró la restricción tentativa a quote por `organization_id is null`: CRM pgTAP demostró que rompería el flujo de claim de presupuestos B2B de organizaciones. La excepción está documentada en `DECISIONS.md`, `RBAC_MATRIX.md` y `SECURITY_FOLLOWUP.md`.
+
+### Gates finales observados
+
+- `pnpm install --frozen-lockfile`: pass.
+- `pnpm exec tsc --noEmit`: pass tras build.
+- `pnpm lint`: pass, sin diagnósticos.
+- `pnpm test`: 71 Vitest + 18 Node, pass.
+- `pnpm test:e2e`: 8 Playwright de demo, pass.
+- `pnpm build`: pass.
+- `supabase db reset --local --yes`: pass, migrations/seed de seis versiones.
+- `supabase test db --local tests/database tests/integration/commerce/checkout-flow.sql`: 156 pgTAP, pass.
+- `tests/integration/postgres-rls.sql`, `tests/integration/security/postgres-object-isolation.sql`, `tests/integration/support-rma/postgres.sql`: pass, fixtures revertidas.
+- `supabase db lint --local --fail-on error`: pass; sin warnings.
+- `git diff --check`: exit 0; Git muestra avisos habituales de LF→CRLF en SQL bajo Windows.
+
+La siguiente ronda no debe empezar auditoría final definitiva. Prioriza los slices P0/P1 reflejados en `STATUS.md`; la cuarta ola está preparada en `WORKSTREAMS.md`.

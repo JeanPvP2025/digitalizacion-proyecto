@@ -1,31 +1,31 @@
 # Seguridad y RLS
 
-Estado del **2026-10-07**. Validación realizada contra Supabase/PostgreSQL local con datos ficticios; no se han probado credenciales, Auth ni políticas de un proyecto remoto.
+Estado del 2026-10-07. Revisado contra la base Supabase local reiniciada desde las migraciones del checkout. No se probaron credenciales remotas ni JWT emitidos por un proyecto de producción.
 
 ## Controles integrados
 
-- `supabase/migrations/20261007085225_database_security_invariants.sql` revoca DML directo en orders, payments, inventory, reservas y eventos; usa RPCs restringidas para transiciones. Catálogo, CRM, soporte y membresías conservan grants/policies por propósito.
-- `lib/server/data-mode.ts` resuelve el origen de datos en servidor. El modo de archivo demo requiere desarrollo local y `DEMO_MODE`; la configuración conectada exige URL/clave pública de Supabase. Backoffice en modo conectado requiere sesión y rol reconocido.
-- No existe un cliente service-role en cliente. Búsqueda de nombres de variables/secretos (`SERVICE_ROLE`, `SUPABASE_SECRET`, `sb_secret`, `JWT_SECRET`, `NEXT_PUBLIC_*SECRET`) sin coincidencias en el código versionable revisado.
-- Los fixtures de prueba son ficticios y el gate SQL ejecuta dentro de transacción revertida.
+- RLS/grants por propósito; escritura directa de pedido, pago, reserva y stock se mantiene cerrada y los cambios de estado usan RPCs.
+- El modo de datos se decide en servidor. Fixtures `.data/` requieren modo demo explícito de desarrollo; los fallos conectados de catálogo no se esconden con fixtures.
+- Checkout valida identidad, reconstruye carrito desde IDs/variantes, vuelve a leer precio y stock, y persiste el pedido/reservas en RPC. El resultado demo se procesa en RPC privilegiada mediante `lib/commerce/payment-admin.ts`, que solo lee `SUPABASE_SECRET_KEY` o `SUPABASE_SERVICE_ROLE_KEY` en servidor. Ninguna variable `NEXT_PUBLIC_*` contiene clave privilegiada.
+- Pago simulado no solicita tarjeta real. La transición pedido/pago/timeline/reserva es atómica e idempotente por event ID; el navegador no puede escoger resultado invocando el RPC.
+- RMA impide devolver más unidades de las compradas y exige pedido entregado dentro de la ventana; ticket y primer mensaje se crean juntos.
+- CRM protege organizaciones/membresías por tenant. La cola de propuestas B2B no asignadas es global para que ventas pueda reclamarlas; las actividades internas se filtran y las notas `organization` no son visibles a ventas hasta que la propuesta sea reclamada. Esta excepción es explícita y probada.
+- Sales no accede a pedidos, pagos, almacén ni tickets; payment SELECT se limita a cliente, fulfillment y superadmin.
 
-## Evidencia runtime
+## Hallazgos de la revisión independiente
 
-`pnpm dlx supabase@latest db reset`, `pnpm dlx supabase@latest test db --local tests/database` (60 pgTAP), `pnpm dlx supabase@latest db lint --local` y `tests/integration/postgres-rls.sql` pasan localmente.
+Ver `SECURITY_FOLLOWUP.md` para evidencia. No se confirmó bypass Critical/High en la segunda revisión. La prueba detectó que ventas podía ver notas `organization` de propuestas sin asignar; `20261007114945_limit_sales_queue_activity_visibility.sql` limita la cola a actividades `internal`. La misma migración elimina `sales_manager` de la policy de pagos. Los hallazgos previos sobre organizaciones/membresías globales se corrigieron en el workflow CRM.
 
-La matriz runtime seleccionada comprueba anon sin acceso a membresías/lectura CRM, consentimiento B2B, customer A/B con privacidad de pedidos y tickets, sales sin lectura de pedido/línea/evento/transacción de otro cliente ni inventario/soporte, fulfillment con inventario y sin CRM, support con cola de tickets y sin inventario, y miembros empresariales buyer/admin separados por organización. Admin empresarial no puede asignar `owner` ni cambiar otro tenant; superadmin puede leer organizaciones/membresías. También prueba que escritura directa de stock/pedido/pago carece de grants y que RPC checkout no acepta carrito ajeno o sobreventa.
+## Evidencia local
 
-Esta es cobertura de escenarios seleccionados, no una prueba exhaustiva SELECT/INSERT/UPDATE/DELETE de cada tabla sensible con cada rol. Roles B2B se representan mediante `organization_memberships.role` (`buyer`/`admin`); los nombres de aplicación “business_user” y “business_manager” no son valores del enum de organización.
+- `tests/integration/postgres-rls.sql`
+- `tests/integration/security/postgres-object-isolation.sql`
+- `tests/integration/support-rma/postgres.sql`
+- `tests/database/*.sql` y `tests/integration/commerce/checkout-flow.sql`
+- `pnpm dlx supabase@latest db lint --local --fail-on error`
 
-## Riesgos abiertos
+Los escenarios ejecutan `SET ROLE` más claims JWT locales y revisan grants/RLS reales de PostgreSQL. No equivalen a una prueba HTTP con Auth/GoTrue/PostgREST. No hay CRUD exhaustivo para todas las operaciones/roles; `RBAC_MATRIX.md` identifica explícitamente esas brechas.
 
-- Checkout de navegador/API conectado aún no orquesta el RPC `resolve_demo_payment`; existe el RPC y está probado en pgTAP, pero la UI no cierra el ciclo pago-pedido-reserva.
-- `place_order` devuelve el pedido existente ante clave idempotente repetida sin comprobar que coincida carrito/dirección; la dirección requiere validación más profunda.
-- No se ha auditado exhaustivamente fixture fallback y acceso por API en producción, ni la matriz de endpoints por JWT real.
-- CRM/organizaciones permite que `sales_manager` lea organizaciones y membresías para su tarea comercial; revisar si ese acceso global contiene solo los campos necesarios.
-- Soporte aún realiza inserts separados; falta atomicidad y enlace seguro de email/pedido para RMA.
-- No hay despliegue, configuración remota, rotación de secretos ni revisión del runtime de producción.
+## No habilitar datos reales todavía
 
-## Release guard
-
-No habilitar uso con datos reales hasta cerrar los P0 de `STATUS.md`, verificar Auth/RLS con proyecto del entorno, establecer secretos solo servidor cuando sean necesarios y ejecutar gates de producción. Nunca agregar service-role a variables `NEXT_PUBLIC_*`.
+Faltan prueba de checkout conectado con Auth local desde aplicación, matriz CRUD/API exhaustiva, flujos completos de Operations/fulfillment y revisión de seguridad sobre el despliegue. Separar secretos por entorno; nunca exponer service-role en cliente ni variables `NEXT_PUBLIC_*`.
