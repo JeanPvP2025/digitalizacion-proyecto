@@ -14,6 +14,14 @@ Los precios de catálogo y oferta se interpretan como importes con IVA incluido.
 
 Las transiciones de cotización son `requested → in_review → sent → accepted | rejected | expired`. `sent` publica la oferta en el portal de la organización; esta entrega no envía correo. Owner/admin aceptan o rechazan una propuesta enviada; la base devuelve `expired` cuando la validez ya pasó. Las funciones públicas son wrappers `SECURITY INVOKER` y el cambio sensible se realiza en funciones privadas con comprobación de actor, rol, tenant y estado.
 
+## Conversión de una oferta aceptada
+
+Una oferta aceptada no se convierte automáticamente en pedido. Owner/admin disponen de una acción explícita que llama a `convert_accepted_business_quote`. El RPC bloquea la cotización, valida membresía/rol y estado `accepted`, y crea como máximo una fila en `business_quote_conversions` por propuesta. La clave única por cotización, el bloqueo transaccional y el retorno de la conversión existente hacen que los reintentos sean idempotentes.
+
+La conversión conserva snapshots inmutables de identidad legal/fiscal y facturación de la organización, datos de la propuesta y cada línea aceptada (producto, SKU/variante, atributos, cantidad, precio ofrecido o solicitado, impuesto, moneda y totales). Solo la organización y `super_admin` pueden leer estos registros; no hay DML directo de cliente. La misma transacción añade `quote_conversion_recorded` al historial visible de la organización.
+
+El registro **no es todavía un pedido comercial ni reserva stock**. `orders` hoy se crea por el contrato del checkout: requiere direcciones completas, usa idempotencia/fingerprint de carrito, comprueba precio/stock de catálogo y reserva inventario; además deja el pago en el flujo demo pendiente. Forzar la oferta negociada en ese camino eludiría precio autoritativo, dirección, condiciones de pago y reservas. Hasta que Commerce/Tech Lead acuerde el contrato B2B para direcciones, pago y reserva/revalidación de stock, el portal identifica honestamente la conversión como auditada y deja pendiente la emisión del pedido formal. No se altera la cotización aceptada ni sus precios.
+
 ## CRM e historial
 
 El CRM mantiene la bandeja de `quote_inquiries` y `crm_leads` para sales_manager/super_admin. La etapa de solicitudes públicas cambia mediante `update_quote_inquiry_status`, que valida transiciones y escribe actividad. Sales_manager ve las solicitudes B2B sin asignar y sus propias cotizaciones; la asignación las retira de la cola global. El acceso a organizaciones y membresías sigue siendo tenant-scoped; ventas no obtiene un directorio global de clientes.

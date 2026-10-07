@@ -7,7 +7,7 @@ Estado observado el **2026-10-07** tras integrar la cuarta ola. Git, migraciones
 - ✅ **Checkout/Pedido/Pago simulado (SQL):** carrito persistido, precio/stock autoritativos en servidor, fingerprint de pedido, snapshots históricos, reserva transaccional, intents de pago, rechazo/aprobación y recuperación; PgTAP cubre la misma clave con payload distinto.
 - 🚧 **Checkout conectado en aplicación:** `POST /api/checkout` acepta `variantId`, reconstruye el contenido y llama RPCs para pedido/pago con credencial privilegiada solo servidor. Route tests y SQL pasan; falta recorrer la ruta por GoTrue/PostgREST con sesión real, retry/refresco y doble POST concurrente desde navegador.
 - ✅ **Boundary storefront:** demo fixtures solo se usan bajo el modo demo explícito; catálogo conectado no vuelve a fixtures cuando falla Supabase. Búsqueda conectada devuelve error/resultado vacío controlado. Playwright cubre solo demo local.
-- ✅ **CRM/B2B base:** organizaciones/membresías, portal, solicitud con snapshots, cola de ventas, claim y oferta/aceptación, actividades y políticas tenant. No es CRM completo ni hay conversión automática de oferta aceptada a pedido.
+- 🚧 **CRM/B2B:** organizaciones/membresías, portal, solicitud con snapshots, cola de ventas, claim y oferta/aceptación, actividades y políticas tenant. Una acción idempotente registra conversión auditada con snapshots tenant-scoped; no crea pedido formal ni reserva stock. El contrato de pedido B2B (direcciones, pago y reserva con precio negociado) queda pendiente de Commerce/Tech Lead.
 - ✅ **Soporte/RMA conectado:** bandeja agente, mensajes y transiciones mediante RPC, timeline, revisión idempotente y límite de unidades; sin efectos de reembolso/stock integrados.
 - 🚧 **RBAC/RLS:** matrix runtime PostgreSQL ahora incluye anon, clientes A/B, buyer/admin B2B, catalog manager, support, sales, fulfillment y superadmin. El acceso a transición de soporte se ejerce por RPC; DML directo permanece revocado. Falta validar con JWT GoTrue/PostgREST y completar cobertura endpoint/columna.
 - 🚧 **Storefront y cuenta:** catálogo, PDP, búsqueda, favoritos/comparador, carrito y guardados funcionan parcialmente con demo/browser storage. PC Builder carga variantes publicadas con `attributes.pc_builder` completos, valida compatibilidad cubierta y guarda/recupera selecciones por `variantId`. El checkout ya acepta `variantId`, pero el seed no contiene componentes PC; muestra estado vacío y mantiene deshabilitada la compra hasta tener catálogo vendible.
@@ -37,7 +37,7 @@ Estado observado el **2026-10-07** tras integrar la cuarta ola. Git, migraciones
 
 - [ ] Hacer E2E conectado de API/route → GoTrue/PostgREST → pedido/pago; cubrir doble envío, timeout/retry, refresh y concurrencia de stock. El checkout E2E anterior no dejó cambios verificables integrables.
 - [ ] Validar CRUD y acciones sensibles con tokens GoTrue/PostgREST; ampliar Auth boundary y separación demo/prod runtime.
-- [ ] Confirmar el modelo comercial de pedido empresarial: oferta aceptada → pedido B2B o registro de conversión.
+- [ ] Acordar e integrar con Commerce/Tech Lead el contrato de pedido formal B2B desde la conversión auditada: dirección, pago y revalidación/reserva de stock con el precio aceptado.
 
 ### P1
 

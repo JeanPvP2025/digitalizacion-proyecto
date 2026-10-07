@@ -155,3 +155,16 @@ export async function respondToBusinessQuote(formData: FormData) {
   if (error) finish(noticeFor(error), organizationId.data);
   finish(data === "expired" ? "expired" : decision.data === "accepted" ? "quote-accepted" : "quote-rejected", organizationId.data);
 }
+
+export async function convertAcceptedBusinessQuote(formData: FormData) {
+  const quoteId = organizationIdSchema.safeParse(formData.get("quoteId"));
+  const organizationId = organizationIdSchema.safeParse(formData.get("organizationId"));
+  if (!quoteId.success || !organizationId.success) finish("invalid");
+
+  const supabase = await getSignedInClient();
+  const { error } = await supabase.rpc("convert_accepted_business_quote", {
+    p_quote_id: quoteId.data,
+  });
+  if (error) finish(noticeFor(error), organizationId.data);
+  finish("quote-converted", organizationId.data);
+}

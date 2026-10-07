@@ -1,5 +1,5 @@
 begin;
-select plan(56);
+select plan(66);
 
 insert into auth.users (id, aud, role, email, encrypted_password, raw_app_meta_data, raw_user_meta_data)
 values
@@ -37,7 +37,8 @@ values ('CRM Test Contact', 'crm-inquiry@nodria.test', 'CRM Inquiry SL', 'Necesi
 
 create temporary table crm_b2b_test_state (
   quote_id uuid not null,
-  quote_item_id uuid
+  quote_item_id uuid,
+  conversion_id uuid
 );
 grant select, insert, update on crm_b2b_test_state to authenticated;
 
@@ -46,6 +47,7 @@ select ok(not has_table_privilege('authenticated', 'public.organization_membersh
 select ok(not has_table_privilege('authenticated', 'public.quotes', 'INSERT'), 'Quotes are only created through the request RPC');
 select ok(not has_table_privilege('authenticated', 'public.quote_items', 'UPDATE'), 'Quote lines cannot be edited through direct SQL');
 select ok(not has_table_privilege('authenticated', 'public.crm_activities', 'INSERT'), 'CRM history is append-only through trusted operations');
+select ok(not has_table_privilege('authenticated', 'public.business_quote_conversions', 'INSERT'), 'Quote conversions are created only through the checked RPC');
 
 set local role authenticated;
 select set_config('request.jwt.claim.sub', '00000000-0000-4000-8000-00000000e001', true);
@@ -122,6 +124,9 @@ select set_config('request.jwt.claim.sub', '00000000-0000-4000-8000-00000000e007
 select set_config('request.jwt.claims', '{"sub":"00000000-0000-4000-8000-00000000e007","role":"authenticated"}', true);
 select is((select count(*)::int from public.quotes where id = (select quote_id from pg_temp.crm_b2b_test_state)), 0, 'Sales manager cannot read a quote assigned to another salesperson');
 select throws_ok($$select public.claim_business_quote((select quote_id from pg_temp.crm_b2b_test_state))$$, '23514', null, 'A second salesperson cannot claim an already assigned quote');
+select set_config('request.jwt.claim.sub', '00000000-0000-4000-8000-00000000e005', true);
+select set_config('request.jwt.claims', '{"sub":"00000000-0000-4000-8000-00000000e005","role":"authenticated"}', true);
+select throws_ok($$select public.convert_accepted_business_quote((select quote_id from pg_temp.crm_b2b_test_state))$$, '42501', null, 'Tenant B cannot convert Tenant A quote');
 
 select set_config('request.jwt.claim.sub', '00000000-0000-4000-8000-00000000e003', true);
 select set_config('request.jwt.claims', '{"sub":"00000000-0000-4000-8000-00000000e003","role":"authenticated"}', true);
@@ -131,6 +136,16 @@ select set_config('request.jwt.claim.sub', '00000000-0000-4000-8000-00000000e002
 select set_config('request.jwt.claims', '{"sub":"00000000-0000-4000-8000-00000000e002","role":"authenticated"}', true);
 select is(public.respond_to_business_quote((select quote_id from pg_temp.crm_b2b_test_state), 'accepted')::text, 'accepted', 'Organization admin can accept a sent quote');
 select is((select count(*)::int from public.crm_activities where quote_id = (select quote_id from pg_temp.crm_b2b_test_state) and event_key = 'quote_accepted'), 1, 'Customer decision is recorded in the quote history');
+select lives_ok($$update pg_temp.crm_b2b_test_state set conversion_id = public.convert_accepted_business_quote(quote_id)$$, 'Organization admin records a conversion for an accepted quote');
+select is((select count(*)::int from public.business_quote_conversions where quote_id = (select quote_id from pg_temp.crm_b2b_test_state)), 1, 'Accepted quote has exactly one conversion record');
+select is(public.convert_accepted_business_quote((select quote_id from pg_temp.crm_b2b_test_state)), (select conversion_id from pg_temp.crm_b2b_test_state), 'Retry returns the same conversion id');
+select is((select organization_snapshot ->> 'legal_name' from public.business_quote_conversions where id = (select conversion_id from pg_temp.crm_b2b_test_state)), 'CRM Organización A SL', 'Conversion keeps an organization snapshot');
+select is((select quote_snapshot -> 'items' -> 0 ->> 'sku' from public.business_quote_conversions where id = (select conversion_id from pg_temp.crm_b2b_test_state)), 'NOD-FS-02', 'Conversion keeps the accepted item SKU snapshot');
+select is((select (quote_snapshot -> 'items' -> 0 ->> 'unit_price')::numeric from public.business_quote_conversions where id = (select conversion_id from pg_temp.crm_b2b_test_state)), 108.25::numeric, 'Conversion keeps the accepted offered price snapshot');
+select is((select count(*)::int from public.crm_activities where quote_id = (select quote_id from pg_temp.crm_b2b_test_state) and event_key = 'quote_conversion_recorded'), 1, 'Conversion writes a single organization-visible CRM event');
+select set_config('request.jwt.claim.sub', '00000000-0000-4000-8000-00000000e005', true);
+select set_config('request.jwt.claims', '{"sub":"00000000-0000-4000-8000-00000000e005","role":"authenticated"}', true);
+select is((select count(*)::int from public.business_quote_conversions where id = (select conversion_id from pg_temp.crm_b2b_test_state)), 0, 'Tenant B cannot read Tenant A conversion snapshot');
 
 select set_config('request.jwt.claim.sub', '00000000-0000-4000-8000-00000000e006', true);
 select set_config('request.jwt.claims', '{"sub":"00000000-0000-4000-8000-00000000e006","role":"authenticated"}', true);

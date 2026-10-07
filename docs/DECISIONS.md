@@ -141,3 +141,13 @@ Las decisiones de alcance heredadas de la misión se marcan **Confirmada**. Las 
 - **Contexto:** La regla Turbopack `*.css` aplicaba el loader global también a `*.module.css`, dejándolos sin exports de clase en HTML.
 - **Decisión:** Procesar Tailwind 4 por `@tailwindcss/postcss` en `postcss.config.mjs` y dejar CSS Modules en el pipeline nativo de Next/Turbopack.
 - **Consecuencias:** B2B y otras superficies recuperan sus clases; E2E verifica root classes y responsive. No volver a aplicar una regla global de loader CSS a todos los módulos.
+
+## D-015 — La conversión B2B aceptada se audita antes de emitir un pedido
+
+- **Fecha:** 2026-10-07
+- **Estado:** Confirmada para el contrato actual; el pedido comercial sigue pendiente de acuerdo con Commerce/Tech Lead.
+- **Contexto:** Las cotizaciones B2B conservan precios negociados e identidad empresarial, mientras `orders` solo se crea hoy desde el checkout con direcciones, fingerprint de carrito, precio/stock actuales, reserva de inventario y pago demo.
+- **Decisión:** Owner/admin puede registrar explícitamente e idempotentemente la conversión de una cotización `accepted`. CRM persiste snapshots inmutables de organización, oferta y líneas, y una actividad visible para el tenant. El registro no se presenta como pedido, no reserva stock y no altera la oferta.
+- **Alternativas:** insertar directamente filas de comercio desde CRM sin resolver direcciones/condiciones de pago ni reutilizar la reserva autoritativa; o mantener una aceptación sin paso posterior auditable.
+- **Motivo:** Preserva auditoría/aislamiento y evita saltarse el contrato autoritativo de checkout o el ownership de inventario.
+- **Consecuencias:** Portal presenta la conversión como auditada y deja explícito que falta emitir pedido formal. Commerce/Tech Lead debe acordar el contrato para direcciones, pago y revalidación/reserva de stock antes de crear órdenes B2B. Ver `lib/crm/CONTRACT.md` y `tests/database/crm_b2b.sql`.

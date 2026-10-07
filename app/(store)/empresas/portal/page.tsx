@@ -3,7 +3,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { ArrowRight, Building2, CalendarClock, Check, CircleAlert, ContactRound, FileText, Plus, ShieldCheck, UserRound } from "lucide-react";
 import { BusinessQuoteRequest, type BusinessProductOption } from "@/components/business/business-quote-request";
-import { addOrganizationMember, removeOrganizationMember, respondToBusinessQuote, setOrganizationMemberRole, createOrganization } from "./actions";
+import { addOrganizationMember, convertAcceptedBusinessQuote, removeOrganizationMember, respondToBusinessQuote, setOrganizationMemberRole, createOrganization } from "./actions";
 import styles from "./business-portal.module.css";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
@@ -25,6 +25,7 @@ type QuoteRow = {
   id: string; quote_number: string; status: "requested" | "in_review" | "sent" | "accepted" | "rejected" | "expired";
   currency: string; request_note: string; requester_name: string; grand_total: string; valid_until: string | null; created_at: string;
 };
+type QuoteConversionRow = { id: string; quote_id: string; conversion_number: string; created_at: string };
 type ActivityRow = { id: number; title: string; subject_name: string; body: string; created_at: string; event_key: string };
 type VariantRow = {
   id: string; sku: string; title: string; current_price: string; currency: string;
@@ -70,6 +71,7 @@ function noticeMessage(notice: string) {
     case "member-removed": return "La persona se ha retirado de la organización.";
     case "quote-requested": return "Solicitud enviada. Ventas preparará una propuesta sobre estas líneas.";
     case "quote-accepted": return "Propuesta aceptada y guardada en el historial de la organización.";
+    case "quote-converted": return "Conversión registrada con los snapshots de la propuesta y la empresa. El pedido formal queda pendiente de definir pago, dirección y reserva de stock.";
     case "quote-rejected": return "Decisión registrada en el historial de la organización.";
     case "expired": return "La propuesta ya no estaba vigente; su estado se ha actualizado a caducada.";
     case "forbidden": return "Tu rol no permite esta acción en la organización o la cotización.";
@@ -137,16 +139,18 @@ export default async function BusinessPortalPage({ searchParams }: { searchParam
   const variantResult = await supabase.from("product_variants").select("id, sku, title, current_price, currency, products!inner(name, brand, slug)").eq("is_active", true).eq("products.is_published", true).order("sku");
   const quoteRows = (quoteResult.data ?? []) as QuoteRow[];
   const quoteIds = quoteRows.map((quote) => quote.id);
-  const [lineResult, activityResult] = await Promise.all([
+  const [lineResult, activityResult, conversionResult] = await Promise.all([
     quoteIds.length ? supabase.from("quote_items").select("id, quote_id, product_name, product_sku, variant_title, quantity, requested_unit_price, offered_unit_price, currency, line_total").in("quote_id", quoteIds).order("created_at") : Promise.resolve({ data: [], error: null }),
     supabase.from("crm_activities").select("id, title, subject_name, body, created_at, event_key").eq("organization_id", organization.id).eq("visibility", "organization").order("created_at", { ascending: false }).limit(12),
+    quoteIds.length ? supabase.from("business_quote_conversions").select("id, quote_id, conversion_number, created_at").in("quote_id", quoteIds) : Promise.resolve({ data: [], error: null }),
   ]);
-  if (memberResult.error || quoteResult.error || variantResult.error || lineResult.error || activityResult.error) {
+  if (memberResult.error || quoteResult.error || variantResult.error || lineResult.error || activityResult.error || conversionResult.error) {
     return <main className={styles.page}><section className={styles.stateCard} role="alert"><span className={styles.stateIcon}><CircleAlert size={22} /></span><p className={styles.eyebrow}>NODRIA · EMPRESAS</p><h1>No se pudo cargar el espacio</h1><p>La base de datos no confirmó todos los miembros, cotizaciones o eventos. Actualiza para volver a intentarlo.</p><Link className={styles.backLink} href={`/empresas/portal?organization=${organization.id}`}>Reintentar <ArrowRight size={14} /></Link></section></main>;
   }
 
   const members = (memberResult.data ?? []) as MemberRow[];
   const quoteItems = (lineResult.data ?? []) as QuoteItemRow[];
+  const quoteConversions = (conversionResult.data ?? []) as QuoteConversionRow[];
   const activities = (activityResult.data ?? []) as ActivityRow[];
   const variantRows = (variantResult.data ?? []) as unknown as VariantRow[];
   const products: BusinessProductOption[] = variantRows.map((variant) => ({
@@ -172,7 +176,7 @@ export default async function BusinessPortalPage({ searchParams }: { searchParam
       </section>
 
       {organizations.length > 1 && <nav aria-label="Organizaciones disponibles" className={styles.organizationTabs}>{organizations.map((row) => <Link aria-current={row.id === organization.id ? "page" : undefined} className={row.id === organization.id ? styles.organizationTabActive : styles.organizationTab} href={`/empresas/portal?organization=${row.id}`} key={row.id}>{row.display_name}<small>{roleLabels[memberships.find((item) => item.organization_id === row.id)?.role ?? "viewer"]}</small></Link>)}</nav>}
-      {notice && <p className={styles.notice} role={firstValue(params.notice) === "quote-requested" || firstValue(params.notice) === "member-added" || firstValue(params.notice) === "quote-accepted" || firstValue(params.notice) === "quote-rejected" || firstValue(params.notice) === "member-updated" || firstValue(params.notice) === "member-removed" || firstValue(params.notice) === "organization-created" ? "status" : "alert"}><CircleAlert aria-hidden="true" size={15} />{notice}</p>}
+      {notice && <p className={styles.notice} role={firstValue(params.notice) === "quote-requested" || firstValue(params.notice) === "member-added" || firstValue(params.notice) === "quote-accepted" || firstValue(params.notice) === "quote-converted" || firstValue(params.notice) === "quote-rejected" || firstValue(params.notice) === "member-updated" || firstValue(params.notice) === "member-removed" || firstValue(params.notice) === "organization-created" ? "status" : "alert"}><CircleAlert aria-hidden="true" size={15} />{notice}</p>}
 
       <div className={styles.workspace}>
         <div className={styles.primaryColumn}>
@@ -185,6 +189,7 @@ export default async function BusinessPortalPage({ searchParams }: { searchParam
             <div className={styles.panelHead}><div><p className={styles.panelEyebrow}>02 · PROPUESTAS</p><h2 id="quotes-heading">Cotizaciones <span>{quoteRows.length}</span></h2></div><span className={styles.panelIcon}><ContactRound size={18} /></span></div>
             {quoteRows.length ? <div className={styles.quoteList}>{quoteRows.map((quote) => {
               const lines = quoteItems.filter((item) => item.quote_id === quote.id);
+              const conversion = quoteConversions.find((item) => item.quote_id === quote.id);
               const hasOffer = quote.status !== "requested" && quote.status !== "in_review";
               return <article className={styles.quoteCard} key={quote.id}>
                 <div className={styles.quoteTop}><div><span className={styles.quoteNumber}>{quote.quote_number}</span><h3>{quote.status === "sent" ? "Propuesta para revisión" : "Solicitud de compra"}</h3></div><span className={`${styles.quoteStatus} ${styles[`quote_${quote.status}`]}`}>{quoteStatusLabels[quote.status]}</span></div>
@@ -193,6 +198,7 @@ export default async function BusinessPortalPage({ searchParams }: { searchParam
                 <ul className={styles.quoteLines}>{lines.map((line) => <li key={line.id}><span><strong>{line.quantity} × {line.product_name}</strong><small>{line.variant_title} · {line.product_sku}</small></span><span>{money(line.offered_unit_price ?? line.requested_unit_price, line.currency)}</span></li>)}</ul>
                 <div className={styles.quoteTotal}><span>{hasOffer ? "TOTAL PROPUESTO · IVA INCLUIDO" : "REFERENCIA DE CATÁLOGO · IVA INCLUIDO"}</span><strong>{money(quote.grand_total, quote.currency)}</strong></div>
                 {canManage && quote.status === "sent" && <div className={styles.decisionRow}><form action={respondToBusinessQuote}><input name="quoteId" type="hidden" value={quote.id} /><input name="organizationId" type="hidden" value={organization.id} /><input name="decision" type="hidden" value="accepted" /><button className={styles.acceptButton} type="submit"><Check size={14} /> Aceptar propuesta</button></form><form action={respondToBusinessQuote}><input name="quoteId" type="hidden" value={quote.id} /><input name="organizationId" type="hidden" value={organization.id} /><input name="decision" type="hidden" value="rejected" /><button className={styles.rejectButton} type="submit">Rechazar</button></form></div>}
+                {quote.status === "accepted" && (conversion ? <p className={styles.quoteMeta}>Conversión registrada: <strong>{conversion.conversion_number}</strong> · {dateLabel(conversion.created_at)}. Pedido formal pendiente de confirmar condiciones de pago, dirección y stock.</p> : canManage ? <div className={styles.decisionRow}><form action={convertAcceptedBusinessQuote}><input name="quoteId" type="hidden" value={quote.id} /><input name="organizationId" type="hidden" value={organization.id} /><button className={styles.acceptButton} type="submit"><Check size={14} /> Registrar conversión auditada</button></form></div> : <p className={styles.quoteMeta}>Propuesta aceptada. Un propietario o administrador puede registrar su conversión a compras.</p>)}
               </article>;
             })}</div> : <div className={styles.emptyQuotes}><span><FileText size={19} /></span><strong>Todavía no hay cotizaciones</strong><p>Las solicitudes y propuestas aparecerán aquí con sus precios, estado e historial.</p></div>}
           </section>
