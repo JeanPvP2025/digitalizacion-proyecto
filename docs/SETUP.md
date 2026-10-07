@@ -74,6 +74,14 @@ Para crear una cuenta local, abre <http://127.0.0.1:3000/acceso>, selecciona cre
 
 Para dejar listo ese presupuesto antes de presentar, abre el portal con esa cuenta y crea `Estudio Prisma Demo` (razón social ficticia `Estudio Prisma Demo SL`, sin NIF/CIF, correo de facturación `compras@estudioprisma.example`). El formulario del portal crea la membresía `owner` junto a la organización. No hay contraseña ni usuario de demostración precreados; guarda la contraseña inventada solo en tu entorno local y no la reutilices.
 
+Para presentar rutas internas con cuentas por rol, crea primero desde `/acceso` cinco cuentas Auth locales con correos ficticios `@nodria.test` (una cuenta para cada rol que vayas a mostrar). Después asigna grants locales:
+
+```powershell
+pwsh -File scripts/demo/assign-staff-roles.ps1
+```
+
+El script pide el correo asociado a `super_admin`, `catalog_manager`, `support_agent`, `sales_manager` y `fulfillment_manager`; valida que cada cuenta exista y que `.env.local` coincida con el proyecto Supabase local activo. Solo acepta loopback, no imprime claves y no crea ni conserva contraseñas. Cada usuario mantiene su propio acceso. El reset local elimina usuarios y grants; vuelve a crear las cuentas y asignar los roles cuando quieras una demo limpia.
+
 Esta opción sigue siendo una instalación local de desarrollo. Las pruebas de base y de rutas no son un E2E de navegador conectado ni certifican un despliegue remoto.
 
 ## Reiniciar la demo

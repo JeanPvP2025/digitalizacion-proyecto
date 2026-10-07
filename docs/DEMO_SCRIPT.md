@@ -89,9 +89,9 @@ No se necesita ni se debe inventar una cuenta del equipo comercial para completa
 | Formulario B2B de `/empresas` | Consulta ficticia en `.data/quotes.json` | Inserta consulta pública en `quote_inquiries` con clave publicable y grants/policies locales |
 | Presupuesto estructurado `/empresas/portal` | No disponible: no existe sesión ni organización demo | Requiere cuenta Auth y organización con membresía; el seed no provee usuarios/organizaciones Auth. La solicitud queda estructurada, asociada a la organización y aparece como **Recibida** |
 | Ticket de `/soporte` | Solicitud pública ficticia en `.data/tickets.json` | Requiere sesión Auth; ticket y primer mensaje se escriben juntos en Supabase |
-| Bandejas internas / resolución | No asumirlas conectadas; la UI de CRM está protegida y el ciclo de agente de soporte sigue parcial | Requieren los roles internos correspondientes. El seed no crea un usuario `sales_manager` o `support_agent`; no inventes accesos privilegiados para esta presentación |
+| Backoffice / acciones por rol | No disponible: el modo de archivos no crea sesión ni roles | Registra cuentas Auth locales ficticias desde `/acceso` y ejecuta `scripts/demo/assign-staff-roles.ps1` para asignar grants persistidos. Usa cuentas separadas para `super_admin`, catálogo, soporte, ventas y almacén; RLS y las rutas vuelven a validar roles. El reset local borra usuarios/grants |
 
-Para el modo conectado, sigue la sección Supabase local de [`SETUP.md`](./SETUP.md). El checkout conectado en pantalla muestra resultados demo; no procesa dinero. A fecha del corte, no existe E2E de navegador contra Supabase Auth/PostgREST ni entorno remoto validado. Los ocho E2E existentes recorren catálogo y verifican algunos estados/campos demo, pero no envían estos tres formularios ni prueban pagos desde navegador.
+Para el modo conectado, sigue la sección Supabase local de [`SETUP.md`](./SETUP.md). El checkout conectado en pantalla muestra resultados demo; no procesa dinero. Los E2E autenticados de checkout, dominios conectados y B2B usan Supabase local; no hay entorno remoto validado.
 
 ## Fallback seguro
 

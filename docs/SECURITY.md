@@ -6,6 +6,7 @@ Estado del **2026-10-07** tras la sexta ola. Migraciones, código y pruebas loca
 
 - RLS/grants protegen tablas; escrituras críticas de pedido, pago, reserva, soporte y stock pasan por RPCs limitadas. Las acciones de inventario exigen `fulfillment_manager` o `super_admin` tanto en Route Handler como en PostgreSQL.
 - El modo de datos se decide en servidor. Supabase configurado prevalece sobre `DEMO_MODE`; una caída conectada devuelve error y no recurre a `.data/`.
+- El bootstrap de roles demo valida que `.env.local` coincida con la URL loopback de Supabase local; usa service-role en memoria para listar Auth users, asigna grants solo a cinco correos ficticios distintos con dominio `.test` mediante conexión Postgres local, y no crea/lee/almacena contraseñas. El reset `--local` borra las cuentas y grants.
 - Checkout reconstruye variantes vendibles, precio y stock; `find_checkout_order` compara el fingerprint bajo identidad autenticada antes de reusar pedido y resolver pago. La clave service-role queda en servidor y solo resuelve el resultado de pago demo.
 - Checkout e inventario rechazan una clave idempotente reutilizada con payload diferente. Los reintentos de checkout no crean carritos adicionales; las recepciones/ajustes registran un movimiento y preservan reservas activas.
 - RMA limita suma devuelta por línea y requiere pedido entregado/ventana aplicable. Ticket+primer mensaje y transiciones de agente usan RPCs transaccionales.
@@ -29,4 +30,4 @@ Estado del **2026-10-07** tras la sexta ola. Migraciones, código y pruebas loca
 
 ## Límites
 
-La matriz no prueba CRUD de cada columna/tabla/endpoint contra todos los roles; `RBAC_MATRIX.md` conserva esa brecha. Los roles `manager` y `marketing` no existen como grants y no deben inventarse sin una decisión de producto. Demo Mode aún necesita recorrido completo por roles y reset reproducible; no hay secret management/deployment remoto probado. El anticipo B2B no equivale a un pago real. No habilitar datos reales ni afirmar certificación de producción.
+La matriz no prueba CRUD de cada columna/tabla/endpoint contra todos los roles; `RBAC_MATRIX.md` conserva ese límite. Los roles `manager` y `marketing` no existen como grants y no deben inventarse sin una decisión de producto. Demo Mode local ya ofrece bootstrap repetible de cuentas con grants; queda una revisión visual manual del recorrido por todos los roles. No hay secret management/deployment remoto probado. El anticipo B2B no equivale a un pago real. No habilitar datos reales ni afirmar certificación de producción.
