@@ -3,10 +3,13 @@ import type { Product, ProductCategory, ProductSpecification } from "@/lib/catal
 export type CatalogCategory = {
   id: string;
   slug: string;
-  name: ProductCategory;
+  name: string;
   description: string;
   sortOrder: number;
+  parentId?: string | null;
 };
+
+export type CatalogProduct = Product & { categoryIds?: readonly string[] };
 
 type ProductRow = {
   id: string;
@@ -29,6 +32,7 @@ type CategoryRow = {
   name: string;
   description: string;
   sort_order: number;
+  parent_id?: string | null;
   is_active: boolean;
 };
 
@@ -61,8 +65,8 @@ export type CatalogRows = {
 };
 
 export type CatalogData =
-  | { source: "demo"; products: Product[]; categories: CatalogCategory[] }
-  | { source: "supabase"; products: Product[]; categories: CatalogCategory[] }
+  | { source: "demo"; products: CatalogProduct[]; categories: CatalogCategory[] }
+  | { source: "supabase"; products: CatalogProduct[]; categories: CatalogCategory[] }
   | { source: "error"; products: []; categories: []; message: string };
 
 export const CATALOG_READ_ERROR = "No se pudo cargar el catálogo. Inténtalo de nuevo más tarde.";
@@ -72,16 +76,17 @@ function isProductCategory(value: string): value is ProductCategory {
   return productCategories.has(value as ProductCategory);
 }
 
-export function mapCatalogRows(rows: CatalogRows): { products: Product[]; categories: CatalogCategory[] } {
+export function mapCatalogRows(rows: CatalogRows): { products: CatalogProduct[]; categories: CatalogCategory[] } {
   const categories = rows.categories
-    .filter((category) => category.is_active && isProductCategory(category.name))
+    .filter((category) => category.is_active)
     .sort((a, b) => a.sort_order - b.sort_order)
-    .map((category) => ({
+    .map((category): CatalogCategory => ({
       id: category.id,
       slug: category.slug,
       name: category.name as ProductCategory,
       description: category.description,
       sortOrder: category.sort_order,
+      parentId: category.parent_id ?? null,
     }));
   const activeCategoryIds = new Set(categories.map((category) => category.id));
   const categoryIdsByProduct = new Map<string, string[]>();
@@ -110,13 +115,14 @@ export function mapCatalogRows(rows: CatalogRows): { products: Product[]; catego
   const categoriesById = new Map(categories.map((category) => [category.id, category]));
   const products = rows.products
     .filter((product) => product.is_published)
-    .flatMap((product): Product[] => {
+    .flatMap((product): CatalogProduct[] => {
       const variant = (variantsByProduct.get(product.id) ?? [])
         .filter((item) => item.currency === "EUR")
         .sort((a, b) => Number(b.sku === product.sku) - Number(a.sku === product.sku) || Number(a.current_price) - Number(b.current_price))[0];
-      const category = (categoryIdsByProduct.get(product.id) ?? [])
+      const productCategoryIds = categoryIdsByProduct.get(product.id) ?? [];
+      const category = productCategoryIds
         .map((id) => categoriesById.get(id))
-        .filter((item): item is CatalogCategory => Boolean(item))
+        .filter((item): item is CatalogCategory & { name: ProductCategory } => item !== undefined && isProductCategory(item.name))
         .sort((a, b) => a.sortOrder - b.sortOrder)[0];
       // A public storefront needs an active sellable variant and an active category.
       if (!variant || !category) return [];
@@ -127,6 +133,7 @@ export function mapCatalogRows(rows: CatalogRows): { products: Product[]; catego
 
       return [{
         id: product.id,
+        categoryIds: productCategoryIds,
         slug: product.slug,
         sku: variant.sku,
         name: product.name,

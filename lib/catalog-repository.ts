@@ -7,7 +7,7 @@ import { getSupabaseCredentials } from "@/lib/supabase/config";
 import { CATALOG_READ_ERROR, catalogDataFromSupabase, type CatalogData, type CatalogRows, type CatalogCategory } from "@/lib/catalog-mapping";
 
 export { CATALOG_READ_ERROR, catalogDataFromSupabase, mapCatalogRows } from "@/lib/catalog-mapping";
-export type { CatalogCategory, CatalogData, CatalogRows } from "@/lib/catalog-mapping";
+export type { CatalogCategory, CatalogData, CatalogProduct, CatalogRows } from "@/lib/catalog-mapping";
 
 const demoCategoryData: CatalogCategory[] = demoCategories.map((category, index) => ({
   id: category.code,
@@ -15,6 +15,7 @@ const demoCategoryData: CatalogCategory[] = demoCategories.map((category, index)
   name: category.name,
   description: category.description,
   sortOrder: (index + 1) * 10,
+  parentId: null,
 }));
 
 async function readPublishedCatalog(client: SupabaseClient): Promise<CatalogRows> {
@@ -27,7 +28,7 @@ async function readPublishedCatalog(client: SupabaseClient): Promise<CatalogRows
   if (productResult.error) throw productResult.error;
   const products = (productResult.data ?? []) as CatalogRows["products"];
   const categoryResult = await client.from("categories")
-    .select("id,slug,name,description,sort_order,is_active")
+    .select("id,slug,name,description,sort_order,parent_id,is_active")
     .eq("is_active", true)
     .order("sort_order");
   if (categoryResult.error) throw categoryResult.error;
