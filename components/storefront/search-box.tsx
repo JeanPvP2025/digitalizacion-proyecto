@@ -9,12 +9,13 @@ import type {
   KeyboardEvent as ReactKeyboardEvent,
 } from "react";
 import { useEffect, useId, useMemo, useRef, useState } from "react";
-import type { CatalogSearchResponse, CatalogSearchResult } from "@/lib/search";
+import type { CatalogSearchResponse, CatalogSearchResult, CatalogSearchRecovery } from "@/lib/search";
 import {
   addRecentSearch,
   parseRecentSearches,
   RECENT_SEARCHES_STORAGE_KEY,
   SEARCH_QUERY_MAX_LENGTH,
+  SEARCH_RESULT_MAX_LIMIT,
 } from "@/lib/search";
 
 type SearchBoxProps = {
@@ -26,6 +27,7 @@ type SearchBoxProps = {
 type SearchAction =
   | { kind: "product"; key: string; href: string; searchTerm: string; product: CatalogSearchResult }
   | { kind: "recent"; key: string; href: string; searchTerm: string }
+  | { kind: "category"; key: string; href: string; searchTerm: string; count: number }
   | { kind: "all"; key: string; href: string; searchTerm: string; total: number };
 type SearchApiResponse = CatalogSearchResponse & { source: "demo" | "supabase" };
 
@@ -44,6 +46,17 @@ function isCatalogSearchResult(value: unknown): value is CatalogSearchResult {
     && typeof value.category === "string"
     && typeof value.price === "number"
     && Number.isFinite(value.price);
+}
+
+function isSearchRecovery(value: unknown): value is CatalogSearchRecovery | null {
+  return value === null || (isRecord(value)
+    && (value.reason === "partial" || value.reason === "browse")
+    && Array.isArray(value.products) && value.products.length <= 3 && value.products.every(isCatalogSearchResult)
+    && Array.isArray(value.categories) && value.categories.length <= 3
+    && value.categories.every((category: unknown) => isRecord(category)
+      && typeof category.name === "string" && typeof category.href === "string"
+      && /^\/catalogo\?(?:categoria|q)=[^&]+$/.test(category.href)
+      && typeof category.count === "number" && Number.isInteger(category.count) && category.count > 0));
 }
 
 const priceFormatter = new Intl.NumberFormat("es-ES", {
@@ -90,7 +103,7 @@ function readStoredSearches() {
 export function SearchBox({
   className = "header-search",
   initialQuery = "",
-  placeholder = "Busca producto o SKU",
+  placeholder = "Producto, marca, SKU o característica",
 }: SearchBoxProps) {
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
@@ -147,7 +160,10 @@ export function SearchBox({
 
         if (!isRecord(payload)
           || !Array.isArray(payload.results)
+          || payload.results.length > SEARCH_RESULT_MAX_LIMIT
           || !payload.results.every(isCatalogSearchResult)
+          || !isSearchRecovery(payload.recovery)
+          || payload.query !== trimmedQuery
           || typeof payload.total !== "number"
           || !Number.isInteger(payload.total)
           || payload.total < 0
@@ -155,7 +171,8 @@ export function SearchBox({
           throw new SearchApiError("La respuesta de búsqueda no es válida.");
         }
 
-        setResponse({ query: trimmedQuery, total: payload.total, results: payload.results, source: payload.source });
+        if (controller.signal.aborted) return;
+        setResponse({ query: trimmedQuery, total: payload.total, results: payload.results, recovery: payload.recovery, source: payload.source });
         setError(null);
       } catch (cause) {
         if (controller.signal.aborted) return;
@@ -191,6 +208,19 @@ export function SearchBox({
         total: response.total,
       });
       return productActions;
+    }
+
+    if (hasQuery && response?.query === trimmedQuery && response.total === 0 && response.recovery) {
+      return [
+        ...response.recovery.categories.map((category): SearchAction => ({
+          kind: "category", key: "category-" + category.name, href: category.href,
+          searchTerm: category.name, count: category.count,
+        })),
+        ...response.recovery.products.map((product): SearchAction => ({
+          kind: "product", key: "alternative-" + product.slug,
+          href: "/producto/" + encodeURIComponent(product.slug), searchTerm: product.name, product,
+        })),
+      ];
     }
 
     if (!hasQuery) {
@@ -254,7 +284,7 @@ export function SearchBox({
       event.preventDefault();
       setIsOpen(false);
       setActiveIndex(-1);
-    } else if (event.key === "Enter" && activeIndex >= 0) {
+    } else if (event.key === "Enter" && activeIndex >= 0 && activeIndex < actions.length) {
       event.preventDefault();
       followAction(actions[activeIndex]);
     }
@@ -386,27 +416,31 @@ export function SearchBox({
               {showNoResults && (
                 <div style={{ padding: 14 }}>
                   <p role="status" style={{ margin: "0 0 5px", fontSize: 13, fontWeight: 700 }}>No encontramos “{trimmedQuery}”.</p>
-                  <p style={{ margin: "0 0 10px", color: "#667166", fontSize: 11 }}>Prueba con un nombre, referencia o característica diferente.</p>
+                  <p style={{ margin: "0 0 10px", color: "#667166", fontSize: 11 }}>
+                    {response?.recovery?.reason === "partial"
+                      ? "Estos productos coinciden con parte de tu búsqueda. Revisa sus características."
+                      : response?.recovery ? "Explora estas categorías y productos del catálogo." : "Prueba con un nombre, referencia o característica diferente."}
+                  </p>
                   <Link
-                    href={"/catalogo?q=" + encodeURIComponent(trimmedQuery)}
-                    onClick={() => handleLinkClick({ kind: "all", key: "no-results", href: "", searchTerm: trimmedQuery, total: 0 })}
+                    href="/catalogo"
+                    onClick={() => { setIsOpen(false); setActiveIndex(-1); }}
                     style={{ color: "#31533a", fontSize: 12, fontWeight: 700, textDecoration: "underline" }}
                   >
-                    Abrir búsqueda completa
+                    Explorar todo el catálogo
                   </Link>
                 </div>
               )}
-              {!isLoading && error?.query !== trimmedQuery && response?.query === trimmedQuery && response.total > 0 && (
+              {!isLoading && error?.query !== trimmedQuery && response?.query === trimmedQuery && actions.length > 0 && (
                 <>
                   {response.source === "demo" && (
                     <p role="status" style={{ margin: 0, padding: "8px 13px 0", color: "#788178", fontSize: 10 }}>
                       Sugerencias de demostración local.
                     </p>
                   )}
-                  <p style={{ margin: 0, padding: "10px 13px 7px", color: "#788178", fontSize: 10 }}>
+                  {response.total > 0 && <p style={{ margin: 0, padding: "10px 13px 7px", color: "#788178", fontSize: 10 }}>
                     {response.total} {response.total === 1 ? "resultado" : "resultados"} en el catálogo
-                  </p>
-                  <ul id={listboxId} role="listbox" aria-label="Productos sugeridos" style={{ margin: 0, padding: "0 0 4px", listStyle: "none" }}>
+                  </p>}
+                  <ul id={listboxId} role="listbox" aria-label={showNoResults ? "Alternativas del catálogo" : "Productos sugeridos"} style={{ margin: 0, padding: "0 0 4px", listStyle: "none" }}>
                     {actions.map((action, index) => (
                       <li key={action.key} style={{ margin: 0 }}>
                         {action.kind === "product" ? (
@@ -426,6 +460,18 @@ export function SearchBox({
                               </span>
                             </span>
                             <strong style={{ flex: "0 0 auto", fontSize: 11 }}>{priceFormatter.format(action.product.price)}</strong>
+                          </Link>
+                        ) : action.kind === "category" ? (
+                          <Link
+                            id={listboxId + "-option-" + index}
+                            aria-selected={activeIndex === index}
+                            href={action.href}
+                            onClick={() => handleLinkClick(action)}
+                            onMouseMove={() => setActiveIndex(index)}
+                            role="option"
+                            style={{ ...optionStyle, background: activeIndex === index ? "#f2f6ef" : "transparent", color: "#31533a", fontSize: 12 }}
+                          >
+                            <span>Explorar {action.searchTerm}</span><span>{action.count} productos</span>
                           </Link>
                         ) : action.kind === "all" ? (
                           <Link

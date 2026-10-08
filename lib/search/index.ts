@@ -1,6 +1,9 @@
 import type { Product } from "@/lib/catalog";
+import { compareSearchMatches, scoreCatalogProducts } from "./ranking";
+import { normalizeSearchText } from "./vocabulary";
+export { rankCatalogProducts, SEARCH_TERM_MAX_COUNT, SEARCH_QUERY_MAX_LENGTH } from "./ranking";
 
-export const SEARCH_QUERY_MAX_LENGTH = 80;
+import { SEARCH_QUERY_MAX_LENGTH } from "./ranking";
 export const SEARCH_RESULT_LIMIT = 5;
 export const SEARCH_RESULT_MAX_LIMIT = 8;
 export const RECENT_SEARCH_LIMIT = 5;
@@ -12,95 +15,56 @@ export type CatalogSearchResponse = {
   query: string;
   total: number;
   results: CatalogSearchResult[];
+  recovery: CatalogSearchRecovery | null;
 };
 
-function normalizeSearchText(value: string) {
-  return value
-    .normalize("NFKD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toLocaleLowerCase("es-ES")
-    .replace(/\s+/g, " ")
-    .trim();
-}
+export type CatalogSearchRecovery = {
+  reason: "partial" | "browse";
+  categories: { name: string; href: string; count: number }[];
+  products: CatalogSearchResult[];
+};
 
-function getSearchableFields(product: Product) {
-  return {
-    name: normalizeSearchText(product.name),
-    sku: normalizeSearchText(product.sku),
-    brand: normalizeSearchText(product.brand),
-    category: normalizeSearchText(product.category),
-    specifications: product.specifications.map((specification) =>
-      normalizeSearchText(specification.label + " " + specification.value),
-    ),
-    summary: normalizeSearchText(product.summary),
-  };
-}
+type SearchCategory = { name: string; slug: string };
 
-function scoreProduct(product: Product, query: string) {
-  const fields = getSearchableFields(product);
-  const technicalDetails = fields.specifications.join(" ");
-  const searchableText = [
-    fields.name,
-    fields.sku,
-    fields.brand,
-    fields.category,
-    technicalDetails,
-    fields.summary,
-  ].join(" ");
-  const queryTerms = query.split(" ");
-
-  if (!queryTerms.every((term) => searchableText.includes(term))) return 0;
-
-  if (fields.name === query) return 120;
-  if (fields.sku === query) return 115;
-  if (fields.name.startsWith(query)) return 105;
-  if (fields.sku.startsWith(query)) return 100;
-  if (fields.brand === query) return 95;
-  if (fields.category === query) return 90;
-  if (fields.name.includes(query)) return 85;
-  if (fields.sku.includes(query)) return 80;
-  if (fields.brand.includes(query)) return 75;
-  if (fields.category.includes(query)) return 70;
-  if (fields.specifications.some((specification) => specification.includes(query))) return 65;
-  if (fields.summary.includes(query)) return 30;
-
-  return 10;
-}
-
-/**
- * Searches the current catalogue by product name, SKU, brand, category,
- * summary, and technical specifications. total always reports the exact
- * number of matches before the result limit is applied.
- */
-export function rankCatalogProducts(products: Product[], rawQuery: string): Product[] {
-  const query = normalizeSearchText(rawQuery);
-  if (!query) return [...products];
-
-  return products
-    .map((product, index) => ({ product, index, score: scoreProduct(product, query) }))
-    .filter((match) => match.score > 0)
-    .sort((left, right) => right.score - left.score || left.index - right.index)
-    .map(({ product }) => product);
+function toResult(product: Product): CatalogSearchResult {
+  const { slug, name, sku, brand, category, price } = product;
+  return { slug, name, sku, brand, category, price };
 }
 
 export function searchCatalogProducts(
   products: Product[],
   rawQuery: string,
   limit = SEARCH_RESULT_LIMIT,
+  categories: SearchCategory[] = [],
 ): CatalogSearchResponse {
-  const matches = rankCatalogProducts(products, rawQuery);
+  const scored = scoreCatalogProducts(products, rawQuery);
+  const matches = (rawQuery.trim() ? scored.filter((match) => match.complete).sort(compareSearchMatches) : scored).map(({ product }) => product);
+  const safeLimit = Number.isFinite(limit) ? Math.min(SEARCH_RESULT_MAX_LIMIT, Math.max(1, Math.floor(limit))) : SEARCH_RESULT_LIMIT;
+  let recovery: CatalogSearchRecovery | null = null;
+  if (!matches.length && products.length) {
+    const partial = scored.filter((match) => match.coverage > 0).sort(compareSearchMatches);
+    const alternatives = partial.length ? partial.map(({ product }) => product) : [...products].sort((left, right) =>
+      Number(Boolean(right.featured)) - Number(Boolean(left.featured)) || (left.slug < right.slug ? -1 : left.slug > right.slug ? 1 : 0));
+    const categoryNames = [...new Set(alternatives.map((product) => product.category))].slice(0, 3);
+    recovery = {
+      reason: partial.length ? "partial" : "browse",
+      categories: categoryNames.map((name) => {
+        const category = categories.find((item) => item.name === name);
+        return {
+          name,
+          href: category ? "/catalogo?categoria=" + encodeURIComponent(category.slug) : "/catalogo?q=" + encodeURIComponent(name),
+          count: products.filter((product) => product.category === name).length,
+        };
+      }),
+      products: alternatives.slice(0, Math.min(safeLimit, 3)).map(toResult),
+    };
+  }
 
   return {
     query: rawQuery.trim(),
     total: matches.length,
-    results: matches.slice(0, limit).map((product) => ({
-      slug: product.slug,
-      name: product.name,
-      sku: product.sku,
-      brand: product.brand,
-      category: product.category,
-      price: product.price,
-    })),
+    results: matches.slice(0, safeLimit).map(toResult),
+    recovery,
   };
 }
 
@@ -130,7 +94,7 @@ export function parseRecentSearches(value: string | null): string[] {
 
 export function addRecentSearch(term: string, recentSearches: string[]): string[] {
   const cleanTerm = term.trim();
-  if (!cleanTerm || cleanTerm.length > SEARCH_QUERY_MAX_LENGTH) return recentSearches.slice(0, RECENT_SEARCH_LIMIT);
+  if (!cleanTerm || cleanTerm.length > SEARCH_QUERY_MAX_LENGTH || /[\u0000-\u001f\u007f]/.test(cleanTerm)) return recentSearches.slice(0, RECENT_SEARCH_LIMIT);
 
   const normalizedTerm = normalizeSearchText(cleanTerm);
   const uniqueSearches = new Map<string, string>([[normalizedTerm, cleanTerm]]);

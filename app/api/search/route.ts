@@ -57,6 +57,7 @@ export async function GET(request: Request) {
     catalog.products,
     parsedQuery.data,
     parsedLimit?.data ?? SEARCH_RESULT_LIMIT,
+    catalog.categories,
   );
 
   return NextResponse.json(
