@@ -1,8 +1,8 @@
 # Estado del proyecto
 
-Estado observado el **2026-10-08** en `main` (`5bf196d`) e inspección HTTP del entorno alojado. La app responde en `https://nodria-staging.vercel.app`; el usuario creó Supabase `ypnhdxpejcbcyjiosrhf` y comprobó RPCs/RLS desde el dashboard. No se ha certificado el flujo Auth/email ni un recorrido conectado completo en el entorno alojado. No ejecutar resets/seed global ni operaciones destructivas contra Supabase remoto.
+Estado de integración del código al **2026-10-08** (`eddd4a0`). Los siete worktrees de profundidad se inspeccionaron e integraron; los seis commits de código aún no están en Vercel. El Supabase remoto `ypnhdxpejcbcyjiosrhf` no se modificó. El reset/seed descrito aquí se ejecutó únicamente contra Supabase local. El entorno alojado sigue sin certificación funcional de Auth/correo.
 
-## Fase de profundidad comercial — auditoría inicial
+## Hallazgos de auditoría inicial (antes de la ola A)
 
 - ✅ La portada, `/catalogo`, `/acceso`, `/configurador` y `/empresas` respondieron HTTP 200 en la comprobación actual; disponibilidad no equivale a comportamiento autenticado.
 - ⚠️ Auth está bloqueando pruebas de usuarios: se reportan `email rate limit exceeded`, `Invalid login credentials` y error al canjear el enlace. El SMTP integrado de Supabase limita el envío y no es adecuado para uso público; verificar URL Configuration, callback y SMTP.
@@ -11,6 +11,18 @@ Estado observado el **2026-10-08** en `main` (`5bf196d`) e inspección HTTP del 
 - ⏳ `/blog`, `/guias`, `/marcas`, `/campanas` y `/categorias/ordenadores` respondieron 404. No hay ecosistema editorial o páginas de marca/campaña; `/servicios` requiere auditoría de profundidad.
 - ⚠️ La PDP tiene contenido base y especificaciones, pero carece de galería editorial, guías/FAQ conectadas, alternativas estructuradas y merchandising por producto.
 - ✅ La identidad y las transacciones permanecen explícitamente ficticias; conservar avisos de simulación y no solicitar datos de tarjeta.
+
+## Séptima ola — integración de profundidad comercial
+
+- ✅ **Catálogo conectado:** migración aditiva determinista añade 84 productos ficticios, 6 marcas y categorías jerárquicas; el reset/seed local resulta en 96 productos publicados, 27 categorías, 7 marcas y 96 variantes EUR activas. No se aplicó al proyecto remoto.
+- ✅ **Descubrimiento:** filtros, conteos, categorías anidadas, marcas, precio, características técnicas, ordenación y URL persistente. Disponibilidad exacta solo se filtra en demo local; en Supabase se confirma durante checkout.
+- ✅ **Portada:** selección de destacados, categorías y campaña desde la fuente de catálogo activa; ante error no sustituye catálogo conectado por fixtures.
+- ✅ **PDP:** galería, especificaciones agrupadas, alternativas, guías enlazadas y compra por variante publicada. El servidor vuelve a validar precio/stock al checkout; añadir al carrito no reserva unidades.
+- ✅ **Búsqueda:** ranking de nombre/SKU/marca/especificaciones, sinónimos y recuperación para cero resultados. El endpoint usa solo el catálogo activo.
+- ✅ **Editorial:** `/blog`, `/blog/[slug]`, `/guias` y `/guias/[slug]` sirven seis artículos ficticios con enlaces al catálogo activo, metadatos y sitemap.
+- ✅ **Auth UX/callback:** callback usa el origen actual y redirect local seguro; mensajes de error son accionables y el reenvío no es automático. Esto no elimina el límite del proveedor SMTP ni verifica Auth alojado.
+- ⚠️ **Operación remota pendiente:** revisar y aplicar manualmente la migración `20261008135808_catalog_depth_dataset.sql` solo en el proyecto de staging tras respaldo/revisión; luego verificar filas y rutas en Vercel. No usar `db reset` ni `seed.sql` remoto.
+- ⚠️ **Integración externa pendiente:** para estabilizar altas/recuperación, configurar Site URL/redirect allowlist de Supabase y SMTP propio; validar con una cuenta de prueba en `nodria-staging.vercel.app`.
 
 ## Estado funcional
 
@@ -46,22 +58,24 @@ La prueba E2E transversal verifica permisos de emisión B2B sin crear pedidos re
 | `pnpm install --frozen-lockfile` | ✅ validado en el cierre coordinador |
 | `pnpm exec tsc --noEmit` | ✅ |
 | `pnpm lint` | ✅ |
-| `pnpm test` | ✅ 189 Vitest + 18 Node |
-| `pnpm test:e2e` | ✅ 17/17 tras excluir suites Auth que requieren Supabase aislado; runners dedicados verificados aparte |
+| `pnpm test` | ✅ 288 Vitest + 18 Node |
+| `pnpm test:e2e` | ✅ Suite base 17/17 y 2 E2E nuevos de editorial/PDP 2/2 |
 | `pwsh -File tests/e2e/connected-domains/run.ps1` | ✅ 6/6 y teardown limpio; incluye cliente → aprobación soporte → inspección warehouse |
 | `pwsh -File tests/e2e/checkout-connected/run.ps1` | ✅ 4/4; aprobado, rechazado, refresh/retry, payload distinto y concurrencia |
 | `pwsh -File tests/e2e/ux-audit/run-roles.ps1` | ✅ 1/1; edición real de catálogo y denegaciones por rol |
 | `pwsh -File tests/e2e/ux-audit/run-customer-b2b.ps1` | ✅ 1/1; customer + owner/admin/buyer/viewer, tenant y responsive |
 | `pwsh -File tests/integration/b2b-connected/run.ps1` | ✅ 1/1; anticipo aprobado/rechazado, tenant, replay y fulfillment |
-| `pnpm build` | ✅ producción; 40 páginas/rutas compiladas después de esta integración |
-| `pnpm dlx supabase@latest db reset --local --yes` | ✅ 18 migraciones y seed aplicados |
-| pgTAP database/checkout/reviews/catalog | ✅ 246 aserciones |
+| `pnpm build` | ✅ producción; 39 páginas/rutas compiladas |
+| `pnpm dlx supabase@latest db reset --local --yes` | ✅ 19 migraciones y seed aplicados en local; la primera ejecución detectó y permitió corregir una ambigüedad SQL de `parent_id` |
+| `pnpm dlx supabase@latest test db --local tests/database` | ✅ 183 aserciones pgTAP |
 | SQL runtime RLS/RBAC/Auth/support/inventory/procurement | ✅ scripts aplicados con fixtures transaccionales |
-| `pnpm dlx supabase@latest db lint --local --fail-on error` | ✅ sin errores de esquema |
+| `pnpm dlx supabase@latest db lint --local --schema public,private --level error --fail-on error` | ✅ sin errores de esquema |
 | `tests/integration/support-flow/return-inspection.sql` | ✅ PostgreSQL local; autorización, cantidades, idempotencia, ledger, desecho, cierre/timeline |
 | `tests/integration/support-flow/inspection-route.test.ts` | ✅ 4/4 |
 | `pwsh -File tests/integration/auth-boundaries/run-local.ps1` | ✅ 78 probes HTTP autenticados; cero fallos |
-| `git diff --check` | ✅ |
+| `node scripts/catalog/generate.mjs --check` | ✅ migración determinista |
+| Catálogo local tras reset | ✅ 96 productos publicados, 27 categorías, 7 marcas, 96 variantes EUR activas |
+| `git diff --check` | ✅ sin errores; Git advierte conversión LF/CRLF de Windows |
 
 ## Séptima ola — cierre de RMA y anticipo B2B
 
@@ -83,10 +97,10 @@ Warnings no bloqueantes conocidos: Node reporta `MODULE_TYPELESS_PACKAGE_JSON` e
 
 ### P1
 
-- 🚧 Aumentar catálogo con dataset determinista curado, marcas/familias coherentes, categorías anidadas y atributos; llevarlo al entorno remoto solo mediante operación aditiva revisada, nunca reset de producción.
-- 🚧 Alinear portada con catálogo activo; no seleccionar destacados desde `demoProducts` en modo conectado.
-- 🚧 Crear guías/artículos y páginas de marca conectadas a productos/categorías; actualmente `/blog`, `/guias` y `/marcas` no existen.
-- 🚧 Profundizar PDP, filtros por categoría, búsqueda y recomendaciones; revisar zero-results, agotados y variantes.
+- ⚠️ Revisar y aplicar en staging la migración aditiva del catálogo, luego validar el despliegue. La implementación y reset local pasan; el remoto aún no contiene estas 84 fichas.
+- ⏳ Crear páginas de marcas, campañas y categoría landing (`/marcas`, `/campanas`, `/categorias/ordenadores`); el catálogo ya tiene datos de marcas y jerarquía pero esas rutas siguen sin existir.
+- 🚧 Verificar en el entorno conectado PDP/variantes con precios reales de demo, checkout y catálogo poblado; las pruebas browser actuales usan datos demo locales y la migration no está desplegada.
+- ⏳ Revisar `/servicios` y añadir historial operativo/CRM sintético repetible sin aparentar transacciones reales ni sobrescribir datos existentes.
 - ✅ Matriz de permisos por rol y dominio documentada en `RBAC_MATRIX.md`, con 78 probes HTTP autenticados, pruebas SQL por dominios críticos y E2E de roles; no equivale a CRUD exhaustivo por columna ni prueba cada Server Action.
 - ✅ **Escritura segura de catálogo:** migration revoca DML amplio y `update_catalog_product_editorial` aplica allowlist/rol en PostgreSQL. API de sesión, route/unit tests y E2E que edita y restaura un producto seed. Ver `docs/CATALOG_MANAGER_UI.md`.
 

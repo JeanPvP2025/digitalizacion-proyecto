@@ -1,6 +1,6 @@
 # Arquitectura inicial de NODRIA
 
-**Estado de este documento:** snapshot de integración y primera revisión del entorno alojado, 2026-10-08. Vercel sirve `nodria-staging.vercel.app`; el usuario creó Supabase `ypnhdxpejcbcyjiosrhf` y comprobó RPCs/RLS desde el dashboard. La comprobación HTTP reciente dio 200 en portada, catálogo y acceso, pero no certifica transacciones ni Auth remoto: se reportaron errores de envío de correo, credenciales y callback. La revisión de profundidad registra 12 productos, seis categorías amplias, una sola marca visible y ausencia de rutas editoriales/de marca/campaña. Ver backlog y límites actuales en `STATUS.md` y `WORKSTREAMS.md`.
+**Estado de este documento:** integración local 2026-10-08, código de aplicación hasta `eddd4a0`. Vercel sirve `nodria-staging.vercel.app` y Supabase `ypnhdxpejcbcyjiosrhf` fue creado por el usuario; esta ola no hizo cambios remotos. El reset local incluye 96 productos, 27 categorías y 7 marcas; la migración que agrega catálogo aún no está aplicada al remoto. Auth/correo alojado sigue sin probarse correctamente. Las rutas de blog y guías ya existen en el código local; páginas de marca y campaña siguen pendientes. Ver límites en `STATUS.md` y `WORKSTREAMS.md`.
 
 ## Objetivo y restricciones
 
@@ -46,6 +46,8 @@ Los límites son módulos de negocio dentro de la misma aplicación y base relac
 ### Contratos de datos importantes
 
 - El catálogo distingue producto y variante vendible cuando haya opciones de compra. Los atributos técnicos deben tener un conjunto consultable por tipo de producto; JSON puede guardar extensiones, no reemplazar indiscriminadamente las relaciones importantes.
+- `categories.parent_id` expone la jerarquía en el catálogo de lectura; `getCatalogData()` conserva `parentId` y los IDs de todas las categorías por producto. El campo `Product.category` mantiene la categoría raíz para los consumidores existentes. Facetas por descendencia usan memberships explícitas; stock exacto no se expone en catálogo conectado.
+- El dataset de profundidad es una migración de datos aditiva e idempotente, no un seed de producción: inserta 84 productos ficticios y conserva los registros preexistentes. El Tech Lead validó su aplicación solo en Supabase local; staging requiere revisión y despliegue manual.
 - El pedido conserva snapshots de descripción/SKU, precios, descuentos, impuestos y direcciones usados al confirmarse. Cambios posteriores en catálogo no reescriben el historial.
 - La disponibilidad se deriva de `physical - reserved`; reservar y liberar stock debe actualizarse de forma atómica con la transición de pedido correspondiente. No se mantiene una copia derivada sin una regla verificable.
 - Los importes se almacenan como `NUMERIC` en PostgreSQL, con moneda explícita en contratos que deban poder extenderse a otros mercados. No se usan cálculos monetarios con coma flotante binaria.
@@ -66,13 +68,14 @@ No se deben duplicar reglas de negocio en componentes cliente, Server Actions, R
 **La migración define controles y tiene gates locales ejecutados; faltan recorrido conectado y cobertura exhaustiva.** El resultado de `tests/integration/postgres-rls.sql` comprueba escenarios seleccionados contra PostgreSQL local; `docs/SECURITY.md` detalla alcance y riesgos restantes.
 
 1. Supabase Auth será responsable de autenticar. La aplicación resolverá el usuario actual en servidor y vinculará su `auth.uid()` a perfiles y membresías persistidas.
-2. RLS limitará lecturas y mutaciones por propietario o membresía de organización. Las políticas deben cubrir cada tabla expuesta, incluida la separación entre usuarios de una organización y usuarios de otra.
-3. Los permisos de personal se comprobarán en servidor y en las políticas apropiadas. No se confiará en roles editables desde el cliente ni en ocultar enlaces como control de acceso.
-4. Cada mutación valida datos con esquemas y vuelve a comprobar el acceso al objeto solicitado para evitar IDOR. Los privilegios elevados requieren autorización explícita y registro de auditoría.
-5. La clave pública/anon, si se usa desde el navegador, no sustituye RLS. Una clave service-role, si se demuestra necesaria, permanece únicamente en entorno servidor y nunca se envía al cliente.
-6. Storage usa rutas y políticas que separen recursos públicos de documentos privados; las descargas privadas requieren autorización o URL firmada de vida corta.
-7. El pago demo no recoge ni almacena datos de tarjetas reales. Los estados aprobados, rechazados o temporales son fixtures de simulación y generan un intento y trazabilidad ficticios.
-8. No se suben secretos ni datos personales reales al repositorio o a seeds. Preview, desarrollo y producción usan proyectos/credenciales separados.
+2. Los enlaces de confirmación/recuperación vuelven al origen actual del navegador y pasan por `/auth/callback`; la ruta solo acepta destinos internos validados. Supabase aún necesita Site URL/redirect allowlist y un SMTP apto para el entorno alojado.
+3. RLS limitará lecturas y mutaciones por propietario o membresía de organización. Las políticas deben cubrir cada tabla expuesta, incluida la separación entre usuarios de una organización y usuarios de otra.
+4. Los permisos de personal se comprobarán en servidor y en las políticas apropiadas. No se confiará en roles editables desde el cliente ni en ocultar enlaces como control de acceso.
+5. Cada mutación valida datos con esquemas y vuelve a comprobar el acceso al objeto solicitado para evitar IDOR. Los privilegios elevados requieren autorización explícita y registro de auditoría.
+6. La clave pública/anon, si se usa desde el navegador, no sustituye RLS. Una clave service-role, si se demuestra necesaria, permanece únicamente en entorno servidor y nunca se envía al cliente.
+7. Storage usa rutas y políticas que separen recursos públicos de documentos privados; las descargas privadas requieren autorización o URL firmada de vida corta.
+8. El pago demo no recoge ni almacena datos de tarjetas reales. Los estados aprobados, rechazados o temporales son fixtures de simulación y generan un intento y trazabilidad ficticios.
+9. No se suben secretos ni datos personales reales al repositorio o a seeds. Preview, desarrollo y producción usan proyectos/credenciales separados.
 
 Las migraciones habilitan RLS/grants, checkout por variante/fingerprint, movimientos y procurement, pedido B2B formal, fulfillment, reembolso e inspección/disposición RMA y reviews. Auth UI/callback/sesión SSR y guards están integrados. El gate local ejercita GoTrue/PostgREST con JWT reales y 78 probes, además de scripts PostgreSQL para RBAC/RLS e inspección RMA. Los `.data/` y fixtures son solo demo local. La matriz CRUD no es exhaustiva y no hay entorno remoto probado; no considerar el producto apto para producción.
 

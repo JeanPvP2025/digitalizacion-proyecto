@@ -1,11 +1,34 @@
 # Registro de handoffs
 
-## Coordinación de fase de profundidad comercial — 2026-10-08
+## Ola A recibida, verificada e integrada — 2026-10-08
+
+Las siete conversaciones terminaron. Se contrastaron el branch, `git status`, diff y pruebas reales de cada worktree; ninguno dejó commits ni archivos de handoff. Los cambios útiles se copiaron, revisaron, corrigieron y comprometieron en `main`. No se esperaba ninguna respuesta posterior.
+
+| Agente/worktree | Entrega comprobada | Integración | Verificación y límites |
+|---|---|---|---|
+| Auth `codex/auth-recovery-ux` (`1fbb`) | Callback, mensajes de rate limit/credenciales, reenvío explícito y feedback seguro; archivos Auth nuevos sin commit | `4e66d81` | 30 Vitest/integration + 6 Playwright pasan. La configuración Supabase URL/SMTP y el correo real no se arreglan desde el código local. |
+| Catalog data `codex/catalog-depth-data` (`0feb`) | Dataset fuente, generador/validador y migración aditiva de 84 productos ficticios, 6 marcas nuevas y 27 categorías totales | `c795b86` | 19 Node tests y generación determinista. Reset local corrigió la ambigüedad PL/pgSQL de `parent_id`; luego aplicó las 19 migraciones y seed. Ningún cambio remoto. |
+| Catalog discovery `codex/catalog-discovery` (`2566`) | Nueva interfaz/facetas; el mapper original no suministraba `parent_id` ni memberships de hojas | `c795b86` más puente de contrato del Tech Lead | Se amplió el mapper a `parentId`/`categoryIds`; 4 tests cubren jerarquía, URL, stock demo y conteos técnicos. |
+| Product detail `codex/product-detail-depth` (`9d01`) | Galería, variantes, alternativas, purchase options y contenido editorial para PDP | `b47c505` | Build/typecheck y 2 E2E de PDP/editorial pasan. No confirma stock ni reserva desde la ficha; el checkout conectado es la autoridad. |
+| Search `codex/search-depth` (`6187`) | Ranking por nombre/SKU/características, vocabulario de sinónimos y recuperación de cero resultados | `ddbe8a7` | Suite específica 46/46 en el worktree; suite integrada completa pasa. |
+| Editorial `codex/editorial-depth` (`82e1`) | El worktree solo contenía el módulo de contenido; no tenía rutas, pruebas ni handoff | `c560dcf` | Tech Lead añadió índices/detalles de Blog y Guías, enlaces de catálogo, metadatos, sitemap/footer, 3 tests unitarios y 2 E2E. |
+| Homepage `codex/homepage-merchandising` (`9dbc`) | Portada derivada de `getCatalogData()`; sus pruebas fallaban por mock de `next/image` y orden de diversidad intencional | `eddd4a0` | Se aisló Image en el test y se corrigió su expectativa. 288 Vitest + 18 Node pasan. |
+
+### Gates y estado del repositorio
+
+- Commits coordinadores de código: `4e66d81`, `c795b86`, `b47c505`, `ddbe8a7`, `c560dcf`, `eddd4a0`.
+- `pnpm install --frozen-lockfile`, TypeScript, ESLint, `pnpm test` (288 Vitest + 18 Node), `pnpm build` (39 rutas) pasan.
+- Playwright: suite previa 17/17 y pruebas nuevas de rutas editorial/PDP 2/2. Auth: 6/6 browser.
+- Supabase local: reset+seed 19 migraciones; pgTAP `tests/database` 183/183; `db lint --schema public,private --level error --fail-on error` sin errores; catálogo 96 productos, 27 categorías, 7 marcas y 96 variantes EUR activas.
+- La migración es aditiva e idempotente. El proyecto Supabase remoto y Vercel no se modificaron ni desplegaron; los seis commits esperan push. Auth hospedado sigue pendiente de URL allowlist, SMTP propio y prueba real.
+- `git diff --check` no detecta problemas. Persisten avisos de conversión LF/CRLF de Windows y advertencias de Playwright `NO_COLOR`/`FORCE_COLOR`; la hidratación mostró `caret-color` sin origen localizado.
+
+## Registro histórico de despacho de la Ola A — 2026-10-08
 
 - Se inspeccionaron estado Git, commits, documentación, esquema/seed del catálogo y disponibilidad HTTP. `main` estaba limpio en `5bf196d` antes de esta reconciliación documental.
 - Evidencia en producción: `/`, `/catalogo`, `/acceso`, `/configurador`, `/empresas` responden 200; `/blog`, `/guias`, `/marcas`, `/campanas` y `/categorias/ordenadores` responden 404. El catálogo muestra 12 productos, seis categorías y la marca única `NODRIA`; la portada aún lee destacados de fixtures locales. No es una prueba de flujos autenticados.
 - Se corrigieron afirmaciones obsoletas en `PROJECT_BRIEF.md`, `ARCHITECTURE.md` y `STATUS.md`: existe Vercel/Supabase remoto, pero Auth está bloqueado según los errores comunicados por el usuario y la demo no está validada integralmente en remoto.
-- Próximo: Ola A paralela de Auth onboarding, catálogo/datos, filtros, PDP, search, editorial y homepage. Las siete conversaciones originales fueron detenidas por el usuario y reemplazadas por nuevas conversaciones independientes en worktrees con GPT-6 Luna y esfuerzo `high`; los IDs activos y ownership están en `WORKSTREAMS.md`. El Tech Lead retiene documentos globales. No resetear Supabase remoto ni aplicar el seed completo de desarrollo en producción; cualquier cambio de catálogo debe ser aditivo y revisado.
+- En ese momento se despachó Ola A de Auth onboarding, catálogo/datos, filtros, PDP, search, editorial y homepage en siete worktrees GPT-6 Luna/high. La integración y resultado final están arriba y en `WORKSTREAMS.md`. La migración de catálogo no se debe aplicar al proyecto remoto sin revisión del operador.
 
 ## Handoff gestión interna de catálogo — 2026-10-08
 

@@ -216,3 +216,27 @@ Las decisiones de alcance heredadas de la misión se marcan **Confirmada**. Las 
 - **Contexto:** `catalog_manager` existe y RLS le concede DML sobre el catálogo, pero el grant actual abarca columnas protegidas y PostgREST permite saltarse cualquier allowlist exclusiva del Route Handler.
 - **Decisión:** Revocar DML amplio del catálogo a `authenticated` y permitir edición editorial de productos existentes únicamente por `update_catalog_product_editorial(text,jsonb)`. PostgreSQL valida rol persistido y allowlist; la UI server-side usa la sesión, envía campos modificados y no usa service role.
 - **Consecuencias:** El manager de catálogo puede leer y editar los seis campos editoriales permitidos; precio, publicación, stock y variantes quedan fuera. pgTAP, route tests y E2E Auth prueban rechazo de campos protegidos y persistencia/reversión de edición.
+
+## D-023 — La expansión del catálogo es sintética, aditiva y separada del seed operativo
+
+- **Fecha:** 2026-10-08
+- **Estado:** Integrada en `20261008135808_catalog_depth_dataset.sql`; probada únicamente en Supabase local, todavía no desplegada en staging.
+- **Contexto:** El seed alojado tenía 12 productos, seis categorías y una marca. La tienda necesita variedad para probar facetas, búsqueda, PDP y variantes.
+- **Decisión:** Mantener el dataset fuente en `scripts/catalog/dataset.mjs`; generar una migración determinista con 84 productos ficticios, seis marcas nuevas, 21 familias y 27 categorías finales. La migración usa IDs/slug/SKU estables, serializa reruns, rechaza colisiones y no reescribe productos existentes. No meter estos registros en `supabase/seed.sql` de producción.
+- **Consecuencias:** El reset local resulta en 96 productos, 27 categorías y 7 marcas. Los datos no son stock, ventas, reviews ni recomendaciones reales. Aplicación remota solo mediante migración aditiva revisada.
+
+## D-024 — Las facetas de categoría leen el árbol y las memberships del catálogo
+
+- **Fecha:** 2026-10-08
+- **Estado:** Integrado en `lib/catalog-repository.ts`, `lib/catalog-mapping.ts` y `/catalogo`.
+- **Contexto:** La migración crea categorías hijas y relaciona cada producto con raíz y hoja; el contrato anterior solo conservaba el nombre de categoría raíz.
+- **Decisión:** El repositorio público selecciona `categories.parent_id`; el mapper conserva `parentId` y todos los `categoryIds`, sin cambiar el campo `Product.category` usado por tarjetas y módulos existentes. El descubrimiento usa esos IDs para filtrar una categoría y sus descendientes. La cantidad exacta sigue fuera del payload conectado.
+- **Consecuencias:** Se mantiene compatibilidad de consumidores existentes y el árbol de filtros funciona con datos jerárquicos. Un test de integración cubre mapeo raíz/hoja, producto, conteo y filtros técnicos.
+
+## D-025 — Los enlaces de correo usan el origen donde se inició Auth
+
+- **Fecha:** 2026-10-08
+- **Estado:** Integrado en `components/storefront/auth-form.tsx` y `app/auth/callback/route.ts`; falta verificación de Auth hospedado.
+- **Contexto:** Los enlaces de Supabase estaban regresando a `localhost` cuando `NEXT_PUBLIC_SITE_URL` no coincidía con el deployment actual.
+- **Decisión:** Crear enlaces de confirmación/recuperación con `window.location.origin`, canjearlos en `/auth/callback` y aceptar solo redirects internos seguros. La UI ofrece reintento explícito y mensajes neutrales; no intenta reenviar automáticamente.
+- **Consecuencias:** Preview y staging regresan al mismo host de inicio, pero el operador aún debe añadir los redirect URLs de Supabase y configurar SMTP propio. El límite del proveedor de correo no se resuelve en la aplicación.

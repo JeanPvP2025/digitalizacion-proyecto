@@ -1,6 +1,6 @@
 # Seguridad y RLS
 
-Estado del **2026-10-08** tras integrar el contrato de escritura editorial de catálogo y su UI por rol. Migraciones, código y pruebas locales fueron revisados. No se probaron credenciales remotas ni JWT de un proyecto de producción.
+Estado del **2026-10-08** tras integrar profundidad de catálogo/Auth UX. La migración nueva solo agrega datos ficticios y no toca grants/RLS. El reset, pruebas y lint se ejecutaron contra Supabase local; no se probaron credenciales remotas ni JWT del proyecto alojado.
 
 ## Controles integrados
 
@@ -13,6 +13,7 @@ Estado del **2026-10-08** tras integrar el contrato de escritura editorial de ca
 - CRM limita organizaciones/membresías por tenant. Ventas puede reclamar propuestas B2B sin asignar; la cola expone actividad `internal`, no notas privadas de organización. Ventas no accede a pedidos ni pagos.
 - Reseñas requieren una línea de pedido entregada del mismo usuario/producto; comienzan en moderación y solo las publicadas se exponen públicamente.
 - `authenticated` no tiene DML directo amplio sobre catálogo. `update_catalog_product_editorial` valida rol persistido en PostgreSQL y solo acepta `name`, `summary`, `description`, `image_url`, `image_alt` y `badge`; el route handler repite autorización y usa la sesión del usuario. El E2E de `catalog_manager` persiste y restaura un campo, y confirma denegación en las otras áreas internas.
+- Los enlaces de confirmación y recuperación usan el origen del navegador que inició Auth; `/auth/callback` canjea el código y valida que `next` sea una ruta interna. La allowlist de redirects y el SMTP son configuración externa pendiente; los cambios de UX no eliminan el límite de envío ni demuestran una sesión remota.
 - Emisión de pedido formal B2B exige owner/admin de la organización, cotización aceptada y stock validado; la función crea un pedido idempotente pendiente de anticipo y no confía en importes/direcciones como autorización.
 - El anticipo B2B demo solo lo resuelve owner/admin del tenant mediante `resolve_business_order_demo_payment`; valida que el pedido tenga vínculo B2B, fija outcome/evento idempotente y escribe pago, timeline y CRM en la transacción. Un rechazo cancela y libera reservas; fulfillment requiere pago `paid`.
 - Procurement y fulfillment usan RPCs con autorización en PostgreSQL; receipts enlazan movimientos del ledger, y expedición consume la reserva una sola vez.
@@ -23,7 +24,7 @@ Estado del **2026-10-08** tras integrar el contrato de escritura editorial de ca
 
 - `pwsh -File tests/integration/auth-boundaries/run-local.ps1`: **78 probes HTTP, 0 fallos**, con JWT emitidos por GoTrue y consultas PostgREST. Incluye anon, customer A/B, B2B admin/buyer, catalog, support, sales, fulfillment, superadmin, aislamiento de objetos, roles, RPCs, modo demo y scan de secreto cliente.
 - `tests/integration/postgres-rls.sql`, `tests/integration/security/postgres-object-isolation.sql`, role-action matrix, auth escalation, Support/RMA y movimientos de inventario: pasan con fixtures en transacciones revertidas.
-- pgTAP database/checkout/reviews: 230 aserciones; `supabase db lint --local --fail-on error`: sin errores.
+- En la integración de profundidad: `pnpm dlx supabase@latest test db --local tests/database` pasó 183 aserciones; `pnpm dlx supabase@latest db lint --local --schema public,private --level error --fail-on error` sin errores.
 - `tests/integration/support-flow/return-inspection.sql`: actor support/cliente denegado; almacén prueba cantidades, restock/desecho, conflicto/replay de idempotencia, unicidad de disposición, cierre y timeline.
 - `tests/integration/b2b-connected/run.ps1`: el runner aislado valida pago B2B aprobado/rechazado, replay, clave con resultado distinto, buyer denegado, auditoría y liberación de reserva.
 - `tests/e2e/checkout-connected/run.ps1`: 4/4 con sesión browser GoTrue/PostgREST; aprueba, rechaza, reintenta tras refresh, rechaza payload con clave repetida y evita doble reserva bajo concurrencia.
@@ -32,4 +33,4 @@ Estado del **2026-10-08** tras integrar el contrato de escritura editorial de ca
 
 ## Límites
 
-La matriz no prueba CRUD de cada columna/tabla/endpoint contra todos los roles; `RBAC_MATRIX.md` conserva ese límite. Los roles `manager` y `marketing` no existen como grants y no deben inventarse sin una decisión de producto. Demo Mode local ya ofrece bootstrap repetible de cuentas con grants; queda una revisión visual manual del recorrido por todos los roles. No hay secret management/deployment remoto probado. El anticipo B2B no equivale a un pago real. No habilitar datos reales ni afirmar certificación de producción.
+La matriz no prueba CRUD de cada columna/tabla/endpoint contra todos los roles; `RBAC_MATRIX.md` conserva ese límite. Los roles `manager` y `marketing` no existen como grants y no deben inventarse sin una decisión de producto. Demo Mode local ya ofrece bootstrap repetible de cuentas con grants; queda una revisión visual manual del recorrido por todos los roles. No hay secret management/deployment remoto probado. La migración de catálogo no se aplicó a staging; la tasa de correo/Auth alojado sigue sin verificarse. El anticipo B2B no equivale a un pago real. No habilitar datos reales ni afirmar certificación de producción.

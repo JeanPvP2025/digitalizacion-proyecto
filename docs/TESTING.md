@@ -20,7 +20,7 @@ pwsh -File tests/e2e/checkout-connected/run.ps1
 
 El runner obtiene claves solo en memoria desde el status de Supabase local, rechaza URLs no loopback, ejecuta Chromium con `DEMO_MODE=false` y limpia fixtures. Cubre aprobado, rechazado, misma clave/payload, clave/payload distinto, refresh/retry y dos sesiones concurrentes con una unidad. Nunca ejecutar simultáneamente con otros tests que muten el mismo proyecto local.
 
-Resultado de integración 2026-10-08: 189 Vitest + 18 Node; E2E demo/UX 17/17 tras excluir las suites que requieren Supabase aislado; checkout conectado 4/4; dominios conectados 6/6; B2B browser aislado 1/1; customer/B2B visual Auth 1/1; roles/backoffice/catálogo 1/1; TypeScript y ESLint pasan. Build y reset/pgTAP/DB runtime están registrados en `STATUS.md`. La route suite RMA es 4/4. Playwright reporta `caret-color: transparent` durante hidratación sin atribución al código, y Windows informa conflicto `NO_COLOR`/`FORCE_COLOR`.
+Integración de profundidad 2026-10-08: `pnpm test` 288 Vitest + 18 Node; `pnpm exec tsc --noEmit`, `pnpm lint`, `pnpm install --frozen-lockfile` y `pnpm build` pasan. E2E base 17/17 y suite nueva de storefront/editorial 2/2. Auth aislado 30/30 unit/integration y 6/6 browser; búsqueda 46/46 en el worktree y 288 en la suite integrada; datos de catálogo 19/19 y `node scripts/catalog/generate.mjs --check`. Build incluye 39 rutas. Supabase local: reset 19 migraciones+seed; pgTAP `tests/database` 183/183; db lint público/privado sin errores; 96 productos publicados, 27 categorías, 7 marcas y 96 variantes EUR activas. La primera ejecución del reset descubrió una variable PL/pgSQL ambigua; se corrigió y la repetición pasó. Playwright reporta `caret-color: transparent` durante hidratación sin atribución al código, y Windows informa conflicto `NO_COLOR`/`FORCE_COLOR`.
 
 ## Rendimiento y accesibilidad medidos
 
@@ -34,7 +34,7 @@ El bootstrap `scripts/demo/assign-staff-roles.ps1` se ejecutó contra Supabase l
 
 ```powershell
 pnpm dlx supabase@latest db reset --local --yes
-pnpm dlx supabase@latest db lint --local --fail-on error
+pnpm dlx supabase@latest db lint --local --schema public,private --level error --fail-on error
 pnpm dlx supabase@latest test db --local tests/database tests/integration/commerce/checkout-flow.sql tests/integration/reviews/product-reviews.sql
 Get-Content tests\integration\postgres-rls.sql -Raw | docker exec -i supabase_db_nodria-commerce psql -U postgres -d postgres -v ON_ERROR_STOP=1
 Get-Content tests\integration\security\postgres-object-isolation.sql -Raw | docker exec -i supabase_db_nodria-commerce psql -U postgres -d postgres -v ON_ERROR_STOP=1
