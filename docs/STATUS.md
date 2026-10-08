@@ -1,6 +1,16 @@
 # Estado del proyecto
 
-Estado observado el **2026-10-08** tras integrar la sexta ola y cerrar los slices locales de RMA/anticipo B2B/bootstrap demo, catálogo editorial y UX autenticada. Git, código, migraciones y pruebas locales prevalecen sobre estados anteriores de los agentes. No existe un proyecto Supabase remoto configurado ni se ha probado un despliegue de producción.
+Estado observado el **2026-10-08** en `main` (`5bf196d`) e inspección HTTP del entorno alojado. La app responde en `https://nodria-staging.vercel.app`; el usuario creó Supabase `ypnhdxpejcbcyjiosrhf` y comprobó RPCs/RLS desde el dashboard. No se ha certificado el flujo Auth/email ni un recorrido conectado completo en el entorno alojado. No ejecutar resets/seed global ni operaciones destructivas contra Supabase remoto.
+
+## Fase de profundidad comercial — auditoría inicial
+
+- ✅ La portada, `/catalogo`, `/acceso`, `/configurador` y `/empresas` respondieron HTTP 200 en la comprobación actual; disponibilidad no equivale a comportamiento autenticado.
+- ⚠️ Auth está bloqueando pruebas de usuarios: se reportan `email rate limit exceeded`, `Invalid login credentials` y error al canjear el enlace. El SMTP integrado de Supabase limita el envío y no es adecuado para uso público; verificar URL Configuration, callback y SMTP.
+- ⚠️ `/catalogo` muestra 12 resultados; `supabase/seed.sql` define 12 productos y seis categorías amplias. Las doce fichas usan `NODRIA` como marca. Es insuficiente para que búsqueda/filtros/comparación transmitan sensación de tienda.
+- ⚠️ La portada obtiene destacados de fixtures locales (`demoProducts`) incluso cuando el catálogo principal es conectado; alinear merchandising con la fuente activa.
+- ⏳ `/blog`, `/guias`, `/marcas`, `/campanas` y `/categorias/ordenadores` respondieron 404. No hay ecosistema editorial o páginas de marca/campaña; `/servicios` requiere auditoría de profundidad.
+- ⚠️ La PDP tiene contenido base y especificaciones, pero carece de galería editorial, guías/FAQ conectadas, alternativas estructuradas y merchandising por producto.
+- ✅ La identidad y las transacciones permanecen explícitamente ficticias; conservar avisos de simulación y no solicitar datos de tarjeta.
 
 ## Estado funcional
 
@@ -67,11 +77,16 @@ Warnings no bloqueantes conocidos: Node reporta `MODULE_TYPELESS_PACKAGE_JSON` e
 
 ### P0
 
-- ✅ No hay bloqueo P0 reproducible en el stack local tras esta ola.
-- ⛔ **Go-live remoto:** no-go hasta disponer de proyecto/credenciales, redirects/secret management, migraciones remotas y pruebas de despliegue; no está dentro de los gates locales.
+- ⚠️ **Auth de la demo alojada:** corregir URL Configuration/allowlist y correo SMTP; verificar alta, confirmación, inicio y recuperación con una cuenta de prueba. Los errores reportados impiden llamar al entorno estable para usuarios.
+- ✅ No se detectó caída HTTP en las rutas alojadas probadas; falta verificación funcional remota.
+- ⚠️ No es un comercio real: checkout/pagos/envíos, clientes, productos y opiniones son ficticios; presentarlo como demo y mantener el límite visible.
 
 ### P1
 
+- 🚧 Aumentar catálogo con dataset determinista curado, marcas/familias coherentes, categorías anidadas y atributos; llevarlo al entorno remoto solo mediante operación aditiva revisada, nunca reset de producción.
+- 🚧 Alinear portada con catálogo activo; no seleccionar destacados desde `demoProducts` en modo conectado.
+- 🚧 Crear guías/artículos y páginas de marca conectadas a productos/categorías; actualmente `/blog`, `/guias` y `/marcas` no existen.
+- 🚧 Profundizar PDP, filtros por categoría, búsqueda y recomendaciones; revisar zero-results, agotados y variantes.
 - ✅ Matriz de permisos por rol y dominio documentada en `RBAC_MATRIX.md`, con 78 probes HTTP autenticados, pruebas SQL por dominios críticos y E2E de roles; no equivale a CRUD exhaustivo por columna ni prueba cada Server Action.
 - ✅ **Escritura segura de catálogo:** migration revoca DML amplio y `update_catalog_product_editorial` aplica allowlist/rol en PostgreSQL. API de sesión, route/unit tests y E2E que edita y restaura un producto seed. Ver `docs/CATALOG_MANAGER_UI.md`.
 
@@ -84,6 +99,7 @@ Warnings no bloqueantes conocidos: Node reporta `MODULE_TYPELESS_PACKAGE_JSON` e
 - [x] Recorrido Auth visual con sesión de cliente y membresías buyer/viewer/owner/admin, tenant ajeno y viewports 390/768/1280; sin mutaciones CRUD. Ver `docs/UX_CUSTOMER_B2B_AUDIT.md`.
 - [x] Shell y navegación interna de `/soporte/agente` con saltos de teclado/estados y viewports 390/768/1280. Ver `docs/UX_STAFF_SHELL.md`.
 - [ ] Medir contraste y revisar lector de pantalla de todas las superficies backoffice con tooling dedicado; E2E de nombre/foco/overflow no sustituye esa auditoría.
+- [ ] Añadir historial sintético variado para CRM/operaciones de forma segura y repetible, sin crear eventos que parezcan transacciones reales ni sobrescribir datos existentes.
 - [ ] Configurar dominio público para verificar `robots.txt`, sitemap, schema y metadatos en despliegue. En local se bloquea indexación deliberadamente para evitar publicar una demo sin dominio real.
 - [ ] Identificar el origen del estilo `caret-color: transparent` que Playwright registra en la hidratación y resolver warnings de entorno sin alterar semántica del producto.
 

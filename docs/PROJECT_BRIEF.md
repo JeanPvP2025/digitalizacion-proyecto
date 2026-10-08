@@ -21,7 +21,8 @@ Build a coherent product that demonstrates workflows across catalogue, discovery
 - Next.js App Router, React, strict TypeScript and Tailwind CSS.
 - Supabase Auth, PostgreSQL, RLS and Storage for connected deployments.
 - Zod request validation; Server Components by default; Client Components only for browser interaction.
-- Vercel is the intended hosting target. No production project or credentials are configured.
+- Hosted environment: Vercel project `nodria-staging` at `https://nodria-staging.vercel.app`, connected to Supabase project `ypnhdxpejcbcyjiosrhf` in Europe. NODRIA remains a fictional demonstration, not a real retailer or payment service.
+- Hosting is live, but that does not certify every remote workflow. Auth email delivery/callback setup and production-like functional verification remain explicit release checks in `STATUS.md`.
 
 ## Demo and security rules
 

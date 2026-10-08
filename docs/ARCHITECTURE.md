@@ -1,6 +1,6 @@
 # Arquitectura inicial de NODRIA
 
-**Estado de este documento:** snapshot de integración local, 2026-10-08. El repo contiene storefront, Auth SSR, checkout conectado, CRM/B2B con pedido y anticipo demo, soporte/RMA con shell de staff, revisión/reembolso e inspección, reseñas, fulfillment por etapas, KPIs operativos, inventario/procurement, PC Builder comprable y editor interno de catálogo con RPC editorial restringida. Demo Mode conectado es repetible con grants locales; las pruebas de rol cubren slices críticos, no cada combinación CRUD/campo. Gates y límites constan en `STATUS.md`; no hay entorno Supabase remoto ni despliegue probado. Imágenes demo estáticas usan `next/image`; las conectadas conservan URL externa solo donde la configuración no garantiza un host optimizador permitido. Ver `SECURITY.md`, `RBAC_MATRIX.md`, `TESTING.md` y `PERFORMANCE_AUDIT.md`.
+**Estado de este documento:** snapshot de integración y primera revisión del entorno alojado, 2026-10-08. Vercel sirve `nodria-staging.vercel.app`; el usuario creó Supabase `ypnhdxpejcbcyjiosrhf` y comprobó RPCs/RLS desde el dashboard. La comprobación HTTP reciente dio 200 en portada, catálogo y acceso, pero no certifica transacciones ni Auth remoto: se reportaron errores de envío de correo, credenciales y callback. La revisión de profundidad registra 12 productos, seis categorías amplias, una sola marca visible y ausencia de rutas editoriales/de marca/campaña. Ver backlog y límites actuales en `STATUS.md` y `WORKSTREAMS.md`.
 
 ## Objetivo y restricciones
 
@@ -94,7 +94,7 @@ Los nombres públicos configurados son `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC
 
 ### Entornos de entrega
 
-El objetivo es Vercel para Next.js y Supabase para base de datos/Auth/Storage. Antes de publicar se requiere: proyecto Supabase por entorno; URLs de Auth/redirección; variables protegidas en Vercel; aplicación automatizable de migraciones versionadas; seed ficticio solo en desarrollo/demo; revisión de policies RLS; y build validado. No hay una configuración de producción creada o probada.
+El entorno alojado actual usa Vercel para Next.js y Supabase para base de datos/Auth. El staging funciona como demo pública y no acepta dinero real. El código de Auth usa callback same-origin; para habilitar confirmaciones/restablecimientos todavía se necesita una allowlist de Auth correcta y un proveedor de correo adecuado. Los RPC/RLS se verificaron en el dashboard por el usuario, pero los nuevos slices de contenido y los datos ampliados no se han aplicado al proyecto remoto. Nunca resetear ni reconstruir la base remota para facilitar desarrollo.
 
 Vercel Preview debe usar datos no productivos y credenciales separadas. Los cambios de schema deben desplegarse en orden controlado antes del código que los consume. El procedimiento concreto de migración y rollback debe seguir las herramientas y migraciones presentes en el repositorio cuando se implemente el workstream de base de datos.
 

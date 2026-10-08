@@ -100,3 +100,19 @@ La integración revisó diffs, migración, contratos y pruebas. `pnpm test:e2e` 
 ## Definition of Done por conversación
 
 Read `PROJECT_BRIEF.md`, `ARCHITECTURE.md`, `DECISIONS.md`, `STATUS.md`, this board, `AGENT_HANDOFF.md`, `DATA_MODEL.md` and `RBAC_MATRIX.md`; inspect `git status`, commits, relevant code/contracts; keep ownership boundaries; test the slice; update relevant docs; deliver files, commit, tests/results, decisions, bugs/risks, contracts and next steps. Integration lead reconciles changes before a slice is called complete.
+
+## Fase de profundidad — Ola A (activa)
+
+La auditoría del 2026-10-08 confirmó una app alojada, pero solo 12 productos, seis categorías, una marca y ausencia de rutas `/blog`, `/guias`, `/marcas` y `/campanas`. Esta ola cierra vertical slices públicos. Tech Lead mantiene STATUS/WORKSTREAMS/AGENT_HANDOFF/DECISIONS centrales; cada agente documenta su handoff propio bajo `docs/phase-depth/`. No hacer resets ni operaciones destructivas en Supabase remoto. Los datasets son ficticios; cualquier cambio remoto debe ser aditivo y revisable.
+
+| Conversation | Role | Task | Ownership | Dependencies | State |
+|---|---|---|---|---|---|
+| Pending creation | Auth Onboarding Agent | Mejorar UX de rate limit/credenciales/callback y probar el flujo de acceso | `components/storefront/auth-form.tsx`, `app/auth/callback/**`, tests Auth propios, `docs/phase-depth/auth.md` | URL Configuration + SMTP remoto requieren operador | Ready; configuración externa identificada |
+| Pending creation | Catalog Data Agent | Dataset sintético determinista con marcas/familias, categorías jerárquicas y validación | `supabase/migrations/**` (solo aditivas), `supabase/seed.sql`, `scripts/catalog/**`, tests de datos propios, `docs/phase-depth/catalog-data.md` | Contratos actuales products/categories/variants/specifications; nunca reset remoto | Ready; ningún otro agente edita SQL/seed |
+| Pending creation | Catalog Discovery Agent | Facetas/filtros por categoría y estados de navegación | `app/(store)/catalogo/**`, componentes y estilos propios de catálogo, tests dedicados | Contrato actual de `Product.specifications`; adapción al dataset nueva solo con cambios compatibles | Ready |
+| Pending creation | Product Detail Agent | PDP profunda: contenido útil, variantes, alternativas y enlaces editoriales | `app/(store)/producto/[slug]/**`, `lib/content/product-editorial.ts`, tests propios, handoff propio | Mantener contrato Product; enlazar slugs válidos | Ready |
+| Pending creation | Search & Discovery Agent | Autocomplete, SKU/atributos, sinónimos y recuperación de cero resultados | `lib/search/**`, `app/api/search/**`, `components/storefront/search-box.tsx`, tests propios | Contrato de catálogo existente; coordinar vocabulario del dataset | Ready |
+| Pending creation | Editorial Agent | Rutas de blog y guías con contenido ficticio curado enlazado al comercio | `app/(store)/blog/**`, `app/(store)/guias/**`, `lib/content/editorial.ts`, tests propios, handoff propio | Slugs de producto/categoría; no editar sitemap global | Ready |
+| Pending creation | Homepage Merchandising Agent | Portada conectada a catálogo activo con destacados/campañas derivados de reglas | `app/(store)/page.tsx`, `lib/content/merchandising.ts`, tests propios, handoff propio | `getCatalogData()` y contratos existentes | Ready |
+
+Siguiente ola tras integrar: perfiles/páginas de marca y campañas, reviews/Q&A y datos históricos CRM/operaciones. No mezclar seed operativo con expansión de catálogo; cada nuevo trabajo remoto deberá usar fixtures aislados y reglas idempotentes.

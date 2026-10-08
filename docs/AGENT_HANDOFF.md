@@ -1,5 +1,12 @@
 # Registro de handoffs
 
+## Coordinación de fase de profundidad comercial — 2026-10-08
+
+- Se inspeccionaron estado Git, commits, documentación, esquema/seed del catálogo y disponibilidad HTTP. `main` estaba limpio en `5bf196d` antes de esta reconciliación documental.
+- Evidencia en producción: `/`, `/catalogo`, `/acceso`, `/configurador`, `/empresas` responden 200; `/blog`, `/guias`, `/marcas`, `/campanas` y `/categorias/ordenadores` responden 404. El catálogo muestra 12 productos, seis categorías y la marca única `NODRIA`; la portada aún lee destacados de fixtures locales. No es una prueba de flujos autenticados.
+- Se corrigieron afirmaciones obsoletas en `PROJECT_BRIEF.md`, `ARCHITECTURE.md` y `STATUS.md`: existe Vercel/Supabase remoto, pero Auth está bloqueado según los errores comunicados por el usuario y la demo no está validada integralmente en remoto.
+- Próximo: Ola A paralela de Auth onboarding, catálogo/datos, filtros, PDP, search, editorial y homepage. El Tech Lead retiene documentos globales. No resetear Supabase remoto ni aplicar el seed completo de desarrollo en producción; cualquier cambio de catálogo debe ser aditivo y revisado.
+
 ## Handoff gestión interna de catálogo — 2026-10-08
 
 - Estado: bloqueado con evidencia, no implementado. `catalog_manager` existe en `app_role`, `private.has_any_staff_role` y policies RLS; la migración base también concede DML completo a `authenticated` sobre tablas de catálogo.

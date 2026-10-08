@@ -1,5 +1,13 @@
 # Registro de decisiones
 
+## D-023 — Profundidad comercial en el entorno alojado sin mutaciones destructivas
+
+- **Fecha:** 2026-10-08
+- **Estado:** Confirmada para esta fase.
+- **Contexto:** NODRIA está accesible en Vercel y conectado a un proyecto Supabase, pero es una demo académica con datos ficticios. El entorno remoto contiene datos que deben conservarse.
+- **Decisión:** Ampliar el producto con contenido y datos deterministas, sintéticos y compatibles. Cambios de BD solo aditivos e idempotentes; probar reset/seed exclusivamente en Supabase local aislado y revisar cualquier operación antes de aplicarla remotamente. Nunca resetear ni ejecutar seed completo de desarrollo contra producción.
+- **Consecuencias:** Pedidos, pagos, reviews, stock y promociones siguen siendo ficticios; el checkout no solicita tarjeta. Conservar IDs/slugs existentes y snapshots transaccionales.
+
 Las decisiones de alcance heredadas de la misión se marcan **Confirmada**. Las decisiones técnicas que aún dependen de migraciones o implementación se marcan **Propuesta** hasta que el código, los contratos o una revisión del tech lead las materialicen. Fecha del registro inicial: **2026-10-07**.
 
 ## D-001 — Identidad de producto: NODRIA
