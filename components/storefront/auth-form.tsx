@@ -20,8 +20,10 @@ type AuthFormProps = {
 };
 
 function getCallbackUrl(destination: string) {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || window.location.origin;
-  const callbackUrl = new URL("/auth/callback", siteUrl);
+  // Auth links must return to the host where the user started the flow.
+  // A build-time NEXT_PUBLIC_SITE_URL can be stale or point at localhost,
+  // especially across Vercel production and preview deployments.
+  const callbackUrl = new URL("/auth/callback", window.location.origin);
   callbackUrl.searchParams.set("next", getSafeRedirectPath(destination));
   return callbackUrl.toString();
 }

@@ -84,6 +84,10 @@ El script pide el correo asociado a `super_admin`, `catalog_manager`, `support_a
 
 Esta opción sigue siendo una instalación local de desarrollo. Las pruebas de base y de rutas no son un E2E de navegador conectado ni certifican un despliegue remoto.
 
+### Supabase Auth en Vercel
+
+Para que confirmaciones de cuenta y recuperación vuelvan a la app desplegada, en Supabase abre **Authentication → URL Configuration** y configura **Site URL** como `https://nodria-staging.vercel.app`. Añade `https://nodria-staging.vercel.app/auth/callback` a **Redirect URLs** (y `http://localhost:3000/auth/callback` solo si también necesitas probar el flujo local). En las plantillas de correo, el enlace debe respetar `{{ .RedirectTo }}` cuando se proporciona; no fuerces `{{ .SiteURL }}` como destino final. La app construye `emailRedirectTo` desde el origen donde el usuario inició el flujo y termina en `/auth/callback`.
+
 ## Reiniciar la demo
 
 ### Borrar pedidos y formularios del modo de archivos
