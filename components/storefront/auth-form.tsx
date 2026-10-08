@@ -3,9 +3,11 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
-import { ArrowRight, KeyRound, LoaderCircle, LockKeyhole, Mail, UserRound } from "lucide-react";
+import { ArrowRight, Check, KeyRound, LoaderCircle, LockKeyhole, Mail, ShieldCheck, UserRound } from "lucide-react";
 import { createSupabaseBrowserClient } from "@/lib/supabase/browser";
 import { getSafeRedirectPath } from "@/lib/supabase/redirects";
+import { BrandMark } from "@/components/storefront/brand-mark";
+import styles from "./auth-form.module.css";
 
 type Mode = "signin" | "signup" | "reset" | "update";
 
@@ -97,55 +99,92 @@ export function AuthForm({ demoMode, redirectTo, initialMode, initialError, init
         : "Recupera el acceso.";
 
   return (
-    <main className="auth-page">
-      <section className="auth-panel">
-        <p className="eyebrow">NODRIA · TU ESPACIO</p>
-        <h1>{title}</h1>
-        <p className="auth-description">
-          {mode === "signin"
-            ? "Tus pedidos, tus configuraciones, tu tecnología."
-            : mode === "signup"
-              ? "Crea tu cuenta y guarda tus configuraciones y pedidos en un solo lugar."
-              : mode === "update"
-                ? "La nueva contraseña se guardará en tu cuenta de Supabase."
-                : "Te enviaremos instrucciones al correo asociado a tu cuenta."}
-        </p>
-
-        {demoMode ? (
-          <div className="auth-demo-notice" role="status">
-            <strong>Autenticación desactivada en esta demo.</strong>
-            <p>Esta instancia no tiene un proyecto Supabase configurado. No introduzcas contraseñas aquí; puedes seguir explorando el catálogo y los flujos ficticios.</p>
-            <Link className="button button--dark" href="/catalogo">Explorar catálogo <ArrowRight size={14} /></Link>
+    <main className={styles.page}>
+      <div className={styles.frame}>
+        <aside className={styles.story} aria-label="Tu espacio NODRIA">
+          <div className={styles.storyTop}>
+            <BrandMark />
+            <span className={styles.storyIndex}>CUENTA PERSONAL <b>·</b> 01</span>
           </div>
-        ) : (
-          <>
-            {(mode === "signin" || mode === "signup") && (
-              <div className="auth-tabs" role="tablist" aria-label="Acceso">
-                <button className={mode === "signin" ? "active" : ""} onClick={() => { setMode("signin"); setError(""); setMessage(""); }} type="button">Iniciar sesión</button>
-                <button className={mode === "signup" ? "active" : ""} onClick={() => { setMode("signup"); setError(""); setMessage(""); }} type="button">Crear cuenta</button>
+          <div className={styles.storyCopy}>
+            <p className={styles.kicker}><i /> TECNOLOGÍA, A TU MANERA</p>
+            <h2>Todo lo tuyo.<br /><em>En su sitio.</em></h2>
+            <p className={styles.storyDescription}>Pedidos, equipos guardados y soporte, reunidos en un espacio pensado para seguirte el ritmo.</p>
+          </div>
+          <div className={styles.visual} aria-hidden="true">
+            <div className={styles.visualGrid} />
+            <div className={styles.visualOrbit} />
+            <div className={styles.visualHalo} />
+            <div className={styles.deviceFrame}>
+              <div className={styles.deviceScreen}>
+                <span className={styles.deviceLine} />
+                <span className={styles.deviceLineShort} />
+                <span className={styles.devicePulse} />
               </div>
-            )}
-            <form className="auth-form" onSubmit={submit}>
-              {mode === "signup" && <div className="field"><label htmlFor="auth-name">Nombre completo</label><div className="auth-input-wrap"><UserRound size={15} /><input id="auth-name" name="fullName" autoComplete="name" maxLength={120} minLength={2} required /></div></div>}
-              {mode !== "update" && <div className="field"><label htmlFor="auth-email">Correo electrónico</label><div className="auth-input-wrap"><Mail size={15} /><input id="auth-email" name="email" type="email" autoComplete="email" maxLength={254} required /></div></div>}
-              {mode !== "reset" && <div className="field"><label htmlFor="auth-password">{mode === "update" ? "Nueva contraseña" : "Contraseña"}</label><div className="auth-input-wrap"><KeyRound size={15} /><input id="auth-password" name="password" type="password" autoComplete={mode === "signin" ? "current-password" : "new-password"} minLength={8} maxLength={72} required /></div><small>Mínimo 8 caracteres.</small></div>}
-              {error && <p className="auth-message auth-message--error" role="alert">{error}</p>}
-              {message && <p className="auth-message" role="status">{message}</p>}
-              <button className="button button--dark auth-submit" disabled={busy} type="submit">
-                {busy ? <LoaderCircle size={15} className="spin-icon" /> : <LockKeyhole size={15} />}
-                {busy ? "Un momento…" : mode === "signin" ? "Entrar en mi espacio" : mode === "signup" ? "Crear mi cuenta" : mode === "update" ? "Guardar contraseña" : "Enviar instrucciones"}
-                <ArrowRight size={14} />
-              </button>
-            </form>
-            <div className="auth-links">
-              {mode === "signin" && <button type="button" onClick={() => { setMode("reset"); setError(""); setMessage(""); }}>¿Has olvidado tu contraseña?</button>}
-              {(mode === "reset" || mode === "update") && <button type="button" onClick={() => { setMode("signin"); setError(""); setMessage(""); }}>Volver a iniciar sesión</button>}
-              <Link href="/">Seguir explorando sin cuenta</Link>
+              <span className={styles.deviceBase} />
             </div>
-            <p className="auth-privacy">Tu cuenta y tus pedidos se consultan con tu sesión autenticada y las políticas de acceso de Supabase.</p>
-          </>
-        )}
-      </section>
+            <div className={styles.visualTag}><span>ESPACIO NODRIA</span><b>01 / 03</b></div>
+          </div>
+          <div className={styles.storyFoot}>
+            <span><Check size={14} /> Seguimiento de pedidos</span>
+            <span><Check size={14} /> Configuraciones guardadas</span>
+          </div>
+        </aside>
+
+        <section className={styles.formPanel} aria-labelledby="auth-title">
+          <div className={styles.formTopline}>
+            <span><ShieldCheck size={15} /> ACCESO A TU CUENTA</span>
+            <Link href="/">Volver a la tienda <ArrowRight size={13} /></Link>
+          </div>
+          <div className={styles.formHeading}>
+            <p className={styles.mobileKicker}>NODRIA · TU ESPACIO</p>
+            <h1 id="auth-title">{title}</h1>
+            <p>{mode === "signin"
+              ? "Continúa donde lo dejaste."
+              : mode === "signup"
+                ? "Crea tu cuenta y reúne aquí tus pedidos y equipos."
+                : mode === "update"
+                  ? "Elige una contraseña nueva para tu cuenta."
+                  : "Te enviaremos instrucciones al correo asociado a tu cuenta."}</p>
+          </div>
+
+          {demoMode ? (
+            <div className={styles.demoNotice} role="status">
+              <div className={styles.demoIcon}><LockKeyhole size={19} /></div>
+              <strong>El acceso no está conectado en esta demo</strong>
+              <p>Esta instancia no tiene un proyecto Supabase configurado. No introduzcas contraseñas; puedes explorar el catálogo y los flujos ficticios.</p>
+              <Link className={`button button--dark ${styles.submit}`} href="/catalogo">Explorar catálogo <ArrowRight size={15} /></Link>
+            </div>
+          ) : (
+            <>
+              {(mode === "signin" || mode === "signup") && (
+                <div className={styles.switcher} role="group" aria-label="Elige cómo acceder">
+                  <button aria-pressed={mode === "signin"} className={mode === "signin" ? styles.selected : ""} onClick={() => { setMode("signin"); setError(""); setMessage(""); }} type="button">Iniciar sesión</button>
+                  <button aria-pressed={mode === "signup"} className={mode === "signup" ? styles.selected : ""} onClick={() => { setMode("signup"); setError(""); setMessage(""); }} type="button">Crear cuenta</button>
+                </div>
+              )}
+              <form className={styles.form} onSubmit={submit}>
+                {mode === "signup" && <div className={styles.field}><label htmlFor="auth-name">Nombre completo</label><div className={styles.inputWrap}><UserRound aria-hidden="true" size={17} /><input id="auth-name" name="fullName" autoComplete="name" maxLength={120} minLength={2} placeholder="Cómo te llamas" required /></div></div>}
+                {mode !== "update" && <div className={styles.field}><label htmlFor="auth-email">Correo electrónico</label><div className={styles.inputWrap}><Mail aria-hidden="true" size={17} /><input id="auth-email" name="email" type="email" autoComplete="email" maxLength={254} placeholder="nombre@correo.com" required /></div></div>}
+                {mode !== "reset" && <div className={styles.field}><label htmlFor="auth-password">{mode === "update" ? "Nueva contraseña" : "Contraseña"}</label><div className={styles.inputWrap}><KeyRound aria-hidden="true" size={17} /><input id="auth-password" name="password" type="password" autoComplete={mode === "signin" ? "current-password" : "new-password"} minLength={8} maxLength={72} placeholder="Mínimo 8 caracteres" required /></div>{mode !== "signin" && <small>Usa al menos 8 caracteres.</small>}</div>}
+                {error && <p className={styles.messageError} role="alert">{error}</p>}
+                {message && <p className={styles.messageSuccess} role="status">{message}</p>}
+                <button className={`button button--dark ${styles.submit}`} disabled={busy} type="submit">
+                  {busy ? <LoaderCircle size={16} className={styles.spinner} /> : <LockKeyhole size={16} />}
+                  {busy ? "Un momento…" : mode === "signin" ? "Iniciar sesión" : mode === "signup" ? "Crear mi cuenta" : mode === "update" ? "Guardar contraseña" : "Enviar instrucciones"}
+                  <ArrowRight size={15} />
+                </button>
+              </form>
+              <div className={styles.formLinks}>
+                {mode === "signin" && <button type="button" onClick={() => { setMode("reset"); setError(""); setMessage(""); }}>¿Has olvidado tu contraseña?</button>}
+                {(mode === "reset" || mode === "update") && <button type="button" onClick={() => { setMode("signin"); setError(""); setMessage(""); }}>Volver a iniciar sesión</button>}
+                <span>{mode === "signup" ? "¿Ya tienes una cuenta?" : mode === "signin" ? "¿Primera vez aquí?" : ""} {(mode === "signin" || mode === "signup") && <button type="button" onClick={() => { setMode(mode === "signin" ? "signup" : "signin"); setError(""); setMessage(""); }}>{mode === "signin" ? "Crea tu cuenta" : "Inicia sesión"}</button>}</span>
+              </div>
+              <p className={styles.privacy}><LockKeyhole size={13} /> Tu cuenta y tus pedidos están protegidos por tu sesión y los permisos de acceso.</p>
+            </>
+          )}
+        </section>
+      </div>
     </main>
   );
 }
