@@ -5,7 +5,7 @@
 - Se inspeccionaron estado Git, commits, documentación, esquema/seed del catálogo y disponibilidad HTTP. `main` estaba limpio en `5bf196d` antes de esta reconciliación documental.
 - Evidencia en producción: `/`, `/catalogo`, `/acceso`, `/configurador`, `/empresas` responden 200; `/blog`, `/guias`, `/marcas`, `/campanas` y `/categorias/ordenadores` responden 404. El catálogo muestra 12 productos, seis categorías y la marca única `NODRIA`; la portada aún lee destacados de fixtures locales. No es una prueba de flujos autenticados.
 - Se corrigieron afirmaciones obsoletas en `PROJECT_BRIEF.md`, `ARCHITECTURE.md` y `STATUS.md`: existe Vercel/Supabase remoto, pero Auth está bloqueado según los errores comunicados por el usuario y la demo no está validada integralmente en remoto.
-- Próximo: Ola A paralela de Auth onboarding, catálogo/datos, filtros, PDP, search, editorial y homepage. El Tech Lead retiene documentos globales. No resetear Supabase remoto ni aplicar el seed completo de desarrollo en producción; cualquier cambio de catálogo debe ser aditivo y revisado.
+- Próximo: Ola A paralela de Auth onboarding, catálogo/datos, filtros, PDP, search, editorial y homepage. Las siete conversaciones originales fueron detenidas por el usuario y reemplazadas por nuevas conversaciones independientes en worktrees con GPT-6 Luna y esfuerzo `high`; los IDs activos y ownership están en `WORKSTREAMS.md`. El Tech Lead retiene documentos globales. No resetear Supabase remoto ni aplicar el seed completo de desarrollo en producción; cualquier cambio de catálogo debe ser aditivo y revisado.
 
 ## Handoff gestión interna de catálogo — 2026-10-08
 
