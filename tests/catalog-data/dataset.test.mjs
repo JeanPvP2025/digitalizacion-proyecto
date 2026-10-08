@@ -6,6 +6,8 @@ import { validateDataset } from '../../scripts/catalog/validate.mjs';
 import { renderMigration } from '../../scripts/catalog/generate.mjs';
 import { mapCatalogRows } from '../../lib/catalog-mapping.ts';
 import { mapPcBuilderRows } from '../../lib/pc-builder/catalog-mapping.ts';
+import { checkBuildCompatibility, pcBuilderCategories } from '../../lib/pc-builder/compatibility.ts';
+import { getCatalogBrands, getCatalogCampaign, getCatalogCampaigns, getCatalogCategory, getCatalogCategoryDirectory } from '../../lib/catalog-landings.ts';
 
 test('deterministic curated coverage and varied availability', () => {
   const data = buildDataset();
@@ -70,6 +72,68 @@ test('existing configurator accepts all eight typed component classes', () => {
   assert.equal(components.length, 32);
   assert.equal(new Set(components.map(c => c.category)).size, 8);
   assert(components.every(c => c.variantId && c.priceEur > 0));
+});
+
+test('active catalog data generates working brand, category and campaign landings', () => {
+  const mapped = mapCatalogRows(rowsFor(buildDataset()));
+  const catalog = { source: 'supabase', ...mapped };
+  const brands = getCatalogBrands(catalog);
+  assert.equal(brands.length, 6);
+  assert.equal(brands.reduce((count, brand) => count + brand.products.length, 0), 84);
+  assert.equal(brands.find(brand => brand.name === 'Veltrama')?.slug, 'veltrama');
+
+  const categoryRoots = getCatalogCategoryDirectory(catalog);
+  assert.equal(categoryRoots.length, 6);
+  assert.equal(getCatalogCategory(catalog, 'ordenadores').products.length, 12);
+  assert.equal(getCatalogCategory(catalog, 'portatiles').products.length, 4);
+
+  const campaigns = getCatalogCampaigns(catalog);
+  assert(campaigns.length >= 3);
+  const pcCampaign = getCatalogCampaign(catalog, 'componentes-pc');
+  assert.equal(pcCampaign.products.length, 32);
+  assert.equal(new Set(pcCampaign.products.map(product => product.id)).size, 32);
+  assert(pcCampaign.categories.every(category => category.count > 0));
+});
+
+test('PC Builder dataset compatibility matrix accepts supported combinations and reports real conflicts', () => {
+  const { components } = mapPcBuilderRows(rowsFor(buildDataset()));
+  const byCategory = Object.fromEntries(pcBuilderCategories.map(category => [
+    category, components.filter(component => component.category === category),
+  ]));
+  for (const category of pcBuilderCategories) assert.equal(byCategory[category].length, 4, `${category} coverage`);
+
+  const highestPsu = byCategory.psu.reduce((best, component) => component.capacityW > best.capacityW ? component : best);
+  let supportedCoreCombinations = 0;
+  for (const cpu of byCategory.cpu) for (const motherboard of byCategory.motherboard)
+    for (const memory of byCategory.memory) for (const pcCase of byCategory.case) {
+      const selection = { cpu: cpu.variantId, motherboard: motherboard.variantId, memory: memory.variantId, case: pcCase.variantId, psu: highestPsu.variantId };
+      const result = checkBuildCompatibility(selection, components);
+      assert.equal(result.status, 'compatible', `${cpu.name} + ${motherboard.name} + ${memory.name} + ${pcCase.name}: ${result.issues.map(issue => issue.code).join(',')}`);
+      supportedCoreCombinations += 1;
+    }
+  assert.equal(supportedCoreCombinations, 256);
+
+  const cpu = byCategory.cpu.at(-1);
+  const motherboard = byCategory.motherboard.find(part => part.formFactor === 'ATX');
+  const memory = byCategory.memory.at(-1);
+  const pcCase = byCategory.case.at(-1);
+  const gpu = byCategory.gpu.find(part => part.lengthMm === 330);
+  const tooSmallCase = byCategory.case.find(part => part.maxGpuLengthMm === 300);
+  const gpuConflict = checkBuildCompatibility({
+    cpu: cpu.variantId, motherboard: motherboard.variantId, memory: memory.variantId,
+    case: tooSmallCase.variantId, psu: highestPsu.variantId, gpu: gpu.variantId,
+  }, components);
+  assert.equal(gpuConflict.status, 'incompatible');
+  assert(gpuConflict.errors.some(issue => issue.code === 'gpu-too-long'));
+
+  const lowHeadroomPsu = byCategory.psu.find(part => part.capacityW === 450);
+  const moderateGpu = byCategory.gpu.find(part => part.estimatedPowerW === 230);
+  const powerReview = checkBuildCompatibility({
+    cpu: cpu.variantId, motherboard: motherboard.variantId, memory: memory.variantId,
+    case: pcCase.variantId, psu: lowHeadroomPsu.variantId, gpu: moderateGpu.variantId,
+  }, components);
+  assert.equal(powerReview.status, 'review');
+  assert(powerReview.warnings.some(issue => issue.code === 'psu-headroom-below-guideline'));
 });
 
 test('migration is additive and does not install any public schema or function', () => {

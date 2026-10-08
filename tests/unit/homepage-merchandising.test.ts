@@ -83,7 +83,7 @@ describe("homepage merchandising rules", () => {
     expect(result.categories.map(({ name, count }) => ({ name, count }))).toEqual([
       { name: "Ordenadores", count: 2 }, { name: "Redes", count: 1 },
     ]);
-    expect(result.categories[0].href).toBe("/catalogo?categoria=ordenadores%20%2F%20prueba");
+    expect(result.categories[0].href).toBe("/categorias/ordenadores%20%2F%20prueba");
     expect(productHref(product("a", "Redes", { slug: "equipo / A" }))).toBe("/producto/equipo%20%2F%20A");
   });
 

@@ -70,7 +70,7 @@ describe("homepage active-source boundary", () => {
     expect(markup).toContain(otherProduct.name);
     expect(markup).toContain('href="/producto/routeur-connecte-314"');
     expect(markup).toContain('src="https://other-host.test/product.png"');
-    expect(markup).toContain('href="/catalogo?categoria=redes"');
+    expect(markup).toContain('href="/categorias/redes"');
     expect(markup).toContain("Catálogo conectado");
     expect(markup).toContain("Disponibilidad por confirmar");
     expect(markup).not.toContain("Stock demo");
@@ -86,7 +86,7 @@ describe("homepage active-source boundary", () => {
     const markup = await renderHome();
     expect(markup).toContain("Aún no hay productos publicados");
     expect(markup).toContain("No hay categorías con productos");
-    expect(markup).not.toContain('href="/catalogo?categoria=redes"');
+    expect(markup).not.toContain('href="/categorias/redes"');
     expect(markup).not.toContain('class="product-card"');
     expectNoFixtures(markup);
   });

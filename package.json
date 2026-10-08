@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "vitest run && node --test lib/catalog-mapping.test.mjs lib/quotes/submit.test.mjs tests/commerce/cart.test.mjs",
+    "test": "vitest run && node --test tests/catalog-data/dataset.test.mjs lib/catalog-mapping.test.mjs lib/quotes/submit.test.mjs tests/commerce/cart.test.mjs",
     "test:watch": "vitest",
     "test:e2e": "playwright test"
   },

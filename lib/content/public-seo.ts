@@ -4,6 +4,9 @@ import type { Metadata } from "next";
 export const PUBLIC_SITEMAP_PATHS = [
   "/",
   "/catalogo",
+  "/categorias",
+  "/marcas",
+  "/campanas",
   "/empresas",
   "/servicios",
   "/envios",
