@@ -61,6 +61,8 @@ La implementación debe conservar los límites anteriores en una sola aplicació
 
 Los grupos de rutas previstos son superficies públicas (storefront/contenido), autenticadas de cliente, portal B2B e internas. Son una organización conceptual; la estructura final debe seguir los patrones de Next.js 16 y las guías instaladas en `node_modules/next/dist/docs/`. Server Components son el punto de partida; los Client Components quedan para interacciones que necesitan estado o APIs del navegador. Mutaciones críticas se validan y autorizan en servidor mediante la primitiva adecuada de Next.js.
 
+Las landings públicas de `/marcas`, `/campanas` y `/categorias` se calculan desde `getCatalogData()` en Server Components. Las páginas por slug no guardan una segunda copia del catálogo: las marcas agrupan nombres publicados; una categoría incluye la categoría y sus descendientes según `parentId` y memberships; las selecciones agrupan categorías activas y productos asociados. Sitemap y metadatos reutilizan esas identidades; con catálogo no disponible las rutas presentan error cerrado y no sustituyen datos locales.
+
 No se deben duplicar reglas de negocio en componentes cliente, Server Actions, Route Handlers y SQL. La transacción de base de datos debe proteger invariantes concurrentes —por ejemplo, reserva de stock o idempotencia de checkout— cuando una verificación aislada en aplicación no sea suficiente.
 
 ## Seguridad prevista y límites actuales
@@ -91,7 +93,7 @@ pnpm install --frozen-lockfile
 pnpm dev
 ```
 
-No se han recibido credenciales remotas. `.env.example` permite activar demo local y documenta `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`. Supabase local sí está configurado, migrado y probado. El modo demo de archivos solo opera en desarrollo; consulta `lib/server/data-mode.ts` y el estado de fallbacks en `STATUS.md`.
+El usuario ha creado Supabase staging (`ypnhdxpejcbcyjiosrhf`) y el proyecto Vercel `nodria-staging`; sus secretos no están en el workspace ni se han leído. Los logs compartidos por el usuario reportaron `Invalid supabaseUrl` en runtime. Después mostró valores configurados en Vercel, pero esta ronda no verificó un nuevo request exitoso ni el Auth alojado. `.env.example` documenta `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`; Supabase local sí está configurado, migrado y probado. El modo demo de archivos solo opera en desarrollo; consulta `lib/server/data-mode.ts` y el estado de fallbacks en `STATUS.md`.
 
 Los nombres públicos configurados son `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`. Nunca se deben poner valores secretos en variables `NEXT_PUBLIC_*`. No inventar valores ni guardar credenciales reales en Git.
 

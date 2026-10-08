@@ -445,3 +445,46 @@ No existe proyecto Supabase remoto, dominio, credenciales de despliegue ni datos
 - Playwright aún registra estilo `caret-color: transparent` durante hidratación y warnings de entorno `NO_COLOR`/`FORCE_COLOR`; no se ha atribuido a una regla del producto.
 - No hay Supabase remoto, dominio, secretos de despliegue ni CrUX. Go-live, SEO público y CWV de campo siguen bloqueados por esa configuración externa.
 - Próximos pasos locales: concluir E2E/build, revisar diff/secret scan, crear commits lógicos y dejar árbol limpio. La ola 8 queda terminada tras commit.
+
+## Handoff Tech Lead — landings comerciales y compatibilidad PC Builder — 2026-10-08
+
+### Trabajo realizado
+
+- Implementadas páginas de índice y detalle para marcas, categorías y selecciones, derivadas del catálogo activo. Se añadieron estados vacíos/error, breadcrumbs, metadatos, canonical/robots condicionado por dominio público, enlaces desde portada/pie y sitemap conectado.
+- Verificado el dataset actual del PC Builder: cuatro variantes por clase en ocho categorías; 256 combinaciones CPU/placa/RAM/caja compatibles bajo las reglas declaradas; detección de GPU larga y aviso por margen de fuente. README del dominio corregido respecto a migración y compra vía checkout.
+- No se abrieron ramas ni conversaciones; el trabajo se hizo en `main` por instrucción del usuario.
+
+### Archivos modificados
+
+- Rutas: `app/(store)/marcas/**`, `app/(store)/categorias/**`, `app/(store)/campanas/**`, `app/sitemap.ts`.
+- Componentes/lógica: `components/storefront/catalog-landings*`, `components/storefront/store-footer.tsx`, `lib/catalog-landings.ts`, `lib/content/catalog-landing-metadata.ts`, `lib/content/merchandising.ts`, `lib/content/public-seo.ts`.
+- Calidad/documentación: `tests/catalog-data/dataset.test.mjs`, `tests/e2e/ux-audit/ux-audit.spec.ts`, `tests/integration/homepage-source.test.ts`, `tests/unit/homepage-merchandising.test.ts`, `package.json`, `lib/pc-builder/README.md` y documentos de proyecto.
+
+### Commits realizados
+
+- `c5e2025 feat(storefront): add catalog landings and PC matrix` contiene rutas, lógica, estilos, cambio de enlaces, matriz PC Builder y pruebas.
+- La documentación de integración se entrega en un commit separado.
+
+### Decisiones y contratos afectados
+
+- D-026 define rutas de descubrimiento calculadas desde `getCatalogData()`; D-027 limita compatibilidad a atributos tipados publicados.
+- No cambian schema, RPCs ni permisos. Categorías de portada ahora enlazan a `/categorias/[slug]`; la selección de portada enlaza a `/campanas/puesto-de-trabajo`; el sitemap lee productos, marcas, categorías y selecciones activas.
+- Si falla el catálogo conectado, las landings no sustituyen fixtures; no se publican selecciones vacías y rutas inválidas no se indexan.
+
+### Tests ejecutados y resultados
+
+- `pnpm exec tsc --noEmit`, `pnpm lint`, `pnpm test` (288 Vitest + 39 Node), `pnpm build`, `pnpm test:e2e` (19/19) y `git diff --check`: pasan.
+- E2E cubre rutas/enlaces, headings/nombres y overflow en escritorio, 390 px y 768 px. Build incluye las seis rutas nuevas.
+- Warnings existentes: `caret-color: transparent` durante hidratación y conflicto `NO_COLOR`/`FORCE_COLOR` en Windows; no bloquearon los checks.
+
+### Bugs conocidos y riesgos
+
+- No se validan BIOS/QVL, conectores de potencia, clearance de radiador ni protocolos de almacenamiento fuera del contrato; compatibilidad no equivale a certificación.
+- Esta ronda no aplicó ni verificó la migración `20261008135808_catalog_depth_dataset.sql` en el proyecto Supabase alojado. Las nuevas marcas/hojas requieren que el catálogo conectado tenga esos datos.
+- Auth alojado depende de URL allowlist y SMTP; no se puede certificar por tests locales. Tampoco se ejecutó axe/lector de pantalla ni Lighthouse de producción.
+
+### Dependencias desbloqueadas y próximos pasos
+
+- Portada, footer y artículos ya pueden enlazar landings comerciales del catálogo activo; slugs se incluyen en el sitemap con dominio público configurado.
+- Verificar el estado de migración en Supabase; si falta, aplicar tras revisión. Luego probar Auth y las landings en Vercel con cuenta ficticia y registrar resultado remoto.
+- Commit de código: `c5e2025`; commit documental pendiente de cierre.

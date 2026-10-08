@@ -240,3 +240,19 @@ Las decisiones de alcance heredadas de la misión se marcan **Confirmada**. Las 
 - **Contexto:** Los enlaces de Supabase estaban regresando a `localhost` cuando `NEXT_PUBLIC_SITE_URL` no coincidía con el deployment actual.
 - **Decisión:** Crear enlaces de confirmación/recuperación con `window.location.origin`, canjearlos en `/auth/callback` y aceptar solo redirects internos seguros. La UI ofrece reintento explícito y mensajes neutrales; no intenta reenviar automáticamente.
 - **Consecuencias:** Preview y staging regresan al mismo host de inicio, pero el operador aún debe añadir los redirect URLs de Supabase y configurar SMTP propio. El límite del proveedor de correo no se resuelve en la aplicación.
+
+## D-026 — Las páginas de descubrimiento derivan del catálogo activo
+
+- **Fecha:** 2026-10-08
+- **Estado:** Integrado en `/marcas`, `/categorias`, `/campanas` y `app/sitemap.ts`.
+- **Contexto:** Una jerarquía de catálogo no basta si los visitantes no tienen rutas de llegada desde campañas, marcas y categorías.
+- **Decisión:** Generar grupos, conteos, productos, metadatos y sitemap desde `getCatalogData()`; categorías incluyen descendientes por IDs/membership, las selecciones usan slugs activos y marcas normalizadas. Ante error del catálogo no se sustituyen datos demo; rutas desconocidas devuelven 404 y metadatos no indexables. Las selecciones no implican descuentos ni compatibilidad técnica.
+- **Consecuencias:** No se añade tabla CMS ni contrato de base de datos. La ruta depende de la migración opcional de catálogo para las nuevas marcas/familias; el catálogo base sigue funcionando y muestra sus categorías existentes.
+
+## D-027 — La matriz del PC Builder valida reglas declaradas, no certifica compatibilidad total
+
+- **Fecha:** 2026-10-08
+- **Estado:** La cobertura del dataset pasa localmente; siguen pendientes verificaciones técnicas que requieren atributos/datos no incluidos.
+- **Contexto:** El dataset ampliado proporciona cuatro variantes por cada una de ocho clases de componente.
+- **Decisión:** Verificar las 256 combinaciones CPU/placa/RAM/caja del catálogo, conflictos GPU-caja y avisos de margen PSU con `attributes.pc_builder` tipado. No inferir BIOS/QVL, conectores de potencia ni espacios de radiador desde texto libre.
+- **Consecuencias:** La matriz ofrece una comprobación reproducible de las reglas publicadas, no una certificación de hardware ni una garantía para montar equipos reales. Checkout vuelve a validar precio y disponibilidad.

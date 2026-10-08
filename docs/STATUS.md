@@ -27,7 +27,7 @@ Estado de integración del código al **2026-10-08** (`eddd4a0`). Los siete work
 ## Estado funcional
 
 - ✅ **Checkout B2C conectado:** sesión Auth real, variante/precio/stock validados en servidor, pedido y líneas con snapshots, pago demo simulado, reservas transaccionales, rechazo/retry y control de idempotencia. 4/4 pruebas browser conectadas pasan.
-- ✅ **Catálogo, búsqueda, carrito y PC Builder comprable:** el configurador añade variantes publicadas al carrito; el checkout vuelve a validar los datos de negocio. Hay pruebas de compatibilidad del slice, aunque ampliar la cobertura de compatibilidades sigue en calidad pendiente.
+- ✅ **Catálogo, búsqueda, carrito y PC Builder comprable:** el configurador añade variantes publicadas al carrito; el checkout vuelve a validar los datos de negocio. La matriz del dataset cubre 256 combinaciones base, conflictos de longitud de GPU y avisos de margen de fuente; límites como BIOS/QVL y conectores siguen explícitos.
 - ✅ **Reviews:** elegibilidad por línea entregada, moderación protegida, lectura pública solo de publicadas y acceso desde PDP.
 - ✅ **CRM/B2B hasta pago demo:** cotización aceptada emite pedido formal tenant-scoped con snapshots/reserva; owner/admin simula anticipo aprobado o rechazado. Aprobado guarda pago, pedido, actividad CRM y eventos idempotentes; rechazado cancela y libera reserva. No se recogen datos de tarjeta ni se procesa dinero real.
 - ✅ **Inventario y procurement básico:** ledger idempotente de movimientos, proveedores, órdenes de compra, recepciones parciales/finales vinculadas al movimiento y control de sobre-recepción.
@@ -98,7 +98,7 @@ Warnings no bloqueantes conocidos: Node reporta `MODULE_TYPELESS_PACKAGE_JSON` e
 ### P1
 
 - ⚠️ Revisar y aplicar en staging la migración aditiva del catálogo, luego validar el despliegue. La implementación y reset local pasan; el remoto aún no contiene estas 84 fichas.
-- ⏳ Crear páginas de marcas, campañas y categoría landing (`/marcas`, `/campanas`, `/categorias/ordenadores`); el catálogo ya tiene datos de marcas y jerarquía pero esas rutas siguen sin existir.
+- ✅ Crear páginas conectadas de marcas, selecciones temáticas y categorías (`/marcas`, `/campanas`, `/categorias` y sus rutas por slug); el sitemap y los enlaces de portada/pie se derivan del catálogo activo. Cubierto por el gate de storefront; no hay fallback de fixtures ante error conectado.
 - 🚧 Verificar en el entorno conectado PDP/variantes con precios reales de demo, checkout y catálogo poblado; las pruebas browser actuales usan datos demo locales y la migration no está desplegada.
 - ⏳ Revisar `/servicios` y añadir historial operativo/CRM sintético repetible sin aparentar transacciones reales ni sobrescribir datos existentes.
 - ✅ Matriz de permisos por rol y dominio documentada en `RBAC_MATRIX.md`, con 78 probes HTTP autenticados, pruebas SQL por dominios críticos y E2E de roles; no equivale a CRUD exhaustivo por columna ni prueba cada Server Action.
@@ -154,4 +154,14 @@ Una feature solo es ✅ cuando su contrato, autorización servidor/DB, persisten
 - Cerrada la ola 8: shell de soporte, recorrido visual customer/B2B autenticado, frontera SQL de catálogo y UI de catálogo están integrados. La migración real usa `update_catalog_product_editorial`, no el nombre provisional `update_catalog_product` que aparecía en el tablero anterior.
 - El gate demo inicialmente descubrió por error el spec customer/B2B, que requiere un proyecto Supabase aislado. `playwright.config.ts` ahora excluye ese spec, igual que excluye checkout conectado, dominios y roles; el runner dedicado sigue siendo el único responsable de la suite. La ejecución completa del gate se repite tras el cambio.
 - Riesgos locales restantes: auditoría dedicada de contraste/lector de pantalla del backoffice, warning de hidratación del caret sin origen atribuido y UX/product polish no bloqueante. No son autorización para etiquetar esas áreas como auditadas.
-- Bloqueos fuera del repo: proyecto/credenciales Supabase remotos, dominio, despliegue y CWV/CrUX de campo. Ningún cambio local puede sustituir esa configuración externa.
+- Bloqueos fuera del repo: el proyecto Supabase staging y deployment Vercel existen según el operador, pero no se confirmó un request de runtime exitoso después de configurar variables, ni el flujo Auth/SMTP. CWV/CrUX de campo siguen sin medirse.
+
+## Landings comerciales y matriz PC Builder — cierre local 2026-10-08
+
+- ✅ `/marcas` y `/marcas/[slug]`, `/categorias` y `/categorias/[slug]`, `/campanas` y `/campanas/[slug]` leen el catálogo activo. Categorías incluyen descendientes mediante `parentId` y `categoryIds`; selecciones y grupos no persisten conteos duplicados. Catálogo conectado fallido no recibe fallback de fixtures.
+- ✅ La portada apunta las categorías a sus landings y la campaña a una selección activa; el pie enlaza marcas/categorías/selecciones. Canonical/robots respetan el dominio público configurado; el sitemap incluye los slugs activos y páginas de producto.
+- ✅ Dataset PC Builder: cuatro variantes por cada una de ocho clases; 256 combinaciones CPU/placa/RAM/caja compatibles con las reglas declaradas, prueba de GPU que excede caja y advertencia de margen de fuente.
+- ✅ Gates de esta ronda: TypeScript, ESLint, `pnpm test` (288 Vitest + 39 Node), `pnpm build`, Playwright 19/19 y `git diff --check`. Las rutas nuevas pasan verificación de headings, nombres de controles/enlaces y overflow desktop/móvil/tablet.
+- Commit funcional local: `c5e2025 feat(storefront): add catalog landings and PC matrix`.
+- ⚠️ Warnings Playwright preexistentes/de entorno: `caret-color: transparent` inyectado durante hidratación y `NO_COLOR` junto con `FORCE_COLOR`; no bloquearon los E2E ni se atribuyeron a estilos del producto.
+- ⏳ No se aplicó ninguna migración ni se modificó el proyecto Supabase remoto durante esta ronda. Falta verificar estado remoto, probar Auth alojado con allowlist/SMTP y repetir el walkthrough con el catálogo remoto poblado.

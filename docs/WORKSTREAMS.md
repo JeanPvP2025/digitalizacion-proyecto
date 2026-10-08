@@ -115,9 +115,18 @@ La auditoría inicial encontró 12 productos, seis categorías y una marca. Se i
 | `client-new-thread:c9081771-c0e8-4652-a62a-dc433866b8e4` | Editorial Agent | Contenido y rutas de blog/guías conectadas al catálogo | `app/(store)/blog/**`, `app/(store)/guias/**`, `lib/content/editorial.ts` | Slugs publicados; sitemap de Tech Lead | ✅ Contenido del agente más rutas de integración en `c560dcf`; tres tests unitarios y 2 E2E nuevos pasan |
 | `client-new-thread:fd8f245a-8039-4b96-b4bc-746943e80bf9` | Homepage Merchandising Agent | Portada basada en catálogo activo | `app/(store)/page.tsx`, `lib/content/merchandising.ts` | `getCatalogData()` | ✅ `eddd4a0`; 2 fallos iniciales de test corregidos; suite global pasa |
 
-## Ready for Conversation
+## Cierre de backlog local ejecutado por Tech Lead — 2026-10-08
 
-- [ ] Páginas de marca, campañas y landing de categorías basadas en el catálogo conectado.
-- [ ] Ampliar y verificar las reglas/matriz de compatibilidad de PC Builder con el nuevo dataset.
-- [ ] Walkthrough de staging después de que el operador aplique la migración y configure SMTP/allowlist; no reutilizar credenciales ni crear datos personales reales.
-- [ ] Evaluar accesibilidad, SEO e imágenes de las nuevas rutas editoriales contra el despliegue real.
+No se abrieron conversaciones ni ramas: por instrucción del usuario, el Tech Lead ejecutó directamente el siguiente slice en `main`.
+
+| Conversation | Role | Task | Ownership | Dependencies | State |
+|---|---|---|---|---|---|
+| Tech Lead (main) | Catalog Discovery | Landings derivadas del catálogo para marcas, categorías y selecciones; enlaces y sitemap | `app/(store)/{marcas,categorias,campanas}/**`, `lib/catalog-landings.ts`, `app/sitemap.ts`, footer/portada | `getCatalogData()`, memberships `parentId/categoryIds` | ✅ Implementado en `c5e2025`; pruebas de datos y recorridos E2E locales |
+| Tech Lead (main) | PC Builder Quality | Matriz de compatibilidad usando las 32 variantes ficticias del dataset actual | `tests/catalog-data/dataset.test.mjs`, contrato PC Builder | `attributes.pc_builder` | ✅ `c5e2025`; 256 combinaciones base + longitud GPU + margen PSU verificados; límites técnicos siguen documentados |
+
+## Pendiente que requiere acceso al entorno
+
+- ⏳ Verificar en Supabase/Vercel el estado de la migración `20261008135808_catalog_depth_dataset.sql`; aplicar únicamente si aún no está presente, siguiendo revisión y respaldo.
+- ⏳ Probar Auth alojado con SMTP y allowlist correctos; depende del operador/configuración de Supabase y de una cuenta de prueba ficticia.
+- ⏳ Recorrer las nuevas landings con el catálogo remoto poblado y medir SEO/CWV de campo; requiere confirmar migración, dominio y despliegue.
+- ⏳ Auditoría dedicada de contraste/lector de pantalla del backoffice, separada del E2E de nombres, foco y overflow.
