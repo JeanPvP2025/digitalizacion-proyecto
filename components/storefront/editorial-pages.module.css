@@ -1,0 +1,84 @@
+.page {
+  max-width: 1120px;
+  padding-block: clamp(2rem, 5vw, 4.5rem);
+}
+
+.articleGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 2.5rem;
+}
+
+.articleCard,
+.takeaway,
+.references,
+.related {
+  border: 1px solid var(--line, #d9ded8);
+  border-radius: 1rem;
+  background: var(--surface, #fff);
+}
+
+.articleCard {
+  display: flex;
+  min-height: 250px;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: clamp(1.25rem, 3vw, 2rem);
+}
+
+.articleCard h2,
+.articleBody h2,
+.references h2,
+.related h2 {
+  margin: .5rem 0 .75rem;
+  font-size: clamp(1.35rem, 2.5vw, 1.8rem);
+  line-height: 1.2;
+  letter-spacing: -.025em;
+}
+
+.articleCard h2 a,
+.articleBody a,
+.references a,
+.related a {
+  color: inherit;
+  text-decoration-thickness: .08em;
+  text-underline-offset: .18em;
+}
+
+.articleCard p:not(.meta) { margin: 0 0 1.5rem; color: var(--muted, #59635a); line-height: 1.7; }
+.meta { margin: 0; color: var(--muted, #59635a); font-size: .875rem; line-height: 1.5; }
+.readLink { margin-top: auto; font-weight: 700; }
+.disclosure { margin: 2rem 0 0; color: var(--muted, #59635a); font-size: .9rem; line-height: 1.6; }
+.breadcrumb { display: flex; flex-wrap: wrap; gap: .55rem; margin-bottom: 2rem; color: var(--muted, #59635a); font-size: .9rem; }
+.breadcrumb a { color: inherit; }
+.articlePage { max-width: 900px; }
+.articleHeader { max-width: 760px; }
+.articleHeader .meta { margin-top: 1.25rem; }
+.takeaway { margin: 1.5rem 0 0; padding: 1.25rem 1.5rem; line-height: 1.7; }
+.takeaway strong { display: inline-block; margin-bottom: .25rem; }
+.articleBody { max-width: 720px; margin: clamp(2rem, 5vw, 4rem) auto; }
+.articleBody section + section { margin-top: 2.5rem; }
+.articleBody p,
+.articleBody li,
+.references p,
+.references li,
+.related li { color: var(--muted, #465149); line-height: 1.8; }
+.articleBody ul,
+.references ul,
+.related ul { padding-left: 1.25rem; }
+.articleBody li + li,
+.references li + li,
+.related li + li { margin-top: .5rem; }
+.references,
+.related { margin-top: 1.5rem; padding: clamp(1.25rem, 3vw, 2rem); }
+.references h2,
+.related h2 { margin-top: 0; }
+.references span { color: var(--muted, #59635a); }
+
+.page a:focus-visible { outline: 3px solid #236b4c; outline-offset: 3px; border-radius: .15rem; }
+
+@media (max-width: 680px) {
+  .articleGrid { grid-template-columns: 1fr; }
+  .articleCard { min-height: 0; }
+}
