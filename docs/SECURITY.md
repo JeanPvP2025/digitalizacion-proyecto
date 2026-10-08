@@ -1,6 +1,6 @@
 # Seguridad y RLS
 
-Estado del **2026-10-08** tras integrar profundidad de catálogo/Auth UX. La migración nueva solo agrega datos ficticios y no toca grants/RLS. El reset, pruebas y lint se ejecutaron contra Supabase local; no se probaron credenciales remotas ni JWT del proyecto alojado.
+Estado del **2026-10-08** tras integrar profundidad de catálogo/Auth UX y publicar `4ed17f3` en Vercel Production. El despliegue público responde en las rutas verificadas. La migración de catálogo es aditiva y no cambia schema/grants/RLS. El reset, pruebas y lint se ejecutaron contra Supabase local; no se probaron credenciales remotas ni JWT del proyecto alojado. La presencia de rutas públicas no equivale a certificación de seguridad remota.
 
 ## Controles integrados
 
@@ -33,4 +33,4 @@ Estado del **2026-10-08** tras integrar profundidad de catálogo/Auth UX. La mig
 
 ## Límites
 
-La matriz no prueba CRUD de cada columna/tabla/endpoint contra todos los roles; `RBAC_MATRIX.md` conserva ese límite. Los roles `manager` y `marketing` no existen como grants y no deben inventarse sin una decisión de producto. Demo Mode local ya ofrece bootstrap repetible de cuentas con grants; queda una revisión visual manual del recorrido por todos los roles. No hay secret management/deployment remoto probado. La migración de catálogo no se aplicó a staging; la tasa de correo/Auth alojado sigue sin verificarse. El anticipo B2B no equivale a un pago real. No habilitar datos reales ni afirmar certificación de producción.
+La matriz no prueba CRUD de cada columna/tabla/endpoint contra todos los roles; `RBAC_MATRIX.md` conserva ese límite. Los roles `manager` y `marketing` no existen como grants y no deben inventarse sin una decisión de producto. Demo Mode local tiene bootstrap repetible de cuentas con grants. El deployment remoto está publicado, pero no se inspeccionaron secretos/configuración de Vercel ni se ejecutaron probes RLS con JWT remotos. El dataset de catálogo parece pendiente, Auth/email requiere configuración y prueba, y el anticipo B2B no equivale a un pago real. No habilitar datos reales ni presentar NODRIA como comercio real. Pasos manuales en `docs/PRODUCTION_RUNBOOK.md`.

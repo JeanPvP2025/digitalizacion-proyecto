@@ -1,5 +1,11 @@
 # Testing y gates
 
+## Smoke check de producción — 2026-10-08
+
+`main` se publicó a Vercel Production desde `4ed17f3` y GitHub informó `success`. Se comprobaron por HTTP con respuesta 200: `/`, `/acceso?next=%2Fmi-cuenta`, `/catalogo`, `/configurador`, `/blog`, `/guias`, `/marcas`, `/categorias`, `/campanas` y `/sitemap.xml`. `/marcas` muestra únicamente NODRIA, señal de que debe comprobarse el dataset remoto. Este smoke check no inicia sesión ni valida escritura, email, RLS o checkout con Auth alojado.
+
+En esta sesión se repitieron instalación congelada, `pnpm exec tsc --noEmit`, `pnpm lint`, `pnpm test` (288 Vitest + 39 Node), `pnpm test:e2e` (19/19), `pnpm build` y `git diff --check`; todos pasan. Playwright muestra una diferencia de hidratación `caret-color: transparent` de origen no atribuido y avisos `NO_COLOR`/`FORCE_COLOR` de Windows; no causaron fallos.
+
 ## Gates de aplicación
 
 ```powershell

@@ -6,7 +6,7 @@ NODRIA is a fictional Spanish technology retailer built as an academic full-stac
 
 ## Current state
 
-The storefront includes catalogue search/filter/sort, product pages, browser-persisted favorites and compare list, a local file demo checkout, account overview, public support intake and B2B request forms, plus partial PC Builder, CRM and inventory surfaces. Supabase SSR, server-side data modes, migrations/RLS, a fictional seed and a server-resolved simulated payment flow are present and validated locally. Connected checkout and CRM/support routes have unit or database coverage, but there is no browser E2E against local Auth/PostgREST, remote credentials or production deployment. Some operational screens remain demo or partial. See [current status](./docs/STATUS.md) and [known limits](./docs/SECURITY.md).
+The app is deployed from `main` to Vercel Production at <https://nodria-staging.vercel.app>. The public storefront includes catalogue discovery, brands/categories/campaigns, search, product pages, guides/blog, PC Builder, and connected customer, B2B and operational flows. Local database/RLS/Auth integration suites cover checkout, inventory, support/RMA, CRM/B2B and staff permissions; hosted Auth email and the expanded hosted catalog still require manual verification. This remains an academic demo: all commercial data is fictional and no money is processed. See [current status](./docs/STATUS.md), [production runbook](./docs/PRODUCTION_RUNBOOK.md) and [security limits](./docs/SECURITY.md).
 
 ## Local setup
 
@@ -32,7 +32,7 @@ pnpm build
 pnpm start
 ```
 
-Quality gates are available through `pnpm test` and `pnpm test:e2e`. The current eight Playwright tests cover demo catalogue behavior and selected form/empty states; they do not submit checkout, quote or support forms in a browser. Some flows remain local/demo-only or partial. Read [status](./docs/STATUS.md), [security](./docs/SECURITY.md) and [testing](./docs/TESTING.md) before treating a screen as a connected workflow.
+Quality gates are available through `pnpm test` and `pnpm test:e2e`. At the latest verified run, 288 Vitest and 39 Node tests passed; Playwright passed 19/19 demo/UX scenarios. Separate runners cover connected Supabase checkout, B2B, customer, support/RMA and staff workflows against an isolated local Supabase stack. Hosted Auth, RLS and writes still require the manual release checks in the [production runbook](./docs/PRODUCTION_RUNBOOK.md).
 
 ## Shared context for contributors
 

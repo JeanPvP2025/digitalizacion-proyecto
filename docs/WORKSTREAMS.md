@@ -126,7 +126,8 @@ No se abrieron conversaciones ni ramas: por instrucción del usuario, el Tech Le
 
 ## Pendiente que requiere acceso al entorno
 
-- ⏳ Verificar en Supabase/Vercel el estado de la migración `20261008135808_catalog_depth_dataset.sql`; aplicar únicamente si aún no está presente, siguiendo revisión y respaldo.
-- ⏳ Probar Auth alojado con SMTP y allowlist correctos; depende del operador/configuración de Supabase y de una cuenta de prueba ficticia.
-- ⏳ Recorrer las nuevas landings con el catálogo remoto poblado y medir SEO/CWV de campo; requiere confirmar migración, dominio y despliegue.
+- ✅ Publicación a Vercel Production desde `main` (`4ed17f3`); smoke HTTP de rutas públicas aprobado. El proyecto conserva el nombre `nodria-staging`.
+- ⏳ Comprobar con SQL si los 84 productos de `20261008135808_catalog_depth_dataset.sql` están en Supabase; aplicar la migración solo si faltan. Ver `docs/PRODUCTION_RUNBOOK.md`.
+- ⏳ Probar Auth alojado después de fijar Site URL/redirect allowlist y SMTP propio, con una cuenta ficticia.
+- ⏳ Recorrer las landings con dataset ampliado y medir SEO/CWV de campo cuando se defina un dominio público estable.
 - ⏳ Auditoría dedicada de contraste/lector de pantalla del backoffice, separada del E2E de nombres, foco y overflow.

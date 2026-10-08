@@ -1,6 +1,6 @@
 # Arquitectura inicial de NODRIA
 
-**Estado de este documento:** integración local 2026-10-08, código de aplicación hasta `eddd4a0`. Vercel sirve `nodria-staging.vercel.app` y Supabase `ypnhdxpejcbcyjiosrhf` fue creado por el usuario; esta ola no hizo cambios remotos. El reset local incluye 96 productos, 27 categorías y 7 marcas; la migración que agrega catálogo aún no está aplicada al remoto. Auth/correo alojado sigue sin probarse correctamente. Las rutas de blog y guías ya existen en el código local; páginas de marca y campaña siguen pendientes. Ver límites en `STATUS.md` y `WORKSTREAMS.md`.
+**Estado de este documento:** integración local y publicación Vercel Production verificadas el 2026-10-08, código `4ed17f3`. `https://nodria-staging.vercel.app` sirve las rutas actuales, incluidas blog, guías, marcas, categorías y campañas. El reset local tiene 96 productos, 27 categorías y 7 marcas; el sitio remoto solo muestra NODRIA, por lo que el dataset adicional aún debe verificarse/aplicarse manualmente en Supabase. Auth/correo alojado no están certificados. La app es una demo académica ficticia, no una tienda que procese pagos reales. Ver `STATUS.md` y `PRODUCTION_RUNBOOK.md`.
 
 ## Objetivo y restricciones
 
@@ -79,7 +79,7 @@ No se deben duplicar reglas de negocio en componentes cliente, Server Actions, R
 8. El pago demo no recoge ni almacena datos de tarjetas reales. Los estados aprobados, rechazados o temporales son fixtures de simulación y generan un intento y trazabilidad ficticios.
 9. No se suben secretos ni datos personales reales al repositorio o a seeds. Preview, desarrollo y producción usan proyectos/credenciales separados.
 
-Las migraciones habilitan RLS/grants, checkout por variante/fingerprint, movimientos y procurement, pedido B2B formal, fulfillment, reembolso e inspección/disposición RMA y reviews. Auth UI/callback/sesión SSR y guards están integrados. El gate local ejercita GoTrue/PostgREST con JWT reales y 78 probes, además de scripts PostgreSQL para RBAC/RLS e inspección RMA. Los `.data/` y fixtures son solo demo local. La matriz CRUD no es exhaustiva y no hay entorno remoto probado; no considerar el producto apto para producción.
+Las migraciones habilitan RLS/grants, checkout por variante/fingerprint, movimientos y procurement, pedido B2B formal, fulfillment, reembolso e inspección/disposición RMA y reviews. Auth UI/callback/sesión SSR y guards están integrados. El gate local ejercita GoTrue/PostgREST con JWT reales y 78 probes, además de scripts PostgreSQL para RBAC/RLS e inspección RMA. Las rutas públicas remotas tienen smoke check HTTP, pero no se probó sesión/JWT contra la base alojada. Los `.data/` y fixtures son solo demo local. La matriz CRUD no es exhaustiva; no considerar el entorno como tienda real ni declarar Auth/RLS remotas certificadas.
 
 ## Configuración local y despliegue previsto
 
@@ -93,13 +93,13 @@ pnpm install --frozen-lockfile
 pnpm dev
 ```
 
-El usuario ha creado Supabase staging (`ypnhdxpejcbcyjiosrhf`) y el proyecto Vercel `nodria-staging`; sus secretos no están en el workspace ni se han leído. Los logs compartidos por el usuario reportaron `Invalid supabaseUrl` en runtime. Después mostró valores configurados en Vercel, pero esta ronda no verificó un nuevo request exitoso ni el Auth alojado. `.env.example` documenta `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`; Supabase local sí está configurado, migrado y probado. El modo demo de archivos solo opera en desarrollo; consulta `lib/server/data-mode.ts` y el estado de fallbacks en `STATUS.md`.
+El usuario creó Supabase `ypnhdxpejcbcyjiosrhf` y Vercel `nodria-staging`; las credenciales no están en el workspace ni se han leído. Tras la configuración manual, el deployment Production responde en las rutas públicas comprobadas; esto no certifica Auth ni RLS remoto. `.env.example` documenta `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`; Supabase local está migrado y probado. El modo demo de archivos solo opera en desarrollo; consulta `lib/server/data-mode.ts` y el estado de fallbacks en `STATUS.md`.
 
 Los nombres públicos configurados son `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`. Nunca se deben poner valores secretos en variables `NEXT_PUBLIC_*`. No inventar valores ni guardar credenciales reales en Git.
 
 ### Entornos de entrega
 
-El entorno alojado actual usa Vercel para Next.js y Supabase para base de datos/Auth. El staging funciona como demo pública y no acepta dinero real. El código de Auth usa callback same-origin; para habilitar confirmaciones/restablecimientos todavía se necesita una allowlist de Auth correcta y un proveedor de correo adecuado. Los RPC/RLS se verificaron en el dashboard por el usuario, pero los nuevos slices de contenido y los datos ampliados no se han aplicado al proyecto remoto. Nunca resetear ni reconstruir la base remota para facilitar desarrollo.
+El entorno alojado usa Vercel para Next.js y Supabase para base de datos/Auth. La rama `main` se despliega a Production y actualmente se sirve bajo el dominio Vercel con nombre `nodria-staging`. Es una demo pública que no acepta dinero real. El callback de Auth usa el mismo origen; para confirmar correo y restablecer contraseña hacen falta URL Configuration/allowlist y SMTP adecuados. El usuario confirmó antes que varios RPC/RLS existen en remoto, pero no se inspeccionó la base desde esta sesión; el dataset ampliado tampoco aparece en la landing de marcas. Nunca resetear ni reconstruir la base remota para facilitar desarrollo.
 
 Vercel Preview debe usar datos no productivos y credenciales separadas. Los cambios de schema deben desplegarse en orden controlado antes del código que los consume. El procedimiento concreto de migración y rollback debe seguir las herramientas y migraciones presentes en el repositorio cuando se implemente el workstream de base de datos.
 

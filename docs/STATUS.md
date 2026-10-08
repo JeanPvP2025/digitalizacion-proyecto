@@ -1,10 +1,20 @@
 # Estado del proyecto
 
-Estado de integración del código al **2026-10-08** (`eddd4a0`). Los siete worktrees de profundidad se inspeccionaron e integraron; los seis commits de código aún no están en Vercel. El Supabase remoto `ypnhdxpejcbcyjiosrhf` no se modificó. El reset/seed descrito aquí se ejecutó únicamente contra Supabase local. El entorno alojado sigue sin certificación funcional de Auth/correo.
+Estado real al **2026-10-08**. `main` está publicado en el entorno **Production** de Vercel desde `4ed17f3` (proyecto llamado `nodria-staging`, URL `https://nodria-staging.vercel.app`). GitHub/Vercel informó deployment `success`; portada, acceso, catálogo, configurador, blog, guías, marcas, categorías, campañas y sitemap respondieron HTTP 200 en el smoke check. Los gates locales se repitieron antes del push y pasan. Esto certifica despliegue y rutas públicas, no login remoto ni aislamiento RLS remoto.
 
-## Hallazgos de auditoría inicial (antes de la ola A)
+La instancia solo muestra la marca NODRIA en `/marcas`; los 84 productos y marcas sintéticos del dataset ampliado parecen no estar cargados. El conector de Supabase no permitió consultar el proyecto desde esta sesión y no se modificó la base remota. Comprueba `docs/PRODUCTION_RUNBOOK.md`; aplica la migración de datos solo si la consulta de verificación devuelve 0. El Auth alojado también sigue pendiente de una prueba real: anteriormente dio límite de correo/credenciales y requiere URL Configuration y SMTP apto para el uso previsto. La aplicación sigue siendo una demo académica; no procesa pagos reales.
 
-- ✅ La portada, `/catalogo`, `/acceso`, `/configurador` y `/empresas` respondieron HTTP 200 en la comprobación actual; disponibilidad no equivale a comportamiento autenticado.
+### Estado de salida a producción — verificación 2026-10-08
+
+- ✅ `pnpm install --frozen-lockfile`, TypeScript, ESLint, `pnpm test` (288 Vitest + 39 Node), `pnpm test:e2e` (19/19), `pnpm build` (38 páginas estáticas generadas) y `git diff --check` pasan localmente.
+- ✅ Los diez commits locales se publicaron en `origin/main`; Vercel registró `4ed17f3` como Production success. Las rutas nuevas pasaron el smoke check HTTP.
+- ⚠️ Datos alojados: `/marcas` solo lista NODRIA; verificar el dataset con SQL. No ejecutar `seed.sql` ni `db reset` en el proyecto remoto.
+- ⚠️ Auth alojado: falta probar confirmación, inicio y recuperación con SMTP y redirect allowlist verificados. No se enviaron correos de prueba desde esta sesión.
+- ⚠️ El deployment se sirve en `nodria-staging.vercel.app`; no hay dominio propio configurado. No se certificó compra, correo ni RLS en el entorno remoto.
+
+## Hallazgos de auditoría inicial (histórico, antes de la ola A)
+
+- ✅ En la auditoría original la portada, `/catalogo`, `/acceso`, `/configurador` y `/empresas` respondieron HTTP 200; disponibilidad no equivale a comportamiento autenticado.
 - ⚠️ Auth está bloqueando pruebas de usuarios: se reportan `email rate limit exceeded`, `Invalid login credentials` y error al canjear el enlace. El SMTP integrado de Supabase limita el envío y no es adecuado para uso público; verificar URL Configuration, callback y SMTP.
 - ⚠️ `/catalogo` muestra 12 resultados; `supabase/seed.sql` define 12 productos y seis categorías amplias. Las doce fichas usan `NODRIA` como marca. Es insuficiente para que búsqueda/filtros/comparación transmitan sensación de tienda.
 - ⚠️ La portada obtiene destacados de fixtures locales (`demoProducts`) incluso cuando el catálogo principal es conectado; alinear merchandising con la fuente activa.

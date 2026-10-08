@@ -120,7 +120,7 @@ pnpm test:e2e
 pnpm build
 ```
 
-La suite Playwright levanta Next.js en `127.0.0.1:4317` con `DEMO_MODE=true`, credenciales Supabase vacías y resultados de navegador bajo `.data/playwright-results`. Sus ocho casos actuales comprueban catálogo, estados vacíos y campos requeridos; no recorren checkout enviado, Supabase Auth, presupuestos conectados ni tickets conectados.
+La suite Playwright levanta Next.js en `127.0.0.1:4317` con `DEMO_MODE=true`, credenciales Supabase vacías y resultados de navegador bajo `.data/playwright-results`. La suite demo/UX tiene 19 casos y no sustituye a los runners separados de checkout conectado, Auth local, presupuestos B2B o tickets/RMA; consulta `docs/TESTING.md` para cobertura y límites actuales.
 
 ## Solución de problemas
 

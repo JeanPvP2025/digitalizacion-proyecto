@@ -488,3 +488,24 @@ No existe proyecto Supabase remoto, dominio, credenciales de despliegue ni datos
 - Portada, footer y artículos ya pueden enlazar landings comerciales del catálogo activo; slugs se incluyen en el sitemap con dominio público configurado.
 - Verificar el estado de migración en Supabase; si falta, aplicar tras revisión. Luego probar Auth y las landings en Vercel con cuenta ficticia y registrar resultado remoto.
 - Commit de código: `c5e2025`; commit documental pendiente de cierre.
+
+## Handoff Tech Lead — publicación de demo y gate de salida — 2026-10-08
+
+### Trabajo realizado
+
+- Se verificó Git y se constató que `main` estaba diez commits por delante de `origin/main`; no había cambios sin commit. Se inspeccionaron los documentos de estado y la configuración de modo de datos.
+- Se midió el deployment previo: rutas comerciales nuevas respondían 404 y `/marcas` solo mostraba NODRIA. Tras pasar el gate local, se publicó `main` sin crear ramas.
+- GitHub registró el commit `4ed17f3` en el entorno Production de Vercel con estado `success`. Las rutas `/`, `/acceso`, `/catalogo`, `/configurador`, `/blog`, `/guias`, `/marcas`, `/categorias`, `/campanas` y `/sitemap.xml` respondieron HTTP 200.
+- El conector Supabase rechazó las consultas de lectura por permisos; no se ejecutó SQL ni se cambió el proyecto remoto. `/marcas` continúa mostrando solo NODRIA, por lo que el dataset de catálogo debe verificarse manualmente.
+
+### Verificación
+
+- `pnpm install --frozen-lockfile`, `pnpm exec tsc --noEmit`, `pnpm lint`, `pnpm test` (288 Vitest + 39 Node), `pnpm test:e2e` (19/19), `pnpm build` (38 páginas estáticas generadas) y `git diff --check`: pasan.
+- Los E2E muestran una diferencia de hidratación `caret-color: transparent` de origen no atribuido y warnings de terminal `NO_COLOR`/`FORCE_COLOR`; las suites concluyen aprobadas.
+
+### Estado y pasos manuales
+
+- El deployment está en el entorno Production de Vercel, aunque el proyecto/dominio se llama `nodria-staging.vercel.app`; es una demo académica ficticia, no un comercio con pagos reales.
+- Revisar `docs/PRODUCTION_RUNBOOK.md`: contar las filas `pr_depth_%`; si faltan, ejecutar solo la migración aditiva de catálogo. No ejecutar `seed.sql` ni `db reset` en remoto.
+- Configurar y probar SMTP y URLs de redirección de Auth. Hasta validar la cuenta de prueba no declarar el login alojado terminado.
+- No se inspeccionaron secretos Vercel, JWT remotos, RLS remoto ni correo saliente.
