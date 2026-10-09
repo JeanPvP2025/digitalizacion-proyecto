@@ -509,3 +509,35 @@ No existe proyecto Supabase remoto, dominio, credenciales de despliegue ni datos
 - Revisar `docs/PRODUCTION_RUNBOOK.md`: contar las filas `pr_depth_%`; si faltan, ejecutar solo la migración aditiva de catálogo. No ejecutar `seed.sql` ni `db reset` en remoto.
 - Configurar y probar SMTP y URLs de redirección de Auth. Hasta validar la cuenta de prueba no declarar el login alojado terminado.
 - No se inspeccionaron secretos Vercel, JWT remotos, RLS remoto ni correo saliente.
+
+## Handoff Tech Lead — mejora UX del PC Builder — 2026-10-09
+
+### Trabajo realizado
+
+- Se reemplazó la lista larga de selectores por un recorrido guiado por categoría, con etapas esenciales y ampliaciones opcionales, indicador de progreso y navegación directa entre piezas.
+- Las opciones publicadas ahora se comparan en tarjetas con precio, fabricante y atributos técnicos estructurados. El resumen operativo conserva precio/consumo, avisos y acciones; cada pieza elegida permite volver a editarla.
+- Se mejoraron los estados sin opciones, selección guardada ya no disponible, foco de teclado, objetivos de interacción y disposición móvil. La compra continúa bloqueada salvo catálogo Supabase y compatibilidad completa.
+
+### Archivos modificados
+
+- `components/storefront/pc-builder.tsx`
+- `components/storefront/pc-builder.module.css`
+- `app/globals.css` (eliminación de reglas antiguas del formulario)
+- `docs/STATUS.md`, `docs/WORKSTREAMS.md`, `docs/AGENT_HANDOFF.md`
+
+### Contratos, decisiones y base de datos
+
+- Sin cambios de contratos, reglas de compatibilidad, persistencia, RLS o migraciones. Los montajes guardados siguen usando variant IDs en localStorage y checkout conserva la validación del servidor.
+
+### Verificación
+
+- `pnpm exec tsc --noEmit`: pasa.
+- `node ./node_modules/eslint/bin/eslint.js components/storefront/pc-builder.tsx`: pasa.
+- `git diff --check`: pasa.
+- Revisión visual local de `/configurador` en modo demo: se verificaron el rail de pasos, el progreso y el estado vacío responsive. Ese modo no ofrece variantes vendibles, así que no se pudo revisar visualmente una tarjeta poblada ni el recorrido con piezas reales.
+- No se ejecutaron suites de tests; el usuario pidió una mejora de interfaz y no solicitó añadir ni correr tests.
+
+### Riesgos y próximos pasos
+
+- El proyecto local no tenía credenciales Supabase y el modo demo está diseñado para rechazar piezas ficticias; validar las tarjetas y el flujo completo cuando el catálogo conectado esté disponible.
+- No se creó commit. No se tocó el proyecto remoto ni se desplegó.

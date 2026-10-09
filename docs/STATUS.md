@@ -175,3 +175,10 @@ Una feature solo es ✅ cuando su contrato, autorización servidor/DB, persisten
 - Commit funcional local: `c5e2025 feat(storefront): add catalog landings and PC matrix`.
 - ⚠️ Warnings Playwright preexistentes/de entorno: `caret-color: transparent` inyectado durante hidratación y `NO_COLOR` junto con `FORCE_COLOR`; no bloquearon los E2E ni se atribuyeron a estilos del producto.
 - ⏳ No se aplicó ninguna migración ni se modificó el proyecto Supabase remoto durante esta ronda. Falta verificar estado remoto, probar Auth alojado con allowlist/SMTP y repetir el walkthrough con el catálogo remoto poblado.
+
+## Mejora del PC Builder — 2026-10-09
+
+- ✅ El configurador ahora guía la selección por categoría, muestra el progreso de las cinco piezas esenciales y separa las ampliaciones opcionales.
+- ✅ Las variantes disponibles se presentan como opciones comparables; el resumen muestra selecciones y permite volver a editarlas. Guardados locales, mensajes de compatibilidad y bloqueo de compra siguen conectados al comportamiento existente.
+- ✅ Validación local: TypeScript, ESLint sobre `components/storefront/pc-builder.tsx` y `git diff --check`.
+- ⚠️ La vista previa local se comprobó en modo demo, que deliberadamente no ofrece piezas ficticias. La revisión visual de tarjetas con variantes reales requiere que el catálogo conectado esté disponible y poblado; no se modificaron migraciones ni Supabase remoto.

@@ -123,6 +123,7 @@ No se abrieron conversaciones ni ramas: por instrucción del usuario, el Tech Le
 |---|---|---|---|---|---|
 | Tech Lead (main) | Catalog Discovery | Landings derivadas del catálogo para marcas, categorías y selecciones; enlaces y sitemap | `app/(store)/{marcas,categorias,campanas}/**`, `lib/catalog-landings.ts`, `app/sitemap.ts`, footer/portada | `getCatalogData()`, memberships `parentId/categoryIds` | ✅ Implementado en `c5e2025`; pruebas de datos y recorridos E2E locales |
 | Tech Lead (main) | PC Builder Quality | Matriz de compatibilidad usando las 32 variantes ficticias del dataset actual | `tests/catalog-data/dataset.test.mjs`, contrato PC Builder | `attributes.pc_builder` | ✅ `c5e2025`; 256 combinaciones base + longitud GPU + margen PSU verificados; límites técnicos siguen documentados |
+| Tech Lead (main) | PC Builder UX | Flujo guiado, selección por categoría, progreso esencial, comparación de variantes y resumen editable | `components/storefront/pc-builder.tsx`, `components/storefront/pc-builder.module.css`, estilos PC Builder en `app/globals.css` | Catálogo conectado con variantes publicadas; reglas actuales de compatibilidad | ✅ Implementado; TypeScript, ESLint y diff-check pasan. La demo local no contiene variantes vendibles para revisar tarjetas reales |
 
 ## Pendiente que requiere acceso al entorno
 
