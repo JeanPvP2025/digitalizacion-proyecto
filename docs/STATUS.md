@@ -1,6 +1,6 @@
 # Estado del proyecto
 
-Estado revisado al **2026-10-09**. `main` se publica en Production de Vercel (`https://nodria-staging.vercel.app`). El usuario informó que ejecutó SQL en el proyecto Supabase y verificó los RPCs de checkout/pago/RMA y RLS en tablas sensibles; esta sesión no dispone de consulta directa para confirmar el número de filas del catálogo. La aplicación sigue siendo una demo académica y no procesa pagos reales.
+Estado revisado al **2026-10-09**. El commit `087fb40` de `main` se desplegó en Production de Vercel (`https://nodria-staging.vercel.app`); `/configurador` responde HTTP 200. El usuario informó que ejecutó SQL en el proyecto Supabase y verificó los RPCs de checkout/pago/RMA y RLS en tablas sensibles; esta sesión no dispone de consulta directa para confirmar el número de filas del catálogo. La aplicación sigue siendo una demo académica y no procesa pagos reales.
 
 El configurador parte de cuatro variantes por clase. Para ampliar la elección a ocho por clase, se añadieron 32 productos ficticios en `20261009113024_pc_builder_catalog_expansion.sql`. El código y el deployment no insertan esos datos: el usuario debe ejecutar la migración en SQL Editor de Supabase y verificar los conteos que se documentan en `docs/PRODUCTION_RUNBOOK.md`. El Auth alojado también sigue pendiente de una prueba real con URL Configuration y SMTP apto para el uso previsto.
 

@@ -8,7 +8,7 @@
 - Generación validada: 84 fichas históricas permanecen byte a byte deterministas; la expansión genera 116 fichas totales/32 nuevas y ocho opciones por categoría. SQL de expansión limitado a esas 32 identidades; inserta productos, variantes, especificaciones e inventario demo, sin cambios de schema/RLS/grants ni actualizaciones/deletes.
 - Gates ejecutados: generación y `--check` de ambas migraciones, validador base, TypeScript, ESLint, build de producción y `git diff --check` pasan. Suite de tests no ejecutada en esta unidad. Supabase remoto no se consultó ni modificó.
 - Estado restante: aplicar manualmente el SQL de expansión en Supabase y comprobar ocho variantes activas por categoría. El catálogo local demo intencionalmente no sustituye el catálogo conectado con fixtures.
-- Commit/deployment: pendiente de la integración actual.
+- Commit `087fb40` publicado en `main`; Vercel Production informó `success` y `/configurador` respondió HTTP 200. La migración SQL de expansión sigue sin aplicar en Supabase.
 
 ## Ola A recibida, verificada e integrada — 2026-10-08
 
