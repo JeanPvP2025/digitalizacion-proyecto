@@ -540,4 +540,4 @@ No existe proyecto Supabase remoto, dominio, credenciales de despliegue ni datos
 ### Riesgos y próximos pasos
 
 - El proyecto local no tenía credenciales Supabase y el modo demo está diseñado para rechazar piezas ficticias; validar las tarjetas y el flujo completo cuando el catálogo conectado esté disponible.
-- No se creó commit. No se tocó el proyecto remoto ni se desplegó.
+- Commit `e91a165 feat(pc-builder): guide component selection`, enviado a `main`; Vercel Production terminó con `success` y `/configurador` respondió HTTP 200 con el nuevo flujo. No se tocaron datos, migraciones ni la configuración remota de Supabase.

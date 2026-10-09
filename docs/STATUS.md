@@ -182,3 +182,4 @@ Una feature solo es ✅ cuando su contrato, autorización servidor/DB, persisten
 - ✅ Las variantes disponibles se presentan como opciones comparables; el resumen muestra selecciones y permite volver a editarlas. Guardados locales, mensajes de compatibilidad y bloqueo de compra siguen conectados al comportamiento existente.
 - ✅ Validación local: TypeScript, ESLint sobre `components/storefront/pc-builder.tsx` y `git diff --check`.
 - ⚠️ La vista previa local se comprobó en modo demo, que deliberadamente no ofrece piezas ficticias. La revisión visual de tarjetas con variantes reales requiere que el catálogo conectado esté disponible y poblado; no se modificaron migraciones ni Supabase remoto.
+- ✅ Publicado desde `e91a165` en Vercel Production; el deployment figura `success` y `https://nodria-staging.vercel.app/configurador` respondió HTTP 200 con el nuevo flujo.
