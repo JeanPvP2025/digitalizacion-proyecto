@@ -256,3 +256,11 @@ Las decisiones de alcance heredadas de la misión se marcan **Confirmada**. Las 
 - **Contexto:** El dataset ampliado proporciona cuatro variantes por cada una de ocho clases de componente.
 - **Decisión:** Verificar las 256 combinaciones CPU/placa/RAM/caja del catálogo, conflictos GPU-caja y avisos de margen PSU con `attributes.pc_builder` tipado. No inferir BIOS/QVL, conectores de potencia ni espacios de radiador desde texto libre.
 - **Consecuencias:** La matriz ofrece una comprobación reproducible de las reglas publicadas, no una certificación de hardware ni una garantía para montar equipos reales. Checkout vuelve a validar precio y disponibilidad.
+
+## D-028 — Ampliar opciones del PC Builder con una migración de catálogo solo aditiva
+
+- **Fecha:** 2026-10-09
+- **Estado:** Código y migración determinista preparados; falta aplicar `20261009113024_pc_builder_catalog_expansion.sql` manualmente en Supabase para que aparezcan en staging.
+- **Contexto:** Cuatro variantes por clase ofrecían poca elección y solo cubrían AM5/DDR5 en las piezas principales.
+- **Decisión:** Mantener intacta la migración histórica de 84 productos y añadir 32 productos ficticios nuevos: cuatro ediciones extra para cada una de las ocho clases. La expansión ofrece AM4/DDR4 además de AM5/DDR5. Los selectores ordenan por precio ascendente. La migración reutiliza contratos y tablas existentes, detecta colisiones de identidad y no actualiza ni elimina filas.
+- **Consecuencias:** Tras aplicar la migración, el configurador tendrá 64 variantes sintéticas, ocho por clase. La suite de compatibilidad existente cubre el catálogo anterior de cuatro opciones por clase; ampliar esa matriz a AM4/DDR4 queda pendiente de una verificación automatizada. Sigue siendo una demo: el stock no representa inventario comercial y compatibilidad excluye BIOS/QVL, conectores y holguras no modeladas.

@@ -7,7 +7,7 @@ const money = value => typeof value === 'string' && /^\d+\.\d{2}$/.test(value) &
 const builderCategories = { procesadores: 'cpu', 'placas-base': 'motherboard', 'memoria-ram': 'memory', cajas: 'case', 'fuentes-alimentacion': 'psu', 'tarjetas-graficas': 'gpu', refrigeracion: 'cooler', 'ssd-internos': 'storage' };
 
 export function validateDataset(data) {
-  assert.equal(data.products.length, 84, 'Expected 84 new products');
+  assert([84, 116].includes(data.products.length), 'Expected 84 base products or 116 expanded products');
   for (const key of ['id','sku','slug']) unique(data.products.map(p => p[key]), `product ${key}`);
   for (const key of ['id','sku']) unique(data.products.map(p => p.variant[key]), `variant ${key}`);
   unique(data.categories.map(c => c.slug), 'category slug');
@@ -68,6 +68,13 @@ export function validateDataset(data) {
       if (b.category !== 'psu') assert.equal(b.estimated_power_w, t.power_w);
     }
   }
+  const expectedOptions = data.products.length === 84 ? 4 : 8;
+  const builderCounts = new Map(Object.values(builderCategories).map(category => [category, 0]));
+  for (const p of data.products) {
+    const category = p.variant.attributes.pc_builder?.category;
+    if (category) builderCounts.set(category, builderCounts.get(category) + 1);
+  }
+  for (const [category, count] of builderCounts) assert.equal(count, expectedOptions, `Expected ${expectedOptions} ${category} options`);
   return { newProducts: data.products.length, categories: data.categories.length, newBrands: new Set(data.products.map(p => p.brand)).size, soldOut: data.products.filter(p => p.stock === 0).length, lowStock: data.products.filter(p => p.stock > 0 && p.stock <= 3).length };
 }
 

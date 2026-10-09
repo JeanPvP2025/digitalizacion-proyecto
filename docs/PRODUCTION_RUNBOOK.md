@@ -22,11 +22,34 @@ from public.products
 where left(id, 9) = 'pr_depth_';
 ```
 
-El resultado esperado es **84 productos y 6 marcas**. El sitio ahora solo muestra NODRIA en `/marcas`, así que probablemente falte el dataset.
+La migración inicial agrega 84 productos; la expansión agrega 32 piezas PC. El resultado final esperado en `pr_depth_` es **116 productos y 6 marcas** (más los 12 productos del seed base).
 
-Si la consulta devuelve 0, abre en GitHub el archivo `supabase/migrations/20261008135808_catalog_depth_dataset.sql` de `main`, copia el archivo completo y ejecútalo en SQL Editor sobre el proyecto correcto. Es una migración de datos ficticios, aditiva e idempotente; no cambia tablas, grants ni RLS. Después repite la consulta y espera `84`/`6`.
+Aplica solo lo que falte:
 
-No ejecutes `supabase/seed.sql`, `db reset`, ni las migraciones históricas otra vez en el proyecto alojado. Si el conteo ya es 84, no vuelvas a aplicar esta migración. La migración no crea datos comerciales reales ni convierte el pago demo en pago real.
+- Si devuelve **0**, ejecuta primero `supabase/migrations/20261008135808_catalog_depth_dataset.sql` y después la migración PC Builder indicada abajo.
+- Si devuelve **84**, la migración inicial ya está; ejecuta únicamente `supabase/migrations/20261009113024_pc_builder_catalog_expansion.sql`.
+- Si devuelve **116**, no repitas ninguna de esas dos migraciones.
+
+La expansión es aditiva e idempotente: añade 32 fichas ficticias y su inventario inicial demo, sin cambiar tablas, grants, RLS ni productos anteriores. En GitHub abre el archivo completo de la migración en `main`, cópialo y ejecútalo en SQL Editor del proyecto `ypnhdxpejcbcyjiosrhf`.
+
+Después verifica que haya ocho variantes válidas por clase:
+
+```sql
+select v.attributes->'pc_builder'->>'category' as clase,
+       count(*) as opciones
+from public.product_variants v
+join public.products p on p.id = v.product_id
+where p.is_published
+  and v.is_active
+  and v.currency = 'EUR'
+  and v.attributes ? 'pc_builder'
+group by 1
+order by 1;
+```
+
+El resultado esperado son **8 opciones** para cada una de las ocho clases (`case`, `cooler`, `cpu`, `gpu`, `memory`, `motherboard`, `psu`, `storage`). Si ya se aplicó la migración de expansión, el rerun no duplica productos, aunque no hace falta ejecutarlo de nuevo.
+
+No ejecutes `supabase/seed.sql`, `db reset`, ni las migraciones históricas otra vez en el proyecto alojado. La migración no crea datos comerciales reales ni convierte el pago demo en pago real.
 
 ## 2. Completar Auth para la URL desplegada
 
@@ -58,7 +81,7 @@ La advertencia de Vercel sobre el prefijo público en URL/publishable key es esp
 
 1. Abre `/acceso`, crea o usa una cuenta ficticia y comprueba que el enlace termina en `https://nodria-staging.vercel.app/auth/callback` y luego en la ruta interna solicitada.
 2. Cierra sesión, vuelve a entrar y prueba recuperación de contraseña; confirma el correo antes de repetir peticiones para no volver a consumir el límite.
-3. Verifica `/marcas` para ver las seis marcas nuevas y `/categorias/ordenadores` para ver el catálogo ampliado.
+3. Verifica `/configurador` y confirma que cada paso ofrece ocho opciones; `/marcas` y `/categorias/ordenadores` deben mostrar el catálogo ampliado.
 4. Recorre una compra demo aprobada y una rechazada solo con datos ficticios; confirma que se indica expresamente que no hay cobro real.
 5. En Vercel, confirma que Production sigue apuntando a `main` y que el deployment aparece como `Ready`.
 

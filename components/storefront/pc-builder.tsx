@@ -146,7 +146,9 @@ export function PcBuilder({ catalog }: { catalog: PcBuilderCatalog }) {
               : "Configuración incompleta";
 
   const currentIndex = pcBuilderCategories.indexOf(activeCategory);
-  const currentOptions = catalog.components.filter((component) => component.category === activeCategory);
+  const currentOptions = catalog.components
+    .filter((component) => component.category === activeCategory)
+    .sort((left, right) => left.priceEur - right.priceEur || left.name.localeCompare(right.name, "es"));
   const selectedVariantId = selection[activeCategory] ?? "";
   const completedRequired = requiredPcBuilderCategories.length - result.missingCategories.length;
   const progressPercent = Math.round((completedRequired / requiredPcBuilderCategories.length) * 100);

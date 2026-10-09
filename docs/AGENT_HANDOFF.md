@@ -1,5 +1,15 @@
 # Registro de handoffs
 
+## Ampliación PC Builder — Tech Lead — 2026-10-09
+
+- El usuario señaló que el configurador ofrece poca elección. El conjunto previo tenía cuatro opciones por clase, solo plataforma AM5/DDR5 en CPU/placa/RAM.
+- Se añadieron 32 fichas ficticias aditivas: cuatro alternativas para cada una de ocho clases, incluyendo AM4/DDR4 y rangos de precio/capacidad mayores. El configurador ordena las opciones por precio ascendente.
+- Ownership: `scripts/catalog/dataset.mjs`, generadores/validador, `supabase/migrations/20261009113024_pc_builder_catalog_expansion.sql`, selector, contratos y runbook.
+- Generación validada: 84 fichas históricas permanecen byte a byte deterministas; la expansión genera 116 fichas totales/32 nuevas y ocho opciones por categoría. SQL de expansión limitado a esas 32 identidades; inserta productos, variantes, especificaciones e inventario demo, sin cambios de schema/RLS/grants ni actualizaciones/deletes.
+- Gates ejecutados: generación y `--check` de ambas migraciones, validador base, TypeScript, ESLint, build de producción y `git diff --check` pasan. Suite de tests no ejecutada en esta unidad. Supabase remoto no se consultó ni modificó.
+- Estado restante: aplicar manualmente el SQL de expansión en Supabase y comprobar ocho variantes activas por categoría. El catálogo local demo intencionalmente no sustituye el catálogo conectado con fixtures.
+- Commit/deployment: pendiente de la integración actual.
+
 ## Ola A recibida, verificada e integrada — 2026-10-08
 
 Las siete conversaciones terminaron. Se contrastaron el branch, `git status`, diff y pruebas reales de cada worktree; ninguno dejó commits ni archivos de handoff. Los cambios útiles se copiaron, revisaron, corrigieron y comprometieron en `main`. No se esperaba ninguna respuesta posterior.

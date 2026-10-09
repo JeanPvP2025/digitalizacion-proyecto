@@ -124,11 +124,12 @@ No se abrieron conversaciones ni ramas: por instrucción del usuario, el Tech Le
 | Tech Lead (main) | Catalog Discovery | Landings derivadas del catálogo para marcas, categorías y selecciones; enlaces y sitemap | `app/(store)/{marcas,categorias,campanas}/**`, `lib/catalog-landings.ts`, `app/sitemap.ts`, footer/portada | `getCatalogData()`, memberships `parentId/categoryIds` | ✅ Implementado en `c5e2025`; pruebas de datos y recorridos E2E locales |
 | Tech Lead (main) | PC Builder Quality | Matriz de compatibilidad usando las 32 variantes ficticias del dataset actual | `tests/catalog-data/dataset.test.mjs`, contrato PC Builder | `attributes.pc_builder` | ✅ `c5e2025`; 256 combinaciones base + longitud GPU + margen PSU verificados; límites técnicos siguen documentados |
 | Tech Lead (main) | PC Builder UX | Flujo guiado, selección por categoría, progreso esencial, comparación de variantes y resumen editable | `components/storefront/pc-builder.tsx`, `components/storefront/pc-builder.module.css`, estilos PC Builder en `app/globals.css` | Catálogo conectado con variantes publicadas; reglas actuales de compatibilidad | ✅ `e91a165` publicado; build, TypeScript, ESLint y diff-check pasan; `/configurador` responde HTTP 200. La demo local no contiene variantes vendibles para revisar tarjetas reales |
+| Tech Lead (main) | PC Builder Catalog Expansion | Ocho opciones por clase, AM4/DDR4 y AM5/DDR5; migración de solo inserciones | `scripts/catalog/**`, `supabase/migrations/20261009113024_pc_builder_catalog_expansion.sql`, selector PC Builder y documentación | Catálogo conectado y atributos `pc_builder` actuales | 🚧 Código y generación determinista listos; falta ejecutar la migración delta en Supabase y confirmar 8 opciones por clase |
 
 ## Pendiente que requiere acceso al entorno
 
 - ✅ Publicación a Vercel Production desde `main` (`4ed17f3`); smoke HTTP de rutas públicas aprobado. El proyecto conserva el nombre `nodria-staging`.
-- ⏳ Comprobar con SQL si los 84 productos de `20261008135808_catalog_depth_dataset.sql` están en Supabase; aplicar la migración solo si faltan. Ver `docs/PRODUCTION_RUNBOOK.md`.
+- ⏳ Aplicar manualmente la migración aditiva `20261009113024_pc_builder_catalog_expansion.sql` en Supabase y comprobar ocho variantes por clase. El usuario informó que ejecutó SQL en Supabase; desde esta sesión no se inspecciona la base remota. Ver `docs/PRODUCTION_RUNBOOK.md`.
 - ⏳ Probar Auth alojado después de fijar Site URL/redirect allowlist y SMTP propio, con una cuenta ficticia.
 - ⏳ Recorrer las landings con dataset ampliado y medir SEO/CWV de campo cuando se defina un dominio público estable.
 - ⏳ Auditoría dedicada de contraste/lector de pantalla del backoffice, separada del E2E de nombres, foco y overflow.

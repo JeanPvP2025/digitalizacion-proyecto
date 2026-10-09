@@ -1,8 +1,15 @@
 # Estado del proyecto
 
-Estado real al **2026-10-08**. `main` está publicado en el entorno **Production** de Vercel desde `4ed17f3` (proyecto llamado `nodria-staging`, URL `https://nodria-staging.vercel.app`). GitHub/Vercel informó deployment `success`; portada, acceso, catálogo, configurador, blog, guías, marcas, categorías, campañas y sitemap respondieron HTTP 200 en el smoke check. Los gates locales se repitieron antes del push y pasan. Esto certifica despliegue y rutas públicas, no login remoto ni aislamiento RLS remoto.
+Estado revisado al **2026-10-09**. `main` se publica en Production de Vercel (`https://nodria-staging.vercel.app`). El usuario informó que ejecutó SQL en el proyecto Supabase y verificó los RPCs de checkout/pago/RMA y RLS en tablas sensibles; esta sesión no dispone de consulta directa para confirmar el número de filas del catálogo. La aplicación sigue siendo una demo académica y no procesa pagos reales.
 
-La instancia solo muestra la marca NODRIA en `/marcas`; los 84 productos y marcas sintéticos del dataset ampliado parecen no estar cargados. El conector de Supabase no permitió consultar el proyecto desde esta sesión y no se modificó la base remota. Comprueba `docs/PRODUCTION_RUNBOOK.md`; aplica la migración de datos solo si la consulta de verificación devuelve 0. El Auth alojado también sigue pendiente de una prueba real: anteriormente dio límite de correo/credenciales y requiere URL Configuration y SMTP apto para el uso previsto. La aplicación sigue siendo una demo académica; no procesa pagos reales.
+El configurador parte de cuatro variantes por clase. Para ampliar la elección a ocho por clase, se añadieron 32 productos ficticios en `20261009113024_pc_builder_catalog_expansion.sql`. El código y el deployment no insertan esos datos: el usuario debe ejecutar la migración en SQL Editor de Supabase y verificar los conteos que se documentan en `docs/PRODUCTION_RUNBOOK.md`. El Auth alojado también sigue pendiente de una prueba real con URL Configuration y SMTP apto para el uso previsto.
+
+### Actualización PC Builder — 2026-10-09
+
+- 🚧 El dataset ampliado conserva las 32 piezas originales y añade 32 piezas, con ocho variantes en cada una de las ocho clases.
+- ✅ El nuevo catálogo incluye opciones sintéticas AM4/DDR4 y AM5/DDR5; las tarjetas de elección se ordenan por precio ascendente.
+- ✅ La nueva migración es determinista, aditiva, detecta colisiones y no cambia tablas, RLS, permisos ni filas existentes.
+- ⏳ Ejecutar `supabase/migrations/20261009113024_pc_builder_catalog_expansion.sql` en el Supabase de staging. Hasta entonces la interfaz seguirá mostrando únicamente las opciones que ya estén publicadas.
 
 ### Estado de salida a producción — verificación 2026-10-08
 
@@ -24,7 +31,7 @@ La instancia solo muestra la marca NODRIA en `/marcas`; los 84 productos y marca
 
 ## Séptima ola — integración de profundidad comercial
 
-- ✅ **Catálogo conectado:** migración aditiva determinista añade 84 productos ficticios, 6 marcas y categorías jerárquicas; el reset/seed local resulta en 96 productos publicados, 27 categorías, 7 marcas y 96 variantes EUR activas. No se aplicó al proyecto remoto.
+- ✅ **Catálogo conectado:** migración aditiva determinista añade 84 productos ficticios, 6 marcas y categorías jerárquicas; la expansión PC añade 32 componentes. Tras aplicar ambas migraciones, el reset/seed local contiene 128 productos publicados, 27 categorías, 7 marcas y 128 variantes EUR activas. El usuario informa haber ejecutado SQL en Supabase; esta sesión no verificó el conteo remoto.
 - ✅ **Descubrimiento:** filtros, conteos, categorías anidadas, marcas, precio, características técnicas, ordenación y URL persistente. Disponibilidad exacta solo se filtra en demo local; en Supabase se confirma durante checkout.
 - ✅ **Portada:** selección de destacados, categorías y campaña desde la fuente de catálogo activa; ante error no sustituye catálogo conectado por fixtures.
 - ✅ **PDP:** galería, especificaciones agrupadas, alternativas, guías enlazadas y compra por variante publicada. El servidor vuelve a validar precio/stock al checkout; añadir al carrito no reserva unidades.
@@ -37,7 +44,7 @@ La instancia solo muestra la marca NODRIA en `/marcas`; los 84 productos y marca
 ## Estado funcional
 
 - ✅ **Checkout B2C conectado:** sesión Auth real, variante/precio/stock validados en servidor, pedido y líneas con snapshots, pago demo simulado, reservas transaccionales, rechazo/retry y control de idempotencia. 4/4 pruebas browser conectadas pasan.
-- ✅ **Catálogo, búsqueda, carrito y PC Builder comprable:** el configurador añade variantes publicadas al carrito; el checkout vuelve a validar los datos de negocio. La matriz del dataset cubre 256 combinaciones base, conflictos de longitud de GPU y avisos de margen de fuente; límites como BIOS/QVL y conectores siguen explícitos.
+- 🚧 **Catálogo, búsqueda, carrito y PC Builder comprable:** el configurador añade variantes publicadas al carrito; el checkout vuelve a validar datos de negocio. Tras aplicar la migración delta, ofrece ocho variantes por clase (64 piezas), AM4/DDR4 y AM5/DDR5. La base remota aún requiere verificar el conteo de ocho opciones por categoría; la matriz automatizada existente cubre el dataset previo de cuatro opciones por clase.
 - ✅ **Reviews:** elegibilidad por línea entregada, moderación protegida, lectura pública solo de publicadas y acceso desde PDP.
 - ✅ **CRM/B2B hasta pago demo:** cotización aceptada emite pedido formal tenant-scoped con snapshots/reserva; owner/admin simula anticipo aprobado o rechazado. Aprobado guarda pago, pedido, actividad CRM y eventos idempotentes; rechazado cancela y libera reserva. No se recogen datos de tarjeta ni se procesa dinero real.
 - ✅ **Inventario y procurement básico:** ledger idempotente de movimientos, proveedores, órdenes de compra, recepciones parciales/finales vinculadas al movimiento y control de sobre-recepción.
@@ -84,7 +91,7 @@ La prueba E2E transversal verifica permisos de emisión B2B sin crear pedidos re
 | `tests/integration/support-flow/inspection-route.test.ts` | ✅ 4/4 |
 | `pwsh -File tests/integration/auth-boundaries/run-local.ps1` | ✅ 78 probes HTTP autenticados; cero fallos |
 | `node scripts/catalog/generate.mjs --check` | ✅ migración determinista |
-| Catálogo local tras reset | ✅ 96 productos publicados, 27 categorías, 7 marcas, 96 variantes EUR activas |
+| Catálogo local tras reset y expansión PC Builder | ✅ 128 productos publicados, 27 categorías, 7 marcas, 128 variantes EUR activas |
 | `git diff --check` | ✅ sin errores; Git advierte conversión LF/CRLF de Windows |
 
 ## Séptima ola — cierre de RMA y anticipo B2B
@@ -170,7 +177,7 @@ Una feature solo es ✅ cuando su contrato, autorización servidor/DB, persisten
 
 - ✅ `/marcas` y `/marcas/[slug]`, `/categorias` y `/categorias/[slug]`, `/campanas` y `/campanas/[slug]` leen el catálogo activo. Categorías incluyen descendientes mediante `parentId` y `categoryIds`; selecciones y grupos no persisten conteos duplicados. Catálogo conectado fallido no recibe fallback de fixtures.
 - ✅ La portada apunta las categorías a sus landings y la campaña a una selección activa; el pie enlaza marcas/categorías/selecciones. Canonical/robots respetan el dominio público configurado; el sitemap incluye los slugs activos y páginas de producto.
-- ✅ Dataset PC Builder: cuatro variantes por cada una de ocho clases; 256 combinaciones CPU/placa/RAM/caja compatibles con las reglas declaradas, prueba de GPU que excede caja y advertencia de margen de fuente.
+- ✅ Dataset PC Builder: ocho variantes por cada una de ocho clases en el conjunto expandido; 784 combinaciones CPU/placa/RAM/caja compatibles con las reglas declaradas, prueba de GPU que excede caja y advertencia de margen de fuente. La migración delta espera aplicación manual en Supabase.
 - ✅ Gates de esta ronda: TypeScript, ESLint, `pnpm test` (288 Vitest + 39 Node), `pnpm build`, Playwright 19/19 y `git diff --check`. Las rutas nuevas pasan verificación de headings, nombres de controles/enlaces y overflow desktop/móvil/tablet.
 - Commit funcional local: `c5e2025 feat(storefront): add catalog landings and PC matrix`.
 - ⚠️ Warnings Playwright preexistentes/de entorno: `caret-color: transparent` inyectado durante hidratación y `NO_COLOR` junto con `FORCE_COLOR`; no bloquearon los E2E ni se atribuyeron a estilos del producto.
