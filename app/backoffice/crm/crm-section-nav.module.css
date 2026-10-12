@@ -1,0 +1,6 @@
+.nav { display: flex; align-items: center; gap: 5px; padding: 0 0 18px; }
+.nav a { min-height: 35px; display: inline-flex; align-items: center; padding: 0 12px; color: #68766c; background: #eef1eb; font-size: 10px; font-weight: 550; transition: color 160ms ease, background-color 160ms ease; }
+.nav a:hover { color: #203729; background: #e5eadf; }
+.nav a:focus-visible { outline: 2px solid #486b3e; outline-offset: 2px; }
+.nav .active { color: #f4f6f1; background: #234232; }
+@media (max-width: 520px) { .nav { overflow-x: auto; margin-right: -15px; padding-right: 15px; } .nav a { flex: 0 0 auto; padding: 0 10px; font-size: 9px; } }

@@ -589,3 +589,37 @@ No existe proyecto Supabase remoto, dominio, credenciales de despliegue ni datos
 ### Siguiente paso
 
 - En Supabase `ypnhdxpejcbcyjiosrhf`: mantener habilitado el registro y apagar **Authentication → Providers → Email → Confirm Email**. Después crear una cuenta ficticia nueva y confirmar que inicia sesión sin enviar email. Si se devuelve `session: null`, el ajuste remoto todavía no quedó aplicado.
+
+## Handoff Tech Lead — pedidos y clientes en CRM — 2026-10-13
+
+### Trabajo realizado
+
+- Se inspeccionó `/backoffice/crm`: ofrecía bandeja de oportunidades, contactos resumidos, organizaciones y propuestas B2B; no tenía directorio de cuentas ni lectura CRM del historial completo de pedidos.
+- Se añadió navegación entre resumen, clientes y pedidos; páginas de búsqueda/paginación para clientes y pedidos; ficha de cliente con historial; ficha de pedido con estados independientes de orden/pago/preparación/devolución, líneas snapshot, importes y cronología.
+- Se añadieron RPCs `crm_customer_directory`, `crm_customer_profile`, `crm_orders` y `crm_order_detail`. Exigen `sales_manager` o `super_admin`, excluyen perfiles internos, validan filtros/paginación y devuelven payload limitado. No conceden lectura directa de tablas ni escrituras.
+- Los controles comerciales son de consulta; fulfillment, pago y RMA siguen enlazados al centro operativo y sus RPCs autorizados.
+
+### Archivos modificados
+
+- `app/backoffice/crm/page.tsx`, `app/backoffice/crm/clientes/**`, `app/backoffice/crm/pedidos/**` y componentes/estilos compartidos del CRM.
+- `lib/crm/orders.ts`, `lib/crm/CONTRACT.md`.
+- `supabase/migrations/20261013100000_crm_customer_orders_workspace.sql`.
+- `docs/STATUS.md`, `docs/WORKSTREAMS.md`, `docs/ARCHITECTURE.md`, `docs/DECISIONS.md`, `docs/RBAC_MATRIX.md`, `docs/TESTING.md`.
+
+### Contratos y permisos
+
+- Se amplía lectura de datos comerciales de cliente/orden solo a través de cuatro funciones `SECURITY DEFINER`, con `search_path` vacío y comprobación de rol dentro de PostgreSQL. Ventas no obtiene direcciones ni referencias privadas del proveedor de pagos.
+- El listado soporta búsqueda por orden/persona/empresa/producto/SKU y filtros separados por orden, pago, fulfillment y última devolución.
+- No hay mutaciones CRM de pedido ni nueva política RLS. Etiquetas, notas de cliente, segmentos, campañas, exportación y emails quedan fuera del slice.
+
+### Verificación y estado Git
+
+- `pnpm exec tsc --noEmit`: pasa.
+- ESLint focalizado en páginas/componentes/lib CRM: pasa.
+- `pnpm dlx supabase@latest test db --local tests/database/crm_customer_orders.sql`: 23/23 pgTAP pasan, incluyendo denegaciones anonymous/customer/support, allow superadmin, ventas sin SELECT directo por RLS, filtros y minimización del payload.
+- No se ejecutó E2E con browser ni se probó la base Supabase alojada; no se modificó la DB remota.
+- El cambio queda preparado en `main`; el deployment debe esperar a que se aplique la migración en Supabase Production.
+
+### Riesgo y siguiente paso
+
+- El frontend depende de los cuatro RPC nuevos. Aplicar primero `supabase/migrations/20261013100000_crm_customer_orders_workspace.sql` en Supabase; después probar como `sales_manager`, confirmar denegación como customer/support y comprobar filtros/detalle; solo entonces desplegar el frontend.

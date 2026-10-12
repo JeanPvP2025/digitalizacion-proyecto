@@ -296,3 +296,13 @@ Las decisiones de alcance heredadas de la misión se marcan **Confirmada**. Las 
 - **Contexto:** No se comprará dominio ni se enviarán correos. El flujo actual usa registro con email y contraseña.
 - **Decisión:** Mantener el registro habilitado y desactivar `Confirm Email` en el proveedor Email de Supabase. La app debe iniciar sesión al recibir la sesión de `signUp` y no ofrecer confirmación/reenvío ni recuperación por correo. No configurar SMTP para este flujo.
 - **Consecuencias:** Las direcciones no se verifican; cualquier error tipográfico queda asociado a una cuenta no verificable. La recuperación de contraseñas olvidadas requiere intervención administrativa. La app debe comunicar esa limitación y no presentar el Auth alojado como verificado hasta completar un registro real.
+
+## D-033 — Lectura comercial de clientes y pedidos mediante RPC CRM
+
+- **Fecha:** 2026-10-13
+- **Estado:** Implementada en el repositorio local; pendiente aplicar la migración y verificar los RPC con una cuenta comercial en Supabase Production.
+- **Contexto:** La bandeja CRM mostraba oportunidades y presupuestos, mientras que operaciones solo listaba pedidos accionables. Ventas no podía consultar el historial del cliente ni cruzar pedido, pago, preparación y devolución. Dar SELECT global directo contradiría el límite de RBAC.
+- **Decisión:** Añadir un directorio/ficha de clientes y una lista/detalle de pedidos. `sales_manager` y `super_admin` leen campos comerciales mínimos mediante RPCs `SECURITY DEFINER`, con rol comprobado en PostgreSQL, `search_path` vacío y paginación/filtros validados. No se amplían grants directos ni policies RLS. El CRM es de consulta; las transiciones siguen en los RPCs operativos existentes.
+- **Alternativas:** mantener el listado parcial de operaciones; o permitir lectura directa global de tablas de pedidos, pagos, líneas y eventos.
+- **Motivo:** ofrece un historial comercial de estilo Shopify sin mezclar permisos de ventas con fulfillment, pagos o RMA.
+- **Consecuencias:** ventas ve email/teléfono, pedido, estados, importe, líneas snapshot y cronología; no ve direcciones ni referencias privadas del proveedor de pagos. No se implementan etiquetas/notas editables, segmentos dinámicos, campañas, exportación ni emails. Aplicar `20261013100000_crm_customer_orders_workspace.sql` antes del deploy del frontend y probar las RPC con sesión comercial.

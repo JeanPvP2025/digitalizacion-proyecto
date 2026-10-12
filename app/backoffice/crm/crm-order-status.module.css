@@ -1,0 +1,9 @@
+.badge { display: inline-flex; width: fit-content; align-items: center; min-height: 22px; padding: 3px 8px; color: #445b47; background: #eef2ea; border-radius: 2px; font: 8px/1.2 var(--font-mono); white-space: nowrap; }
+.muted { color: #929a92; background: #f1f2ef; }
+.kind_order.value_pending_payment, .kind_payment.value_pending { color: #785a26; background: #f7efd9; }
+.kind_order.value_paid, .kind_payment.value_paid, .kind_fulfillment.value_delivered, .kind_return.value_closed { color: #376440; background: #e5f1e5; }
+.kind_order.value_processing, .kind_fulfillment.value_pending, .kind_fulfillment.value_picking, .kind_fulfillment.value_packed { color: #345e61; background: #e5f0ed; }
+.kind_order.value_shipped, .kind_fulfillment.value_shipped, .kind_return.value_received { color: #3e5877; background: #e9eef5; }
+.kind_order.value_cancelled, .kind_order.value_refunded, .kind_payment.value_failed, .kind_payment.value_refunded, .kind_return.value_rejected { color: #87513f; background: #f6eae4; }
+.kind_return.value_refunded { color: #376440; background: #e5f1e5; }
+.kind_payment.value_authorized, .kind_payment.value_partially_refunded, .kind_return.value_requested, .kind_return.value_approved { color: #76582e; background: #f6f0e4; }

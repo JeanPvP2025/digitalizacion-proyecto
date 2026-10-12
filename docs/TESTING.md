@@ -1,6 +1,6 @@
 # Testing y gates
 
-## Corte de release — 2026-10-12
+## Corte de release — 2026-10-13
 
 - `pnpm install --frozen-lockfile`, `pnpm exec tsc --noEmit`, `pnpm lint`, `pnpm test` (**288 Vitest + 39 Node**), `pnpm test:e2e` (**19/19**), `pnpm build` y `git diff --check`: pasan.
 - Supabase local: migraciones y seed aplicados; pgTAP **183/183**; DB lint sin errores; auth/RLS HTTP **78/78**.
@@ -9,6 +9,7 @@
 - Browser Playwright contra Production, viewports de 390 px, sin `pageerror` ni overflow horizontal en las rutas comprobadas. La revisión funcional del catálogo encontró 44 fichas/3 marcas y 4–5 opciones PC Builder por clase; esto es un fallo de datos alojados, no de rendering.
 - Después del deployment `4905c47`, `robots.txt` y `sitemap.xml` responden 200 y publican exclusivamente `https://nodria-academico.vercel.app` (74 URLs). El dominio anterior devuelve 308 conservando ruta y query.
 - Durante `pnpm test:e2e` aparecen avisos `NO_COLOR`/`FORCE_COLOR` y un `caret-color` de hidratación sin origen atribuido; no causaron fallos. El runner de roles mostró errores de escritura del stream al cerrarse mientras el test completó 1/1 y el proyecto efímero se limpió.
+- CRM de clientes/pedidos añadido después de ese corte: `pnpm exec tsc --noEmit` y ESLint focalizado pasan. `tests/database/crm_customer_orders.sql` aporta 23 aserciones pgTAP para roles, denegación RLS directa, filtros, aislamiento de staff y payload; pasó localmente después de aplicar la migración en la DB `nodria-commerce`. No se ha ejecutado contra Supabase remoto ni se ha desplegado.
 
 ## Smoke check de producción — 2026-10-08
 

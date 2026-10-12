@@ -2,12 +2,13 @@
 
 Tablero de conversaciones. El repositorio y las migraciones son fuente de verdad; un estado `Done` de agente no sustituye integración/gates del tech lead.
 
-## Cierre de release actual — 2026-10-12
+## Cierre de release actual — 2026-10-13
 
 No hay conversaciones o worktrees de implementación activos. El proyecto `nodria` está en Vercel Production en `https://nodria-academico.vercel.app`; `nodria-staging.vercel.app` queda como redirección permanente compatible.
 
 | Conversation | Role | Task | Ownership | Dependencies | State |
 |---|---|---|---|---|---|
+| Tech Lead (main) | CRM comercial — clientes y pedidos | Directorio/ficha de clientes; pedidos con filtros de estado y timeline en el CRM admin | `app/backoffice/crm/**`, `lib/crm/orders.ts`, `supabase/migrations/20261013100000_crm_customer_orders_workspace.sql`, docs CRM/RBAC | Aplicar migración en Supabase y validar sesión `sales_manager` | 🚧 Typecheck, lint y 23 pgTAP locales pasan; migration/roles Production y deployment pendientes |
 | Tech Lead (main) | Auth sin correo | Eliminar confirmación/reenvío/recuperación por email de la UI y mantener registro con sesión inmediata | `components/storefront/auth-form.tsx`, callback feedback, Auth docs | Supabase `Confirm Email` desactivado | 🚧 Código actualizado; falta guardar ajuste remoto y probar un registro nuevo |
 | Supabase project owner | External release verification | Desactivar `Confirm Email`, mantener registros habilitados y probar alta/inicio; completar RLS/JWT y recorrido de pedido demo | Supabase project `ypnhdxpejcbcyjiosrhf` | Acceso al proyecto | ⚠️ Catálogo verificado por SQL: 116 productos, 6 marcas, 8–9 opciones por clase; Auth/RLS alojados aún sin certificar |
 

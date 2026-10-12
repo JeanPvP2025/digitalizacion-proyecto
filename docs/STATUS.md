@@ -1,6 +1,6 @@
 # Estado del proyecto
 
-Estado revisado al **2026-10-12**. La aplicación está desplegada en Vercel Production desde `main`, con proyecto `nodria` y dominio final `https://nodria-academico.vercel.app`. El dominio antiguo `https://nodria-staging.vercel.app` devuelve `308` hacia el nuevo y conserva ruta y query. Los smoke checks a `/`, `/acceso`, `/configurador` y `/backoffice/crm` responden HTTP 200.
+Estado revisado al **2026-10-13**. La aplicación está desplegada en Vercel Production desde `main`, con proyecto `nodria` y dominio final `https://nodria-academico.vercel.app`. El dominio antiguo `https://nodria-staging.vercel.app` devuelve `308` hacia el nuevo y conserva ruta y query. Los smoke checks previos a `/`, `/acceso`, `/configurador` y `/backoffice/crm` responden HTTP 200; las rutas CRM nuevas aún no se han desplegado.
 
 El operador verificó en el SQL Editor del proyecto Supabase `ypnhdxpejcbcyjiosrhf` un total de **116 productos de catálogo ampliado y 6 marcas**. La consulta del PC Builder devolvió 8–9 opciones por clase (`case` 9, `cooler` 8, `cpu` 9, `gpu` 8, `memory` 9, `motherboard` 9, `psu` 9, `storage` 9). Esto cumple el mínimo de ocho opciones; no borrar filas para forzar un total exacto.
 
@@ -58,6 +58,7 @@ Las notas de despliegue y PC Builder a continuación describen el estado de esa 
 - 🚧 **Catálogo, búsqueda, carrito y PC Builder comprable:** el configurador añade variantes publicadas al carrito; el checkout vuelve a validar datos de negocio. La base local tiene ocho opciones por clase, pero Production solo muestra 4–5 y 44 fichas/3 marcas. El carrito y el checkout se cubren contra Supabase aislado; la variedad final alojada aún no.
 - ✅ **Reviews:** elegibilidad por línea entregada, moderación protegida, lectura pública solo de publicadas y acceso desde PDP.
 - ✅ **CRM/B2B hasta pago demo:** cotización aceptada emite pedido formal tenant-scoped con snapshots/reserva; owner/admin simula anticipo aprobado o rechazado. Aprobado guarda pago, pedido, actividad CRM y eventos idempotentes; rechazado cancela y libera reserva. No se recogen datos de tarjeta ni se procesa dinero real.
+- 🚧 **CRM comercial de clientes y pedidos:** se añadieron localmente directorio/ficha de cliente, historial y filtros de pedido/pago/preparación/devolución, detalle con artículos snapshot, importes y timeline. Cuatro RPCs limitadas están en `20261013100000_crm_customer_orders_workspace.sql`; typecheck, ESLint y 23 aserciones pgTAP pasan en Supabase local. Falta aplicar la migración en Production y validar las vistas con sesiones sales/customer/support antes de desplegar. No amplía mutaciones ni RLS directo.
 - ✅ **Inventario y procurement básico:** ledger idempotente de movimientos, proveedores, órdenes de compra, recepciones parciales/finales vinculadas al movimiento y control de sobre-recepción.
 - ✅ **Fulfillment:** pedido pagado pasa por picking, packing y expedición con timeline y consumo de reserva. La secuencia y autorización están cubiertas en PostgreSQL.
 - ✅ **Support/RMA local:** ticket, conversación, revisión/reembolso demo, inspección de almacén y disposición por línea funcionan. Reponer incrementa `on_hand` una sola vez mediante ledger; desechar no incrementa stock; al inspeccionar todas las líneas la devolución se cierra con evento de timeline. El recorrido browser conectado cliente → soporte → almacén queda cubierto.
@@ -131,8 +132,11 @@ Warnings no bloqueantes conocidos: Node reporta `MODULE_TYPELESS_PACKAGE_JSON` e
 - ⏳ Revisar `/servicios` y añadir historial operativo/CRM sintético repetible sin aparentar transacciones reales ni sobrescribir datos existentes.
 - ✅ Matriz de permisos por rol y dominio documentada en `RBAC_MATRIX.md`, con 78 probes HTTP autenticados, pruebas SQL por dominios críticos y E2E de roles; no equivale a CRUD exhaustivo por columna ni prueba cada Server Action.
 - ✅ **Escritura segura de catálogo:** migration revoca DML amplio y `update_catalog_product_editorial` aplica allowlist/rol en PostgreSQL. API de sesión, route/unit tests y E2E que edita y restaura un producto seed. Ver `docs/CATALOG_MANAGER_UI.md`.
+- 🚧 **CRM de pedidos en Production:** el CRM está implementado y su prueba pgTAP pasa en local; requiere migración `20261013100000_crm_customer_orders_workspace.sql`, verificación de roles en Supabase alojado y posterior deployment. No publicar el frontend antes de que existan los RPC.
 
 ### P2
+
+- ⏳ **CRM tipo Shopify, siguiente alcance:** etiquetas/notas editables, segmentos dinámicos, valor de vida calculado con política explícita de reembolsos, y acciones comerciales aún no existen. No simularlos como completos.
 
 - [x] Medir Lighthouse local en portada móvil y catálogo desktop; corregir contraste, nombres accesibles, objetivos táctiles e imágenes responsive. Evidencia detallada en `docs/PERFORMANCE_AUDIT.md` y `.seo-cache/`.
 - [ ] Repetir CWV de laboratorio en el dominio final y obtener datos de campo cuando haya tráfico; no hay datos CrUX/INP actuales.

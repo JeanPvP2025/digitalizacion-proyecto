@@ -36,7 +36,7 @@ Los límites son módulos de negocio dentro de la misma aplicación y base relac
 | Descubrimiento | Búsqueda, filtros, ordenación, comparador y recomendaciones | Catálogo; las consultas deben respetar publicación y disponibilidad |
 | Comercio | Carritos, promociones, checkout, intentos de pago demo, pedidos y snapshots históricos | Cliente/organización, catálogo, inventario, envíos, devoluciones |
 | Clientes | Perfil, direcciones, wishlist, construcciones guardadas, pedidos y preferencias | Identidad, comercio, soporte, reseñas |
-| B2B y CRM | Organizaciones, contactos, leads, oportunidades, actividades, condiciones comerciales y presupuestos | Identidad/membresías, precios, pedidos y auditoría |
+| B2B y CRM | Organizaciones, contactos, leads, oportunidades, actividades, condiciones comerciales, presupuestos y lectura comercial de clientes/pedidos | Identidad/membresías, precios, pedidos, actividad y auditoría |
 | Inventario y compras | Almacenes, cantidades físicas/reservadas, movimientos, proveedores, órdenes de compra y recepciones | Catálogo, pedidos, devoluciones y operaciones |
 | Fulfillment y operaciones | Preparación, expedición, seguimiento, incidencias, devoluciones y RMA | Pedidos, inventario, soporte y timeline operacional |
 | Soporte y reputación | Tickets, mensajes, devoluciones atendidas, reseñas, votos y moderación | Clientes, organizaciones, pedidos, productos |
@@ -80,6 +80,8 @@ No se deben duplicar reglas de negocio en componentes cliente, Server Actions, R
 9. No se suben secretos ni datos personales reales al repositorio o a seeds. Preview, desarrollo y producción usan proyectos/credenciales separados.
 
 Las migraciones habilitan RLS/grants, checkout por variante/fingerprint, movimientos y procurement, pedido B2B formal, fulfillment, reembolso e inspección/disposición RMA y reviews. Auth UI/callback/sesión SSR y guards están integrados. El gate local ejercita GoTrue/PostgREST con JWT reales y 78 probes, además de scripts PostgreSQL para RBAC/RLS e inspección RMA. Las rutas públicas remotas tienen smoke check HTTP, pero no se probó sesión/JWT contra la base alojada. Los `.data/` y fixtures son solo demo local. La matriz CRUD no es exhaustiva; no considerar el entorno como tienda real ni declarar Auth/RLS remotas certificadas.
+
+El CRM dispone de rutas de clientes y pedidos con perfiles, líneas históricas, filtros de estados y cronología. `sales_manager` accede solo mediante RPC SQL de lectura acotada: no se amplían grants directos ni policies RLS sobre `orders`, `order_items`, `payment_transactions` o `order_events`. El SQL vive en `20261013100000_crm_customer_orders_workspace.sql`; se debe aplicar a Supabase antes de desplegar el frontend que consume esos RPCs.
 
 ## Configuración local y despliegue previsto
 

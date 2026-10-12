@@ -30,8 +30,16 @@ Los miembros de la organización pueden leer el pedido y sus líneas/eventos; so
 
 ## CRM e historial
 
-El CRM mantiene la bandeja de `quote_inquiries` y `crm_leads` para sales_manager/super_admin. La etapa de solicitudes públicas cambia mediante `update_quote_inquiry_status`, que valida transiciones y escribe actividad. Sales_manager ve las solicitudes B2B sin asignar y sus propias cotizaciones; la asignación las retira de la cola global. El acceso a organizaciones y membresías sigue siendo tenant-scoped; ventas no obtiene un directorio global de clientes.
+El CRM mantiene la bandeja de `quote_inquiries` y `crm_leads` para sales_manager/super_admin. La etapa de solicitudes públicas cambia mediante `update_quote_inquiry_status`, que valida transiciones y escribe actividad. Sales_manager ve las solicitudes B2B sin asignar y sus propias cotizaciones; la asignación las retira de la cola global. El acceso a organizaciones y membresías sigue siendo tenant-scoped; ventas no obtiene una lista de organizaciones ni membresías.
 
 `crm_activities` es append-only para los roles de aplicación. Triggers y RPCs guardan altas, cambios de etapa, asignaciones, ofertas, decisiones y cambios de equipo. El tenant ve solo eventos marcados como `organization`; ventas ve leads, consultas públicas y solicitudes B2B visibles por su asignación; super_admin conserva acceso de auditoría. La UI lee este historial persistido y no sintetiza actividad a partir de fechas.
 
 Los nombres y correos que forman parte de una cotización son snapshots de la solicitud. No se guardan datos de tarjeta ni credenciales de pago.
+
+### Directorio de clientes y pedidos
+
+`/backoffice/crm/clientes` y `/backoffice/crm/pedidos` son lecturas CRM para `sales_manager`/`super_admin`. La ficha de cliente reúne su perfil y pedidos; la ficha de pedido presenta líneas con snapshot de precio, importes, cronología y estados independientes de pedido, pago, preparación y última devolución. La búsqueda y filtros se ejecutan en el RPC, no solo en el navegador.
+
+Las lecturas pasan por `crm_customer_directory`, `crm_customer_profile`, `crm_orders` y `crm_order_detail`, `SECURITY DEFINER` con `search_path` vacío y comprobación de rol en PostgreSQL. No conceden acceso a las tablas sensibles ni cambian sus políticas RLS. El payload comercial no incluye direcciones ni referencias privadas del proveedor; ventas puede ver email/teléfono, estado e importe del pedido, artículos snapshot y notas de los eventos operativos. `crm_orders` admite filtros separados para estado de pedido, pago, preparación y devolución.
+
+Estas páginas son de consulta. Transiciones de pago, picking, empaquetado, expedición, entrega y RMA permanecen en las herramientas con permisos operativos existentes. Este primer slice no implementa etiquetas/notas editables de cliente, segmentos dinámicos, campañas, exportación ni envío de correo. Antes de desplegar el código, aplicar `supabase/migrations/20261013100000_crm_customer_orders_workspace.sql` en Supabase y validar los RPC con sesión comercial; el estado remoto no está comprobado.

@@ -1,6 +1,6 @@
 # Matriz de roles y permisos
 
-Estado al 2026-10-07 tras la sexta ola y los cierres integrados de RMA y B2B. La autorización efectiva combina sesión Auth, `user_role_grants`, `organization_memberships`, grants SQL, RLS y validaciones de RPC. Ocultar una acción en UI no concede ni deniega acceso.
+Estado al 2026-10-13. La autorización efectiva combina sesión Auth, `user_role_grants`, `organization_memberships`, grants SQL, RLS y validaciones de RPC. Ocultar una acción en UI no concede ni deniega acceso.
 
 ## Nombres de rol
 
@@ -10,7 +10,7 @@ Estado al 2026-10-07 tras la sexta ola y los cierres integrados de RMA y B2B. La
 | `business_user` | `organization_memberships.role = buyer` o `viewer` | Organización a la que pertenece; `viewer` no administra ni compra |
 | `business_manager` | `organization_memberships.role = admin` o `owner` | Solo su organización; el owner conserva administración superior |
 | `support` | `app_role = support_agent` | Tickets, mensajes públicos permitidos y devoluciones; sin inventario/CRM |
-| `sales` | `app_role = sales_manager` | CRM comercial y cola de presupuestos sin asignar; sin pedidos/pagos/almacén |
+| `sales` | `app_role = sales_manager` | CRM comercial, cola de presupuestos y lectura comercial mínima de clientes/pedidos mediante RPC; sin mutación de pedidos ni acceso directo a tablas de pedidos/pagos |
 | `warehouse` | `app_role = fulfillment_manager` | Pedidos operativos, inventario y fulfillment |
 | `admin` / `superadmin` | `app_role = super_admin` | Operación interna transversal según cada RPC; no salta las validaciones de función |
 | `catalog_manager` | `app_role = catalog_manager` | Gestión de catálogo y variantes |
@@ -27,18 +27,18 @@ Estado al 2026-10-07 tras la sexta ola y los cierres integrados de RMA y B2B. La
 |---|---|---|---|---|---|---|---|---|---|
 | Catálogo publicado | R | R | R | R | R | R | R | R/C/U/D | R/C/U/D |
 | Perfil y grants | — | R/U propio limitado | R propio | R propio | R propio | R propio | R propio | R propio | R + administración interna autorizada |
-| Organizaciones/membresías | — | R de su org | R de su org/miembros | R de su org; C/U/D de miembros por RPC con límites de rol | — | R de solicitud comercial necesaria; no lista organizaciones ni membresías | — | — | R; administración protegida |
+| Organizaciones/membresías | — | R de su org | R de su org/miembros | R de su org; C/U/D de miembros por RPC con límites de rol | — | R del nombre de empresa asociado a una orden, vía RPC CRM; no lista organizaciones ni membresías | — | — | R; administración protegida |
 | Carrito | — | R/C/U/D propio | R/C/U/D propio | R/C/U/D propio | — | — | — | — | R interno |
 | Presupuestos B2B | — | C por RPC/intake público acotado | R/C de su org | R/C y respuesta en su org | — | R de cola solicitada sin asignar y presupuestos propios; reclamar/enviar por RPC; sin D | — | — | R y transiciones permitidas por RPC |
 | CRM leads/inquiries | C acotada con consentimiento | — | — | — | — | R/U vía server action/RPC | — | — | R/U vía rutas autorizadas |
-| Pedidos y líneas | — | R propio | R de pedidos de su organización; sin mutación | R de la organización; owner/admin emite desde quote aceptado por RPC | R mínimo necesario por política/soporte | — | R operativa | — | R |
-| Pagos | — | R de pago propio | R de pago propio/org, sin transición | R de pago de su organización; owner/admin resuelve anticipo demo por RPC | R mínimo de contexto permitido | — | R operativo | — | R |
+| Pedidos y líneas | — | R propio | R de pedidos de su organización; sin mutación | R de la organización; owner/admin emite desde quote aceptado por RPC | R mínimo necesario por política/soporte | R de campos comerciales mínimos vía RPC CRM (cliente, número, estados, líneas snapshot e importe); sin acceso directo ni mutaciones | R operativa | — | R |
+| Pagos | — | R de pago propio | R de pago propio/org, sin transición | R de pago de su organización; owner/admin resuelve anticipo demo por RPC | R mínimo de contexto permitido | Solo estado de pago asociado a la orden mediante RPC CRM; sin referencia del proveedor ni acceso directo | R operativo | — | R |
 | Crear pedido / checkout | — | C por RPC autenticada; precios y stock servidor | Igual, vinculado a org miembro | Igual; owner/admin emite pedido B2B y resuelve anticipo demo idempotente por RPC | — | — | — | — | Solo por flujo/autorización explícita |
 | Stock/reservas/fulfillment | — | — | — | — | — | — | R; recepción/ajuste por RPC idempotente; fulfillment consume reserva por RPC | R de catálogo, sin mutación de stock | R y RPC según acción |
 | Procurement | — | — | — | — | — | — | R de proveedores/PO/recepciones; CRUD de proveedor, borrador/estado de PO y recepción por RPC | — | R y RPCs de procurement según acción |
 | Tickets y mensajes | — | C por RPC; R/mensaje propio permitido | Propio/org | Propio/org | R/U y respuesta por RPC; DML directo revocado | — | — | — | R/U por RPC según acción |
 | Devoluciones/RMA y reembolsos | — | C por RPC; R propias y reembolso propio | C por RPC si es titular; R propia | C por RPC si es titular; R propia | R/U de revisión por RPC; R de reembolso autorizado | — | R operativa, R de reembolso, inspección/restock/desecho por RPC; cierre tras todas las líneas | — | R/U según acción por RPC |
-| Auditoría/timeline | — | R de timeline propio permitido | Propio/org | Propio/org | R de caso autorizado | Actividad interna comercial autorizada | Eventos de pedidos operativos | — | R |
+| Auditoría/timeline | — | R de timeline propio permitido | Propio/org | Propio/org | R de caso autorizado | R de eventos/notas del pedido vía RPC CRM; no lee auditoría global | Eventos de pedidos operativos | — | R |
 
 Las celdas “—” significan sin permiso por el contrato actual. Para movimientos manuales, `receive_inventory` y `adjust_inventory` permiten solo `fulfillment_manager`/`super_admin`; Postgres valida rol, fingerprint y saldo reservado aun cuando se invoque la RPC fuera de la UI. Procurement sigue el mismo límite interno. Fulfillment requiere el rol de almacén/superadmin y consume una reserva solo al expedir. Owner/admin B2B puede emitir un pedido aceptado y resolver su anticipo demo por RPC tenant-scoped; buyer/viewer no. La matriz CRUD sigue siendo conservadora y debe ampliarse con pruebas por endpoint antes de conceder permisos.
 
@@ -53,6 +53,7 @@ La tabla `return_refunds` solo concede lectura RLS al propietario de la devoluci
 - `tests/integration/support-flow/return-inspection.sql` prueba que support/cliente no inspeccionan, warehouse no puede alterar cantidades, repetición idéntica se reproduce, payload diferente y segunda disposición se rechazan, y stock/timeline/cierre se mantienen coherentes.
 - `create_business_order_from_accepted_quote` solo admite owner/admin; `orders`, `order_items`, `order_events`, pagos y `business_quote_orders` se leen por membresía de organización o por los roles internos ya permitidos. `tests/database/crm_b2b.sql` verifica buyer/viewer lectura, bloqueo de emisión para esos roles y aislamiento tenant B.
 - `resolve_business_order_demo_payment` exige owner/admin de la misma organización. El runner B2B aislado valida que buyer no puede liquidar, aprobado/rechazado quedan en el tenant y el retry/payload distinto no duplica el pago o la actividad.
+- El CRM comercial suma lectura global acotada, sin escrituras, mediante `crm_customer_directory`, `crm_customer_profile`, `crm_orders` y `crm_order_detail`. Las RPC comprueban `sales_manager`/`super_admin`, limitan paginación y estados, y no amplían grants ni RLS directos. Ventas ve identidad de contacto, estados, importes, líneas snapshot y cronología; no ve direcciones ni referencias del proveedor. La migración `20261013100000_crm_customer_orders_workspace.sql` debe aplicarse y validarse antes de publicar las rutas; todavía no se ha certificado contra la base alojada.
 - La matriz inicial se corrigió al detectar que el RPC, no el DML directo, es el contrato para transición de ticket. No se añadió permiso directo.
 - No existen roles persistidos `marketing` ni `manager` genérico; sus pruebas son por ausencia de enum/grant, no por usuario con un rol inventado.
 - No se ha ejecutado CRUD exhaustivo en cada columna/tabla, ni pruebas HTTP de cada Server Action. Roles `marketing` y `manager` genérico no existen como grants persistidos y no deben recibir acceso implícito. El gate cubre escenarios seleccionados y no constituye certificación de producción.

@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { updateOpportunityStatus } from "@/app/backoffice/crm/actions";
 import { getCrmWorkspace, type CrmOpportunity, type ProspectStatus } from "@/lib/crm/data";
+import { CrmSectionNav } from "./crm-section-nav";
 import { QuoteQueue } from "./quote-queue";
 import styles from "./crm.module.css";
 
@@ -168,6 +169,8 @@ export default async function CrmPage({ searchParams }: { searchParams: SearchPa
             </div>
             <div className={styles.introStamp}><Handshake size={19} /><span>Conectado a registros reales<small>Actualizado al cargar esta página</small></span></div>
           </section>
+
+          <CrmSectionNav active="overview" />
 
           {notice && <p className={`${styles.notice} ${noticeIsError ? styles.noticeError : ""}`} role={noticeIsError ? "alert" : "status"}>{notice}</p>}
 
