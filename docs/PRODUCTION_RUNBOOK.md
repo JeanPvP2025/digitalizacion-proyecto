@@ -52,21 +52,21 @@ group by 1
 order by 1;
 ```
 
-El resultado esperado son **8 opciones** para cada una de las ocho clases (`case`, `cooler`, `cpu`, `gpu`, `memory`, `motherboard`, `psu`, `storage`). Vuelve a cargar `/marcas`, `/categorias` y `/configurador` en el dominio final y comprueba que las ocho clases muestren ocho opciones.
+El mínimo esperado son **8 opciones** para cada una de las ocho clases (`case`, `cooler`, `cpu`, `gpu`, `memory`, `motherboard`, `psu`, `storage`). El SQL Editor del operador devolvió 8–9 por clase. No borres opciones adicionales. Vuelve a cargar `/marcas`, `/categorias` y `/configurador` en el dominio final y comprueba el catálogo publicado.
 
 No ejecutes `supabase/seed.sql`, `db reset`, ni las migraciones históricas otra vez en el proyecto alojado. La migración no crea datos comerciales reales ni convierte el pago demo en pago real.
 
-## 2. Completar Auth para la URL desplegada
+## 2. Auth sin correo de confirmación
 
 En Supabase **Authentication → URL Configuration**:
 
 - Site URL: `https://nodria-academico.vercel.app`
-- Redirect URL: `https://nodria-academico.vercel.app/auth/callback`
+- Conserva `https://nodria-academico.vercel.app/auth/callback` en Redirect URLs para compatibilidad con enlaces antiguos.
 - Añade `http://localhost:3000/auth/callback` solo si vas a probar desde local.
 
-En **Authentication → Emails → SMTP Settings**, configura un proveedor SMTP propio con remitente verificado y credenciales privadas. No pegues la contraseña SMTP en Git, en el navegador ni en una variable `NEXT_PUBLIC_*`. Después prueba una sola vez confirmación y recuperación con una cuenta ficticia.
+En **Authentication → Providers (Sign In / Providers) → Email**, deja habilitado el registro de usuarios y desactiva **Confirm Email**. No configures SMTP para el flujo actual: el usuario pidió que no se envíen confirmaciones ni recuperaciones. Al registrarse, la app debe recibir una sesión e iniciar sesión de inmediato; si Supabase devuelve `session: null`, revisa ese ajuste antes de repetir el registro.
 
-El proveedor integrado de Supabase limita actualmente el envío de correo a 2 mensajes por hora y es solo para pruebas; al excederlo aparece `email rate limit exceeded`. Supabase documenta la configuración de SMTP y recomienda autenticar el dominio de envío con SPF/DKIM/DMARC. Fuentes: [SMTP personalizado de Supabase](https://supabase.com/docs/guides/auth/auth-smtp), [límites de Auth](https://supabase.com/docs/guides/auth/rate-limits), [URLs de redirección](https://supabase.com/docs/guides/auth/redirect-urls).
+La dirección del usuario no queda verificada. La UI no ofrece reenvío ni recuperación por correo; una contraseña olvidada requiere intervención administrativa. No invites personas al equipo del proyecto Supabase para sortear el envío restringido. Referencia: [configuración de Auth](https://supabase.com/docs/guides/auth/general-configuration).
 
 ## 3. Variables de Vercel
 
@@ -84,10 +84,10 @@ La advertencia de Vercel sobre el prefijo público en URL/publishable key es esp
 
 ## 4. Prueba manual final
 
-1. Abre `/acceso`, crea o usa una cuenta ficticia y comprueba que el enlace termina en `https://nodria-academico.vercel.app/auth/callback` y luego en la ruta interna solicitada.
-2. Cierra sesión, vuelve a entrar y prueba recuperación de contraseña; confirma el correo antes de repetir peticiones para no volver a consumir el límite.
-3. Verifica `/configurador` y confirma que cada paso ofrece ocho opciones; `/marcas` y `/categorias/ordenadores` deben mostrar el catálogo ampliado.
+1. Abre `/acceso`, crea una cuenta ficticia y comprueba que inicia sesión y redirige al destino sin enviar correo.
+2. Cierra sesión e inicia sesión con la misma cuenta. La recuperación de contraseña por email no está disponible.
+3. Verifica `/configurador` y confirma que cada clase ofrece al menos ocho opciones; `/marcas` y `/categorias/ordenadores` deben mostrar el catálogo ampliado.
 4. Recorre una compra demo aprobada y una rechazada solo con datos ficticios; confirma que se indica expresamente que no hay cobro real.
 5. En Vercel, confirma que Production sigue apuntando a `main` y que el deployment aparece como `Ready`.
 
-El dominio Vercel final ya está configurado; no añadas el dominio antiguo como canónico. El proyecto solo puede marcarse como release remoto certificado después de verificar las migraciones/conteos, Auth por email y un recorrido autenticado real con una cuenta ficticia.
+El dominio Vercel final ya está configurado; no añadas el dominio antiguo como canónico. El proyecto solo puede marcarse como release remoto certificado después de verificar los conteos, el alta Auth sin correo y un recorrido autenticado real con una cuenta ficticia, además de los controles RLS pendientes.

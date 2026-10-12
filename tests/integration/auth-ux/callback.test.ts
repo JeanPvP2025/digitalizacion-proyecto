@@ -43,10 +43,11 @@ describe("Auth callback boundary", () => {
     expect(destination.href).not.toMatch(/private-code|secret-email/);
   });
 
-  it("returns failed recovery to recovery entry, without update mode", async () => {
+  it("returns failed legacy recovery to sign-in without opening another email flow", async () => {
     mocks.exchange.mockResolvedValue({ error: { code: "bad_code_verifier" } });
     const { destination } = await callback({ code: "valid", next: "/acceso?modo=actualizar" });
-    expect(destination.searchParams.get("modo")).toBe("recuperar");
+    expect(destination.pathname).toBe("/acceso");
+    expect(destination.searchParams.has("modo")).toBe(false);
     expect(destination.searchParams.get("motivo")).toBe("browser");
     expect(destination.searchParams.has("next")).toBe(false);
     expect(destination.href.endsWith("#")).toBe(true);

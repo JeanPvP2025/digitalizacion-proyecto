@@ -25,8 +25,7 @@ async function access(page: Page, query = "") {
   await page.waitForLoadState("networkidle");
 }
 
-test("rate limit is Spanish and the email pause survives mode switches without automatic sends", async ({ page }) => {
-  await page.clock.install();
+test("email-based Auth is not offered when Supabase tries to send a message", async ({ page }) => {
   const attempts = await fakeAuth(page, { status: 429, body: { code: "over_email_send_rate_limit", msg: "email rate limit exceeded" } });
   await access(page);
   await page.getByRole("button", { name: "Crear cuenta", exact: true }).click();
@@ -34,22 +33,12 @@ test("rate limit is Spanish and the email pause survives mode switches without a
   await page.getByLabel("Correo electrónico").fill("ficticia@example.invalid");
   await page.getByLabel("Contraseña", { exact: true }).fill("Ficticia123!");
   await page.getByRole("button", { name: "Crear mi cuenta" }).click();
-  await expect(page.locator("form").getByRole("alert")).toContainText("límite de envío");
+  await expect(page.locator("form").getByRole("alert")).toContainText("Confirm Email");
   await expect(page.locator("form").getByRole("alert")).not.toContainText("email rate limit exceeded");
-  await expect(page.getByRole("button", { name: "Crear mi cuenta" })).toBeDisabled();
-  await page.getByRole("button", { name: "Confirmar mi correo" }).click();
-  await expect(page.getByLabel("Correo electrónico")).toHaveValue("ficticia@example.invalid");
-  await expect(page.getByRole("button", { name: "Solicitar enlace de confirmación" })).toBeDisabled();
-  await page.getByRole("button", { name: "Volver a iniciar sesión" }).click();
-  await expect(page.getByRole("button", { name: "Iniciar sesión", exact: true }).last()).toBeEnabled();
-  await page.getByRole("button", { name: "¿Has olvidado tu contraseña?" }).click();
-  await expect(page.getByRole("button", { name: "Enviar instrucciones" })).toBeDisabled();
-  await page.clock.fastForward(61_000);
-  await expect(page.getByRole("button", { name: "Enviar instrucciones" })).toBeEnabled();
   expect(attempts).toHaveLength(1);
 });
 
-test("invalid credentials preserve inputs and offer recovery without exposing provider details", async ({ page }) => {
+test("invalid credentials preserve inputs without offering email recovery", async ({ page }) => {
   const attempts = await fakeAuth(page, { status: 400, body: { code: "invalid_credentials", msg: "Invalid login credentials" } });
   await access(page);
   await page.getByLabel("Correo electrónico").fill("ficticia@example.invalid");
@@ -58,13 +47,13 @@ test("invalid credentials preserve inputs and offer recovery without exposing pr
   await page.getByRole("button", { name: "Iniciar sesión", exact: true }).last().click();
   await expect(page.locator("form").getByRole("alert")).toContainText("Revisa ambos datos");
   await expect(page.locator("form").getByRole("alert")).not.toContainText("Invalid login credentials");
-  await page.getByRole("button", { name: "¿Has olvidado tu contraseña?" }).click();
   await expect(page.getByLabel("Correo electrónico")).toHaveValue("ficticia@example.invalid");
+  await expect(page.getByText("Esta web no envía correos de recuperación.")).toBeVisible();
+  await expect(page.getByRole("button", { name: "¿Has olvidado tu contraseña?" })).toHaveCount(0);
   expect(attempts).toHaveLength(1);
 });
 
-test("signup and explicit confirmation retain current-origin callback and a neutral success", async ({ page }) => {
-  await page.clock.install();
+test("signup fails clearly when hosted Auth still requires confirmation", async ({ page }) => {
   const attempts = await fakeAuth(page, { status: 200, body: { user: { id: "fictitious", identities: [] }, session: null } });
   await access(page, "?next=%2Fcheckout%3Fpaso%3D2");
   await page.getByRole("button", { name: "Crear cuenta", exact: true }).click();
@@ -72,55 +61,39 @@ test("signup and explicit confirmation retain current-origin callback and a neut
   await page.getByLabel("Correo electrónico").fill("ficticia@example.invalid");
   await page.getByLabel("Contraseña", { exact: true }).fill("Ficticia123!");
   await page.getByRole("button", { name: "Crear mi cuenta" }).click();
-  await expect(page.getByRole("heading", { name: "Confirma tu correo." })).toBeVisible();
-  await expect(page.getByText("Si el registro necesita confirmación", { exact: false })).toBeVisible();
-  await expect(page.getByRole("button", { name: "Solicitar enlace de confirmación" })).toBeDisabled();
-  const callback = new URL(attempts[0].url.searchParams.get("redirect_to")!);
-  expect(callback.origin).toBe("http://127.0.0.1:4349");
-  expect(callback.pathname).toBe("/auth/callback");
-  expect(callback.searchParams.get("next")).toBe("/checkout?paso=2");
-  await page.clock.fastForward(61_000);
-  await page.getByRole("button", { name: "Solicitar enlace de confirmación" }).click();
-  await expect(page.getByText("Si hay una cuenta pendiente", { exact: false })).toBeVisible();
-  expect(attempts[1].path).toBe("/auth/v1/resend");
-  expect(attempts[1].body.type).toBe("signup");
-  expect(new URL(attempts[1].url.searchParams.get("redirect_to")!).origin).toBe(callback.origin);
-});
-
-test("recovery uses a safe password-update callback and does not confirm account existence", async ({ page }) => {
-  const attempts = await fakeAuth(page, { status: 200, body: {} }, 300);
-  await access(page, "?modo=recuperar&next=https%3A%2F%2Fevil.invalid");
-  await page.getByLabel("Correo electrónico").fill("ficticia@example.invalid");
-  await page.getByRole("button", { name: "Enviar instrucciones" }).click();
-  await expect(page.getByRole("button", { name: "Un momento…" })).toBeDisabled();
-  await expect(page.getByRole("button", { name: "Volver a iniciar sesión" })).toBeDisabled();
-  await expect(page.getByText("Si existe una cuenta para ese correo", { exact: false })).toBeVisible();
+  await expect(page.locator("form").getByRole("alert")).toContainText("Supabase todavía exige confirmación");
+  await expect(page.getByText("Se activa al instante; no enviaremos correos.")).toBeVisible();
   expect(attempts).toHaveLength(1);
-  const callback = new URL(attempts[0].url.searchParams.get("redirect_to")!);
-  expect(callback.origin).toBe("http://127.0.0.1:4349");
-  expect(callback.searchParams.get("next")).toBe("/acceso?modo=actualizar");
-  await expect(page.getByRole("button", { name: "Enviar instrucciones" })).toBeDisabled();
+  expect(attempts[0].url.searchParams.has("redirect_to")).toBe(false);
+  expect(attempts[0].path).not.toBe("/auth/v1/resend");
 });
 
-test("expired recovery callback gives a safe actionable error and unknown reason remains generic", async ({ page }) => {
+test("the old recovery entry does not send email or expose a recovery form", async ({ page }) => {
+  const attempts = await fakeAuth(page, { status: 200, body: {} });
+  await access(page, "?modo=recuperar&next=https%3A%2F%2Fevil.invalid");
+  await expect(page.getByRole("heading", { name: "Qué bueno verte." })).toBeVisible();
+  await expect(page.getByText("Esta web no envía correos de recuperación.")).toBeVisible();
+  await expect(page.getByRole("button", { name: "Enviar instrucciones" })).toHaveCount(0);
+  expect(attempts).toHaveLength(0);
+});
+
+test("expired callback gives a safe error without offering another email", async ({ page }) => {
   await fakeAuth(page, { status: 200, body: {} });
   await page.goto("/auth/callback?error=access_denied&error_code=otp_expired&error_description=private-token&next=%2Facceso%3Fmodo%3Dactualizar");
-  await expect(page.getByRole("heading", { name: "Recupera el acceso." })).toBeVisible();
-  await expect(page.locator("form").getByRole("alert")).toContainText("caducado o ya se ha utilizado");
-  await expect(page.getByLabel("Nueva contraseña")).toHaveCount(0);
+  await expect(page.getByRole("heading", { name: "Qué bueno verte." })).toBeVisible();
+  await expect(page.locator("form").getByRole("alert")).toContainText("Inicia sesión de nuevo");
   expect(page.url()).not.toContain("private-token");
-  await access(page, "?error=callback&motivo=private-token");
-  await expect(page.locator("form").getByRole("alert")).toContainText("No se pudo completar el enlace");
-  await expect(page.locator("form").getByRole("alert")).not.toContainText("private-token");
+  await expect(page.getByRole("button", { name: "Enviar instrucciones" })).toHaveCount(0);
 });
 
-test("password update without a session gives a route back to recovery", async ({ page }) => {
+test("password update without a session gives a route back to sign-in", async ({ page }) => {
   const attempts = await fakeAuth(page, { status: 200, body: {} });
   await access(page, "?modo=actualizar");
   await page.getByLabel("Nueva contraseña").fill("Ficticia123!");
   await page.getByRole("button", { name: "Guardar contraseña" }).click();
   await expect(page.locator("form").getByRole("alert")).toContainText("sesión ha caducado");
-  await page.getByRole("button", { name: "Solicitar un nuevo enlace de recuperación" }).click();
-  await expect(page.getByRole("heading", { name: "Recupera el acceso." })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Solicitar un nuevo enlace de recuperación" })).toHaveCount(0);
+  await page.getByRole("button", { name: "Volver a iniciar sesión" }).click();
+  await expect(page.getByRole("heading", { name: "Qué bueno verte." })).toBeVisible();
   expect(attempts).toHaveLength(0);
 });

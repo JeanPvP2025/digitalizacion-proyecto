@@ -2,14 +2,14 @@
 
 Estado revisado al **2026-10-12**. La aplicación está desplegada en Vercel Production desde `main`, con proyecto `nodria` y dominio final `https://nodria-academico.vercel.app`. El dominio antiguo `https://nodria-staging.vercel.app` devuelve `308` hacia el nuevo y conserva ruta y query. Los smoke checks a `/`, `/acceso`, `/configurador` y `/backoffice/crm` responden HTTP 200.
 
-La inspección browser en producción encontró **44 fichas visibles en 3 marcas**, y el PC Builder muestra solo **4–5 opciones por clase** (Gráfica y Refrigeración: 4; las otras clases: 5), frente a las 8 esperadas. Por tanto, el catálogo remoto sigue incompleto o parte del dataset no satisface las condiciones de publicación/atributos. El contrato debe confirmarse mediante el SQL de solo lectura del runbook antes de aplicar cualquier migración.
+El operador verificó en el SQL Editor del proyecto Supabase `ypnhdxpejcbcyjiosrhf` un total de **116 productos de catálogo ampliado y 6 marcas**. La consulta del PC Builder devolvió 8–9 opciones por clase (`case` 9, `cooler` 8, `cpu` 9, `gpu` 8, `memory` 9, `motherboard` 9, `psu` 9, `storage` 9). Esto cumple el mínimo de ocho opciones; no borrar filas para forzar un total exacto.
 
 - ✅ **Producto académico:** los vertical slices implementados están integrados. La compra y los pagos son simulados, todos los datos comerciales son ficticios y no se aceptan tarjetas ni se procesa dinero.
 - ✅ **Gates locales repetidos:** instalación congelada, TypeScript, ESLint, 288 tests Vitest + 39 Node, Playwright demo/UX 19/19, build, pgTAP 183/183, Supabase DB lint y 78 probes HTTP Auth/RLS pasan. Suites conectadas aisladas: checkout 4/4, dominios 6/6, B2B 1/1, customer/B2B 1/1 y roles 1/1.
-- ✅ **PC Builder local:** la expansión aditiva está aplicada en Supabase local y ofrece ocho opciones por clase.
-- ⚠️ **PC Builder alojado:** 4–5 opciones por clase visibles en la web pública, no ocho. Falta verificar conteo e historial remoto y completar solo las migraciones de datos faltantes.
-- ⚠️ **Certificación alojada pendiente:** la sesión de Supabase disponible está autenticada en otra organización y no puede ver el proyecto `ypnhdxpejcbcyjiosrhf`. Por eso no se verifican aquí el conteo de 116 fichas, las migraciones alojadas, Auth/SMTP, RLS/JWT ni mutaciones conectadas en producción. El operador informó que ya ejecutó SQL y confirmó varios RPC/RLS, pero falta evidencia de lectura actual.
-- ⏳ El producto queda completado como demo académica desplegada; no se debe marcar **producción integral certificada** hasta cerrar las verificaciones externas indicadas en `docs/PRODUCTION_RUNBOOK.md`.
+- ✅ **Catálogo y PC Builder alojados:** los conteos reportados por el operador confirman 116 productos, 6 marcas y al menos ocho opciones activas por clase.
+- 🚧 **Auth alojado:** se decidió desactivar `Confirm Email` para crear cuentas inmediatamente sin enviar confirmación. La UI ya no ofrece reenvío ni recuperación por email. Falta que el operador guarde ese ajuste en Supabase y pruebe un registro nuevo.
+- ⚠️ **Seguridad y recuperación:** sin verificar correo, una dirección puede no pertenecer al usuario; la recuperación de contraseña requerirá intervención administrativa. La sesión de esta integración no puede comprobar RLS/JWT ni mutaciones alojadas.
+- ⏳ El producto queda completado como demo académica desplegada; no se debe marcar **producción integral certificada** hasta guardar el ajuste de Auth y completar las verificaciones externas indicadas en `docs/PRODUCTION_RUNBOOK.md`.
 
 ## Histórico de salida inicial — 2026-10-09
 

@@ -8,10 +8,10 @@ No hay conversaciones o worktrees de implementación activos. El proyecto `nodri
 
 | Conversation | Role | Task | Ownership | Dependencies | State |
 |---|---|---|---|---|---|
-| Tech Lead (main) | Release / Integration | Integrar cambios, corregir pruebas obsoletas, repetir gates, fijar dominio final y reconciliar documentación | Tests, release docs, Vercel deployment | Workstreams previos finalizados | 🚧 Código y hosting listos; producción muestra catálogo parcial y Supabase Auth/RLS no están verificados |
-| Supabase project owner | External release verification | Confirmar 116 fichas y 8 opciones por clase; Site URL/redirect/SMTP; Auth, RLS y recorrido de pedido demo alojados | Supabase project `ypnhdxpejcbcyjiosrhf` | Acceso a la organización correcta | ⚠️ Web pública muestra 44 fichas/3 marcas y 4–5 opciones; CLI autenticada en otra organización |
+| Tech Lead (main) | Auth sin correo | Eliminar confirmación/reenvío/recuperación por email de la UI y mantener registro con sesión inmediata | `components/storefront/auth-form.tsx`, callback feedback, Auth docs | Supabase `Confirm Email` desactivado | 🚧 Código actualizado; falta guardar ajuste remoto y probar un registro nuevo |
+| Supabase project owner | External release verification | Desactivar `Confirm Email`, mantener registros habilitados y probar alta/inicio; completar RLS/JWT y recorrido de pedido demo | Supabase project `ypnhdxpejcbcyjiosrhf` | Acceso al proyecto | ⚠️ Catálogo verificado por SQL: 116 productos, 6 marcas, 8–9 opciones por clase; Auth/RLS alojados aún sin certificar |
 
-La base local de integración tiene los slices implementados y los gates repetidos. La **release final aún no está completa**: la base remota publica un dataset incompleto y no hay evidencia de Auth/RLS alojado. El dominio, robots y sitemap ya están corregidos en Production.
+La base local de integración tiene los slices implementados y los gates repetidos. La **release final aún no está completa**: falta aplicar y verificar el ajuste de Auth remoto, y no hay evidencia actual de RLS/JWT alojado. El catálogo, dominio, robots y sitemap ya están verificados.
 
 ## Ola 3 — completada e integrada
 

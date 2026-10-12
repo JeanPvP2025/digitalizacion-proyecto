@@ -32,9 +32,8 @@ export async function GET(request: NextRequest) {
   const failure = new URL("/acceso", url.origin);
   failure.searchParams.set("error", "callback");
   failure.searchParams.set("motivo", reason);
-  // Preserve only the validated destination. Recovery failures never offer password update without a session.
-  if (destination === "/acceso?modo=actualizar") failure.searchParams.set("modo", "recuperar");
-  else failure.searchParams.set("next", destination);
+  // Preserve only the validated destination. A failed recovery callback must not reopen a recovery-by-email flow.
+  if (destination !== "/acceso?modo=actualizar") failure.searchParams.set("next", destination);
   failure.hash = "#"; // Prevent a provider error/token fragment from being inherited by the redirect.
   return NextResponse.redirect(failure, { headers });
 }

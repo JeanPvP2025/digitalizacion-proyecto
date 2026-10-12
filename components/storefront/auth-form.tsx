@@ -10,7 +10,7 @@ import { getAuthFeedback, getCallbackFeedback } from "@/app/auth/callback/feedba
 import { BrandMark } from "@/components/storefront/brand-mark";
 import styles from "./auth-form.module.css";
 
-type Mode = "signin" | "signup" | "reset" | "update" | "confirm";
+type Mode = "signin" | "signup" | "update";
 
 type AuthFormProps = {
   demoMode: boolean;
@@ -19,15 +19,6 @@ type AuthFormProps = {
   initialError?: string;
   initialMessage?: string;
 };
-
-function getCallbackUrl(destination: string) {
-  // Auth links must return to the host where the user started the flow.
-  // A build-time NEXT_PUBLIC_SITE_URL can be stale or point at localhost,
-  // especially across Vercel production and preview deployments.
-  const callbackUrl = new URL("/auth/callback", window.location.origin);
-  callbackUrl.searchParams.set("next", getSafeRedirectPath(destination));
-  return callbackUrl.toString();
-}
 
 export function AuthForm({ demoMode, redirectTo, initialMode, initialError, initialMessage }: AuthFormProps) {
   const router = useRouter();
@@ -38,15 +29,14 @@ export function AuthForm({ demoMode, redirectTo, initialMode, initialError, init
   const [error, setError] = useState(() => searchParams.get("error") === "callback"
     ? getCallbackFeedback(searchParams.get("motivo")) : initialError ?? "");
   const [email, setEmail] = useState("");
-  const [pause, setPause] = useState<"email" | "all" | null>(null);
+  const [pause, setPause] = useState(false);
   const pending = useRef(false);
-  const emailAction = mode === "signup" || mode === "reset" || mode === "confirm";
-  const paused = pause === "all" || (pause === "email" && emailAction);
+  const paused = pause;
 
   useEffect(() => {
     if (!pause) return;
-    // A UI pause limits repeated clicks; it does not predict the provider's quota reset.
-    const timer = window.setTimeout(() => setPause(null), 60_000);
+    // A UI pause limits repeated sign-in attempts; it does not predict the provider's quota reset.
+    const timer = window.setTimeout(() => setPause(false), 60_000);
     return () => window.clearTimeout(timer);
   }, [pause]);
 
@@ -85,39 +75,12 @@ export function AuthForm({ demoMode, redirectTo, initialMode, initialError, init
         const { data: result, error: authError } = await supabase.auth.signUp({
           email,
           password,
-          options: {
-            data: { full_name: name },
-            emailRedirectTo: getCallbackUrl(redirectTo),
-          },
+          options: { data: { full_name: name } },
         });
         if (authError) throw authError;
 
         if (result.session) router.replace(getSafeRedirectPath(redirectTo));
-        else {
-          setPause("email");
-          setMode("confirm");
-          setMessage("Si el registro necesita confirmación, recibirás un correo. Revisa tu bandeja de entrada y spam y abre el enlace en este mismo navegador y dispositivo. Si ya tienes cuenta, prueba a iniciar sesión. Espera a recibir el correo antes de pedir otro.");
-        }
-        return;
-      }
-
-      if (mode === "confirm") {
-        const { error: authError } = await supabase.auth.resend({
-          type: "signup", email, options: { emailRedirectTo: getCallbackUrl(redirectTo) },
-        });
-        if (authError) throw authError;
-        setPause("email");
-        setMessage("Si hay una cuenta pendiente de confirmación para ese correo, recibirás un enlace. Revisa también spam y ábrelo en este mismo navegador y dispositivo. Usa el más reciente y espera a recibirlo antes de solicitar otro.");
-        return;
-      }
-
-      if (mode === "reset") {
-        const { error: authError } = await supabase.auth.resetPasswordForEmail(email, {
-          redirectTo: getCallbackUrl("/acceso?modo=actualizar"),
-        });
-        if (authError) throw authError;
-        setPause("email");
-        setMessage("Si existe una cuenta para ese correo, recibirás instrucciones para recuperar el acceso. Revisa también spam y abre el enlace más reciente en este mismo navegador y dispositivo. Espera a recibirlo antes de solicitar otro.");
+        else setError("Supabase todavía exige confirmación por correo. Desactiva «Confirm Email» en el proveedor Email antes de registrar cuentas.");
         return;
       }
 
@@ -127,7 +90,7 @@ export function AuthForm({ demoMode, redirectTo, initialMode, initialError, init
     } catch (cause) {
       const feedback = getAuthFeedback(cause);
       setError(feedback.message);
-      if (feedback.pause) setPause(feedback.pause);
+      if (feedback.pause) setPause(true);
     } finally {
       pending.current = false;
       setBusy(false);
@@ -138,9 +101,7 @@ export function AuthForm({ demoMode, redirectTo, initialMode, initialError, init
     ? "Qué bueno verte."
     : mode === "signup"
       ? "Empieza con buen pie."
-      : mode === "update"
-        ? "Elige una contraseña nueva."
-        : mode === "confirm" ? "Confirma tu correo." : "Recupera el acceso.";
+      : "Elige una contraseña nueva.";
 
   return (
     <main className={styles.page}>
@@ -186,12 +147,8 @@ export function AuthForm({ demoMode, redirectTo, initialMode, initialError, init
             <p>{mode === "signin"
               ? "Continúa donde lo dejaste."
               : mode === "signup"
-                ? "Crea tu cuenta y reúne aquí tus pedidos y equipos."
-                : mode === "update"
-                  ? "Elige una contraseña nueva para tu cuenta."
-                  : mode === "confirm"
-                    ? "Revisa primero tu bandeja de entrada y spam. Si ya confirmaste tu cuenta, inicia sesión."
-                    : "Te enviaremos instrucciones al correo asociado a tu cuenta."}</p>
+                ? "Crea tu cuenta y reúne aquí tus pedidos y equipos. Se activa al instante; no enviaremos correos."
+                : "Elige una contraseña nueva para tu cuenta."}</p>
           </div>
 
           {demoMode ? (
@@ -212,21 +169,19 @@ export function AuthForm({ demoMode, redirectTo, initialMode, initialError, init
               <form className={styles.form} onSubmit={submit} aria-busy={busy}>
                 {mode === "signup" && <div className={styles.field}><label htmlFor="auth-name">Nombre completo</label><div className={styles.inputWrap}><UserRound aria-hidden="true" size={17} /><input id="auth-name" name="fullName" autoComplete="name" maxLength={120} minLength={2} placeholder="Cómo te llamas" required /></div></div>}
                 {mode !== "update" && <div className={styles.field}><label htmlFor="auth-email">Correo electrónico</label><div className={styles.inputWrap}><Mail aria-hidden="true" size={17} /><input id="auth-email" name="email" type="email" autoComplete="email" value={email} onChange={(event) => setEmail(event.target.value)} maxLength={254} placeholder="nombre@correo.com" required /></div></div>}
-                {mode !== "reset" && mode !== "confirm" && <div className={styles.field}><label htmlFor="auth-password">{mode === "update" ? "Nueva contraseña" : "Contraseña"}</label><div className={styles.inputWrap}><KeyRound aria-hidden="true" size={17} /><input id="auth-password" name="password" type="password" autoComplete={mode === "signin" ? "current-password" : "new-password"} minLength={mode === "signin" ? undefined : 8} maxLength={mode === "signin" ? undefined : 72} placeholder={mode === "signin" ? "Tu contraseña" : "Mínimo 8 caracteres"} required /></div>{mode !== "signin" && <small>Usa al menos 8 caracteres.</small>}</div>}
+                <div className={styles.field}><label htmlFor="auth-password">{mode === "update" ? "Nueva contraseña" : "Contraseña"}</label><div className={styles.inputWrap}><KeyRound aria-hidden="true" size={17} /><input id="auth-password" name="password" type="password" autoComplete={mode === "signin" ? "current-password" : "new-password"} minLength={mode === "signin" ? undefined : 8} maxLength={mode === "signin" ? undefined : 72} placeholder={mode === "signin" ? "Tu contraseña" : "Mínimo 8 caracteres"} required /></div>{mode !== "signin" && <small>Usa al menos 8 caracteres.</small>}</div>
                 {error && <p className={styles.messageError} role="alert">{error}</p>}
                 {message && <p className={styles.messageSuccess} role="status">{message}</p>}
-                {paused && <p id="auth-pause" className={styles.privacy} role="status">Espera antes de volver a {emailAction ? "solicitar un correo" : "intentarlo"}. Esta pausa dura al menos un minuto; el límite del servicio puede durar más. No se enviará nada automáticamente.</p>}
+                {paused && <p id="auth-pause" className={styles.privacy} role="status">Espera un minuto antes de volver a intentarlo. El límite del servicio puede durar más.</p>}
                 <button className={`button button--dark ${styles.submit}`} disabled={busy || paused} aria-describedby={paused ? "auth-pause" : undefined} type="submit">
                   {busy ? <LoaderCircle size={16} className={styles.spinner} /> : <LockKeyhole size={16} />}
-                  {busy ? "Un momento…" : mode === "signin" ? "Iniciar sesión" : mode === "signup" ? "Crear mi cuenta" : mode === "update" ? "Guardar contraseña" : mode === "confirm" ? "Solicitar enlace de confirmación" : "Enviar instrucciones"}
+                  {busy ? "Un momento…" : mode === "signin" ? "Iniciar sesión" : mode === "signup" ? "Crear mi cuenta" : "Guardar contraseña"}
                   <ArrowRight size={15} />
                 </button>
               </form>
               <div className={styles.formLinks}>
-                {mode === "signin" && <button disabled={busy} type="button" onClick={() => changeMode("reset")}>¿Has olvidado tu contraseña?</button>}
-                {(mode === "signin" || mode === "signup") && <button disabled={busy} type="button" onClick={() => changeMode("confirm")}>Confirmar mi correo</button>}
-                {(mode === "reset" || mode === "update" || mode === "confirm") && <button disabled={busy} type="button" onClick={() => changeMode("signin")}>Volver a iniciar sesión</button>}
-                {mode === "update" && <button disabled={busy} type="button" onClick={() => changeMode("reset")}>Solicitar un nuevo enlace de recuperación</button>}
+                {mode === "signin" && <p className={styles.privacy}>Si olvidas tu contraseña, contacta con la administración de la demo. Esta web no envía correos de recuperación.</p>}
+                {mode === "update" && <button disabled={busy} type="button" onClick={() => changeMode("signin")}>Volver a iniciar sesión</button>}
                 <span>{mode === "signup" ? "¿Ya tienes una cuenta?" : mode === "signin" ? "¿Primera vez aquí?" : ""} {(mode === "signin" || mode === "signup") && <button disabled={busy} type="button" onClick={() => changeMode(mode === "signin" ? "signup" : "signin")}>{mode === "signin" ? "Crea tu cuenta" : "Inicia sesión"}</button>}</span>
               </div>
               <p className={styles.privacy}><LockKeyhole size={13} /> Tu cuenta y tus pedidos están protegidos por tu sesión y los permisos de acceso.</p>

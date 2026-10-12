@@ -2,18 +2,19 @@ import { describe, expect, it } from "vitest";
 import { getAuthFeedback, getCallbackFeedback, getCallbackReason } from "@/app/auth/callback/feedback";
 
 describe("public Auth feedback", () => {
-  it("uses stable codes for email/request limits and accepts legacy errors", () => {
-    expect(getAuthFeedback({ code: "over_email_send_rate_limit", message: "secret" })).toMatchObject({ pause: "email", message: expect.stringContaining("espera") });
+  it("flags email sending as a Supabase configuration mismatch and accepts legacy errors", () => {
+    expect(getAuthFeedback({ code: "over_email_send_rate_limit", message: "secret" })).toMatchObject({ message: expect.stringContaining("Confirm Email") });
+    expect(getAuthFeedback({ code: "over_email_send_rate_limit" }).pause).toBeUndefined();
     expect(getAuthFeedback(new Error("email rate limit exceeded"))).toEqual(getAuthFeedback({ code: "over_email_send_rate_limit" }));
     expect(getAuthFeedback({ code: "over_request_rate_limit" }).pause).toBe("all");
     expect(getAuthFeedback({ status: 429 }).pause).toBe("all");
   });
 
-  it("offers sign-in/recovery without asserting account existence", () => {
+  it("keeps invalid-credentials feedback actionable without promising email recovery", () => {
     const message = getAuthFeedback({ code: "invalid_credentials", message: "secret" }).message;
     expect(message).toContain("Revisa ambos datos");
-    expect(message).toContain("¿Has olvidado tu contraseña?");
-    expect(message).toContain("correo de confirmación");
+    expect(message).toContain("administración de la demo");
+    expect(message).not.toContain("correo de confirmación");
     expect(getAuthFeedback(new Error("Invalid login credentials")).message).toBe(message);
   });
 
@@ -24,7 +25,7 @@ describe("public Auth feedback", () => {
 
   it("distinguishes the missing browser verifier and ignores arbitrary reasons", () => {
     expect(getCallbackReason({ code: "bad_code_verifier" })).toBe("browser");
-    expect(getCallbackFeedback("browser")).toContain("mismo navegador y dispositivo");
+    expect(getCallbackFeedback("browser")).toContain("Inicia sesión de nuevo");
     expect(getCallbackFeedback("<script>secret</script>")).toBe(getCallbackFeedback(null));
   });
 

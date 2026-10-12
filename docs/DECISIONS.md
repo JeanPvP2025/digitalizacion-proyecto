@@ -288,3 +288,11 @@ Las decisiones de alcance heredadas de la misión se marcan **Confirmada**. Las 
 - **Contexto:** Next.js inserta variables `NEXT_PUBLIC_*` al crear el bundle. Modificar la variable en Vercel no cambia los artefactos del deployment ya publicado.
 - **Decisión:** Hacer un nuevo deployment desde `main` y verificar `robots.txt`, `sitemap.xml` y metadatos contra `https://nodria-academico.vercel.app` antes de cerrar la release.
 - **Consecuencias:** El host viejo solo debe quedar como redirect; no incluir URLs de staging en señales canónicas o de rastreo.
+
+## D-032 — Crear cuentas sin correo de confirmación
+
+- **Fecha:** 2026-10-12
+- **Estado:** Decidido por el usuario; ajuste remoto de Supabase pendiente.
+- **Contexto:** No se comprará dominio ni se enviarán correos. El flujo actual usa registro con email y contraseña.
+- **Decisión:** Mantener el registro habilitado y desactivar `Confirm Email` en el proveedor Email de Supabase. La app debe iniciar sesión al recibir la sesión de `signUp` y no ofrecer confirmación/reenvío ni recuperación por correo. No configurar SMTP para este flujo.
+- **Consecuencias:** Las direcciones no se verifican; cualquier error tipográfico queda asociado a una cuenta no verificable. La recuperación de contraseñas olvidadas requiere intervención administrativa. La app debe comunicar esa limitación y no presentar el Auth alojado como verificado hasta completar un registro real.

@@ -562,3 +562,30 @@ No existe proyecto Supabase remoto, dominio, credenciales de despliegue ni datos
 
 - El proyecto local no tenía credenciales Supabase y el modo demo está diseñado para rechazar piezas ficticias; validar las tarjetas y el flujo completo cuando el catálogo conectado esté disponible.
 - Commit `e91a165 feat(pc-builder): guide component selection`, enviado a `main`; Vercel Production terminó con `success` y `/configurador` respondió HTTP 200 con el nuevo flujo. No se tocaron datos, migraciones ni la configuración remota de Supabase.
+
+## Handoff: Auth sin confirmación ni correos — 2026-10-12
+
+### Trabajo realizado
+
+- El registro mantiene email/contraseña como credenciales, pero elimina `emailRedirectTo`, el reenvío de confirmación y la solicitud de recuperación por email. Si Supabase devuelve sesión, la UI redirige inmediatamente; si devuelve `session: null`, explica que `Confirm Email` sigue activo.
+- La interfaz explica que la recuperación de contraseña requiere intervención administrativa. Los errores de Auth/callback ya no ofrecen solicitar correos.
+- Se documentó la decisión de desactivar `Confirm Email` y mantener el registro habilitado en el proyecto Supabase remoto. Esta sesión no tiene acceso de escritura a ese Dashboard; el cambio debe hacerlo el operador.
+- Se actualizó el estado del catálogo con los conteos que el usuario ejecutó en SQL Editor: 116 productos/6 marcas y 8–9 opciones por clase.
+
+### Archivos modificados
+
+- `components/storefront/auth-form.tsx`
+- `app/(store)/acceso/page.tsx`
+- `app/auth/callback/route.ts`, `app/auth/callback/feedback.ts`
+- `tests/auth-ux/browser.spec.ts`, `tests/unit/auth-feedback.test.ts`, `tests/integration/auth-ux/callback.test.ts` (aserciones existentes alineadas con la decisión)
+- `docs/STATUS.md`, `docs/WORKSTREAMS.md`, `docs/ARCHITECTURE.md`, `docs/DECISIONS.md`, `docs/SETUP.md`, `docs/PRODUCTION_RUNBOOK.md`
+
+### Contratos, pruebas y límites
+
+- Sin cambios de schema, migraciones, RLS o variables de Vercel. Se conserva `/auth/callback` para enlaces heredados.
+- Verificación ejecutada: `pnpm exec tsc --noEmit` pasó; ESLint focalizado en los archivos afectados pasó; Vitest (`tests/unit/auth-feedback.test.ts` y `tests/integration/auth-ux/callback.test.ts`) pasó con 30 tests; Playwright con `tests/auth-ux/playwright.config.ts` pasó con 6 tests; `git diff --check` pasó con avisos de conversión LF/CRLF de Windows. No se modificó el Dashboard remoto ni se hizo deployment.
+- Al desactivar confirmación, Supabase trata los emails declarados como confirmados sin probar su propiedad. La recuperación self-service no existe; contraseña olvidada requiere intervención administrativa.
+
+### Siguiente paso
+
+- En Supabase `ypnhdxpejcbcyjiosrhf`: mantener habilitado el registro y apagar **Authentication → Providers → Email → Confirm Email**. Después crear una cuenta ficticia nueva y confirmar que inicia sesión sin enviar email. Si se devuelve `session: null`, el ajuste remoto todavía no quedó aplicado.

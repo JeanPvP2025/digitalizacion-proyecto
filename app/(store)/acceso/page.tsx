@@ -19,7 +19,7 @@ export default function AccessPage({ searchParams }: { searchParams: SearchParam
 async function AccessContent({ searchParams }: { searchParams: SearchParams }) {
   const params = await searchParams;
   const requestedMode = firstValue(params.modo);
-  const initialMode = requestedMode === "recuperar" ? "reset" : requestedMode === "actualizar" ? "update" : "signin";
+  const initialMode = requestedMode === "actualizar" ? "update" : "signin";
   const callbackError = firstValue(params.error) === "callback";
   const signedOut = firstValue(params.salida) === "1";
 
@@ -27,7 +27,7 @@ async function AccessContent({ searchParams }: { searchParams: SearchParams }) {
     demoMode={!hasSupabaseCredentials()}
     redirectTo={getSafeRedirectPath(firstValue(params.next), "/mi-cuenta")}
     initialMode={initialMode}
-    initialError={callbackError ? "No se pudo completar el enlace de acceso. Puede haber caducado; solicita otro e inténtalo de nuevo." : undefined}
+    initialError={callbackError ? "No se pudo completar el enlace de acceso. Inicia sesión de nuevo; si no puedes, contacta con la administración de la demo." : undefined}
     initialMessage={signedOut ? "Has cerrado tu sesión en este dispositivo." : undefined}
   />;
 }
