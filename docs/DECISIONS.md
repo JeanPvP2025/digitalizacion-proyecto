@@ -264,3 +264,27 @@ Las decisiones de alcance heredadas de la misión se marcan **Confirmada**. Las 
 - **Contexto:** Cuatro variantes por clase ofrecían poca elección y solo cubrían AM5/DDR5 en las piezas principales.
 - **Decisión:** Mantener intacta la migración histórica de 84 productos y añadir 32 productos ficticios nuevos: cuatro ediciones extra para cada una de las ocho clases. La expansión ofrece AM4/DDR4 además de AM5/DDR5. Los selectores ordenan por precio ascendente. La migración reutiliza contratos y tablas existentes, detecta colisiones de identidad y no actualiza ni elimina filas.
 - **Consecuencias:** Tras aplicar la migración, el configurador tendrá 64 variantes sintéticas, ocho por clase. La suite de compatibilidad existente cubre el catálogo anterior de cuatro opciones por clase; ampliar esa matriz a AM4/DDR4 queda pendiente de una verificación automatizada. Sigue siendo una demo: el stock no representa inventario comercial y compatibilidad excluye BIOS/QVL, conectores y holguras no modeladas.
+
+## D-029 — Dominio final académico en Vercel y conservación del alias anterior
+
+- **Fecha:** 2026-10-12
+- **Estado:** Configurado y comprobado por HTTP; proyecto Vercel `nodria`, Production en `https://nodria-academico.vercel.app`.
+- **Contexto:** `nodria.vercel.app` no estaba disponible en la cuenta y `nodria-staging.vercel.app` no debía seguir presentándose como dominio final.
+- **Decisión:** Usar el hostname estable `nodria-academico.vercel.app` como URL canónica, actualizar `NEXT_PUBLIC_SITE_URL` y mantener `nodria-staging.vercel.app` únicamente como redirección permanente 308 con path/query preservados.
+- **Consecuencias:** Los enlaces públicos/Auth deben usar el host canónico. La redirección no confirma Site URL/allowlist de Supabase, correo SMTP ni workflows alojados. El proyecto sigue etiquetado claramente como demo académica y no procesa dinero.
+
+## D-030 — La release remota no se certifica mientras falte el dataset publicado
+
+- **Fecha:** 2026-10-12
+- **Estado:** Verificado por browser contra el catálogo Production; la reconciliación de migraciones queda pendiente en Supabase.
+- **Contexto:** El sitio final muestra 44 fichas y 3 marcas; el PC Builder ofrece entre 4 y 5 opciones por clase, aunque el contrato del release requiere 8.
+- **Decisión:** Mantener el catálogo como pendiente y no marcar la release end-to-end completa hasta confirmar el historial y los conteos de datos desde Supabase, aplicar solo migraciones aditivas faltantes y repetir la consulta de opciones.
+- **Consecuencias:** El dominio final puede usarse para revisar la demo, pero la experiencia de catálogo/PC Builder aún no cumple la variedad prevista. No usar `seed.sql` ni `db reset` en remoto.
+
+## D-031 — Recompilar después de cambiar la URL pública de Next.js
+
+- **Fecha:** 2026-10-12
+- **Estado:** `NEXT_PUBLIC_SITE_URL` se actualizó en Vercel Production; el deployment publicado aún muestra la URL previa en `robots.txt` y `sitemap.xml`.
+- **Contexto:** Next.js inserta variables `NEXT_PUBLIC_*` al crear el bundle. Modificar la variable en Vercel no cambia los artefactos del deployment ya publicado.
+- **Decisión:** Hacer un nuevo deployment desde `main` y verificar `robots.txt`, `sitemap.xml` y metadatos contra `https://nodria-academico.vercel.app` antes de cerrar la release.
+- **Consecuencias:** El host viejo solo debe quedar como redirect; no incluir URLs de staging en señales canónicas o de rastreo.

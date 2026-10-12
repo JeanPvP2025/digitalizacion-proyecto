@@ -1,6 +1,6 @@
 # Seguridad y RLS
 
-Estado del **2026-10-08** tras integrar profundidad de catálogo/Auth UX y publicar `4ed17f3` en Vercel Production. El despliegue público responde en las rutas verificadas. La migración de catálogo es aditiva y no cambia schema/grants/RLS. El reset, pruebas y lint se ejecutaron contra Supabase local; no se probaron credenciales remotas ni JWT del proyecto alojado. La presencia de rutas públicas no equivale a certificación de seguridad remota.
+Estado actualizado **2026-10-12**. La publicación final usa Vercel project `nodria` y `https://nodria-academico.vercel.app`; el alias `nodria-staging.vercel.app` redirige con 308. Los gates de seguridad local siguen pasando. El CLI disponible está asociado a otra organización y no muestra el proyecto Supabase `ypnhdxpejcbcyjiosrhf`; por tanto, no se ejecutaron JWT/RLS ni mutaciones contra la base alojada. Una respuesta HTTP 200 no equivale a autorización o aislamiento verificado.
 
 ## Controles integrados
 
@@ -22,6 +22,10 @@ Estado del **2026-10-08** tras integrar profundidad de catálogo/Auth UX y publi
 
 ## Evidencia local
 
+- Corte de producción 2026-10-12: la raíz, acceso, configurador y CRM responden 200 en el dominio final; el host anterior conserva path y query mediante 308. Esto comprueba disponibilidad pública, no sesión ni permisos.
+- Auditoría browser pública: sin errores JavaScript ni overflow horizontal en los viewports probados. La falta de opciones de catálogo observada se registra como integridad de datos/entrega, no como bypass de autorización.
+- `pwsh -File tests/integration/auth-boundaries/run-local.ps1`: 78 probes JWT/HTTP locales, sin fallos; no se usaron secretos remotos.
+
 - `pwsh -File tests/integration/auth-boundaries/run-local.ps1`: **78 probes HTTP, 0 fallos**, con JWT emitidos por GoTrue y consultas PostgREST. Incluye anon, customer A/B, B2B admin/buyer, catalog, support, sales, fulfillment, superadmin, aislamiento de objetos, roles, RPCs, modo demo y scan de secreto cliente.
 - `tests/integration/postgres-rls.sql`, `tests/integration/security/postgres-object-isolation.sql`, role-action matrix, auth escalation, Support/RMA y movimientos de inventario: pasan con fixtures en transacciones revertidas.
 - En la integración de profundidad: `pnpm dlx supabase@latest test db --local tests/database` pasó 183 aserciones; `pnpm dlx supabase@latest db lint --local --schema public,private --level error --fail-on error` sin errores.
@@ -33,4 +37,4 @@ Estado del **2026-10-08** tras integrar profundidad de catálogo/Auth UX y publi
 
 ## Límites
 
-La matriz no prueba CRUD de cada columna/tabla/endpoint contra todos los roles; `RBAC_MATRIX.md` conserva ese límite. Los roles `manager` y `marketing` no existen como grants y no deben inventarse sin una decisión de producto. Demo Mode local tiene bootstrap repetible de cuentas con grants. El deployment remoto está publicado, pero no se inspeccionaron secretos/configuración de Vercel ni se ejecutaron probes RLS con JWT remotos. El dataset de catálogo parece pendiente, Auth/email requiere configuración y prueba, y el anticipo B2B no equivale a un pago real. No habilitar datos reales ni presentar NODRIA como comercio real. Pasos manuales en `docs/PRODUCTION_RUNBOOK.md`.
+La matriz no prueba CRUD de cada columna/tabla/endpoint contra todos los roles; `RBAC_MATRIX.md` conserva ese límite. Los roles `manager` y `marketing` no existen como grants y no deben inventarse sin una decisión de producto. Demo Mode local tiene bootstrap repetible de cuentas con grants. El despliegue remoto está publicado, pero no se inspeccionó Supabase alojado ni se ejecutaron probes RLS con JWT remotos porque la sesión carece de acceso a esa organización. No afirmar que la migración del catálogo o el correo alojado están verificados sin ejecutar las comprobaciones de `docs/PRODUCTION_RUNBOOK.md`. El anticipo B2B es demo, no dinero real. No habilitar datos reales ni presentar NODRIA como comercio real.

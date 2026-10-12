@@ -2,6 +2,17 @@
 
 Tablero de conversaciones. El repositorio y las migraciones son fuente de verdad; un estado `Done` de agente no sustituye integración/gates del tech lead.
 
+## Cierre de release actual — 2026-10-12
+
+No hay conversaciones o worktrees de implementación activos. El proyecto `nodria` está en Vercel Production en `https://nodria-academico.vercel.app`; `nodria-staging.vercel.app` queda como redirección permanente compatible.
+
+| Conversation | Role | Task | Ownership | Dependencies | State |
+|---|---|---|---|---|---|
+| Tech Lead (main) | Release / Integration | Integrar cambios, corregir pruebas obsoletas, repetir gates, fijar dominio final y reconciliar documentación | Tests, release docs, Vercel deployment | Workstreams previos finalizados | 🚧 Código local y dominio final listos; producción muestra catálogo parcial y sitemap con host antiguo |
+| Supabase project owner | External release verification | Confirmar 116 fichas y 8 opciones por clase; Site URL/redirect/SMTP; Auth, RLS y recorrido de pedido demo alojados | Supabase project `ypnhdxpejcbcyjiosrhf` | Acceso a la organización correcta | ⚠️ Web pública muestra 44 fichas/3 marcas y 4–5 opciones; CLI autenticada en otra organización |
+
+La base local de integración tiene los slices implementados y los gates repetidos. La **release final aún no está completa**: la base remota publica un dataset incompleto, robots/sitemap conservan el hostname antiguo y no hay evidencia de Auth/RLS alojado. No marcar el proyecto como terminado hasta cerrar estas verificaciones.
+
 ## Ola 3 — completada e integrada
 
 | Conversation | Role | Task | Ownership | Dependencies | State |
@@ -126,7 +137,7 @@ No se abrieron conversaciones ni ramas: por instrucción del usuario, el Tech Le
 | Tech Lead (main) | PC Builder UX | Flujo guiado, selección por categoría, progreso esencial, comparación de variantes y resumen editable | `components/storefront/pc-builder.tsx`, `components/storefront/pc-builder.module.css`, estilos PC Builder en `app/globals.css` | Catálogo conectado con variantes publicadas; reglas actuales de compatibilidad | ✅ `e91a165` publicado; build, TypeScript, ESLint y diff-check pasan; `/configurador` responde HTTP 200. La demo local no contiene variantes vendibles para revisar tarjetas reales |
 | Tech Lead (main) | PC Builder Catalog Expansion | Ocho opciones por clase, AM4/DDR4 y AM5/DDR5; migración de solo inserciones | `scripts/catalog/**`, `supabase/migrations/20261009113024_pc_builder_catalog_expansion.sql`, selector PC Builder y documentación | Catálogo conectado y atributos `pc_builder` actuales | 🚧 Código y generación determinista listos; falta ejecutar la migración delta en Supabase y confirmar 8 opciones por clase |
 
-## Pendiente que requiere acceso al entorno
+## Histórico de pendientes que requerían acceso al entorno — 2026-10-08
 
 - ✅ Publicación a Vercel Production desde `main` (`4ed17f3`); smoke HTTP de rutas públicas aprobado. El proyecto conserva el nombre `nodria-staging`.
 - ⏳ Aplicar manualmente la migración aditiva `20261009113024_pc_builder_catalog_expansion.sql` en Supabase y comprobar ocho variantes por clase. El usuario informó que ejecutó SQL en Supabase; desde esta sesión no se inspecciona la base remota. Ver `docs/PRODUCTION_RUNBOOK.md`.

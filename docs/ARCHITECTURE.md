@@ -1,6 +1,6 @@
 # Arquitectura inicial de NODRIA
 
-**Estado de este documento:** integración local y publicación Vercel Production verificadas el 2026-10-08, código `4ed17f3`. `https://nodria-staging.vercel.app` sirve las rutas actuales, incluidas blog, guías, marcas, categorías y campañas. El reset local tiene 96 productos, 27 categorías y 7 marcas; el sitio remoto solo muestra NODRIA, por lo que el dataset adicional aún debe verificarse/aplicarse manualmente en Supabase. Auth/correo alojado no están certificados. La app es una demo académica ficticia, no una tienda que procese pagos reales. Ver `STATUS.md` y `PRODUCTION_RUNBOOK.md`.
+**Estado de este documento:** actualizado el 2026-10-12. El proyecto Vercel `nodria` sirve `https://nodria-academico.vercel.app` en Production; el dominio anterior `nodria-staging.vercel.app` responde con redirección permanente al dominio final. Las rutas públicas y los gates locales están verificados. El acceso disponible a Supabase corresponde a otra organización, por lo que el estado remoto de las migraciones de catálogo, Auth, RLS y workflows autenticados no se pudo confirmar en esta sesión. NODRIA es una demo académica ficticia; no procesa pagos reales. Ver `STATUS.md` y `PRODUCTION_RUNBOOK.md`.
 
 ## Objetivo y restricciones
 
@@ -93,16 +93,16 @@ pnpm install --frozen-lockfile
 pnpm dev
 ```
 
-El usuario creó Supabase `ypnhdxpejcbcyjiosrhf` y Vercel `nodria-staging`; las credenciales no están en el workspace ni se han leído. Tras la configuración manual, el deployment Production responde en las rutas públicas comprobadas; esto no certifica Auth ni RLS remoto. `.env.example` documenta `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`; Supabase local está migrado y probado. El modo demo de archivos solo opera en desarrollo; consulta `lib/server/data-mode.ts` y el estado de fallbacks en `STATUS.md`.
+El proyecto alojado es Supabase `ypnhdxpejcbcyjiosrhf` y Vercel `nodria`. Los secretos no están en el workspace ni se imprimen; la CLI de Supabase disponible muestra otra organización y no lista este proyecto. La publicación Production responde en el dominio final y el alias anterior redirige; esto no certifica Auth ni RLS remoto. `.env.example` documenta `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`; Supabase local está migrado y probado. El modo demo de archivos solo opera en desarrollo; consulta `lib/server/data-mode.ts` y el estado de fallbacks en `STATUS.md`.
 
 Los nombres públicos configurados son `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`. Nunca se deben poner valores secretos en variables `NEXT_PUBLIC_*`. No inventar valores ni guardar credenciales reales en Git.
 
 ### Entornos de entrega
 
-El entorno alojado usa Vercel para Next.js y Supabase para base de datos/Auth. La rama `main` se despliega a Production y actualmente se sirve bajo el dominio Vercel con nombre `nodria-staging`. Es una demo pública que no acepta dinero real. El callback de Auth usa el mismo origen; para confirmar correo y restablecer contraseña hacen falta URL Configuration/allowlist y SMTP adecuados. El usuario confirmó antes que varios RPC/RLS existen en remoto, pero no se inspeccionó la base desde esta sesión; el dataset ampliado tampoco aparece en la landing de marcas. Nunca resetear ni reconstruir la base remota para facilitar desarrollo.
+El entorno alojado usa Vercel para Next.js y Supabase para base de datos/Auth. La rama `main` se despliega a Production en `https://nodria-academico.vercel.app`; `https://nodria-staging.vercel.app` es solo un alias con redirección permanente. Es una demo pública que no acepta dinero real. El callback de Auth usa el mismo origen y requiere URL Configuration/allowlist y SMTP adecuados. El usuario confirmó antes que varios RPC/RLS existen en remoto, pero no se inspeccionó la base desde esta sesión; tampoco se confirmaron las filas del catálogo. Nunca resetear ni reconstruir la base remota para facilitar desarrollo.
 
 Vercel Preview debe usar datos no productivos y credenciales separadas. Los cambios de schema deben desplegarse en orden controlado antes del código que los consume. El procedimiento concreto de migración y rollback debe seguir las herramientas y migraciones presentes en el repositorio cuando se implemente el workstream de base de datos.
 
 ## Verificación y calidad
 
-Los scripts declaran `pnpm lint`, `pnpm build`, `pnpm test` y `pnpm test:e2e`; typecheck usa `pnpm exec tsc --noEmit`. La integración actual tiene 179 Vitest, 18 Node, 17 E2E demo/UX, 4 E2E checkout GoTrue/PostgREST, 5 E2E dominios, un E2E B2B aislado que incluye anticipo aprobado/rechazado, replay y permisos, 230 aserciones pgTAP y 78 probes HTTP Auth, además de SQL runtime de RLS/role/auth/support/inventory/procurement/fulfillment/RMA inspection. Un build o una pantalla renderizada no demuestra integridad funcional ni seguridad.
+Los scripts declaran `pnpm lint`, `pnpm build`, `pnpm test` y `pnpm test:e2e`; typecheck usa `pnpm exec tsc --noEmit`. Al corte del 2026-10-12 pasan 288 tests Vitest, 39 Node, 19 E2E demo/UX, 4 E2E checkout GoTrue/PostgREST, 6 E2E dominios, suites B2B/customer/roles aisladas, 183 aserciones pgTAP y 78 probes HTTP Auth, además de SQL runtime de RLS/role/auth/support/inventory/procurement/fulfillment/RMA inspection. Los checks ejecutados localmente no sustituyen la verificación del catálogo, Auth o RLS en el proyecto Supabase alojado. Un build o una pantalla renderizada no demuestra integridad funcional ni seguridad.

@@ -1,8 +1,19 @@
 # Estado del proyecto
 
-Estado revisado al **2026-10-09**. El commit `087fb40` de `main` se desplegó en Production de Vercel (`https://nodria-staging.vercel.app`); `/configurador` responde HTTP 200. El usuario informó que ejecutó SQL en el proyecto Supabase y verificó los RPCs de checkout/pago/RMA y RLS en tablas sensibles; esta sesión no dispone de consulta directa para confirmar el número de filas del catálogo. La aplicación sigue siendo una demo académica y no procesa pagos reales.
+Estado revisado al **2026-10-12**. La aplicación está desplegada en Vercel Production desde `main`, con proyecto `nodria` y dominio final `https://nodria-academico.vercel.app`. El dominio antiguo `https://nodria-staging.vercel.app` devuelve `308` hacia el nuevo y conserva ruta y query. Los smoke checks a `/`, `/acceso`, `/configurador` y `/backoffice/crm` responden HTTP 200.
 
-El configurador parte de cuatro variantes por clase. Para ampliar la elección a ocho por clase, se añadieron 32 productos ficticios en `20261009113024_pc_builder_catalog_expansion.sql`. El código y el deployment no insertan esos datos: el usuario debe ejecutar la migración en SQL Editor de Supabase y verificar los conteos que se documentan en `docs/PRODUCTION_RUNBOOK.md`. El Auth alojado también sigue pendiente de una prueba real con URL Configuration y SMTP apto para el uso previsto.
+La inspección browser en producción encontró **44 fichas visibles en 3 marcas**, y el PC Builder muestra solo **4–5 opciones por clase** (Gráfica y Refrigeración: 4; las otras clases: 5), frente a las 8 esperadas. Por tanto, el catálogo remoto sigue incompleto o parte del dataset no satisface las condiciones de publicación/atributos. El contrato debe confirmarse mediante el SQL de solo lectura del runbook antes de aplicar cualquier migración.
+
+- ✅ **Producto académico:** los vertical slices implementados están integrados. La compra y los pagos son simulados, todos los datos comerciales son ficticios y no se aceptan tarjetas ni se procesa dinero.
+- ✅ **Gates locales repetidos:** instalación congelada, TypeScript, ESLint, 288 tests Vitest + 39 Node, Playwright demo/UX 19/19, build, pgTAP 183/183, Supabase DB lint y 78 probes HTTP Auth/RLS pasan. Suites conectadas aisladas: checkout 4/4, dominios 6/6, B2B 1/1, customer/B2B 1/1 y roles 1/1.
+- ✅ **PC Builder local:** la expansión aditiva está aplicada en Supabase local y ofrece ocho opciones por clase.
+- ⚠️ **PC Builder alojado:** 4–5 opciones por clase visibles en la web pública, no ocho. Falta verificar conteo e historial remoto y completar solo las migraciones de datos faltantes.
+- ⚠️ **Certificación alojada pendiente:** la sesión de Supabase disponible está autenticada en otra organización y no puede ver el proyecto `ypnhdxpejcbcyjiosrhf`. Por eso no se verifican aquí el conteo de 116 fichas, las migraciones alojadas, Auth/SMTP, RLS/JWT ni mutaciones conectadas en producción. El operador informó que ya ejecutó SQL y confirmó varios RPC/RLS, pero falta evidencia de lectura actual.
+- ⏳ El producto queda completado como demo académica desplegada; no se debe marcar **producción integral certificada** hasta cerrar las verificaciones externas indicadas en `docs/PRODUCTION_RUNBOOK.md`.
+
+## Histórico de salida inicial — 2026-10-09
+
+Las notas de despliegue y PC Builder a continuación describen el estado de esa fecha; quedan supersedidas por la revisión actual de 2026-10-12.
 
 ### Actualización PC Builder — 2026-10-09
 
@@ -44,7 +55,7 @@ El configurador parte de cuatro variantes por clase. Para ampliar la elección a
 ## Estado funcional
 
 - ✅ **Checkout B2C conectado:** sesión Auth real, variante/precio/stock validados en servidor, pedido y líneas con snapshots, pago demo simulado, reservas transaccionales, rechazo/retry y control de idempotencia. 4/4 pruebas browser conectadas pasan.
-- 🚧 **Catálogo, búsqueda, carrito y PC Builder comprable:** el configurador añade variantes publicadas al carrito; el checkout vuelve a validar datos de negocio. Tras aplicar la migración delta, ofrece ocho variantes por clase (64 piezas), AM4/DDR4 y AM5/DDR5. La base remota aún requiere verificar el conteo de ocho opciones por categoría; la matriz automatizada existente cubre el dataset previo de cuatro opciones por clase.
+- 🚧 **Catálogo, búsqueda, carrito y PC Builder comprable:** el configurador añade variantes publicadas al carrito; el checkout vuelve a validar datos de negocio. La base local tiene ocho opciones por clase, pero Production solo muestra 4–5 y 44 fichas/3 marcas. El carrito y el checkout se cubren contra Supabase aislado; la variedad final alojada aún no.
 - ✅ **Reviews:** elegibilidad por línea entregada, moderación protegida, lectura pública solo de publicadas y acceso desde PDP.
 - ✅ **CRM/B2B hasta pago demo:** cotización aceptada emite pedido formal tenant-scoped con snapshots/reserva; owner/admin simula anticipo aprobado o rechazado. Aprobado guarda pago, pedido, actividad CRM y eventos idempotentes; rechazado cancela y libera reserva. No se recogen datos de tarjeta ni se procesa dinero real.
 - ✅ **Inventario y procurement básico:** ledger idempotente de movimientos, proveedores, órdenes de compra, recepciones parciales/finales vinculadas al movimiento y control de sobre-recepción.
@@ -53,7 +64,7 @@ El configurador parte de cuatro variantes por clase. Para ampliar la elección a
 - ✅ **Analytics del alcance publicado:** pedidos, ventas brutas aprobadas, aprobación de pago, inventario disponible y conversión de solicitudes CRM tienen fórmula, fuente, periodo de 30 días Europe/Madrid, límites y fixtures puros/SQL/E2E; el dashboard falla cerrado ante discrepancias. Ventas netas, margen, visitas y conversión específica de cotizaciones B2B no se presentan como KPIs todavía.
 - ✅ **Demo Mode local:** modo de archivos limitado a desarrollo y sin Auth; Supabase configurado siempre gana y falla cerrado. La guía cubre reset local y organización ficticia; `scripts/demo/assign-staff-roles.ps1` asigna en loopback grants de los cinco roles internos a cuentas Auth locales ya creadas, sin crear ni almacenar contraseñas. Se ejecutó y verificó que escribe exactamente un grant por rol; `db reset --local` los elimina.
 - ✅ **Seguridad/Auth local:** aislamiento, escalada, permisos sensibles y boundaries HTTP verificados con matriz documentada, suites SQL y 78 probes autenticados; esto no certifica un entorno remoto ni prueba CRUD exhaustivo por cada campo/endpoint. `manager` y `marketing` no son roles persistidos y no reciben permisos implícitos.
-- 🚧 **Experiencia y presentación:** storefront medido en Lighthouse local: portada móvil 92 (LCP simulado 3,2 s; traza observada local 0,56 s) y catálogo desktop 100. Sweeps UX cubren rutas anónimas, customer/B2B y roles internos en tres viewports; catálogo y shell de soporte están integrados. No se ha medido contraste/lector de pantalla exhaustivo en backoffice; no hay CrUX/INP ni URL pública.
+- 🚧 **Experiencia y presentación:** storefront medido en Lighthouse local: portada móvil 92 y catálogo desktop 100. El dominio público está configurado; las rutas comprobadas no presentan overflow a 390 px y no hay errores JavaScript. El `robots.txt`/sitemap live todavía usa el alias antiguo hasta el siguiente deployment. No se ha medido contraste/lector de pantalla exhaustivo en backoffice ni CrUX/INP de campo.
 
 ## Sexta ola integrada
 
@@ -108,15 +119,15 @@ Warnings no bloqueantes conocidos: Node reporta `MODULE_TYPELESS_PACKAGE_JSON` e
 
 ### P0
 
-- ⚠️ **Auth de la demo alojada:** corregir URL Configuration/allowlist y correo SMTP; verificar alta, confirmación, inicio y recuperación con una cuenta de prueba. Los errores reportados impiden llamar al entorno estable para usuarios.
-- ✅ No se detectó caída HTTP en las rutas alojadas probadas; falta verificación funcional remota.
-- ⚠️ No es un comercio real: checkout/pagos/envíos, clientes, productos y opiniones son ficticios; presentarlo como demo y mantener el límite visible.
+- ⏳ **Auth Supabase alojado:** fijar Site URL y Redirect URLs en `https://nodria-academico.vercel.app`, configurar SMTP verificado y probar alta, enlace, inicio y recuperación con una cuenta ficticia. Esta sesión no tiene acceso a la organización Supabase correcta.
+- ✅ Smoke público: rutas base responden HTTP 200 y no se observaron errores JavaScript/overflow en el navegador de producción. Esto no sustituye pruebas de sesión, RLS ni escritura.
+- ⚠️ NODRIA no es un comercio real: checkout/pagos/envíos, clientes, productos y opiniones son ficticios; mantener el aviso en UI y no aceptar tarjetas/datos reales.
 
 ### P1
 
-- ⚠️ Revisar y aplicar en staging la migración aditiva del catálogo, luego validar el despliegue. La implementación y reset local pasan; el remoto aún no contiene estas 84 fichas.
+- ⚠️ **Dataset alojado incompleto:** el público muestra 44 fichas/3 marcas y el configurador 4–5 opciones por clase, frente a 8. Consultar historial y conteos; aplicar solo las migraciones aditivas que falten y repetir el walkthrough.
 - ✅ Crear páginas conectadas de marcas, selecciones temáticas y categorías (`/marcas`, `/campanas`, `/categorias` y sus rutas por slug); el sitemap y los enlaces de portada/pie se derivan del catálogo activo. Cubierto por el gate de storefront; no hay fallback de fixtures ante error conectado.
-- 🚧 Verificar en el entorno conectado PDP/variantes con precios reales de demo, checkout y catálogo poblado; las pruebas browser actuales usan datos demo locales y la migration no está desplegada.
+- 🚧 Recorrer en producción una PDP, PC Builder y checkout conectado aprobado/rechazado con una cuenta y datos ficticios tras corregir el catálogo. Las suites aisladas locales pasan, pero no generan pedidos remotos.
 - ⏳ Revisar `/servicios` y añadir historial operativo/CRM sintético repetible sin aparentar transacciones reales ni sobrescribir datos existentes.
 - ✅ Matriz de permisos por rol y dominio documentada en `RBAC_MATRIX.md`, con 78 probes HTTP autenticados, pruebas SQL por dominios críticos y E2E de roles; no equivale a CRUD exhaustivo por columna ni prueba cada Server Action.
 - ✅ **Escritura segura de catálogo:** migration revoca DML amplio y `update_catalog_product_editorial` aplica allowlist/rol en PostgreSQL. API de sesión, route/unit tests y E2E que edita y restaura un producto seed. Ver `docs/CATALOG_MANAGER_UI.md`.
@@ -124,14 +135,14 @@ Warnings no bloqueantes conocidos: Node reporta `MODULE_TYPELESS_PACKAGE_JSON` e
 ### P2
 
 - [x] Medir Lighthouse local en portada móvil y catálogo desktop; corregir contraste, nombres accesibles, objetivos táctiles e imágenes responsive. Evidencia detallada en `docs/PERFORMANCE_AUDIT.md` y `.seo-cache/`.
-- [ ] Repetir CWV con la URL de producción y datos de campo cuando exista despliegue; el perfil Lighthouse móvil simulado aún da LCP 3,2 s, mientras que su traza observada en localhost da 0,56 s.
+- [ ] Repetir CWV de laboratorio en el dominio final y obtener datos de campo cuando haya tráfico; no hay datos CrUX/INP actuales.
 - [x] Ampliar el barrido E2E anónimo a 27 rutas, teclado, nombres de controles, enlaces/destinos y overflow en desktop, móvil (390 px) y tablet (768 px); detalle en `docs/UX_FINAL_AUDIT.md`.
 - [x] Walkthrough responsive autenticado de roles internos en Supabase local efímero: support, sales, fulfillment, catalog (denegación documentada) y superadmin; evidencia en `docs/UX_FINAL_AUDIT.md`.
 - [x] Recorrido Auth visual con sesión de cliente y membresías buyer/viewer/owner/admin, tenant ajeno y viewports 390/768/1280; sin mutaciones CRUD. Ver `docs/UX_CUSTOMER_B2B_AUDIT.md`.
 - [x] Shell y navegación interna de `/soporte/agente` con saltos de teclado/estados y viewports 390/768/1280. Ver `docs/UX_STAFF_SHELL.md`.
 - [ ] Medir contraste y revisar lector de pantalla de todas las superficies backoffice con tooling dedicado; E2E de nombre/foco/overflow no sustituye esa auditoría.
 - [ ] Añadir historial sintético variado para CRM/operaciones de forma segura y repetible, sin crear eventos que parezcan transacciones reales ni sobrescribir datos existentes.
-- [ ] Configurar dominio público para verificar `robots.txt`, sitemap, schema y metadatos en despliegue. En local se bloquea indexación deliberadamente para evitar publicar una demo sin dominio real.
+- ⚠️ Volver a desplegar tras actualizar `NEXT_PUBLIC_SITE_URL` y validar que robots/sitemap publiquen el dominio final; la versión live observada aún contiene enlaces a `nodria-staging.vercel.app`.
 - [ ] Identificar el origen del estilo `caret-color: transparent` que Playwright registra en la hidratación y resolver warnings de entorno sin alterar semántica del producto.
 
 ### P3

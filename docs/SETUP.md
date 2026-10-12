@@ -86,7 +86,7 @@ Esta opción sigue siendo una instalación local de desarrollo. Las pruebas de b
 
 ### Supabase Auth en Vercel
 
-Para que confirmaciones de cuenta y recuperación vuelvan a la app desplegada, en Supabase abre **Authentication → URL Configuration** y configura **Site URL** como `https://nodria-staging.vercel.app`. Añade `https://nodria-staging.vercel.app/auth/callback` a **Redirect URLs** (y `http://localhost:3000/auth/callback` solo si también necesitas probar el flujo local). En las plantillas de correo, el enlace debe respetar `{{ .RedirectTo }}` cuando se proporciona; no fuerces `{{ .SiteURL }}` como destino final. La app construye `emailRedirectTo` desde el origen donde el usuario inició el flujo y termina en `/auth/callback`.
+Para que confirmaciones de cuenta y recuperación vuelvan a la app desplegada, en Supabase abre **Authentication → URL Configuration** y configura **Site URL** como `https://nodria-academico.vercel.app`. Añade `https://nodria-academico.vercel.app/auth/callback` a **Redirect URLs** (y `http://localhost:3000/auth/callback` solo si también necesitas probar el flujo local). El dominio antiguo `nodria-staging.vercel.app` redirige al nuevo; no lo uses como URL canónica de Auth. En las plantillas de correo, el enlace debe respetar `{{ .RedirectTo }}` cuando se proporciona; no fuerces `{{ .SiteURL }}` como destino final. La app construye `emailRedirectTo` desde el origen donde el usuario inició el flujo y termina en `/auth/callback`.
 
 ## Reiniciar la demo
 
