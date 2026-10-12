@@ -7,6 +7,7 @@ NODRIA es un proyecto académico con identidades, catálogo, pedidos y pagos fic
 ## Verificaciones ya hechas
 
 - Proyecto Vercel `nodria`; el dominio final responde HTTP 200 en portada, acceso, configurador y backoffice CRM. El alias antiguo responde `308` a la URL equivalente en el dominio final.
+- El commit `4905c47` está `Ready` en Production. `robots.txt` y el sitemap responden 200 y contienen solo URLs de `nodria-academico.vercel.app` (74 entradas).
 - TypeScript, ESLint, 288 Vitest + 39 Node, Playwright demo/UX 19/19, build de producción y `git diff --check` pasan.
 - Supabase local: reset/migraciones/seed, 183 pgTAP, DB lint y 78 probes HTTP Auth/RLS pasan. Suites aisladas: checkout 4/4, dominios 6/6, B2B 1/1, customer/B2B 1/1 y roles 1/1.
 - El CLI de Supabase de esta sesión lista una organización distinta y no tiene acceso al proyecto `ypnhdxpejcbcyjiosrhf`. No se consideran certificados el catálogo, Auth/SMTP, RLS ni escrituras alojadas solo porque las rutas respondan 200.

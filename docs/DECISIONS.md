@@ -284,7 +284,7 @@ Las decisiones de alcance heredadas de la misión se marcan **Confirmada**. Las 
 ## D-031 — Recompilar después de cambiar la URL pública de Next.js
 
 - **Fecha:** 2026-10-12
-- **Estado:** `NEXT_PUBLIC_SITE_URL` se actualizó en Vercel Production; el deployment publicado aún muestra la URL previa en `robots.txt` y `sitemap.xml`.
+- **Estado:** `NEXT_PUBLIC_SITE_URL` se actualizó y el deployment `4905c47` publicado confirma que `robots.txt` y `sitemap.xml` usan el hostname final.
 - **Contexto:** Next.js inserta variables `NEXT_PUBLIC_*` al crear el bundle. Modificar la variable en Vercel no cambia los artefactos del deployment ya publicado.
 - **Decisión:** Hacer un nuevo deployment desde `main` y verificar `robots.txt`, `sitemap.xml` y metadatos contra `https://nodria-academico.vercel.app` antes de cerrar la release.
 - **Consecuencias:** El host viejo solo debe quedar como redirect; no incluir URLs de staging en señales canónicas o de rastreo.

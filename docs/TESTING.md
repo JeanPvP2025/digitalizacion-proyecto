@@ -7,7 +7,7 @@
 - Suites aisladas repetidas: checkout conectado **4/4**, dominios conectados **6/6**, B2B **1/1**, customer/B2B responsive **1/1**, roles protegidos **1/1**. Estas pruebas usan proyectos Supabase locales efímeros.
 - Producción: HTTP 200 en `/`, `/acceso`, `/configurador`, `/backoffice/crm`; el dominio anterior responde 308 y preserva la URL. No se ejecutaron mutaciones, login por email ni pruebas RLS contra Supabase remoto.
 - Browser Playwright contra Production, viewports de 390 px, sin `pageerror` ni overflow horizontal en las rutas comprobadas. La revisión funcional del catálogo encontró 44 fichas/3 marcas y 4–5 opciones PC Builder por clase; esto es un fallo de datos alojados, no de rendering.
-- `robots.txt` y `sitemap.xml` responden 200, pero sus URLs aún apuntan a `nodria-staging.vercel.app` porque el build live es anterior al cambio de `NEXT_PUBLIC_SITE_URL`; debe comprobarse tras el próximo deployment.
+- Después del deployment `4905c47`, `robots.txt` y `sitemap.xml` responden 200 y publican exclusivamente `https://nodria-academico.vercel.app` (74 URLs). El dominio anterior devuelve 308 conservando ruta y query.
 - Durante `pnpm test:e2e` aparecen avisos `NO_COLOR`/`FORCE_COLOR` y un `caret-color` de hidratación sin origen atribuido; no causaron fallos. El runner de roles mostró errores de escritura del stream al cerrarse mientras el test completó 1/1 y el proyecto efímero se limpió.
 
 ## Smoke check de producción — 2026-10-08

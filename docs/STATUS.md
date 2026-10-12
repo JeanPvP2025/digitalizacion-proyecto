@@ -64,7 +64,7 @@ Las notas de despliegue y PC Builder a continuación describen el estado de esa 
 - ✅ **Analytics del alcance publicado:** pedidos, ventas brutas aprobadas, aprobación de pago, inventario disponible y conversión de solicitudes CRM tienen fórmula, fuente, periodo de 30 días Europe/Madrid, límites y fixtures puros/SQL/E2E; el dashboard falla cerrado ante discrepancias. Ventas netas, margen, visitas y conversión específica de cotizaciones B2B no se presentan como KPIs todavía.
 - ✅ **Demo Mode local:** modo de archivos limitado a desarrollo y sin Auth; Supabase configurado siempre gana y falla cerrado. La guía cubre reset local y organización ficticia; `scripts/demo/assign-staff-roles.ps1` asigna en loopback grants de los cinco roles internos a cuentas Auth locales ya creadas, sin crear ni almacenar contraseñas. Se ejecutó y verificó que escribe exactamente un grant por rol; `db reset --local` los elimina.
 - ✅ **Seguridad/Auth local:** aislamiento, escalada, permisos sensibles y boundaries HTTP verificados con matriz documentada, suites SQL y 78 probes autenticados; esto no certifica un entorno remoto ni prueba CRUD exhaustivo por cada campo/endpoint. `manager` y `marketing` no son roles persistidos y no reciben permisos implícitos.
-- 🚧 **Experiencia y presentación:** storefront medido en Lighthouse local: portada móvil 92 y catálogo desktop 100. El dominio público está configurado; las rutas comprobadas no presentan overflow a 390 px y no hay errores JavaScript. El `robots.txt`/sitemap live todavía usa el alias antiguo hasta el siguiente deployment. No se ha medido contraste/lector de pantalla exhaustivo en backoffice ni CrUX/INP de campo.
+- 🚧 **Experiencia y presentación:** storefront medido en Lighthouse local: portada móvil 92 y catálogo desktop 100. El dominio público, robots y sitemap ya usan el host final; las rutas comprobadas no presentan overflow a 390 px y no hay errores JavaScript. No se ha medido contraste/lector de pantalla exhaustivo en backoffice ni CrUX/INP de campo.
 
 ## Sexta ola integrada
 
@@ -142,7 +142,7 @@ Warnings no bloqueantes conocidos: Node reporta `MODULE_TYPELESS_PACKAGE_JSON` e
 - [x] Shell y navegación interna de `/soporte/agente` con saltos de teclado/estados y viewports 390/768/1280. Ver `docs/UX_STAFF_SHELL.md`.
 - [ ] Medir contraste y revisar lector de pantalla de todas las superficies backoffice con tooling dedicado; E2E de nombre/foco/overflow no sustituye esa auditoría.
 - [ ] Añadir historial sintético variado para CRM/operaciones de forma segura y repetible, sin crear eventos que parezcan transacciones reales ni sobrescribir datos existentes.
-- ⚠️ Volver a desplegar tras actualizar `NEXT_PUBLIC_SITE_URL` y validar que robots/sitemap publiquen el dominio final; la versión live observada aún contiene enlaces a `nodria-staging.vercel.app`.
+- ✅ URL de producción actualizada antes de la reconstrucción `4905c47`; `robots.txt` y las 74 URLs del sitemap ya usan solo el dominio final.
 - [ ] Identificar el origen del estilo `caret-color: transparent` que Playwright registra en la hidratación y resolver warnings de entorno sin alterar semántica del producto.
 
 ### P3
