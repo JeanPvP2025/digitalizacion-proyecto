@@ -18,7 +18,7 @@ export default async function SupportAgentPage() {
   await connection();
   const session = await getConnectedSupportSession();
   if (session.kind === "unavailable") {
-    return <AccessPage title="Bandeja no disponible" description="Esta bandeja necesita el entorno conectado de Supabase." />;
+    return <AccessPage title="Bandeja no disponible" description="La bandeja de soporte no está activa en este momento." />;
   }
   if (session.kind === "unauthenticated") {
     return (

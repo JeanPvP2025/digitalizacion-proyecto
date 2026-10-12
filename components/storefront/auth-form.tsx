@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { ArrowRight, Check, KeyRound, LoaderCircle, LockKeyhole, Mail, ShieldCheck, UserRound } from "lucide-react";
 import { createSupabaseBrowserClient } from "@/lib/supabase/browser";
-import { getSafeRedirectPath } from "@/lib/supabase/redirects";
+import { getRoleLandingPath, getSafeRedirectPath } from "@/lib/supabase/redirects";
 import { getAuthFeedback, getCallbackFeedback } from "@/app/auth/callback/feedback";
 import { BrandMark } from "@/components/storefront/brand-mark";
 import styles from "./auth-form.module.css";
@@ -15,12 +15,13 @@ type Mode = "signin" | "signup" | "update";
 type AuthFormProps = {
   demoMode: boolean;
   redirectTo: string;
+  preserveRequestedDestination: boolean;
   initialMode: Mode;
   initialError?: string;
   initialMessage?: string;
 };
 
-export function AuthForm({ demoMode, redirectTo, initialMode, initialError, initialMessage }: AuthFormProps) {
+export function AuthForm({ demoMode, redirectTo, preserveRequestedDestination, initialMode, initialError, initialMessage }: AuthFormProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [mode, setMode] = useState<Mode>(initialMode);
@@ -64,9 +65,17 @@ export function AuthForm({ demoMode, redirectTo, initialMode, initialError, init
       if (!supabase) throw new Error("Auth unavailable");
 
       if (mode === "signin") {
-        const { error: authError } = await supabase.auth.signInWithPassword({ email, password });
+        const { data: signInData, error: authError } = await supabase.auth.signInWithPassword({ email, password });
         if (authError) throw authError;
-        router.replace(getSafeRedirectPath(redirectTo));
+        let destination = redirectTo;
+        if (!preserveRequestedDestination && signInData.user) {
+          const { data: grants, error: grantsError } = await supabase
+            .from("user_role_grants")
+            .select("role")
+            .eq("user_id", signInData.user.id);
+          if (!grantsError) destination = getRoleLandingPath((grants ?? []).map((grant: { role: string }) => grant.role));
+        }
+        router.replace(getSafeRedirectPath(destination));
         return;
       }
 
@@ -80,7 +89,7 @@ export function AuthForm({ demoMode, redirectTo, initialMode, initialError, init
         if (authError) throw authError;
 
         if (result.session) router.replace(getSafeRedirectPath(redirectTo));
-        else setError("Supabase todavía exige confirmación por correo. Desactiva «Confirm Email» en el proveedor Email antes de registrar cuentas.");
+        else setError("No se pudo activar la cuenta automáticamente. Contacta con la administración para habilitar el acceso.");
         return;
       }
 
@@ -154,8 +163,8 @@ export function AuthForm({ demoMode, redirectTo, initialMode, initialError, init
           {demoMode ? (
             <div className={styles.demoNotice} role="status">
               <div className={styles.demoIcon}><LockKeyhole size={19} /></div>
-              <strong>El acceso no está conectado en esta demo</strong>
-              <p>Esta instancia no tiene un proyecto Supabase configurado. No introduzcas contraseñas; puedes explorar el catálogo y los flujos ficticios.</p>
+              <strong>El acceso no está disponible en esta demo</strong>
+              <p>Ahora mismo no hay cuentas activas para iniciar sesión. No introduzcas contraseñas; puedes explorar el catálogo y los flujos ficticios.</p>
               <Link className={`button button--dark ${styles.submit}`} href="/catalogo">Explorar catálogo <ArrowRight size={15} /></Link>
             </div>
           ) : (
@@ -184,7 +193,7 @@ export function AuthForm({ demoMode, redirectTo, initialMode, initialError, init
                 {mode === "update" && <button disabled={busy} type="button" onClick={() => changeMode("signin")}>Volver a iniciar sesión</button>}
                 <span>{mode === "signup" ? "¿Ya tienes una cuenta?" : mode === "signin" ? "¿Primera vez aquí?" : ""} {(mode === "signin" || mode === "signup") && <button disabled={busy} type="button" onClick={() => changeMode(mode === "signin" ? "signup" : "signin")}>{mode === "signin" ? "Crea tu cuenta" : "Inicia sesión"}</button>}</span>
               </div>
-              <p className={styles.privacy}><LockKeyhole size={13} /> Tu cuenta y tus pedidos están protegidos por tu sesión y los permisos de acceso.</p>
+              <p className={styles.privacy}><LockKeyhole size={13} /> Solo tú y el personal autorizado podéis consultar la información de tu cuenta.</p>
             </>
           )}
         </section>

@@ -63,7 +63,7 @@ function AnalyticsFrame({ children }: { children: React.ReactNode }) {
           </div>
           <div className={styles.accessStamp}>
             <span><ShieldCheck size={15} aria-hidden="true" /> ACCESO INTERNO</span>
-            <small>Solo super_admin</small>
+            <small>Solo administración</small>
           </div>
         </div>
         <nav className={styles.sectionNav} aria-label="Áreas de equipo">
@@ -83,7 +83,7 @@ function AnalyticsState({ snapshot }: { snapshot: Exclude<AnalyticsSnapshot, { s
   const copy = {
     not_configured: {
       title: "Analítica conectada pendiente",
-      body: "No hay una conexión Supabase configurada. Esta vista no utiliza pedidos demo, archivos locales ni métricas estimadas.",
+      body: "Las métricas operativas no están disponibles ahora. No se muestran pedidos de demostración ni cifras estimadas.",
       icon: <Database size={21} aria-hidden="true" />,
       alert: false,
       action: "Volver a operaciones",
@@ -91,7 +91,7 @@ function AnalyticsState({ snapshot }: { snapshot: Exclude<AnalyticsSnapshot, { s
     },
     unauthenticated: {
       title: "Inicia sesión para continuar",
-      body: "Las métricas operativas requieren una sesión Auth verificada.",
+      body: "Las métricas operativas requieren una cuenta de equipo autorizada.",
       icon: <ShieldCheck size={21} aria-hidden="true" />,
       alert: false,
       action: "Iniciar sesión",
@@ -99,7 +99,7 @@ function AnalyticsState({ snapshot }: { snapshot: Exclude<AnalyticsSnapshot, { s
     },
     forbidden: {
       title: "Acceso restringido",
-      body: "El agregado cruza datos de pedidos, pagos, almacén y CRM. La matriz actual limita esta vista al rol super_admin.",
+      body: "El informe reúne datos de pedidos, pagos, almacén y CRM. Esta vista está reservada a administración.",
       icon: <ShieldCheck size={21} aria-hidden="true" />,
       alert: true,
       action: "Volver a operaciones",
@@ -111,7 +111,7 @@ function AnalyticsState({ snapshot }: { snapshot: Exclude<AnalyticsSnapshot, { s
         ? "Una fuente supera el máximo seguro de 5.000 filas. No se muestran agregados parciales."
         : errorReason === "inconsistent"
           ? "Los eventos, las transacciones y el pedido asociado no coinciden. Se ocultan los totales hasta resolver la discrepancia."
-          : "Falló una de las lecturas protegidas de Supabase. No se muestran resultados parciales; vuelve a intentarlo.",
+          : "No se pudieron cargar todas las fuentes de datos. No se muestran resultados parciales; vuelve a intentarlo.",
       icon: errorReason === "inconsistent" ? <FileWarning size={21} aria-hidden="true" /> : <CircleAlert size={21} aria-hidden="true" />,
       alert: true,
       action: "Reintentar",
@@ -186,7 +186,7 @@ function MetricDefinitions() {
           </tbody>
         </table>
       </div>
-      <p className={styles.boundaryNote}>Ventana temporal semiabierta: inicio incluido, instante de consulta excluido. La lectura usa el cliente autenticado y RLS; si falla una fuente, se oculta todo el agregado.</p>
+      <p className={styles.boundaryNote}>El informe incluye los datos disponibles para tu perfil. Si falla una fuente, se ocultan los resultados para evitar cifras incompletas.</p>
     </section>
   );
 }
@@ -202,7 +202,7 @@ function AnalyticsDashboard({ snapshot }: { snapshot: Extract<AnalyticsSnapshot,
   return (
     <>
       <section className={styles.reportBar} aria-label="Periodo del informe">
-        <div><span className={styles.reportDot} aria-hidden="true" /><strong>SUPABASE · RLS ACTIVO</strong><span>Periodo {periodLabel(snapshot)} · {ANALYTICS_TIME_ZONE}</span></div>
+        <div><span className={styles.reportDot} aria-hidden="true" /><strong>INFORME OPERATIVO</strong><span>Periodo {periodLabel(snapshot)} · {ANALYTICS_TIME_ZONE}</span></div>
         <small>Corte {dateTime.format(new Date(snapshot.generatedAt))}</small>
       </section>
 

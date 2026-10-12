@@ -71,7 +71,7 @@ describe("homepage active-source boundary", () => {
     expect(markup).toContain('href="/producto/routeur-connecte-314"');
     expect(markup).toContain('src="https://other-host.test/product.png"');
     expect(markup).toContain('href="/categorias/redes"');
-    expect(markup).toContain("Catálogo conectado");
+    expect(markup).toContain("Catálogo actualizado");
     expect(markup).toContain("Disponibilidad por confirmar");
     expect(markup).not.toContain("Stock demo");
     expect(markup).not.toContain("Añadir al carrito");
@@ -118,7 +118,7 @@ describe("homepage active-source boundary", () => {
     vi.stubEnv("NEXT_PUBLIC_SUPABASE_URL", "");
     vi.stubEnv("NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY", "");
     const markup = await renderHome();
-    expect(markup).toContain("Catálogo local de demostración");
+    expect(markup).toContain("Catálogo de demostración");
     expect(markup).toContain("Tu espacio de trabajo, pieza a pieza");
     expect(markup).toContain("Más ideas por descubrir");
     expect(markup).not.toContain("Novedades y otras ideas");

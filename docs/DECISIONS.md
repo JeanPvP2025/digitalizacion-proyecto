@@ -306,3 +306,11 @@ Las decisiones de alcance heredadas de la misión se marcan **Confirmada**. Las 
 - **Alternativas:** mantener el listado parcial de operaciones; o permitir lectura directa global de tablas de pedidos, pagos, líneas y eventos.
 - **Motivo:** ofrece un historial comercial de estilo Shopify sin mezclar permisos de ventas con fulfillment, pagos o RMA.
 - **Consecuencias:** ventas ve email/teléfono, pedido, estados, importe, líneas snapshot y cronología; no ve direcciones ni referencias privadas del proveedor de pagos. No se implementan etiquetas/notas editables, segmentos dinámicos, campañas, exportación ni emails. Aplicar `20261013100000_crm_customer_orders_workspace.sql` antes del deploy del frontend y probar las RPC con sesión comercial.
+
+## D-034 — Destino por rol y variedad visual del catálogo
+
+- **Fecha:** 2026-10-13
+- **Estado:** Implementado en el repositorio local; gates locales completados.
+- **Contexto:** El acceso enviaba todas las cuentas a `/mi-cuenta` y muchas fichas del catálogo compartían una misma fotografía editorial.
+- **Decisión:** Tras el inicio de sesión sin un destino interno `next` distinto de `/mi-cuenta`, seleccionar la página inicial consultando los roles persistidos de la propia cuenta: superadministración/almacén a `/backoffice`, ventas a `/backoffice/crm`, catálogo a `/backoffice/catalog`, soporte a `/soporte/agente` y cuentas de cliente a `/mi-cuenta`. Otros destinos internos seguros siguen prevaleciendo y los guards de servidor conservan la autoridad. Para el catálogo, conservar cada imagen editorial única y rotar las URLs repetidas por fotografías ilustrativas asignadas a la subcategoría.
+- **Consecuencias:** El redirect solo mejora la navegación; no concede acceso ni confía en metadatos editables. Las fotografías se marcan como ilustrativas y no como imágenes exactas del modelo. La variedad se resuelve en la capa de presentación y no requiere migración.

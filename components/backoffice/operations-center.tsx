@@ -103,7 +103,7 @@ export function OperationsCenter({
         </div>
         <div className={styles.connectionStatus}>
           <span className={styles.connectionDot} />
-          <span><strong>Supabase conectado</strong><small>Lectura protegida por sesión y RLS</small></span>
+          <span><strong>Operaciones activas</strong><small>Información disponible para tu perfil</small></span>
         </div>
       </section>
 
@@ -164,7 +164,7 @@ export function OperationsCenter({
             {hasFilters && <Link className={styles.clearFilters} href="/backoffice">Limpiar</Link>}
           </form>
 
-          {workspace.queueIsLimited && <p className={styles.limitNotice}>La tabla muestra los 24 pedidos operables más antiguos. Los indicadores muestran el recuento total permitido por RLS.</p>}
+          {workspace.queueIsLimited && <p className={styles.limitNotice}>La tabla muestra los 24 pedidos operables más antiguos. Los indicadores cuentan todos los pedidos disponibles para tu perfil.</p>}
 
           {visibleOrders.length ? (
             <div className={styles.tableScroll}>
@@ -208,7 +208,7 @@ export function OperationsCenter({
             </div>
           )}
           <footer className={styles.panelFooter}>
-            <span><i aria-hidden="true" /> Picking y empaquetado quedan en timeline · El despacho consume reservas en PostgreSQL</span>
+            <span><i aria-hidden="true" /> Preparación y empaquetado quedan en el historial · El despacho confirma las unidades reservadas</span>
             <small>Actualizado {lastUpdated}</small>
           </footer>
         </section>
@@ -245,7 +245,7 @@ export function OperationsCenter({
 
       <footer className={styles.pageFooter}>
         <span>NODRIA · OPERACIONES</span>
-        <span>Las reglas de expedición y reservas se validan en PostgreSQL.</span>
+        <span>Las reglas de expedición y reserva se comprueban antes de confirmar cada envío.</span>
       </footer>
     </main>
   );

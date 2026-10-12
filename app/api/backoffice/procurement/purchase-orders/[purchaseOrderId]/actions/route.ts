@@ -31,7 +31,7 @@ export async function POST(request: Request, context: { params: Promise<{ purcha
     return errorResponse(mapped.message, mapped.status);
   }
   const result = resultSchema.safeParse(data);
-  if (!result.success) return errorResponse("La base de datos devolvió un estado de pedido inválido.", 503);
+  if (!result.success) return errorResponse("No se pudo actualizar el estado de la orden. Vuelve a intentarlo.", 503);
   if (!result.data.success) return errorResponse("El estado actual del pedido no permite esta acción.", 409, { code: result.data.errorCode });
   return Response.json({ purchaseOrder: result.data }, { headers: privateHeaders });
 }

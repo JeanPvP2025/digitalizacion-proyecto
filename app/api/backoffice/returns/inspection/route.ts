@@ -45,9 +45,9 @@ export async function POST(request: Request) {
   if (!parsed.success) return errorResponse("Revisa la disposición, cantidad, almacén y motivo de inspección.", 400);
 
   const access = await getProcurementAccess();
-  if (access.status === "not_configured") return errorResponse("La inspección requiere Supabase conectado.", 503);
+  if (access.status === "not_configured") return errorResponse("La inspección no está disponible en este momento.", 503);
   if (access.status === "unauthenticated") return errorResponse("Inicia sesión con una cuenta de almacén.", 401);
-  if (access.status === "forbidden") return errorResponse("Esta acción requiere fulfillment_manager o super_admin.", 403);
+  if (access.status === "forbidden") return errorResponse("Tu cuenta no tiene permiso para inspeccionar devoluciones.", 403);
   if (access.status === "error") return errorResponse("No se han podido comprobar los permisos de almacén.", 503);
 
   const input = parsed.data;
@@ -61,7 +61,7 @@ export async function POST(request: Request) {
     p_idempotency_key: input.idempotencyKey,
   });
   if (error) {
-    if (error.code === "42501") return errorResponse("La base de datos ha rechazado la inspección por permisos.", 403);
+    if (error.code === "42501") return errorResponse("Tu cuenta no tiene permiso para inspeccionar esta devolución.", 403);
     if (error.code === "22023") return errorResponse("Los datos de inspección no son válidos.", 400);
     if (error.code === "23505") return errorResponse("Esta devolución ya se inspeccionó o la clave se usó con otros datos.", 409);
     if (error.code === "23514") return errorResponse("La devolución ya no admite esa cantidad o disposición.", 409);
@@ -71,6 +71,6 @@ export async function POST(request: Request) {
   }
 
   const result = resultSchema.safeParse(data);
-  if (!result.success) return errorResponse("La base de datos devolvió una respuesta de inspección inválida.", 503);
+  if (!result.success) return errorResponse("No se pudo completar la inspección. Vuelve a intentarlo.", 503);
   return NextResponse.json({ inspection: result.data[0] }, { headers: privateHeaders });
 }

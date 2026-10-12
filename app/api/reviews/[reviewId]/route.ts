@@ -14,7 +14,7 @@ export async function PATCH(
   context: { params: Promise<{ reviewId: string }> },
 ) {
   if (getServerDataMode() !== "supabase") {
-    return NextResponse.json({ error: "La moderación requiere conexión con Supabase." }, { status: 503, headers: privateHeaders });
+    return NextResponse.json({ error: "La moderación no está disponible en este momento." }, { status: 503, headers: privateHeaders });
   }
 
   const { reviewId } = await context.params;

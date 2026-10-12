@@ -74,7 +74,7 @@ export function InventoryActions({ rows }: { rows: StockOption[] }) {
     <section className={styles.actionsPanel} aria-labelledby="inventory-actions-title">
       <div className={styles.panelHeading}>
         <div><p className={styles.panelEyebrow}>ACCIONES AUTORIZADAS</p><h2 id="inventory-actions-title">Recibir y ajustar stock</h2></div>
-        <span className={styles.sourceBadge}>RPC · LEDGER IDEMPOTENTE</span>
+        <span className={styles.sourceBadge}>MOVIMIENTOS DE INVENTARIO</span>
       </div>
       <p className={styles.actionIntro}>Cada operación actualiza el físico y el ledger en una transacción. Las reservas activas se conservan; un ajuste negativo no puede consumirlas.</p>
       {feedback && <p className={feedback.kind === "success" ? styles.actionSuccess : styles.actionError} role={feedback.kind === "error" ? "alert" : "status"}>{feedback.text}</p>}

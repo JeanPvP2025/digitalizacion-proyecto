@@ -12,7 +12,7 @@ const privateHeaders = { "Cache-Control": "private, no-store" };
 export async function POST(request: Request) {
   if (getServerDataMode() !== "supabase") {
     return NextResponse.json(
-      { error: "Las opiniones requieren una cuenta conectada y una compra guardada en Supabase." },
+      { error: "Para opinar, inicia sesión con la cuenta que realizó la compra." },
       { status: 503, headers: privateHeaders },
     );
   }

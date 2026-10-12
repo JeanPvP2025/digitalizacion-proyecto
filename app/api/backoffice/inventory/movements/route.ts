@@ -52,7 +52,7 @@ export async function POST(request: Request) {
   if (!parsed.success) return errorResponse("Revisa los datos del movimiento y vuelve a intentarlo.", 400);
 
   const supabase = await createSupabaseServerClient();
-  if (!supabase) return errorResponse("Las recepciones requieren una sesión Supabase conectada.", 503);
+  if (!supabase) return errorResponse("Las recepciones no están disponibles en este momento.", 503);
   const { data: auth, error: authError } = await supabase.auth.getUser();
   if (authError) return errorResponse("No se ha podido validar la sesión.", 503);
   if (!auth.user) return errorResponse("Inicia sesión con una cuenta de almacén.", 401);
@@ -64,7 +64,7 @@ export async function POST(request: Request) {
     .returns<{ role: string }[]>();
   if (grantsError) return errorResponse("No se han podido comprobar los permisos de almacén.", 503);
   if (!hasStaffSurfaceRole((grants ?? []).map(({ role }) => role), "inventory")) {
-    return errorResponse("Esta acción requiere el rol fulfillment_manager o super_admin.", 403);
+    return errorResponse("Tu cuenta no tiene permiso para registrar movimientos de inventario.", 403);
   }
 
   const operation = parsed.data;
@@ -86,7 +86,7 @@ export async function POST(request: Request) {
       });
 
   if (error) {
-    if (error.code === "42501") return errorResponse("La base de datos ha rechazado este movimiento por permisos.", 403);
+    if (error.code === "42501") return errorResponse("Tu cuenta no tiene permiso para registrar este movimiento.", 403);
     if (error.code === "22023") return errorResponse("Los datos del movimiento no son válidos.", 400);
     if (error.code === "23505") return errorResponse("Esta clave de reintento ya se usó con otros datos. Inicia un movimiento nuevo.", 409);
     if (error.code === "23514") return errorResponse("El ajuste no puede reducir el stock por debajo de las unidades reservadas.", 409);
@@ -96,6 +96,6 @@ export async function POST(request: Request) {
   }
 
   const result = resultSchema.safeParse(data);
-  if (!result.success) return errorResponse("La base de datos devolvió una respuesta de movimiento inválida.", 503);
+  if (!result.success) return errorResponse("No se pudo registrar el movimiento. Vuelve a intentarlo.", 503);
   return NextResponse.json({ movement: result.data[0] }, { status: 200, headers: privateHeaders });
 }

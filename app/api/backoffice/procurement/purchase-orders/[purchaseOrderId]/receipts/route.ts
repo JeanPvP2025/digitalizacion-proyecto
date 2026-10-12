@@ -42,7 +42,7 @@ export async function POST(request: Request, context: { params: Promise<{ purcha
     return errorResponse(mapped.message, mapped.status);
   }
   const result = resultSchema.safeParse(data);
-  if (!result.success) return errorResponse("La base de datos devolvió una recepción inválida.", 503);
+  if (!result.success) return errorResponse("No se pudo registrar la recepción. Vuelve a intentarlo.", 503);
   if (!result.data.success) {
     const mapped = receiptErrors[result.data.errorCode ?? ""] ?? { message: "No se ha podido completar la recepción. El intento puede consultarse en el pedido.", status: 409 };
     return errorResponse(mapped.message, mapped.status, { receipt: result.data, code: result.data.errorCode });

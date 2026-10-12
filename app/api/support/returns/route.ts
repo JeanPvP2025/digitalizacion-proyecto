@@ -24,7 +24,7 @@ async function getAuthenticatedClient() {
 export async function GET(request: Request) {
   const mode = getServerDataMode();
   if (mode !== "supabase") {
-    return NextResponse.json({ error: "Las devoluciones requieren una cuenta conectada con pedidos guardados en Supabase." }, { status: 503, headers: privateHeaders });
+    return NextResponse.json({ error: "Las devoluciones requieren una cuenta con un pedido disponible." }, { status: 503, headers: privateHeaders });
   }
 
   const orderNumber = orderNumberSchema.safeParse(new URL(request.url).searchParams.get("orderNumber"));
@@ -55,7 +55,7 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   if (getServerDataMode() !== "supabase") {
-    return NextResponse.json({ error: "Las devoluciones requieren una cuenta conectada con pedidos guardados en Supabase." }, { status: 503, headers: privateHeaders });
+    return NextResponse.json({ error: "Las devoluciones requieren una cuenta con un pedido disponible." }, { status: 503, headers: privateHeaders });
   }
 
   let body: unknown;

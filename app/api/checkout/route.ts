@@ -103,7 +103,7 @@ function checkoutErrorResponse(error: unknown) {
   if (code === "23514") {
     return NextResponse.json({ error: "Este pedido ya no admite otro resultado de pago." }, { status: 409 });
   }
-  return NextResponse.json({ error: "No se ha podido confirmar el pedido con Supabase. Conserva la misma referencia al reintentar." }, { status: 503 });
+  return NextResponse.json({ error: "No se ha podido confirmar el pedido. Conserva la misma referencia al reintentar." }, { status: 503 });
 }
 
 async function loadSellableCheckoutVariants(
@@ -218,7 +218,7 @@ function supabaseOrderResponse(
 
 async function createSupabaseOrder(checkout: CheckoutRequest) {
   const supabase = await createSupabaseServerClient();
-  if (!supabase) return NextResponse.json({ error: "Supabase no está configurado para este entorno." }, { status: 503 });
+  if (!supabase) return NextResponse.json({ error: "La finalización de pedidos no está disponible en este momento." }, { status: 503 });
 
   const { data: authData, error: authError } = await supabase.auth.getUser();
   if (!authData.user) {
@@ -226,7 +226,7 @@ async function createSupabaseOrder(checkout: CheckoutRequest) {
       console.error("NODRIA checkout authentication failed", { status: authError.status ?? "unknown" });
       return NextResponse.json({ error: "No se ha podido validar tu sesión. Inténtalo de nuevo." }, { status: 503 });
     }
-    return NextResponse.json({ error: "Inicia sesión para finalizar el pedido en Supabase." }, { status: 401 });
+    return NextResponse.json({ error: "Inicia sesión para finalizar el pedido." }, { status: 401 });
   }
   const userId = authData.user.id;
   if (!checkout.paymentMethod) {
@@ -237,7 +237,7 @@ async function createSupabaseOrder(checkout: CheckoutRequest) {
   // after authenticating the customer through the publishable-key session.
   const paymentAdmin = createSupabasePaymentAdminClient();
   if (!paymentAdmin) {
-    return NextResponse.json({ error: "Falta configurar una clave secreta de Supabase solo para servidor; el pedido no se ha creado." }, { status: 503 });
+    return NextResponse.json({ error: "No se pudo preparar el pedido de forma segura. No se ha creado; inténtalo más tarde." }, { status: 503 });
   }
 
   if (!consumeRateLimit(`checkout:user:${userId}`, MAX_ATTEMPTS_PER_MINUTE, 60_000)) {
@@ -353,7 +353,7 @@ async function createDemoOrder(checkout: DemoRequestWithRequest) {
 
   const consolidated = consolidateCheckoutItems(checkout.data.items);
   if (consolidated.some((item) => "variantId" in item)) {
-    return NextResponse.json({ error: "La selección por variantId requiere el checkout Supabase conectado; el modo demo local usa productId." }, { status: 400 });
+    return NextResponse.json({ error: "No se ha podido validar la selección del carrito. Actualízalo y vuelve a intentarlo." }, { status: 400 });
   }
   const orderItems: DemoOrderRecord["items"] = [];
   for (const item of consolidated) {
@@ -420,7 +420,7 @@ async function createDemoOrder(checkout: DemoRequestWithRequest) {
 export async function POST(request: Request) {
   const mode = getCheckoutMode();
   if (mode === "unavailable") {
-    return NextResponse.json({ error: "El checkout requiere credenciales Supabase en este entorno." }, { status: 503 });
+    return NextResponse.json({ error: "La finalización de pedidos no está disponible en este momento." }, { status: 503 });
   }
 
   let untrustedBody: unknown;

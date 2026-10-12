@@ -54,11 +54,11 @@ async function AccountContent({ searchParams }: { searchParams: SearchParams }) 
     ]);
 
     if (profileResult.error) {
-      profileNotice = "No se pudo leer tu perfil con la policy activa de Supabase. La cuenta no usará datos demo como sustituto.";
+      profileNotice = "No se pudo cargar tu perfil. No se mostrarán datos de demostración como sustituto.";
       email = auth.user.email ?? "";
       name = email || "Cliente NODRIA";
     } else if (!profileResult.data) {
-      profileNotice = "La sesión es válida, pero falta la fila de profiles que crea el trigger de Auth. Revisa que la migración esté aplicada; la aplicación no inserta perfiles desde el cliente.";
+      profileNotice = "No se encontró el perfil asociado a tu cuenta. Contacta con la administración para revisar el acceso.";
       email = auth.user.email ?? "";
       name = email || "Cliente NODRIA";
     } else {
@@ -78,7 +78,7 @@ async function AccountContent({ searchParams }: { searchParams: SearchParams }) 
       }));
     }
 
-    if (membershipResult.error) membershipsError = "No se pudieron validar tus membresías de empresa con las policies activas.";
+    if (membershipResult.error) membershipsError = "No se pudieron cargar tus empresas. Vuelve a intentarlo más tarde.";
     else memberships = membershipResult.data ?? [];
 
     isDemo = false;
@@ -98,7 +98,7 @@ async function AccountContent({ searchParams }: { searchParams: SearchParams }) 
       <h1 className="page-title">Hola, {name.split(" ")[0]}<span className="title-period">.</span></h1>
       <p className="page-intro">Aquí tienes tus pedidos, configuraciones y conversaciones con el equipo NODRIA.</p>
 
-      {isDemo && <div className="account-demo-notice"><span>CUENTA DEMO LOCAL</span><p>Sin inicio de sesión real. Los pedidos de la demo se asocian al correo <strong>{email}</strong>; la actividad se conserva solo en este servidor local.</p><Link href="/acceso">Configurar acceso Supabase <ArrowRight size={13} /></Link></div>}
+      {isDemo && <div className="account-demo-notice"><span>CUENTA DE DEMOSTRACIÓN</span><p>Sin inicio de sesión real. Los pedidos de la demo se asocian al correo <strong>{email}</strong>; la actividad se conserva solo en este servidor local.</p><Link href="/acceso">Iniciar sesión o crear cuenta <ArrowRight size={13} /></Link></div>}
       {profileNotice && <p className="account-auth-notice" role="alert">{profileNotice}</p>}
       {ordersError && <p className="account-auth-notice" role="alert">{ordersError}</p>}
 

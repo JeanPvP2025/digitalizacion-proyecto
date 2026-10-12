@@ -12,9 +12,9 @@ export const metadata: Metadata = {
 };
 
 const messages = {
-  not_configured: { title: "Inspección conectada no disponible", body: "Configura Supabase para consultar devoluciones pendientes. No se usarán datos locales como sustituto." },
+  not_configured: { title: "Inspección no disponible", body: "La inspección de devoluciones no está activa en este momento. No se usarán datos de demostración como sustituto." },
   unauthenticated: { title: "Inicia sesión para continuar", body: "La inspección requiere una cuenta de almacén autenticada." },
-  forbidden: { title: "Acceso restringido", body: "Esta acción requiere fulfillment_manager o super_admin." },
+  forbidden: { title: "Acceso restringido", body: "La inspección está reservada al personal autorizado de almacén." },
   error: { title: "No se pudo cargar la cola", body: "La consulta conectada falló. No se ha cambiado inventario; vuelve a intentarlo." },
 } as const;
 

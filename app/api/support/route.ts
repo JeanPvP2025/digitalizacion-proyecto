@@ -9,7 +9,7 @@ export const runtime = "nodejs";
 
 export async function POST(request: Request) {
   const mode = getServerDataMode();
-  if (mode === "unavailable") return NextResponse.json({ error: "El soporte no está disponible en este entorno: configura Supabase o activa la demo local en desarrollo." }, { status: 503 });
+  if (mode === "unavailable") return NextResponse.json({ error: "El soporte no está disponible en este momento." }, { status: 503 });
 
   let body: unknown;
   try { body = await request.json(); } catch { return NextResponse.json({ error: "Solicitud no válida." }, { status: 400 }); }
@@ -65,12 +65,12 @@ export async function POST(request: Request) {
       if (persisted.reason === "idempotency_conflict") {
         return NextResponse.json({ error: "La clave de reintento ya se utilizó con otros datos. Actualiza el formulario antes de volver a enviarlo." }, { status: 409 });
       }
-      return NextResponse.json({ error: "No se pudo confirmar el guardado del ticket en Supabase. Inténtalo más tarde." }, { status: 500 });
+      return NextResponse.json({ error: "No se pudo confirmar el guardado del ticket. Inténtalo más tarde." }, { status: 500 });
     }
 
     return NextResponse.json({ persisted: true, mode: "supabase", ticketId: persisted.ticketId, ticketNumber: persisted.ticketNumber }, { status: 201 });
   } catch (error) {
     console.error("NODRIA support database operation failed", error instanceof Error ? error.name : "unknown error");
-    return NextResponse.json({ error: "No se pudo confirmar el guardado del ticket en Supabase. Inténtalo más tarde." }, { status: 500 });
+    return NextResponse.json({ error: "No se pudo confirmar el guardado del ticket. Inténtalo más tarde." }, { status: 500 });
   }
 }

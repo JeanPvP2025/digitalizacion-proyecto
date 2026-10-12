@@ -2,8 +2,10 @@ import { describe, expect, it } from "vitest";
 import { getAuthFeedback, getCallbackFeedback, getCallbackReason } from "@/app/auth/callback/feedback";
 
 describe("public Auth feedback", () => {
-  it("flags email sending as a Supabase configuration mismatch and accepts legacy errors", () => {
-    expect(getAuthFeedback({ code: "over_email_send_rate_limit", message: "secret" })).toMatchObject({ message: expect.stringContaining("Confirm Email") });
+  it("hides provider configuration details for email limits and accepts legacy errors", () => {
+    const rateLimitMessage = getAuthFeedback({ code: "over_email_send_rate_limit", message: "secret" }).message;
+    expect(rateLimitMessage).toContain("administración");
+    expect(rateLimitMessage).not.toMatch(/Supabase|Confirm Email/i);
     expect(getAuthFeedback({ code: "over_email_send_rate_limit" }).pause).toBeUndefined();
     expect(getAuthFeedback(new Error("email rate limit exceeded"))).toEqual(getAuthFeedback({ code: "over_email_send_rate_limit" }));
     expect(getAuthFeedback({ code: "over_request_rate_limit" }).pause).toBe("all");
@@ -39,7 +41,7 @@ describe("public Auth feedback", () => {
   });
 
   it.each(["email_address_not_authorized", "email_provider_disabled", "signup_disabled"])("avoids retry loops for %s", (code) => {
-    expect(getAuthFeedback({ code }).message).toContain("repetir la solicitud no resolverá");
+    expect(getAuthFeedback({ code }).message).toContain("Contacta con la administración");
   });
 
   it.each([null, "secret", new Error("token=secret"), { code: "unknown", message: "private@example.invalid" }])("hides unknown provider details", (cause) => {

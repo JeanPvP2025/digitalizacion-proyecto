@@ -22,8 +22,8 @@ function firstValue(value: string | string[] | undefined): string {
 
 function AccessState({ status }: { status: "not_configured" | "forbidden" | "error" }) {
   const messages = {
-    not_configured: ["Catálogo conectado no disponible", "La gestión requiere un proyecto Supabase conectado. No se muestran ni guardan datos de demo."],
-    forbidden: ["Acceso restringido", "Esta superficie requiere un grant persistido catalog_manager o super_admin."],
+    not_configured: ["Gestión de catálogo no disponible", "La edición no está activa en este momento. No se muestran ni guardan datos de demostración."],
+    forbidden: ["Acceso restringido", "Esta herramienta está reservada al personal autorizado para gestionar el catálogo."],
     error: ["No se pudo comprobar el acceso", "La consulta de roles falló. No se han mostrado productos; vuelve a intentarlo."],
   } as const;
   const [title, body] = messages[status];
@@ -35,8 +35,8 @@ function CatalogHeader() {
     <header className={styles.header}>
       <Link className={styles.backLink} href="/backoffice"><ArrowLeft size={15} aria-hidden="true" /> Volver a operaciones</Link>
       <p className={styles.eyebrow}>NODRIA / CONTENIDO DE PRODUCTO</p>
-      <div className={styles.titleLine}><h1>Gestión de catálogo<span>.</span></h1><span className={styles.roleLabel}>CATALOG MANAGER</span></div>
-      <p className={styles.intro}>Corrige nombres, textos e imágenes de las fichas. Cada cambio pasa por la RPC segura de catálogo y conserva los permisos de tu sesión.</p>
+      <div className={styles.titleLine}><h1>Gestión de catálogo<span>.</span></h1><span className={styles.roleLabel}>EQUIPO DE CATÁLOGO</span></div>
+      <p className={styles.intro}>Corrige nombres, textos e imágenes de las fichas. Cada cambio se valida y guarda con los permisos de tu cuenta.</p>
       <div className={styles.scopeNote}><span aria-hidden="true">i</span><p>Solo contenido editorial. El estado de publicación, los precios, las variantes y las valoraciones no se editan aquí.</p></div>
     </header>
   );
@@ -73,7 +73,7 @@ async function CatalogContent({ searchParams }: { searchParams: SearchParams }) 
       <section className={styles.catalogPanel} aria-labelledby="products-title">
         <div className={styles.panelHeading}>
           <div><p className={styles.panelEyebrow}>FICHAS DE PRODUCTO</p><h2 id="products-title">Contenido editorial <span>{visibleProducts.length}</span></h2></div>
-          <span className={styles.sourceBadge}><i aria-hidden="true" /> LECTURA CON SESIÓN · RLS</span>
+          <span className={styles.sourceBadge}><i aria-hidden="true" /> ACCESO DE EQUIPO</span>
         </div>
         <form className={styles.filters} action="/backoffice/catalog" method="get" role="search">
           <label className={styles.searchField}><span className={styles.srOnly}>Buscar producto por nombre, marca o SKU</span><input type="search" name="q" maxLength={100} placeholder="Nombre, marca, slug o SKU" defaultValue={query} /></label>
@@ -88,9 +88,9 @@ async function CatalogContent({ searchParams }: { searchParams: SearchParams }) 
             {visibleProducts.map((product) => <CatalogProductEditor key={product.id} product={product} />)}
           </div>
         ) : (
-          <div className={styles.emptyState}><Boxes size={22} aria-hidden="true" /><h3>{snapshot.products.length ? "No hay coincidencias" : "El catálogo está vacío"}</h3><p>{snapshot.products.length ? "Prueba con otro nombre, marca o SKU, o cambia el estado seleccionado." : "No hay productos visibles para este rol en la base de datos conectada."}</p></div>
+          <div className={styles.emptyState}><Boxes size={22} aria-hidden="true" /><h3>{snapshot.products.length ? "No hay coincidencias" : "El catálogo está vacío"}</h3><p>{snapshot.products.length ? "Prueba con otro nombre, marca o SKU, o cambia el estado seleccionado." : "Todavía no hay productos disponibles para editar."}</p></div>
         )}
-        <footer className={styles.panelFooter}><span><i aria-hidden="true" /> Sin edición de publicación ni de datos comerciales</span><small>Los permisos de filas los vuelve a comprobar PostgreSQL</small></footer>
+        <footer className={styles.panelFooter}><span><i aria-hidden="true" /> Sin edición de publicación ni de datos comerciales</span><small>Los cambios solo están disponibles para personal autorizado</small></footer>
       </section>
     </>
   );

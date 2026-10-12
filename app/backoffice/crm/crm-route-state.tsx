@@ -6,7 +6,7 @@ export function CrmRouteState({ state, title = "CRM" }: {
   title?: string;
 }) {
   const copy = {
-    unconfigured: ["Conexión pendiente", "Esta vista necesita Supabase. No se sustituye la información por registros locales."],
+    unconfigured: ["Vista no disponible", "No se sustituye la información de clientes por registros de demostración."],
     unauthenticated: ["Inicia sesión", "Necesitas una sesión de personal para consultar esta información."],
     forbidden: ["Acceso restringido", "Esta vista requiere el rol de ventas o superadministración."],
     error: ["No se pudo cargar", "No se ha cambiado ningún pedido. Vuelve a cargar cuando el servicio esté disponible."],

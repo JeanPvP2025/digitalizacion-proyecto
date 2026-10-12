@@ -31,7 +31,7 @@ export async function POST(request: Request) {
     return errorResponse(mapped.message, mapped.status);
   }
   const result = supplierResponseSchema.safeParse(data);
-  if (!result.success) return errorResponse("La base de datos devolvió un proveedor inválido.", 503);
+  if (!result.success) return errorResponse("No se pudo guardar el proveedor. Revisa los datos e inténtalo de nuevo.", 503);
   const row = result.data[0];
   return Response.json({ supplier: {
     id: row.id, code: row.supplier_code, name: row.name, contactEmail: row.contact_email,

@@ -77,7 +77,7 @@ export async function getCatalogData(): Promise<CatalogData> {
 }
 
 export function getCatalogSourceNotice(source: CatalogData["source"]): string | null {
-  if (source === "demo") return "Catálogo local de demostración. No hay credenciales de Supabase configuradas.";
-  if (source === "supabase") return "Catálogo conectado. El catálogo público no muestra unidades exactas de inventario.";
+  if (source === "demo") return "Catálogo de demostración. La disponibilidad puede variar.";
+  if (source === "supabase") return "Catálogo actualizado. La disponibilidad se confirma antes de finalizar el pedido.";
   return null;
 }

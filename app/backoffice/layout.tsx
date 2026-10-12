@@ -19,21 +19,21 @@ async function BackofficeGate({ children }: { children: ReactNode }) {
   const auth = await getServerAuthState();
 
   if (auth.kind === "demo") {
-    return <AccessMessage title="Portal de equipo desactivado.">La demo no tiene proyecto Supabase, sesión real ni una forma segura de comprobar permisos. No se muestra el panel de operaciones.</AccessMessage>;
+    return <AccessMessage title="Portal de equipo no disponible.">El acceso del equipo no está activo en esta demostración. No se muestra información operativa.</AccessMessage>;
   }
 
   if (auth.kind === "signed-out") redirect("/acceso?next=%2Fbackoffice");
 
   const { roles, error } = await getStaffRoleGrants(auth.supabase, auth.user.id);
   if (error) {
-    return <AccessMessage title="No se pudieron comprobar los permisos.">La consulta de roles de Supabase falló. Vuelve a intentarlo cuando se recupere el servicio.</AccessMessage>;
+    return <AccessMessage title="No se pudieron comprobar los permisos.">No se ha podido verificar tu perfil. Vuelve a intentarlo en unos minutos.</AccessMessage>;
   }
 
   if (!hasStaffSurfaceRole(roles, "backoffice")) {
     return <AccessMessage title="No tienes acceso al portal de equipo.">El portal requiere un rol de personal asignado mediante una vía administrativa confiable.</AccessMessage>;
   }
 
-  return <>{roles.includes("catalog_manager") && <nav className={styles.catalogNav} aria-label="Herramientas de catálogo"><Link className="button button--dark" href="/backoffice/catalog">Gestión de catálogo</Link></nav>}{dataMode === "local-demo" && <div className="staff-demo-data-notice" role="status">Acceso validado con Supabase. Los pedidos del centro de operaciones son datos ficticios locales de desarrollo.</div>}{children}</>;
+  return <>{roles.includes("catalog_manager") && <nav className={styles.catalogNav} aria-label="Herramientas de catálogo"><Link className="button button--dark" href="/backoffice/catalog">Gestión de catálogo</Link></nav>}{dataMode === "local-demo" && <div className="staff-demo-data-notice" role="status">Los pedidos del centro de operaciones son datos ficticios de esta demostración.</div>}{children}</>;
 }
 
 function AccessMessage({ title, children }: { title: string; children: ReactNode }) {

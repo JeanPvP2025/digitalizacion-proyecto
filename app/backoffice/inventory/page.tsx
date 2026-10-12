@@ -76,7 +76,7 @@ function InventoryState({ status }: { status: Exclude<InventorySnapshot["status"
   const messages = {
     not_configured: {
       title: "Inventario conectado no disponible",
-      body: "No hay credenciales de Supabase configuradas y no existe una fuente local de inventario. Esta ruta no sustituye el stock conectado con datos estimados.",
+      body: "El inventario no está disponible en este momento. No se sustituye el stock por cantidades estimadas.",
     },
     unauthenticated: {
       title: "Inicia sesión para continuar",
@@ -84,11 +84,11 @@ function InventoryState({ status }: { status: Exclude<InventorySnapshot["status"
     },
     forbidden: {
       title: "Acceso restringido",
-      body: "Tu cuenta no tiene el rol fulfillment_manager ni super_admin requerido para consultar almacenes e inventario.",
+      body: "Tu cuenta no tiene permiso para consultar almacenes e inventario.",
     },
     error: {
       title: "No se pudo cargar el inventario",
-      body: "La consulta a Supabase ha fallado. Comprueba la conexión y vuelve a intentarlo; no se han aplicado cambios al stock.",
+      body: "No se pudo cargar el inventario. No se han aplicado cambios al stock; vuelve a intentarlo en unos minutos.",
     },
   } as const;
   const message = messages[status];
@@ -178,7 +178,7 @@ function InventoryTable({
             <p className={styles.panelEyebrow}>EXISTENCIAS</p>
             <h2 id="stock-table-title">Referencias de inventario <span>{number(visibleRows.length)}</span></h2>
           </div>
-          <span className={styles.sourceBadge}>SUPABASE · CONSULTA PROTEGIDA</span>
+          <span className={styles.sourceBadge}>INVENTARIO DE EQUIPO</span>
         </div>
 
         <form className={styles.searchForm} action="/backoffice/inventory" method="get" role="search">

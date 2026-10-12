@@ -21,7 +21,7 @@ function OperationsState({ status }: { status: Exclude<OperationsWorkspace["stat
   const messages = {
     unconfigured: {
       title: "Operaciones conectadas no disponibles",
-      body: "Configura Supabase para consultar pedidos y eventos. Este centro no sustituye la información conectada por registros demo.",
+      body: "El centro de operaciones no está disponible ahora. Los registros de demostración no sustituyen los pedidos del equipo.",
     },
     unauthenticated: {
       title: "Inicia sesión para continuar",
@@ -29,11 +29,11 @@ function OperationsState({ status }: { status: Exclude<OperationsWorkspace["stat
     },
     forbidden: {
       title: "Acceso restringido",
-      body: "El centro operativo requiere el rol fulfillment_manager o super_admin.",
+      body: "El centro operativo está reservado al personal autorizado de almacén.",
     },
     error: {
       title: "No se pudo cargar la cola operativa",
-      body: "Una consulta a Supabase ha fallado. No se han cambiado pedidos; vuelve a cargar cuando se recupere el servicio.",
+      body: "No se pudo cargar la cola. No se han cambiado pedidos; vuelve a intentarlo en unos minutos.",
     },
   } as const;
   const message = messages[status];

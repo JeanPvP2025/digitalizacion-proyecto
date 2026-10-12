@@ -22,10 +22,13 @@ async function AccessContent({ searchParams }: { searchParams: SearchParams }) {
   const initialMode = requestedMode === "actualizar" ? "update" : "signin";
   const callbackError = firstValue(params.error) === "callback";
   const signedOut = firstValue(params.salida) === "1";
+  const requestedDestination = firstValue(params.next);
+  const redirectTo = getSafeRedirectPath(requestedDestination, "/mi-cuenta");
 
   return <AuthForm
     demoMode={!hasSupabaseCredentials()}
-    redirectTo={getSafeRedirectPath(firstValue(params.next), "/mi-cuenta")}
+    redirectTo={redirectTo}
+    preserveRequestedDestination={Boolean(requestedDestination && redirectTo !== "/mi-cuenta")}
     initialMode={initialMode}
     initialError={callbackError ? "No se pudo completar el enlace de acceso. Inicia sesión de nuevo; si no puedes, contacta con la administración de la demo." : undefined}
     initialMessage={signedOut ? "Has cerrado tu sesión en este dispositivo." : undefined}

@@ -22,7 +22,7 @@ function BackToOperations() {
 
 export default async function ReviewModerationPage() {
   if (getServerDataMode() !== "supabase") {
-    return <main className={styles.moderationPage}><BackToOperations /><h1>Moderación no disponible</h1><p>Se requiere una sesión conectada con Supabase.</p></main>;
+    return <main className={styles.moderationPage}><BackToOperations /><h1>Moderación no disponible</h1><p>La moderación no está activa en este momento.</p></main>;
   }
 
   const auth = await getServerAuthState();
@@ -33,7 +33,7 @@ export default async function ReviewModerationPage() {
     return <main className={styles.moderationPage}><BackToOperations /><h1>No se pudo comprobar el acceso.</h1><p role="alert">No se pudo comprobar el permiso de moderación. Vuelve a cargar la página cuando se recupere la conexión.</p></main>;
   }
   if (!canModerateReviews(roleGrants.roles)) {
-    return <main className={styles.moderationPage}><BackToOperations /><h1>Acceso restringido</h1><p role="alert">La moderación requiere el rol super_admin. La base de datos vuelve a comprobar este permiso con RLS.</p></main>;
+    return <main className={styles.moderationPage}><BackToOperations /><h1>Acceso restringido</h1><p role="alert">Esta herramienta está reservada al personal autorizado.</p></main>;
   }
 
   const result = await listPendingProductReviews(auth.supabase);

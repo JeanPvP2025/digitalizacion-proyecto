@@ -57,7 +57,7 @@ describe("catalog admin API", () => {
     const rpc = authorized().mockResolvedValueOnce({ data: null, error: { code: "PGRST202" } });
     const response = await PATCH(request({ productId: "pr_demo", changes: { name: "Cambio pendiente" } }));
     expect(response.status).toBe(503);
-    expect(await response.json()).toMatchObject({ error: expect.stringContaining("RPC segura") });
+    expect(await response.json()).toMatchObject({ error: expect.stringContaining("edición del catálogo") });
     expect(rpc).toHaveBeenCalledOnce();
   });
 });

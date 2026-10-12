@@ -31,6 +31,6 @@ export async function POST(request: Request) {
     return errorResponse(mapped.message, mapped.status);
   }
   const result = resultSchema.safeParse(data);
-  if (!result.success) return errorResponse("La base de datos devolvió una respuesta de pedido inválida.", 503);
+  if (!result.success) return errorResponse("No se pudo crear la orden de compra. Vuelve a intentarlo.", 503);
   return Response.json({ purchaseOrder: result.data }, { status: 201, headers: privateHeaders });
 }

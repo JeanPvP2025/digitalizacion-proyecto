@@ -57,7 +57,7 @@ export default async function CrmCustomersPage({ searchParams }: { searchParams:
             <td><div className={styles.statusStack}>{customer.latest_order_status && <CrmOrderStatus kind="order" value={customer.latest_order_status} />}{customer.latest_payment_status && <CrmOrderStatus kind="payment" value={customer.latest_payment_status} />}</div></td>
             <td><Link href={`/backoffice/crm/clientes/${customer.customer_id}`}>Abrir ficha <ArrowRight size={13} /></Link></td>
           </tr>)}</tbody>
-        </table></div> : <div className={styles.empty}><UsersRound size={22} /><div><strong>{query ? "No hay clientes con esa búsqueda" : "Aún no hay cuentas de cliente"}</strong><p>{query ? "Prueba con otro nombre, correo, teléfono o número de pedido." : "Los perfiles de cliente aparecerán cuando se registren cuentas en Supabase."}</p></div>{query && <Link href="/backoffice/crm/clientes">Quitar búsqueda</Link>}</div>}
+        </table></div> : <div className={styles.empty}><UsersRound size={22} /><div><strong>{query ? "No hay clientes con esa búsqueda" : "Aún no hay cuentas de cliente"}</strong><p>{query ? "Prueba con otro nombre, correo, teléfono o número de pedido." : "Los perfiles aparecerán aquí cuando se registren nuevos clientes."}</p></div>{query && <Link href="/backoffice/crm/clientes">Quitar búsqueda</Link>}</div>}
 
         {result.totalCount > PAGE_SIZE && <nav className={styles.pager} aria-label="Paginación de clientes">
           <span>Página {page} de {totalPages} · {result.totalCount.toLocaleString("es-ES")} clientes</span>

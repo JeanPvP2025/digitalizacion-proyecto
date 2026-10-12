@@ -83,7 +83,7 @@ function dateLabel(value: string) {
 function noticeMessage(notice: string) {
   switch (notice) {
     case "organization-created": return "Empresa creada. Tu cuenta empieza como propietaria y puede gestionar el equipo.";
-    case "unconfigured": return "El portal no tiene conexión de base de datos para guardar cambios.";
+    case "unconfigured": return "El portal no está disponible para guardar cambios en este momento.";
     case "member-added": return "La persona ya forma parte de la organización.";
     case "member-updated": return "El rol del miembro se ha actualizado.";
     case "member-removed": return "La persona se ha retirado de la organización.";
@@ -114,7 +114,7 @@ export default async function BusinessPortalPage({ searchParams }: { searchParam
   const supabase = await createSupabaseServerClient();
 
   if (!supabase) {
-    return <main className={styles.page}><section className={styles.stateCard} role="status"><span className={styles.stateIcon}><CircleAlert size={22} /></span><p className={styles.eyebrow}>NODRIA · EMPRESAS</p><h1>Espacio conectado pendiente</h1><p>El portal de organización y cotizaciones requiere una sesión de Supabase. La demo de archivos no guarda membresías ni propuestas estructuradas.</p><Link className={styles.backLink} href="/empresas">Volver a soluciones de empresa <ArrowRight size={14} /></Link></section></main>;
+    return <main className={styles.page}><section className={styles.stateCard} role="status"><span className={styles.stateIcon}><CircleAlert size={22} /></span><p className={styles.eyebrow}>NODRIA · EMPRESAS</p><h1>Espacio de empresa no disponible</h1><p>El portal de organizaciones y presupuestos no está activo en esta demostración. No se muestran ni guardan datos empresariales de prueba.</p><Link className={styles.backLink} href="/empresas">Volver a soluciones de empresa <ArrowRight size={14} /></Link></section></main>;
   }
 
   const { data: authData, error: authError } = await supabase.auth.getUser();
@@ -122,7 +122,7 @@ export default async function BusinessPortalPage({ searchParams }: { searchParam
 
   const membershipResult = await supabase.from("organization_memberships").select("organization_id, role").eq("user_id", authData.user.id);
   if (membershipResult.error) {
-    return <main className={styles.page}><section className={styles.stateCard} role="alert"><span className={styles.stateIcon}><CircleAlert size={22} /></span><p className={styles.eyebrow}>NODRIA · EMPRESAS</p><h1>No se pudieron consultar tus organizaciones</h1><p>La base de datos no confirmó tus membresías. Actualiza para reintentar; no se ha mostrado información de otra empresa.</p><Link className={styles.backLink} href="/empresas/portal">Reintentar <ArrowRight size={14} /></Link></section></main>;
+    return <main className={styles.page}><section className={styles.stateCard} role="alert"><span className={styles.stateIcon}><CircleAlert size={22} /></span><p className={styles.eyebrow}>NODRIA · EMPRESAS</p><h1>No se pudieron consultar tus organizaciones</h1><p>No se pudo validar la información de tus empresas. Actualiza para reintentar; no se ha mostrado información de otra empresa.</p><Link className={styles.backLink} href="/empresas/portal">Reintentar <ArrowRight size={14} /></Link></section></main>;
   }
 
   const memberships = (membershipResult.data ?? []) as MembershipRow[];
@@ -132,7 +132,7 @@ export default async function BusinessPortalPage({ searchParams }: { searchParam
         <header className={styles.header}><Link className={styles.brand} href="/empresas"><span className={styles.brandMark}>N</span><span>NODRIA<small>ESPACIO DE EMPRESA</small></span></Link><Link className={styles.backLink} href="/empresas">Soluciones para empresas <ArrowRight size={14} /></Link></header>
         {notice && <p className={styles.notice} role="alert"><CircleAlert size={15} />{notice}</p>}
         <section className={styles.onboarding}>
-          <div className={styles.onboardingIntro}><span className={styles.onboardingIndex}>01 / 03</span><p className={styles.eyebrow}>ALTA DE ORGANIZACIÓN</p><h1>Empieza por reunir<br /><em>a tu equipo.</em></h1><p>Registra la entidad y confirma sus datos básicos. La sesión actual quedará como propietaria inicial; podrás añadir personas con roles acotados después.</p><div className={styles.onboardingSeal}><ShieldCheck size={17} /><span>El alta y el rol propietario se guardan juntos<small>Validación y control en PostgreSQL</small></span></div></div>
+          <div className={styles.onboardingIntro}><span className={styles.onboardingIndex}>01 / 03</span><p className={styles.eyebrow}>ALTA DE ORGANIZACIÓN</p><h1>Empieza por reunir<br /><em>a tu equipo.</em></h1><p>Registra la entidad y confirma sus datos básicos. La cuenta actual quedará como propietaria inicial; podrás añadir personas con permisos acotados después.</p><div className={styles.onboardingSeal}><ShieldCheck size={17} /><span>La organización y su propietario se guardan juntos<small>El acceso se valida en cada acción</small></span></div></div>
           <div className={styles.onboardingFormWrap}>
             <h2>Datos de la organización</h2>
             <form action={createOrganization} className={styles.fields}>
@@ -151,7 +151,7 @@ export default async function BusinessPortalPage({ searchParams }: { searchParam
   const organizationIds = memberships.map((membership) => membership.organization_id);
   const organizationsResult = await supabase.from("organizations").select("id, slug, legal_name, display_name, billing_email, tax_id").in("id", organizationIds).order("display_name");
   if (organizationsResult.error || !organizationsResult.data?.length) {
-    return <main className={styles.page}><section className={styles.stateCard} role="alert"><span className={styles.stateIcon}><CircleAlert size={22} /></span><p className={styles.eyebrow}>NODRIA · EMPRESAS</p><h1>No se pudieron cargar los datos de empresa</h1><p>La consulta de organizaciones falló o las políticas no devolvieron filas asociadas a tu sesión.</p><Link className={styles.backLink} href="/empresas/portal">Reintentar <ArrowRight size={14} /></Link></section></main>;
+    return <main className={styles.page}><section className={styles.stateCard} role="alert"><span className={styles.stateIcon}><CircleAlert size={22} /></span><p className={styles.eyebrow}>NODRIA · EMPRESAS</p><h1>No se pudieron cargar los datos de empresa</h1><p>No se ha podido mostrar la información de las organizaciones asociadas a tu cuenta.</p><Link className={styles.backLink} href="/empresas/portal">Reintentar <ArrowRight size={14} /></Link></section></main>;
   }
 
   const organizations = organizationsResult.data as OrganizationRow[];
@@ -178,7 +178,7 @@ export default async function BusinessPortalPage({ searchParams }: { searchParam
     ? await supabase.from("orders").select("id, order_number, status, grand_total, currency, created_at").in("id", orderIds)
     : { data: [], error: null };
   if (memberResult.error || quoteResult.error || variantResult.error || lineResult.error || activityResult.error || conversionResult.error || businessOrderResult.error || orderResult.error) {
-    return <main className={styles.page}><section className={styles.stateCard} role="alert"><span className={styles.stateIcon}><CircleAlert size={22} /></span><p className={styles.eyebrow}>NODRIA · EMPRESAS</p><h1>No se pudo cargar el espacio</h1><p>La base de datos no confirmó todos los miembros, cotizaciones o eventos. Actualiza para volver a intentarlo.</p><Link className={styles.backLink} href={`/empresas/portal?organization=${organization.id}`}>Reintentar <ArrowRight size={14} /></Link></section></main>;
+    return <main className={styles.page}><section className={styles.stateCard} role="alert"><span className={styles.stateIcon}><CircleAlert size={22} /></span><p className={styles.eyebrow}>NODRIA · EMPRESAS</p><h1>No se pudo cargar el espacio</h1><p>No se pudo mostrar toda la información de miembros, presupuestos o actividad. Actualiza para volver a intentarlo.</p><Link className={styles.backLink} href={`/empresas/portal?organization=${organization.id}`}>Reintentar <ArrowRight size={14} /></Link></section></main>;
   }
 
   const members = (memberResult.data ?? []) as MemberRow[];

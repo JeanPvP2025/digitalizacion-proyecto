@@ -41,7 +41,7 @@ describe("warehouse return inspection route", () => {
     accessMock.get.mockResolvedValueOnce({ status: "forbidden" });
     const response = await route.POST(request(payload()));
     expect(response.status).toBe(403);
-    expect(await response.json()).toMatchObject({ error: expect.stringContaining("fulfillment_manager") });
+    expect(await response.json()).toMatchObject({ error: expect.stringContaining("no tiene permiso") });
   });
 
   it("rejects an altered quantity or cross-origin mutation before persistence", async () => {

@@ -10,13 +10,13 @@ export function getAuthFeedback(cause: unknown): AuthFeedback {
     : error.message === "Invalid login credentials" ? "invalid_credentials" : undefined);
   switch (code) {
     case "over_email_send_rate_limit":
-      return { message: "Supabase todavía intenta enviar correos. Comprueba que «Confirm Email» esté desactivado; esta web no ofrece confirmación ni recuperación por email." };
+      return { message: "No se pudo completar el acceso automático. Contacta con la administración para revisar la configuración de la cuenta." };
     case "over_request_rate_limit":
       return { message: "Hay demasiados intentos de acceso. Espera unos minutos antes de volver a intentarlo.", pause: "all" };
     case "invalid_credentials":
       return { message: "No hemos podido iniciar sesión con ese correo y contraseña. Revisa ambos datos. Si acabas de crear la cuenta, contacta con la administración de la demo si sigue sin funcionar." };
     case "email_not_confirmed":
-      return { message: "Esta cuenta sigue pendiente de confirmación, pero la web no envía correos. Contacta con la administración de la demo para habilitarla y comprobar la configuración de Supabase." };
+      return { message: "Esta cuenta todavía no está activa. Contacta con la administración para habilitar el acceso." };
     case "otp_expired":
     case "flow_state_expired":
     case "flow_state_not_found":
@@ -37,7 +37,7 @@ export function getAuthFeedback(cause: unknown): AuthFeedback {
     case "email_address_not_authorized":
     case "email_provider_disabled":
     case "signup_disabled":
-      return { message: "El registro no está disponible en este momento. Contacta con la administración de la demo; repetir la solicitud no resolverá la configuración de Supabase." };
+      return { message: "No se pudo crear la cuenta en este momento. Contacta con la administración antes de volver a intentarlo." };
     case "user_already_exists":
     case "email_exists":
       return { message: "No se pudo completar el registro. Prueba a iniciar sesión con esa cuenta; si has olvidado la contraseña, contacta con la administración de la demo." };

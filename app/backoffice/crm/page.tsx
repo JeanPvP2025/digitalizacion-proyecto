@@ -66,7 +66,7 @@ function noticeMessage(notice: string): string | null {
     case "quote-claimed": return "Solicitud asignada a tu cola de trabajo.";
     case "quote-sent": return "Propuesta publicada en el portal de la organización.";
     case "forbidden": return "Tu cuenta no tiene acceso al área de ventas.";
-    case "unconfigured": return "No hay conexión Supabase configurada para guardar cambios.";
+    case "unconfigured": return "El área comercial no está disponible para guardar cambios en este momento.";
     case "not-found": return "La solicitud ya no está disponible o no tienes acceso a ella.";
     case "error": return "No se pudo completar la operación. Inténtalo de nuevo.";
     default: return null;
@@ -113,9 +113,9 @@ export default async function CrmPage({ searchParams }: { searchParams: SearchPa
           <p className={styles.eyebrow}>NODRIA · CRM</p>
           <h1>{isForbidden ? "Acceso restringido" : isUnconfigured ? "Conexión pendiente" : "No se pudo cargar el CRM"}</h1>
           <p>{isForbidden
-            ? "El área de ventas requiere el rol sales_manager o super_admin. La autorización también se comprueba en la base de datos mediante RLS."
+            ? "El área de ventas está reservada al personal comercial autorizado."
             : isUnconfigured
-              ? "Este espacio lee datos de Supabase y no muestra registros de demostración cuando la conexión no está configurada."
+              ? "Este espacio no está disponible ahora. No se muestran registros de demostración como si fueran datos de clientes."
               : "No se pudo verificar el acceso o leer los registros. Actualiza la página para volver a intentarlo."}</p>
           <div className={styles.stateActions}>
             {isUnconfigured ? <Link href="/backoffice">Volver a operaciones <ArrowRight size={15} /></Link> : <Link href="/backoffice/crm"><RotateCw size={15} /> Reintentar</Link>}
@@ -157,7 +157,7 @@ export default async function CrmPage({ searchParams }: { searchParams: SearchPa
       <div className={styles.main}>
         <header className={styles.topbar}>
           <div className={styles.breadcrumb}><span>OPERACIONES</span><span>/</span><strong>CRM</strong></div>
-          <span className={styles.connected}><i /> DATOS SUPABASE</span>
+          <span className={styles.connected}><i /> CLIENTES Y OPORTUNIDADES</span>
         </header>
 
         <div className={styles.content}>
@@ -177,7 +177,7 @@ export default async function CrmPage({ searchParams }: { searchParams: SearchPa
           <section className={styles.panel} aria-labelledby="business-quotes-title">
             <div className={styles.panelHeading}>
               <div><p className={styles.panelEyebrow}>B2B · COLA ASIGNADA POR PERSONA</p><h2 id="business-quotes-title">Propuestas empresariales <span>{salesQuotes.length}</span></h2></div>
-              <span className={styles.panelMeta}>PRECIOS Y ESTADOS EN POSTGRESQL</span>
+              <span className={styles.panelMeta}>PRECIOS Y ESTADOS DE PEDIDO</span>
             </div>
             <QuoteQueue currentUserId={userId} quotes={salesQuotes} />
           </section>
@@ -193,7 +193,7 @@ export default async function CrmPage({ searchParams }: { searchParams: SearchPa
             <section className={styles.panel} aria-labelledby="pipeline-title">
               <div className={styles.panelHeading}>
                 <div><p className={styles.panelEyebrow}>PIPELINE</p><h2 id="pipeline-title">Solicitudes de presupuesto <span>{filteredOpportunities.length}</span></h2></div>
-                <span className={styles.panelMeta}>ESTADOS DE prospect_status</span>
+                <span className={styles.panelMeta}>ETAPAS COMERCIALES</span>
               </div>
               <form className={styles.filters} action="/backoffice/crm" method="get" role="search">
                 <label className={styles.searchBox}><Search size={15} aria-hidden="true" /><span className={styles.srOnly}>Buscar oportunidades</span><input type="search" name="q" maxLength={100} placeholder="Nombre, empresa, correo o mensaje" defaultValue={query} /></label>
@@ -228,9 +228,9 @@ export default async function CrmPage({ searchParams }: { searchParams: SearchPa
                   ))}
                 </div>
               ) : (
-                <div className={styles.empty}><span><Inbox size={20} /></span><strong>{opportunities.length ? "No hay solicitudes con estos filtros" : "Aún no hay solicitudes"}</strong><p>{opportunities.length ? "Prueba otra búsqueda o selecciona todas las etapas." : "Las solicitudes recibidas aparecerán aquí cuando exista un registro en Supabase."}</p>{(query || status !== "all") && <Link href="/backoffice/crm">Ver todas las solicitudes <ArrowRight size={14} /></Link>}</div>
+              <div className={styles.empty}><span><Inbox size={20} /></span><strong>{opportunities.length ? "No hay solicitudes con estos filtros" : "Aún no hay solicitudes"}</strong><p>{opportunities.length ? "Prueba otra búsqueda o selecciona todas las etapas." : "Las solicitudes recibidas aparecerán aquí cuando llegue una nueva consulta."}</p>{(query || status !== "all") && <Link href="/backoffice/crm">Ver todas las solicitudes <ArrowRight size={14} /></Link>}</div>
               )}
-              <div className={styles.panelFooter}><span>LECTURA Y CAMBIO DE ETAPA CON RLS</span><span>{filteredOpportunities.length} de {opportunities.length} solicitudes</span></div>
+              <div className={styles.panelFooter}><span>ACCESO SEGÚN PERFIL COMERCIAL</span><span>{filteredOpportunities.length} de {opportunities.length} solicitudes</span></div>
             </section>
 
             <aside className={styles.sidePanels}>
@@ -251,10 +251,10 @@ export default async function CrmPage({ searchParams }: { searchParams: SearchPa
           <section className={`${styles.panel} ${styles.activityPanel}`} aria-labelledby="activity-title">
             <div className={styles.panelHeading}><div><p className={styles.panelEyebrow}>ENTRADAS RECIENTES</p><h2 id="activity-title">Actividad comercial</h2></div><CalendarClock size={17} /></div>
             {activities.length ? <ol className={styles.activityList}>{activities.map((activity) => <li key={activity.id}><span className={styles.activityIcon}>{activity.kind === "lead" ? <UserRound size={15} /> : <Handshake size={15} />}</span><span className={styles.activityCopy}><strong>{activity.title}</strong><small>{activity.name}{activity.company ? ` · ${activity.company}` : ""}</small></span><time dateTime={activity.createdAt}>{dateLabel(activity.createdAt)}</time></li>)}</ol> : <p className={styles.compactEmpty}>Todavía no hay actividad comercial registrada.</p>}
-            <p className={styles.activityNote}>Historial persistido en PostgreSQL. El acceso depende del rol comercial y de la asignación de cada propuesta.</p>
+            <p className={styles.activityNote}>El historial se conserva junto a cada propuesta y solo está disponible para el equipo autorizado.</p>
           </section>
 
-          <footer className={styles.footer}><span>© NODRIA · CRM</span><span>Solicitudes, contactos y organizaciones leídos según las políticas disponibles.</span></footer>
+          <footer className={styles.footer}><span>© NODRIA · CRM</span><span>Solicitudes, contactos y organizaciones disponibles para el equipo comercial.</span></footer>
         </div>
       </div>
     </main>

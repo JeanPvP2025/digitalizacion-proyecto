@@ -10,3 +10,12 @@ export function getSafeRedirectPath(value: string | null | undefined, fallback =
     return fallback;
   }
 }
+
+/** Choose a useful landing page from persisted staff roles after a default sign-in. */
+export function getRoleLandingPath(roles: readonly string[]) {
+  if (roles.includes("super_admin") || roles.includes("fulfillment_manager")) return "/backoffice";
+  if (roles.includes("sales_manager")) return "/backoffice/crm";
+  if (roles.includes("catalog_manager")) return "/backoffice/catalog";
+  if (roles.includes("support_agent")) return "/soporte/agente";
+  return "/mi-cuenta";
+}

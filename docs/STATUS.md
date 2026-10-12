@@ -11,6 +11,13 @@ El operador verificó en el SQL Editor del proyecto Supabase `ypnhdxpejcbcyjiosr
 - ⚠️ **Seguridad y recuperación:** sin verificar correo, una dirección puede no pertenecer al usuario; la recuperación de contraseña requerirá intervención administrativa. La sesión de esta integración no puede comprobar RLS/JWT ni mutaciones alojadas.
 - ⏳ El producto queda completado como demo académica desplegada; no se debe marcar **producción integral certificada** hasta guardar el ajuste de Auth y completar las verificaciones externas indicadas en `docs/PRODUCTION_RUNBOOK.md`.
 
+### Ajuste de navegación y catálogo — 2026-10-13
+
+- ✅ El inicio de sesión por defecto dirige a cada perfil interno a su herramienta habitual según sus roles persistidos; los destinos internos distintos de `/mi-cuenta` conservan prioridad y la autorización de servidor no cambia.
+- ✅ La interfaz presenta errores, permisos y estados con lenguaje de producto, sin mencionar el proveedor de base de datos ni sus mecanismos internos.
+- ✅ El catálogo sustituye fotografías repetidas por imágenes ilustrativas rotadas por subcategoría y conserva imágenes editoriales únicas; no requiere migración.
+- ✅ TypeScript, ESLint y 288 tests Vitest más 41 tests Node pasan en local. Vercel aún debe recibir este commit para publicar el cambio.
+
 ## Histórico de salida inicial — 2026-10-09
 
 Las notas de despliegue y PC Builder a continuación describen el estado de esa fecha; quedan supersedidas por la revisión actual de 2026-10-12.
