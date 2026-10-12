@@ -19,7 +19,7 @@ async function signIn(page: Page, user: ConnectedDomainUser, destination: string
   await page.getByLabel("Contraseña").fill(user.password);
   const authResponsePromise = page.waitForResponse((response) =>
     response.url().includes("/auth/v1/token") && response.request().method() === "POST");
-  await page.getByRole("button", { name: "Entrar en mi espacio" }).click();
+  await page.locator("form").getByRole("button", { name: "Iniciar sesión" }).click();
   const authResponse = await authResponsePromise;
   if (!authResponse.ok()) {
     const body = await authResponse.json().catch(() => ({})) as { msg?: string; message?: string };

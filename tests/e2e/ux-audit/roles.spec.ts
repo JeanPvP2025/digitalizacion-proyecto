@@ -12,7 +12,7 @@ async function signIn(page: Page, account: RoleAccount) {
   await page.goto("/acceso?next=%2Fbackoffice");
   await page.getByLabel("Correo electrónico").fill(account.email);
   await page.getByLabel("Contraseña").fill(account.password);
-  await page.getByRole("button", { name: "Entrar en mi espacio" }).click();
+  await page.locator("form").getByRole("button", { name: "Iniciar sesión" }).click();
   await page.waitForURL("**/backoffice");
   await expect(page.locator("main h1:visible")).toHaveCount(1);
 }

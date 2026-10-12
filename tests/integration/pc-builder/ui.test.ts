@@ -14,12 +14,13 @@ describe("PC Builder empty catalogue UI", () => {
 
     expect(markup).toContain("El catálogo demo no contiene piezas PC con variant IDs.");
     expect(markup).toContain("No se ofrecen fichas ficticias como compatibles o comprables");
-    expect(markup).toContain("Añadir al carrito se habilita cuando hay una configuración completa y compatible del catálogo conectado.");
-    expect(markup).toContain("El catálogo no incluye todavía reglas para BIOS/QVL");
-    expect(markup.match(/<select[^>]*disabled=""/g)).toHaveLength(8);
-    expect(markup).toContain("Añadir componentes</button>");
+    expect(markup).toContain("Añadir al carrito se habilita con un montaje completo y compatible del catálogo conectado.");
+    expect(markup).toContain("No incluye todavía BIOS/QVL, conectores de energía ni todos los espacios físicos.");
+    expect(markup).toContain(">0 variantes</span>");
+    expect(markup).toContain("Esta pieza no está disponible");
+    expect(markup.match(/aria-label="[1-8]\. /g)).toHaveLength(8);
     expect(markup).toMatch(/<button[^>]*disabled=""[^>]*aria-describedby="builder-cart-restriction"/);
-    expect(markup).toContain("Guardar selección</button>");
+    expect(markup).toContain("Guardar montaje</button>");
   });
 
   it("shows an error state with a retry action when the catalogue read fails", () => {

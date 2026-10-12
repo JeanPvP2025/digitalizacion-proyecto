@@ -30,7 +30,7 @@ async function signIn(page: Page, user: CheckoutConnectedUser) {
   await page.goto("/acceso");
   await page.getByLabel("Correo electrónico").fill(user.email);
   await page.getByLabel("Contraseña").fill(user.password);
-  await page.getByRole("button", { name: "Entrar en mi espacio" }).click();
+  await page.locator("form").getByRole("button", { name: "Iniciar sesión" }).click();
   await expect(page).toHaveURL(/\/mi-cuenta(?:\?|$)/, { timeout: 15_000 });
 }
 

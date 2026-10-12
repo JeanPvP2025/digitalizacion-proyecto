@@ -76,7 +76,7 @@ async function signIn(page: Page, user: UserFixture) {
   await page.goto("/acceso");
   await page.getByLabel("Correo electrónico").fill(user.email);
   await page.getByLabel("Contraseña").fill(user.password);
-  await page.getByRole("button", { name: "Entrar en mi espacio" }).click();
+  await page.locator("form").getByRole("button", { name: "Iniciar sesión" }).click();
   await expect(page).toHaveURL(/\/mi-cuenta(?:\?|$)/);
   await expect(page.locator("main h1:visible")).toHaveCount(1);
 }
@@ -191,7 +191,9 @@ test("customer account and B2B memberships show the right tenant, actions, links
     await expect(checked(await customerClient.from("organizations").select("id").eq("id", fixtures.organizationId))).toEqual([]);
     for (const role of roles) {
       const member = fixtures.users.find((user) => user.role === role)!;
-      expect(checked(await member.client.from("organization_memberships").select("organization_id,role").eq("organization_id", fixtures.organizationId))).toHaveLength(1);
+      const visibleMemberships = checked(await member.client.from("organization_memberships").select("organization_id,role").eq("organization_id", fixtures.organizationId));
+      expect(visibleMemberships).toHaveLength(role === "owner" || role === "admin" ? 4 : 1);
+      expect(visibleMemberships.every((membership) => membership.organization_id === fixtures.organizationId)).toBe(true);
       expect(checked(await member.client.from("organizations").select("id").eq("id", fixtures.otherOrganizationId))).toEqual([]);
     }
   } finally {
