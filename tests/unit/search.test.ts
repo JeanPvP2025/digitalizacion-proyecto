@@ -19,20 +19,26 @@ const enriched: Product[] = [
 function slugs(query: string, products = enriched) { return rankCatalogProducts(products, query).map(({ slug }) => slug); }
 
 describe("catalog search ranking", () => {
+  it("finds a real product by its exact manufacturer model number", () => {
+    const reference = demoProducts[0]!;
+    expect(reference.modelNumber).toBeTruthy();
+    expect(rankCatalogProducts(demoProducts, reference.modelNumber!).map(({ slug }) => slug)).toContain(reference.slug);
+  });
+
   it("preserves the full catalog when the query is empty", () => {
     expect(rankCatalogProducts(demoProducts, "").map(({ id }) => id)).toEqual(
       demoProducts.map(({ id }) => id),
     );
   });
 
-  it("normalizes accents and ranks exact SKU matches first", () => {
-    const results = searchCatalogProducts(demoProducts, "telefonia", 8);
+  it("ranks a real reference model and exact SKU", () => {
+    const results = searchCatalogProducts(demoProducts, "Kingston NV3", 8);
     expect(results.total).toBe(1);
-    expect(results.results[0]?.name).toBe("Slate Air 11");
+    expect(results.results[0]?.name).toBe("SSD Kingston NV3 1TB M.2 2230 PCIe 4.0 NVMe 6000MB/s 3D NAND Gaming");
 
-    const skuResults = searchCatalogProducts(demoProducts, "NOD-ARC-2T", 8);
+    const skuResults = searchCatalogProducts(demoProducts, "REF-SNV3SM31T0-0ETE5", 8);
     expect(skuResults.total).toBe(1);
-    expect(skuResults.results[0]?.name).toBe("Arc SSD 2 TB");
+    expect(skuResults.results[0]?.name).toBe("SSD Kingston NV3 1TB M.2 2230 PCIe 4.0 NVMe 6000MB/s 3D NAND Gaming");
   });
 
   it.each(["NIV-NB14-32", "nivnb1432", "NIV NB14 32"])("finds exact SKU regardless of separators: %s", (query) => {
@@ -80,8 +86,8 @@ describe("catalog search ranking", () => {
 
   it("reports totals before clamping the public result limit", () => {
     expect(searchCatalogProducts(enriched, "nival", 1)).toMatchObject({ total: 2, results: [expect.any(Object)], recovery: null });
-    expect(searchCatalogProducts(demoProducts, "NODRIA", -1).results).toHaveLength(1);
-    expect(searchCatalogProducts(demoProducts, "NODRIA", Number.NaN).results).toHaveLength(5);
+    expect(searchCatalogProducts(demoProducts, "Kingston", -1).results).toHaveLength(1);
+    expect(searchCatalogProducts(demoProducts, "AMD", Number.NaN).results).toHaveLength(5);
   });
 
   it("returns partial alternatives and real category URLs, while keeping total zero", () => {

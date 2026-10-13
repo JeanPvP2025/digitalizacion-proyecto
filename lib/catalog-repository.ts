@@ -38,7 +38,7 @@ async function readPublishedCatalog(client: SupabaseClient): Promise<CatalogRows
   const productIds = products.map((product) => product.id);
   const [linkResult, variantResult, specificationResult] = await Promise.all([
     client.from("product_categories").select("product_id,category_id").in("product_id", productIds),
-    client.from("product_variants").select("id,product_id,sku,title,current_price,compare_at_price,currency,is_active").in("product_id", productIds).eq("is_active", true),
+    client.from("product_variants").select("id,product_id,sku,title,current_price,compare_at_price,currency,is_active,attributes").in("product_id", productIds).eq("is_active", true),
     client.from("product_specifications").select("product_id,label,value,sort_order").in("product_id", productIds).order("sort_order"),
   ]);
 
@@ -77,7 +77,7 @@ export async function getCatalogData(): Promise<CatalogData> {
 }
 
 export function getCatalogSourceNotice(source: CatalogData["source"]): string | null {
-  if (source === "demo") return "Catálogo de demostración. La disponibilidad puede variar.";
-  if (source === "supabase") return "Catálogo actualizado. La disponibilidad se confirma antes de finalizar el pedido.";
+  if (source === "demo") return "Modelos, fotos y precios de referencia consultados en PcComponentes. NODRIA no vende ni mantiene stock.";
+  if (source === "supabase") return "Referencias consultadas en PcComponentes. Confirma allí el precio y la disponibilidad actuales.";
   return null;
 }

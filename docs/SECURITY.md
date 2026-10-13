@@ -1,6 +1,13 @@
 # Seguridad y RLS
 
-Estado actualizado **2026-10-12**. La publicación final usa Vercel project `nodria` y `https://nodria-academico.vercel.app`; el alias `nodria-staging.vercel.app` redirige con 308. Los gates de seguridad local siguen pasando. El CLI disponible está asociado a otra organización y no muestra el proyecto Supabase `ypnhdxpejcbcyjiosrhf`; por tanto, no se ejecutaron JWT/RLS ni mutaciones contra la base alojada. Una respuesta HTTP 200 no equivale a autorización o aislamiento verificado.
+## Catálogo externo y fotografías — 2026-10-13
+
+- Las referencias públicas solo se aceptan con URLs HTTPS de `www.pccomponentes.com` y fotos de `img.pccomponentes.com`/`thumb.pccomponentes.com` dentro de `/articles/`. El mapper rechaza dominios o imágenes repetidas y exige que el precio de referencia coincida con el precio de variante.
+- Ningún dato de catálogo habilita checkout: el modo demo impide crear pedidos con esas referencias y no expone campos de pago. Las imágenes son URLs públicas del vendedor, no subidas por usuarios.
+- El precio observado no acredita disponibilidad, stock ni relación comercial. El usuario sigue al vendedor para comprar; NODRIA no gestiona cobro ni datos de tarjeta.
+- La migración no crea tablas, policies, grants ni funciones. Despublica fixtures comerciales previas y conserva pedidos/historial. No se aplicó al Supabase remoto en esta sesión.
+
+Estado base **2026-10-12**, con cambio de catálogo documentado el 2026-10-13. La publicación final usa Vercel project `nodria` y `https://nodria-academico.vercel.app`; el alias `nodria-staging.vercel.app` redirige con 308. Los gates locales pasan. El acceso Supabase de esta sesión no autorizó consultas; no se ejecutaron JWT/RLS ni mutaciones contra la base alojada. Una respuesta HTTP 200 no equivale a autorización o aislamiento verificado.
 
 ## Controles integrados
 

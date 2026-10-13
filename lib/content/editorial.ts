@@ -29,12 +29,12 @@ export const editorialCollections = {
   blog: {
     title: "Ideas para decidir mejor",
     label: "Blog",
-    description: "Comparativas y criterios para pensar tu próxima compra tecnológica. Contenido editorial de la demo ficticia NODRIA, sin pruebas de rendimiento ni ofertas reales.",
+    description: "Comparativas y criterios para pensar una compra tecnológica. El contenido es académico y no incluye pruebas de rendimiento ni ofertas de NODRIA.",
   },
   guias: {
     title: "Una buena decisión empieza aquí",
     label: "Guías",
-    description: "Guías prácticas para ordenar requisitos, revisar fichas y preparar un equipo. Ejemplos con productos ficticios del catálogo académico de NODRIA.",
+    description: "Guías prácticas para ordenar requisitos, revisar fichas técnicas de fabricantes y preparar un equipo.",
   },
 } as const;
 
@@ -43,11 +43,11 @@ export const editorialArticles: readonly EditorialArticle[] = [
   {
     collection: "guias", slug: "elegir-portatil-trabajo-estudio",
     title: "Cómo elegir un portátil para trabajar y estudiar",
-    description: "Convierte tus tareas, desplazamientos y accesorios en una lista de requisitos antes de comparar portátiles del catálogo ficticio.",
+    description: "Convierte tus tareas, desplazamientos y accesorios en una lista de requisitos antes de comparar ordenadores.",
     category: "Ordenadores", author: "Redacción NODRIA · equipo ficticio",
     publishedAt: "2026-10-01", updatedAt: "2026-10-08",
     takeaway: "Elige a partir de tus tareas y de los requisitos de tus aplicaciones; una cifra aislada no resume la experiencia de uso.",
-    productSlugs: ["fluxbook-14-pro"], categorySlugs: ["ordenadores"],
+    productSlugs: [], categorySlugs: [],
     related: ["portatil-o-sobremesa", "elegir-monitor-escritorio"],
     sections: [
       { id: "rutina", title: "1. Describe una semana de uso", paragraphs: [
@@ -56,7 +56,7 @@ export const editorialArticles: readonly EditorialArticle[] = [
       ] },
       { id: "ficha", title: "2. Lee la ficha como una lista de comprobación", paragraphs: [
         "Anota memoria, almacenamiento, pantalla y conexiones en columnas separadas. Después marca qué datos necesitas confirmar. El espacio que ocupan tus proyectos actuales puede ayudarte a plantear una necesidad de almacenamiento, pero no sustituye una política de copias. Comprueba también si las ampliaciones que imaginas están documentadas para la variante exacta del equipo.",
-        "Las especificaciones del FluxBook enlazado sirven como ejemplo de lectura dentro de esta demo. No hemos medido su autonomía, temperatura, ruido ni comportamiento con aplicaciones reales. Si esos factores deciden una compra real, busca documentación del fabricante y pruebas independientes del modelo correspondiente, con condiciones de ensayo identificadas.",
+        "En el catálogo actual no hay referencias de portátiles. No hemos medido autonomía, temperatura, ruido ni comportamiento de ningún ordenador. Si esos factores deciden una compra, busca documentación del fabricante y pruebas independientes del modelo exacto, con condiciones de ensayo identificadas.",
       ], checklist: ["Aplicaciones y sistema operativo necesarios.", "Peso y dimensiones aceptables para tus desplazamientos.", "Conexiones para pantalla, cargador y accesorios.", "Capacidad de almacenamiento y plan de copia separado."] },
       { id: "presupuesto", title: "3. Compara el puesto completo", paragraphs: [
         "Define un presupuesto que incluya lo que falta en tu mesa: monitor, teclado, adaptadores o bolsa, si los necesitas. Escribe por qué cada elemento sería necesario y evita añadir accesorios por inercia. Comprueba conexiones en ambos extremos antes de dar por válido un cable que ya tienes.",
@@ -71,7 +71,7 @@ export const editorialArticles: readonly EditorialArticle[] = [
     category: "Monitores", author: "Redacción NODRIA · equipo ficticio",
     publishedAt: "2026-10-02", updatedAt: "2026-10-08",
     takeaway: "Comprueba primero mesa, conexiones y tareas; después valora las diferencias de pantalla que puedas justificar.",
-    productSlugs: ["loom-27-4k"], categorySlugs: ["monitores", "ordenadores"],
+    productSlugs: [], categorySlugs: [],
     related: ["elegir-portatil-trabajo-estudio", "renovar-equipos-oficina"],
     sections: [
       { id: "mesa", title: "1. Mide el espacio que vas a usar", paragraphs: [
@@ -80,7 +80,7 @@ export const editorialArticles: readonly EditorialArticle[] = [
       ] },
       { id: "conexiones", title: "2. Comprueba el recorrido de la señal", paragraphs: [
         "Escribe la salida del ordenador, el cable previsto y la entrada del monitor. Confirma en la documentación de cada elemento qué combinación admite la resolución y frecuencia que quieres utilizar. Un conector con la forma correcta no resuelve por sí solo todas las condiciones de funcionamiento; tampoco conviene asumir que cualquier adaptador conserva todas las funciones.",
-        "Si quieres cargar un portátil desde la pantalla, comprueba que ambos equipos y el cable contemplan esa función y sus requisitos. El Loom 27 4K es un ejemplo ficticio para practicar la lectura de conexiones. La guía no certifica una combinación concreta de portátil, cable y monitor ni garantiza prestaciones fuera de lo que indique cada ficha.",
+        "Si quieres cargar un portátil desde la pantalla, comprueba que ambos equipos y el cable contemplan esa función y sus requisitos. No hay referencias de monitor verificadas en el catálogo actual. Esta guía no certifica una combinación concreta ni garantiza prestaciones fuera de lo que indiquen las fichas.",
       ], checklist: ["Dimensiones de pantalla y peana frente a la mesa.", "Salida del equipo, entrada del monitor y cable necesario.", "Ajustes de soporte documentados para el modelo.", "Funciones de carga o accesorios, solo si están confirmadas."] },
       { id: "criterios", title: "3. Relaciona cada especificación con una tarea", paragraphs: [
         "Anota si tu prioridad es leer texto, trabajar con varias ventanas o revisar imágenes. No conviertas una cifra de resolución, frecuencia o color en una clasificación universal. Para trabajos donde el color sea crítico, pide información sobre el flujo completo y las condiciones de validación; esta demo no incluye mediciones de precisión ni calibración de paneles.",
@@ -95,31 +95,31 @@ export const editorialArticles: readonly EditorialArticle[] = [
     category: "Componentes", author: "Redacción NODRIA · equipo ficticio",
     publishedAt: "2026-10-03", updatedAt: "2026-10-08",
     takeaway: "Una configuración requiere revisar el conjunto y sus variantes; una comprobación parcial no certifica un montaje real.",
-    productSlugs: ["arc-ssd-2tb", "foundry-s-studio"], categorySlugs: ["componentes", "almacenamiento"],
+    productSlugs: ["amd-ryzen-5-9600-3-8-5-2ghz-17wc6", "intenso-premium-ssd-1tb-m-2-nvme-pcie-3-0-1xihy"], categorySlugs: ["componentes", "almacenamiento"],
     related: ["portatil-o-sobremesa", "elegir-monitor-escritorio"],
     sections: [
       { id: "objetivo", title: "1. Define el objetivo y lo que ya tienes", paragraphs: [
         "Escribe las aplicaciones, el tipo de proyectos y las conexiones que necesita tu equipo. Consulta los requisitos de esas aplicaciones y decide qué componentes pretendes conservar. Anota sus referencias exactas: una familia comercial puede incluir distintas versiones. Separa también monitor y accesorios del presupuesto de la torre para poder comparar el coste del puesto completo.",
-        "Decide qué aspectos necesitan validación externa antes de comprar. Esta demo permite explorar un conjunto limitado de reglas de compatibilidad con datos ficticios. Un estado favorable en el configurador solo corresponde a esas reglas y no es una prueba de estabilidad, refrigeración, consumo o rendimiento de un ordenador montado.",
+        "Decide qué aspectos necesitan validación externa antes de comprar. El configurador compara un conjunto limitado de atributos publicados para modelos reales. Un estado favorable solo corresponde a esas reglas y no es una prueba de estabilidad, refrigeración, consumo o rendimiento de un ordenador montado.",
       ] },
       { id: "conjunto", title: "2. Revisa las dependencias entre piezas", paragraphs: [
         "Construye una lista de comprobaciones para procesador, placa, memoria, caja, almacenamiento y alimentación. Busca en la documentación de cada referencia los requisitos aplicables y deja señalado lo que no puedas confirmar. Evita interpretar un dato ausente como una compatibilidad aprobada. Si necesitas versiones específicas de firmware o accesorios adicionales, añádelos a la revisión.",
-        "Para almacenamiento, distingue la capacidad que necesitas de la compatibilidad del dispositivo. Comprueba interfaz, formato y ubicaciones disponibles en la placa o caja elegidas. El Arc SSD enlazado ofrece una ficha ficticia para practicar ese paso; no demuestra que funcione en cualquier equipo ni aporta ensayos de velocidad o resistencia.",
+        "Para almacenamiento, distingue la capacidad que necesitas de la compatibilidad del dispositivo. Comprueba interfaz, formato y ubicaciones disponibles en la placa o caja elegidas. Las referencias enlazadas muestran datos del modelo publicado; no demuestran que funcione en cualquier equipo ni aportan ensayos de velocidad o resistencia.",
       ], checklist: ["Referencia exacta y variante de cada pieza.", "Compatibilidades documentadas y datos todavía pendientes.", "Espacio físico, conexiones y accesorios necesarios.", "Presupuesto del conjunto, incluido el puesto exterior."] },
       { id: "revision", title: "3. Guarda una decisión explicable", paragraphs: [
         "Resume por qué has elegido cada componente y qué pendiente impediría cerrar la compra. Si una pieza cambia, vuelve a revisar sus dependencias en lugar de dar por vigente la comprobación anterior. Una configuración guardada es un punto de partida: precio, publicación y disponibilidad pertenecen al catálogo actual y se revisan en el flujo de compra.",
-        "También puedes comparar el enfoque con un sobremesa del catálogo, como Foundry S Studio, sin presentar uno como superior por defecto. Si prefieres explorar reglas dentro de NODRIA, abre el configurador desde el catálogo de componentes. Para un montaje real, pide una revisión técnica de todas las referencias; aquí no se presta un servicio de montaje ni se procesa dinero real.",
+        "El catálogo reúne componentes y SSD, no ordenadores premontados. Puedes explorar reglas parciales en el configurador desde la categoría de componentes. Para un montaje real, pide una revisión técnica de todas las referencias; aquí no se presta un servicio de montaje ni se procesa dinero real.",
       ] },
     ],
   },
   {
     collection: "blog", slug: "portatil-o-sobremesa",
     title: "Portátil o sobremesa: compara tu rutina, no una etiqueta",
-    description: "Una comparación por escenarios para decidir si tu próximo puesto necesita movilidad o una instalación fija, con ejemplos ficticios.",
+    description: "Una comparación por escenarios para decidir si tu próximo puesto necesita movilidad o una instalación fija.",
     category: "Comparativas", author: "Redacción NODRIA · equipo ficticio",
     publishedAt: "2026-10-04", updatedAt: "2026-10-08",
     takeaway: "La movilidad y la organización del puesto son preguntas previas a cualquier comparación de modelos.",
-    productSlugs: ["fluxbook-14-pro", "foundry-s-studio"], categorySlugs: ["ordenadores"],
+    productSlugs: [], categorySlugs: [],
     related: ["elegir-portatil-trabajo-estudio", "preparar-configuracion-pc"],
     sections: [
       { id: "escenarios", title: "Dos formas de organizar el trabajo", paragraphs: [
@@ -131,7 +131,7 @@ export const editorialArticles: readonly EditorialArticle[] = [
         "Considera cómo guardarás y recuperarás tus archivos, especialmente si alternas equipos. Decide qué datos deben estar disponibles en cada lugar y cómo comprobarás tus copias. No presupongas que cambiar de formato resuelve la continuidad del trabajo. Anota también las aplicaciones y licencias cuya instalación debe confirmar el responsable correspondiente.",
       ], checklist: ["¿Necesito desplazar el mismo equipo durante la semana?", "¿Qué accesorios y conexiones hay en cada lugar?", "¿Puedo verificar las aplicaciones en ambos candidatos?", "¿He contado el puesto completo en los dos presupuestos?"] },
       { id: "ejemplos", title: "Cómo usar los ejemplos del catálogo", paragraphs: [
-        "FluxBook 14 Pro y Foundry S Studio representan dos formatos en el catálogo ficticio. Abre sus fichas y coloca sus datos frente a tus requisitos; no tomes su nombre ni su descripción como una evaluación independiente. Esta redacción no ha realizado pruebas de productividad, autonomía o acústica y no declara un ganador técnico entre ambos.",
+        "El catálogo actual no contiene ordenadores premontados. Usa esta comparación como lista de criterios y consulta los modelos concretos cuando estén disponibles. Esta redacción no ha realizado pruebas de productividad, autonomía o acústica ni declara un ganador técnico.",
         "Si la movilidad es imprescindible, continúa con la guía de portátil. Si quieres entender el conjunto de piezas, revisa la preparación de una configuración de PC. La decisión queda mejor fundada cuando puedes señalar qué necesidad cubre y qué dato sigue pendiente. Los precios y las variantes se consultan en la ficha vigente, sin convertir este artículo en una oferta permanente.",
       ] },
     ],
@@ -143,7 +143,7 @@ export const editorialArticles: readonly EditorialArticle[] = [
     category: "Conectividad", author: "Redacción NODRIA · equipo ficticio",
     publishedAt: "2026-10-05", updatedAt: "2026-10-08",
     takeaway: "Describe el problema y las condiciones de uso antes de asumir que un nuevo dispositivo lo resolverá.",
-    productSlugs: ["linkmesh-x7-pro"], categorySlugs: ["redes"],
+    productSlugs: [], categorySlugs: [],
     related: ["renovar-equipos-oficina", "elegir-portatil-trabajo-estudio"],
     sections: [
       { id: "mapa", title: "Empieza por un mapa y un síntoma concreto", paragraphs: [
@@ -155,7 +155,7 @@ export const editorialArticles: readonly EditorialArticle[] = [
         "Prepara una lista de puertos y formas de conexión requeridas. Si exploras una red con varios puntos, revisa cómo se comunican y qué compatibilidad exige el sistema concreto. No infieras cobertura de la superficie de la vivienda ni rendimiento real de una cifra de velocidad máxima. Este artículo no contiene una medición del entorno ni un estudio de instalación.",
       ], checklist: ["Síntoma, lugares afectados y equipos implicados.", "Condiciones del proveedor y funciones que debo conservar.", "Puertos, cableado y documentación de compatibilidad.", "Preguntas sin resolver antes de elegir un dispositivo."] },
       { id: "catalogo", title: "Explora la ficha sin convertirla en una garantía", paragraphs: [
-        "LinkMesh X7 Pro es un producto ficticio del catálogo académico. Úsalo para identificar dónde se describen estándar, puertos y otros atributos. Sus datos de demo no son mediciones de tu vivienda ni ensayos realizados por esta redacción. No prometemos una velocidad, un alcance o la solución de un problema por enlazar esa ficha.",
+        "El catálogo actual no tiene productos de red verificados. Cuando compares uno, revisa estándar, puertos y otros atributos de la ficha exacta. Una ficha comercial no es una medición de tu vivienda ni un ensayo independiente; ningún producto garantiza por sí solo velocidad, alcance o solución de un problema.",
         "Cuando tengas tu lista de requisitos, compara solo las funciones documentadas y conserva los pendientes. Si no puedes determinar el origen del problema, prepara una consulta con tu mapa y los síntomas para un servicio técnico real. NODRIA permite explorar un flujo de soporte simulado; no configura redes reales. La planificación de una oficina exige además una revisión de usuarios, permisos y continuidad.",
       ] },
     ],
@@ -167,7 +167,7 @@ export const editorialArticles: readonly EditorialArticle[] = [
     category: "Empresas", author: "Redacción NODRIA · equipo ficticio",
     publishedAt: "2026-10-06", updatedAt: "2026-10-08",
     takeaway: "Una solicitud útil describe puestos y restricciones; una lista de unidades por sí sola deja demasiadas decisiones abiertas.",
-    productSlugs: ["foundry-s-studio", "loom-27-4k"], categorySlugs: ["ordenadores", "monitores", "redes"],
+    productSlugs: [], categorySlugs: [],
     related: ["elegir-monitor-escritorio", "planificar-red-hogar"],
     sections: [
       { id: "perfiles", title: "Agrupa puestos por tareas verificables", paragraphs: [
@@ -180,7 +180,7 @@ export const editorialArticles: readonly EditorialArticle[] = [
       ], checklist: ["Perfiles de uso, número de puestos y ubicación.", "Aplicaciones, permisos y restricciones confirmados.", "Accesorios existentes y conexiones pendientes de validar.", "Responsables de transición y criterios de aceptación."] },
       { id: "solicitud", title: "Convierte la lista en una solicitud clara", paragraphs: [
         "Resume objetivo, grupos de puestos y preguntas pendientes antes de explorar el formulario de empresas. Utiliza cantidades y contactos de ejemplo en NODRIA: todas las organizaciones, propuestas, pedidos y pagos son ficticios. El portal permite recorrer un proceso académico y no contrata suministro, instalación ni asesoramiento para una empresa real.",
-        "Foundry S Studio y Loom 27 4K sirven como referencias del catálogo para practicar la lectura del puesto. No están recomendados para una aplicación concreta ni probados como conjunto por esta redacción. Consulta las guías de monitor y conectividad para preparar preguntas más precisas, y verifica las fichas vigentes antes de crear tu solicitud de demostración.",
+        "El catálogo actual reúne componentes, pero no equipos empresariales completos, monitores o redes. No hay recomendaciones para una aplicación concreta ni pruebas de un puesto como conjunto. Consulta las fichas de cada fabricante y valida tus requisitos antes de crear una solicitud.",
       ] },
     ],
   },

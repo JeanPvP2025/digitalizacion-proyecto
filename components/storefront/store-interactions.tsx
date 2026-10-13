@@ -1,14 +1,14 @@
 "use client";
 
-import { Check, Heart, ShoppingBag } from "lucide-react";
+import { ArrowUpRight, Check, Heart, ShoppingBag } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import type { Product } from "@/lib/catalog";
-import { toPcBuilderCartLines, type PcBuilderCatalogComponent } from "@/lib/pc-builder";
 
 export type CartLine = { id: string; variantId?: string; slug?: string; name: string; price: number; image?: string; sku?: string; quantity: number; type: "product" | "builder" };
-export const CART_KEY = "nodria.cart.v1";
+// A fresh key prevents old synthetic NODRIA items remaining in a browser cart.
+export const CART_KEY = "nodria.cart.v2";
 export const FAVORITES_KEY = "nodria.favorites.v1";
 export const COMPARE_KEY = "nodria.compare.v1";
 
@@ -35,17 +35,7 @@ export function addToCart(product: Product, quantity = 1) {
   const lines = readCart();
   const existing = lines.find((line) => line.id === product.id);
   if (existing) existing.quantity = Math.min(existing.quantity + quantity, Math.max(1, product.stock));
-  else lines.push({ type: "product", id: product.id, slug: product.slug, name: product.name, price: product.price, image: product.image, sku: product.sku, quantity: Math.min(quantity, Math.max(1, product.stock)) });
-  publishCart(lines);
-}
-
-export function addComponentsToCart(components: PcBuilderCatalogComponent[]) {
-  const lines = readCart();
-  for (const component of toPcBuilderCartLines(components)) {
-    const existing = lines.find((line) => line.variantId === component.variantId);
-    if (existing) existing.quantity += 1;
-    else lines.push(component);
-  }
+  else lines.push({ type: "product", id: product.id, slug: product.slug, name: product.name, price: product.price, image: product.image, sku: product.modelNumber, quantity: Math.min(quantity, Math.max(1, product.stock)) });
   publishCart(lines);
 }
 
@@ -124,17 +114,19 @@ export function ProductActions({ product, compact = false }: { product: Product;
 
   return (
     <div className={`product-actions${compact ? " product-actions--compact" : ""}`}>
-      <button className="button button--dark add-button" type="button" disabled={product.stock < 1} onClick={() => { addToCart(product); setAdded(true); window.setTimeout(() => setAdded(false), 1700); }}>
+      {product.priceReference ? <a className="button button--dark add-button" href={product.priceReference.productUrl} target="_blank" rel="noopener noreferrer">
+        <ArrowUpRight aria-hidden="true" size={16} /> Ver en PcComponentes
+      </a> : <button className="button button--dark add-button" type="button" disabled={product.stock < 1} onClick={() => { addToCart(product); setAdded(true); window.setTimeout(() => setAdded(false), 1700); }}>
         {added ? <Check size={16} /> : <ShoppingBag size={16} />}
-        {product.stock < 1 ? "Agotado" : added ? "Añadido" : "Añadir al carrito"}
-      </button>
+        {product.stock < 1 ? "No disponible" : added ? "Añadido" : "Añadir al carrito"}
+      </button>}
       <button aria-label={saved ? "Quitar de favoritos" : "Guardar en favoritos"} aria-pressed={saved} className={`icon-button${saved ? " is-active" : ""}`} type="button" onClick={toggleFavorite}><Heart size={17} fill={saved ? "currentColor" : "none"} /></button>
       {!compact && <button aria-pressed={compared} className={`compare-mini${compared ? " is-active" : ""}`} type="button" onClick={toggleCompare}>{compared ? "En comparador" : "Comparar"}</button>}
     </div>
   );
 }
 
-export function CartPage() {
+export function CartPage({ checkoutEnabled }: { checkoutEnabled: boolean }) {
   const [lines, setLines] = useState<CartLine[]>([]);
   const [ready, setReady] = useState(false);
   useEffect(() => {
@@ -158,14 +150,14 @@ export function CartPage() {
           <section className="cart-lines" aria-label="Artículos del carrito">
             {lines.map((line) => <article className="cart-line" key={line.id}>
               {line.image ? <Image src={line.image} alt="" width={88} height={88} unoptimized /> : <span className="cart-line-image-fallback" aria-hidden="true"><ShoppingBag size={21} /></span>}
-              <div className="cart-line-info"><span className="mono-label">{line.sku ?? "CONFIGURACIÓN NODRIA"}</span>{line.slug ? <Link href={`/producto/${line.slug}`}><h2>{line.name}</h2></Link> : <Link href="/configurador"><h2>{line.name}</h2></Link>}<span className="stock-status"><i /> {line.type === "builder" ? "Variante del catálogo · disponibilidad confirmada en checkout" : "Disponible para envío"}</span></div>
+              <div className="cart-line-info">{line.sku && <span className="mono-label">Modelo · {line.sku}</span>}{line.slug ? <Link href={`/producto/${line.slug}`}><h2>{line.name}</h2></Link> : <Link href="/configurador"><h2>{line.name}</h2></Link>}<span className="stock-status">{line.type === "builder" ? "Disponibilidad pendiente de comprobación" : "Selección local de demostración"}</span></div>
               <div className="quantity-control" aria-label={`Cantidad de ${line.name}`}><button aria-label="Reducir cantidad" type="button" onClick={() => changeQuantity(line.id, line.quantity - 1)}>−</button><span>{line.quantity}</span><button aria-label="Aumentar cantidad" type="button" onClick={() => changeQuantity(line.id, line.quantity + 1)}>+</button></div>
               <strong className="cart-line-price">{new Intl.NumberFormat("es-ES", { style: "currency", currency: "EUR", maximumFractionDigits: 2 }).format(line.price * line.quantity)}</strong>
               <button className="remove-line" type="button" onClick={() => changeQuantity(line.id, 0)}>Eliminar</button>
             </article>)}
             <button className="text-button clear-cart" onClick={emptyCart} type="button">Vaciar carrito</button>
           </section>
-          <aside className="cart-summary"><span className="mono-label">RESUMEN DEL PEDIDO</span><div><span>Subtotal (IVA incl.)</span><strong>{new Intl.NumberFormat("es-ES", { style: "currency", currency: "EUR", maximumFractionDigits: 2 }).format(subtotal)}</strong></div><div><span>Envío</span><strong>{subtotal >= 100 ? "Gratis" : "Calculado"}</strong></div><p>Impuestos incluidos en los precios. El envío se confirma antes de finalizar.</p><div className="summary-total"><span>Total estimado</span><strong>{new Intl.NumberFormat("es-ES", { style: "currency", currency: "EUR", maximumFractionDigits: 2 }).format(subtotal)}</strong></div><Link className="button button--accent checkout-button" href="/checkout">Continuar al pago <span>→</span></Link><span className="checkout-assurance">Pago seguro · Datos de tarjeta simulados</span></aside>
+          <aside className="cart-summary"><span className="mono-label">RESUMEN DE LA SELECCIÓN</span><div><span>Subtotal de referencia</span><strong>{new Intl.NumberFormat("es-ES", { style: "currency", currency: "EUR", maximumFractionDigits: 2 }).format(subtotal)}</strong></div><div><span>Envío</span><strong>No disponible</strong></div><p>Los precios proceden de referencias externas. NODRIA no vende estos artículos ni calcula impuestos o transporte.</p><div className="summary-total"><span>Total de referencia</span><strong>{new Intl.NumberFormat("es-ES", { style: "currency", currency: "EUR", maximumFractionDigits: 2 }).format(subtotal)}</strong></div>{checkoutEnabled ? <><Link className="button button--accent checkout-button" href="/checkout">Continuar a finalizar pedido <span>→</span></Link><span className="checkout-assurance">El stock se validará en el servidor.</span></> : <p className="checkout-assurance">No hay venta ni pago en NODRIA. Abre la ficha del vendedor para consultar el precio actual.</p>}</aside>
         </div>
       )}
     </main>

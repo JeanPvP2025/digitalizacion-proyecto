@@ -23,13 +23,22 @@ function catalogRows(categories: readonly PcBuilderCategory[] = pcBuilderCategor
   return {
     products: categories.map((_, index) => ({
       id: productId(index + 1), slug: `component-${index + 1}`, name: `Pieza ${index + 1}`,
-      brand: "NODRIA", summary: "Ficha con atributos PC Builder de prueba.", is_published: true,
+      brand: "Fabricante real de prueba", summary: "Ficha de referencia de prueba.",
+      image_url: `https://thumb.pccomponentes.com/w-530-530/articles/product-${index + 1}.jpg`,
+      image_alt: `Modelo de prueba ${index + 1}`, is_published: true,
     })),
     categories: [{ id: categoryId, slug: "componentes", is_active: true }],
     productCategories: categories.map((_, index) => ({ product_id: productId(index + 1), category_id: categoryId })),
     variants: categories.map((category, index) => ({
       id: variantId(index + 1), product_id: productId(index + 1), sku: `NOD-PC-${index + 1}`,
-      title: "Única", attributes: { pc_builder: attributesByCategory[category] },
+      title: "Única", attributes: {
+        pc_builder: attributesByCategory[category],
+        reference_price: {
+          source: "PcComponentes", seller: "PcComponentes", url: `https://www.pccomponentes.com/componente-${category}`,
+          observed_at: "2026-10-13", price_eur: 100,
+          image_url: `https://thumb.pccomponentes.com/w-530-530/articles/product-${index + 1}.jpg`,
+        },
+      },
       current_price: "100.00", currency: "EUR", is_active: true,
     })),
   };
@@ -43,9 +52,9 @@ function buildSelection() {
 }
 
 describe("PC Builder catalogue contract and compatibility", () => {
-  it("maps only published, active EUR variants with complete structured attributes", () => {
+  it("maps published, active EUR variants with their own verified product image and structured attributes", () => {
     const rows = catalogRows();
-    rows.products.push({ id: "hidden", slug: "hidden", name: "No publicada", brand: "NODRIA", summary: "", is_published: false });
+    rows.products.push({ id: "hidden", slug: "hidden", name: "No publicada", brand: "Fabricante real de prueba", summary: "", image_url: "https://thumb.pccomponentes.com/w-530-530/articles/hidden.jpg", image_alt: "Imagen oculta", is_published: false });
     rows.productCategories.push({ product_id: "hidden", category_id: categoryId });
     rows.variants.push({ id: variantId(20), product_id: "hidden", sku: "NOD-HIDDEN", title: "Única", attributes: { pc_builder: attributesByCategory.cpu }, current_price: 1, currency: "EUR", is_active: true });
     rows.variants.push({ id: variantId(21), product_id: productId(1), sku: "NOD-USD", title: "USD", attributes: { pc_builder: attributesByCategory.cpu }, current_price: 1, currency: "USD", is_active: true });
@@ -58,14 +67,21 @@ describe("PC Builder catalogue contract and compatibility", () => {
     expect(result.omittedVariants).toBe(1);
   });
 
-  it("omits free-text and incomplete compatibility data instead of inferring values", () => {
+  it("omits free text but accepts published references when optional technical data is absent", () => {
     const rows = catalogRows(["storage"]);
     rows.variants[0].attributes = { capacity: "2 TB", interface: "NVMe PCIe 4.0 ×4" };
     const genericSpecs = mapPcBuilderRows(rows);
     expect(genericSpecs).toEqual({ components: [], omittedVariants: 1 });
 
-    rows.variants[0].attributes = { pc_builder: { ...attributesByCategory.storage, estimated_power_w: undefined } };
-    expect(mapPcBuilderRows(rows)).toEqual({ components: [], omittedVariants: 1 });
+    const verifiedPrice = (catalogRows(["storage"]).variants[0].attributes as { reference_price: Record<string, unknown> }).reference_price;
+    rows.variants[0].attributes = {
+      pc_builder: { ...attributesByCategory.storage, estimated_power_w: undefined },
+      reference_price: verifiedPrice,
+    };
+    const missingEstimate = mapPcBuilderRows(rows);
+    expect(missingEstimate.components).toHaveLength(1);
+    expect(missingEstimate.omittedVariants).toBe(0);
+    expect(missingEstimate.components[0]).not.toHaveProperty("estimatedPowerW");
   });
 
   it("requires an eligible active product category before exposing a variant", () => {

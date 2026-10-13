@@ -48,7 +48,7 @@ async function browserCheckout(page: Page, body: CheckoutRequest) {
 async function addLegacyCart(page: Page, fixtures: CheckoutConnectedFixtures, key: CheckoutFixtureKey) {
   const catalog = fixtures.catalog[key];
   await page.addInitScript(({ productId, unitPrice, sku }) => {
-    localStorage.setItem("nodria.cart.v1", JSON.stringify([{
+    localStorage.setItem("nodria.cart.v2", JSON.stringify([{
       id: productId,
       slug: "e2e-checkout-fixture",
       name: "NODRIA Connected Checkout Fixture",

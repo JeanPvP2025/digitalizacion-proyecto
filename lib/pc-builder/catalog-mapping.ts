@@ -18,6 +18,8 @@ export type PcBuilderProductRow = {
   name: string;
   brand: string;
   summary: string;
+  image_url: string | null;
+  image_alt: string;
   is_published: boolean;
 };
 
@@ -55,8 +57,8 @@ const categoryOrder: PcBuilderCategory[] = [
 ];
 const memoryGenerations = ["DDR4", "DDR5"] as const;
 const formFactors: readonly MotherboardFormFactor[] = ["E-ATX", "ATX", "microATX", "Mini-ITX"];
-const efficiencyLabels = ["80+ Bronze", "80+ Gold", "80+ Platinum"] as const;
-const storageInterfaces = ["NVMe PCIe 4.0", "NVMe PCIe 5.0"] as const;
+const efficiencyLabels = ["80+ Bronze", "80+ Silver", "80+ Gold", "80+ Platinum"] as const;
+const storageInterfaces = ["NVMe PCIe 3.0", "NVMe PCIe 4.0", "NVMe PCIe 5.0"] as const;
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
@@ -90,6 +92,25 @@ function isCategory(value: unknown): value is PcBuilderCategory {
   return typeof value === "string" && categoryOrder.includes(value as PcBuilderCategory);
 }
 
+function hasVerifiedPriceReference(value: unknown, currentPrice: number | string, productImage: string | null): boolean {
+  if (!isRecord(value) || !isRecord(value.reference_price)) return false;
+  const reference = value.reference_price;
+  if (reference.source !== "PcComponentes" || reference.seller !== "PcComponentes" ||
+      typeof reference.url !== "string" || typeof reference.observed_at !== "string" ||
+      typeof reference.image_url !== "string" || reference.image_url !== productImage ||
+      !/^\d{4}-\d{2}-\d{2}$/.test(reference.observed_at) ||
+      typeof reference.price_eur !== "number" || Math.abs(reference.price_eur - Number(currentPrice)) > 0.001) return false;
+  try {
+    const url = new URL(reference.url);
+    const image = new URL(reference.image_url);
+    return url.protocol === "https:" && url.hostname === "www.pccomponentes.com" &&
+      image.protocol === "https:" && ["img.pccomponentes.com", "thumb.pccomponentes.com"].includes(image.hostname) &&
+      image.pathname.includes("/articles/");
+  } catch {
+    return false;
+  }
+}
+
 function parseVariantComponent(
   variant: PcBuilderVariantRow,
   product: PcBuilderProductRow,
@@ -103,6 +124,7 @@ function parseVariantComponent(
   const root = isRecord(variant.attributes) ? variant.attributes : null;
   const builder = root && isRecord(root.pc_builder) ? root.pc_builder : null;
   if (!builder || !isCategory(builder.category)) return null;
+  const reference = root && isRecord(root.reference_price) ? root.reference_price : null;
 
   const base = {
     id: variant.id,
@@ -111,6 +133,10 @@ function parseVariantComponent(
     productSlug: product.slug,
     sku: variant.sku,
     variantTitle: variant.title,
+    modelNumber: reference && nonEmptyString(reference.mpn) ? reference.mpn.trim() : undefined,
+    imageUrl: product.image_url ?? undefined,
+    productUrl: reference && nonEmptyString(reference.url) ? reference.url : undefined,
+    checkedAt: reference && nonEmptyString(reference.observed_at) ? reference.observed_at : undefined,
     name: product.name,
     manufacturer: product.brand,
     priceEur: Number(variant.current_price),
@@ -126,48 +152,57 @@ function parseVariantComponent(
         estimatedPowerW: builder.estimated_power_w, integratedGraphics: builder.integrated_graphics } satisfies CpuFixture;
     }
     case "motherboard": {
-      if (!nonEmptyString(builder.socket) || !isFormFactor(builder.form_factor) ||
-          !isMemoryGeneration(builder.memory_generation) || !positiveNumber(builder.max_memory_gb) ||
-          !positiveNumber(builder.estimated_power_w)) return null;
-      return { ...base, category: "motherboard", socket: builder.socket, formFactor: builder.form_factor,
-        memoryGeneration: builder.memory_generation, maxMemoryGb: builder.max_memory_gb,
-        estimatedPowerW: builder.estimated_power_w } satisfies MotherboardFixture;
+      const socket = nonEmptyString(builder.socket) ? builder.socket.trim().replace(/^AMD\s+/i, "") : undefined;
+      if ((builder.socket !== undefined && !socket) || (builder.form_factor !== undefined && !isFormFactor(builder.form_factor)) ||
+          (builder.memory_generation !== undefined && !isMemoryGeneration(builder.memory_generation)) ||
+          (builder.max_memory_gb !== undefined && !positiveNumber(builder.max_memory_gb)) ||
+          (builder.estimated_power_w !== undefined && !positiveNumber(builder.estimated_power_w))) return null;
+      return { ...base, category: "motherboard", ...(socket ? { socket } : {}),
+        ...(isFormFactor(builder.form_factor) ? { formFactor: builder.form_factor } : {}),
+        ...(isMemoryGeneration(builder.memory_generation) ? { memoryGeneration: builder.memory_generation } : {}),
+        ...(positiveNumber(builder.max_memory_gb) ? { maxMemoryGb: builder.max_memory_gb } : {}),
+        ...(positiveNumber(builder.estimated_power_w) ? { estimatedPowerW: builder.estimated_power_w } : {}) } satisfies MotherboardFixture;
     }
     case "memory": {
       if (!isMemoryGeneration(builder.generation) || !positiveNumber(builder.capacity_gb) ||
           !positiveNumber(builder.kit_modules) || !positiveNumber(builder.speed_mt_per_s) ||
-          !positiveNumber(builder.estimated_power_w)) return null;
+          (builder.estimated_power_w !== undefined && !positiveNumber(builder.estimated_power_w))) return null;
       return { ...base, category: "memory", generation: builder.generation, capacityGb: builder.capacity_gb,
         kitModules: builder.kit_modules, speedMtPerS: builder.speed_mt_per_s,
-        estimatedPowerW: builder.estimated_power_w } satisfies MemoryFixture;
+        ...(positiveNumber(builder.estimated_power_w) ? { estimatedPowerW: builder.estimated_power_w } : {}) } satisfies MemoryFixture;
     }
     case "case": {
-      if (!stringArray(builder.supported_form_factors) || !builder.supported_form_factors.every(isFormFactor) ||
-          !positiveNumber(builder.max_gpu_length_mm) || !positiveNumber(builder.estimated_power_w)) return null;
-      return { ...base, category: "case", supportedFormFactors: builder.supported_form_factors,
-        maxGpuLengthMm: builder.max_gpu_length_mm, estimatedPowerW: builder.estimated_power_w } satisfies CaseFixture;
+      if ((builder.supported_form_factors !== undefined && (!stringArray(builder.supported_form_factors) || !builder.supported_form_factors.every(isFormFactor))) ||
+          (builder.max_gpu_length_mm !== undefined && !positiveNumber(builder.max_gpu_length_mm)) ||
+          (builder.estimated_power_w !== undefined && !positiveNumber(builder.estimated_power_w))) return null;
+      return { ...base, category: "case",
+        ...(stringArray(builder.supported_form_factors) ? { supportedFormFactors: builder.supported_form_factors as MotherboardFormFactor[] } : {}),
+        ...(positiveNumber(builder.max_gpu_length_mm) ? { maxGpuLengthMm: builder.max_gpu_length_mm } : {}),
+        ...(positiveNumber(builder.estimated_power_w) ? { estimatedPowerW: builder.estimated_power_w } : {}) } satisfies CaseFixture;
     }
     case "gpu": {
-      if (!positiveNumber(builder.length_mm) || !positiveNumber(builder.estimated_power_w)) return null;
-      return { ...base, category: "gpu", lengthMm: builder.length_mm,
-        estimatedPowerW: builder.estimated_power_w } satisfies GpuFixture;
+      if ((builder.length_mm !== undefined && !positiveNumber(builder.length_mm)) ||
+          (builder.estimated_power_w !== undefined && !positiveNumber(builder.estimated_power_w))) return null;
+      return { ...base, category: "gpu",
+        ...(positiveNumber(builder.length_mm) ? { lengthMm: builder.length_mm } : {}),
+        ...(positiveNumber(builder.estimated_power_w) ? { estimatedPowerW: builder.estimated_power_w } : {}) } satisfies GpuFixture;
     }
     case "psu": {
-      if (!positiveNumber(builder.capacity_w) || !efficiencyLabels.includes(builder.efficiency_label as (typeof efficiencyLabels)[number])) return null;
+      if (!positiveNumber(builder.capacity_w) || (builder.efficiency_label !== undefined && !efficiencyLabels.includes(builder.efficiency_label as (typeof efficiencyLabels)[number]))) return null;
       return { ...base, category: "psu", capacityW: builder.capacity_w,
-        efficiencyLabel: builder.efficiency_label as (typeof efficiencyLabels)[number] } satisfies PsuFixture;
+        ...(typeof builder.efficiency_label === "string" ? { efficiencyLabel: builder.efficiency_label as (typeof efficiencyLabels)[number] } : {}) } satisfies PsuFixture;
     }
     case "storage": {
       if (!positiveNumber(builder.capacity_tb) || !storageInterfaces.includes(builder.interface as (typeof storageInterfaces)[number]) ||
-          !positiveNumber(builder.estimated_power_w)) return null;
+          (builder.estimated_power_w !== undefined && !positiveNumber(builder.estimated_power_w))) return null;
       return { ...base, category: "storage", capacityTb: builder.capacity_tb,
         interface: builder.interface as (typeof storageInterfaces)[number],
-        estimatedPowerW: builder.estimated_power_w } satisfies StorageFixture;
+        ...(positiveNumber(builder.estimated_power_w) ? { estimatedPowerW: builder.estimated_power_w } : {}) } satisfies StorageFixture;
     }
     case "cooler": {
-      if (!stringArray(builder.supported_sockets) || !positiveNumber(builder.estimated_power_w)) return null;
+      if (!stringArray(builder.supported_sockets) || (builder.estimated_power_w !== undefined && !positiveNumber(builder.estimated_power_w))) return null;
       return { ...base, category: "cooler", supportedSockets: builder.supported_sockets,
-        estimatedPowerW: builder.estimated_power_w } satisfies CoolerFixture;
+        ...(positiveNumber(builder.estimated_power_w) ? { estimatedPowerW: builder.estimated_power_w } : {}) } satisfies CoolerFixture;
     }
   }
 }
@@ -194,6 +229,10 @@ export function mapPcBuilderRows(rows: PcBuilderCatalogRows) {
   for (const variant of rows.variants) {
     if (!variant.is_active || !products.has(variant.product_id)) continue;
     if (variant.currency !== "EUR") {
+      omittedVariants += 1;
+      continue;
+    }
+    if (!hasVerifiedPriceReference(variant.attributes, variant.current_price, products.get(variant.product_id)?.image_url ?? null)) {
       omittedVariants += 1;
       continue;
     }

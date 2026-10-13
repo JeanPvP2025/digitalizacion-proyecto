@@ -1,11 +1,14 @@
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowUpRight, Star } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import type { Product } from "@/lib/catalog";
 import { formatPrice } from "@/lib/catalog";
 import { ProductActions } from "@/components/storefront/store-interactions";
 
-export function ProductCard({ product, index = 0, showRating = true }: { product: Product; index?: number; showRating?: boolean }) {
+export function ProductCard({ product, index = 0 }: { product: Product; index?: number }) {
+  const checkedAt = product.priceReference?.checkedAt
+    ? new Intl.DateTimeFormat("es-ES", { dateStyle: "medium", timeZone: "UTC" }).format(new Date(`${product.priceReference.checkedAt}T00:00:00Z`))
+    : null;
   return (
     <article className="product-card" style={{ animationDelay: `${index * 70}ms` }}>
       <Link className="product-image-link" href={`/producto/${product.slug}`}>
@@ -18,14 +21,14 @@ export function ProductCard({ product, index = 0, showRating = true }: { product
             sizes="(max-width: 760px) 46vw, (max-width: 1100px) 36vw, 24vw"
             loading={index > 2 ? "lazy" : "eager"}
           />
-          {product.badge && <span className="product-badge">DEMO · {product.badge}</span>}
           <span className="product-open"><ArrowUpRight size={16} /></span>
         </div>
       </Link>
-      <div className="product-card-meta"><span>{product.category} · demo</span>{showRating && <span className="product-rating" aria-label={`Valoración de ejemplo: ${product.rating.toFixed(1)} de 5, ${product.reviewCount} reseñas ficticias`}><Star size={12} fill="currentColor" /> {product.rating.toFixed(1)} <small>({product.reviewCount}) · demo</small></span>}</div>
+      <div className="product-card-meta"><span>{product.category}</span></div>
       <Link className="product-card-title" href={`/producto/${product.slug}`}><h3>{product.name}</h3></Link>
-      <div className="product-card-price"><strong>Precio demo · {formatPrice(product.price)}</strong>{product.previousPrice && <del>{formatPrice(product.previousPrice)}</del>}</div>
-      <div className="product-card-stock"><i /> {product.stock > 0 ? `Stock demo · ${product.stock} unidades` : "Sin stock en esta ficha demo"}</div>
+      <div className="product-card-price"><strong>{formatPrice(product.price)}</strong></div>
+      {product.priceReference && <a className="product-card-reference" href={product.priceReference.productUrl} target="_blank" rel="noopener noreferrer">Precio de referencia · PcComponentes{checkedAt ? ` · ${checkedAt}` : ""}</a>}
+      <div className="product-card-stock">Disponibilidad comercial no conectada</div>
       <ProductActions product={product} compact />
     </article>
   );

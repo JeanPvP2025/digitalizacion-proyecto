@@ -1,5 +1,11 @@
 # Modelo de datos NODRIA
 
+## Referencias de catálogo — actualización 2026-10-13
+
+La migración `20261013070617_verified_product_reference_catalog.sql` crea/upsertea 64 referencias de PcComponentes en `products`, `product_categories`, `product_variants` y `product_specifications`. La variante guarda en `attributes.reference_price` el proveedor, vendedor, URL, precio observado, fecha, imagen y MPN; `attributes.pc_builder` contiene únicamente atributos usados por el configurador.
+
+La migración despublica fichas sintéticas conocidas y desactiva sus variantes. El inventario disponible de fixtures se retira mediante la función existente `private.adjust_inventory`, manteniendo reservas e historial; no borra pedidos ni productos históricos. La migración está creada en el repositorio pero todavía no se ha ejecutado contra el Supabase remoto.
+
 Snapshot contrastado con las migraciones locales al 2026-10-08. La migración `20261008135808_catalog_depth_dataset.sql` es solo aditiva y fue aplicada en el proyecto Supabase local, no en el remoto. Las migraciones son la fuente de verdad; este mapa resume relaciones y transiciones que importan a la aplicación.
 
 ## Relaciones principales

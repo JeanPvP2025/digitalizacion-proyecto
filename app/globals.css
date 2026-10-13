@@ -194,6 +194,8 @@ img { display: block; max-width: 100%; }
 .product-card-price strong { color: #26352b; font: 600 14px var(--font-display); }
 .product-card-price del { color: #667167; font-size: 10px; }
 .product-card-stock { display: flex; align-items: center; gap: 6px; margin-top: 8px; color: #647066; font-size: 8px; }
+.product-card-reference { margin: 5px 0 0; color: #647066; font: 8px var(--font-mono); }
+.product-card-outbound { display: inline-flex; align-items: center; gap: 4px; width: fit-content; margin-top: 5px; color: #35583d; font-size: 10px; text-decoration: underline; text-underline-offset: 3px; }
 .product-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 15px; }
 .product-actions--compact { gap: 6px; }
 .add-button { min-height: 38px; flex: 1; padding: 0 11px; font-size: 10px; }

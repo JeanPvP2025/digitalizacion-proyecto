@@ -1,22 +1,22 @@
 # Estado del proyecto
 
-Estado revisado al **2026-10-13**. La aplicación está desplegada en Vercel Production desde `main`, con proyecto `nodria` y dominio final `https://nodria-academico.vercel.app`. El dominio antiguo `https://nodria-staging.vercel.app` devuelve `308` hacia el nuevo y conserva ruta y query. Los smoke checks previos a `/`, `/acceso`, `/configurador` y `/backoffice/crm` responden HTTP 200; las rutas CRM nuevas aún no se han desplegado.
+Actualización de catálogo **2026-10-13**. Los cambios de esta actualización están en el árbol de trabajo local y todavía no se han desplegado ni aplicado al Supabase remoto. No se ejecutaron mutaciones contra producción en esta sesión.
 
-El operador verificó en el SQL Editor del proyecto Supabase `ypnhdxpejcbcyjiosrhf` un total de **116 productos de catálogo ampliado y 6 marcas**. La consulta del PC Builder devolvió 8–9 opciones por clase (`case` 9, `cooler` 8, `cpu` 9, `gpu` 8, `memory` 9, `motherboard` 9, `psu` 9, `storage` 9). Esto cumple el mínimo de ocho opciones; no borrar filas para forzar un total exacto.
+El catálogo local ahora contiene **64 referencias reales** de PcComponentes España: modelos y números de fabricante exactos, precio consultado el 13/10/2026, ficha de vendedor y foto comercial individual. Hay 8 productos por cada una de las 8 clases del PC Builder. Las 64 imágenes devolvieron `200 image/jpeg` y sus 64 cuerpos tienen hashes distintos.
 
-- ✅ **Producto académico:** los vertical slices implementados están integrados. La compra y los pagos son simulados, todos los datos comerciales son ficticios y no se aceptan tarjetas ni se procesa dinero.
-- ✅ **Gates locales repetidos:** instalación congelada, TypeScript, ESLint, 288 tests Vitest + 39 Node, Playwright demo/UX 19/19, build, pgTAP 183/183, Supabase DB lint y 78 probes HTTP Auth/RLS pasan. Suites conectadas aisladas: checkout 4/4, dominios 6/6, B2B 1/1, customer/B2B 1/1 y roles 1/1.
-- ✅ **Catálogo y PC Builder alojados:** los conteos reportados por el operador confirman 116 productos, 6 marcas y al menos ocho opciones activas por clase.
-- 🚧 **Auth alojado:** se decidió desactivar `Confirm Email` para crear cuentas inmediatamente sin enviar confirmación. La UI ya no ofrece reenvío ni recuperación por email. Falta que el operador guarde ese ajuste en Supabase y pruebe un registro nuevo.
-- ⚠️ **Seguridad y recuperación:** sin verificar correo, una dirección puede no pertenecer al usuario; la recuperación de contraseña requerirá intervención administrativa. La sesión de esta integración no puede comprobar RLS/JWT ni mutaciones alojadas.
-- ⏳ El producto queda completado como demo académica desplegada; no se debe marcar **producción integral certificada** hasta guardar el ajuste de Auth y completar las verificaciones externas indicadas en `docs/PRODUCTION_RUNBOOK.md`.
+- ✅ **Modelos, precios y fotos:** dataset local sin productos sintéticos visibles; cada precio tiene vendedor y fecha, cada producto enlaza a su propia ficha, y no se muestran reseñas ni stock inventados.
+- ✅ **Límite comercial:** NODRIA no es PcComponentes ni otro vendedor. El catálogo y el configurador son de consulta; el modo demo no ofrece carrito de compra, cobro, envío ni devoluciones.
+- ⏳ **Supabase remoto:** falta ejecutar `supabase/migrations/20261013070617_verified_product_reference_catalog.sql` después de las migraciones de categorías previas y comprobar sus conteos. Esta integración no pudo consultar ni modificar el proyecto alojado.
+- ⏳ **Vercel:** falta subir/desplegar estos cambios y revisar catálogo, imágenes y configurador en el dominio final.
+- ⚠️ **Uso de fotografías:** se enlazan las imágenes del catálogo público de PcComponentes. Un uso comercial de NODRIA requeriría permiso/licencia del titular; el proyecto sigue siendo una demo académica.
 
-### Ajuste de navegación y catálogo — 2026-10-13
+### Catálogo verificado y checkout de solo consulta — 2026-10-13
 
-- ✅ El inicio de sesión por defecto dirige a cada perfil interno a su herramienta habitual según sus roles persistidos; los destinos internos distintos de `/mi-cuenta` conservan prioridad y la autorización de servidor no cambia.
-- ✅ La interfaz presenta errores, permisos y estados con lenguaje de producto, sin mencionar el proveedor de base de datos ni sus mecanismos internos.
-- ✅ El catálogo sustituye fotografías repetidas por imágenes ilustrativas rotadas por subcategoría y conserva imágenes editoriales únicas; no requiere migración.
-- ✅ TypeScript, ESLint y 288 tests Vitest más 41 tests Node pasan en local. Vercel aún debe recibir este commit para publicar el cambio.
+- ✅ El storefront local, búsqueda, fichas de producto, favoritos, comparación y PC Builder leen las mismas referencias exactas.
+- ✅ Las tarjetas y fichas usan la foto única de la ficha del vendedor. Las 64 respuestas fueron JPEG válidos con contenido distinto. La fecha del precio se muestra como observación, no como precio vigente garantizado.
+- ✅ En modo demo, `/checkout` explica que la compra se realiza directamente con el vendedor y no solicita datos, simula pagos ni crea pedidos.
+- ✅ `pnpm install --frozen-lockfile`, TypeScript, ESLint, `pnpm test` (289 Vitest + 26 Node), `pnpm test:e2e` (17/17), `pnpm build` y `git diff --check` pasan localmente. La build generó 40 páginas estáticas; las fotos se verificaron por HTTP y el E2E comprobó el uso de `next/image`.
+- ⚠️ Playwright sigue mostrando el aviso de hidratación `caret-color: transparent` en campos; no aparece en el código del proyecto y no afecta al resultado de las pruebas. Windows también informa del cambio esperado de finales LF/CRLF.
 
 ## Histórico de salida inicial — 2026-10-09
 

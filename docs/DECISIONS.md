@@ -1,5 +1,13 @@
 # Registro de decisiones
 
+## D-035 — Referencias comerciales reales, sin suplantar al vendedor
+
+- **Fecha:** 2026-10-13
+- **Estado:** Confirmada.
+- **Contexto:** El catálogo de demostración usaba nombres, precios y fotografías ficticios repetidos; la persona usuaria pidió modelos, precios e imágenes reales.
+- **Decisión:** Publicar 64 referencias verificadas en PcComponentes España, con precio observado/fecha, MPN, especificaciones, enlace al vendedor e imagen primaria única por producto. NODRIA sigue siendo una empresa académica ficticia y no afirma vender, almacenar, enviar ni garantizar estas referencias. El checkout de modo demo es de solo consulta.
+- **Consecuencias:** El dataset local y la migración conectada deben mantener el mismo modelo y URL de imagen. Una compra va al vendedor. No se inventa disponibilidad ni reseñas. Para uso comercial de las fotografías, se debe obtener autorización/licencia.
+
 ## D-023 — Profundidad comercial en el entorno alojado sin mutaciones destructivas
 
 - **Fecha:** 2026-10-08

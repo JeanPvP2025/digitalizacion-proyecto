@@ -14,7 +14,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const data = await getCatalogData();
   const brand = getCatalogBrand(data, slug);
   if (!brand) return { title: "Marca no encontrada", robots: { index: false, follow: false } };
-  return createCatalogLandingMetadata(`/marcas/${encodeURIComponent(brand.slug)}`, `${brand.name} en el catálogo`, `Consulta ${brand.products.length} fichas ficticias de ${brand.name} disponibles en el catálogo activo de NODRIA.`);
+  return createCatalogLandingMetadata(`/marcas/${encodeURIComponent(brand.slug)}`, `${brand.name} en el catálogo`, `Consulta ${brand.products.length} referencias de ${brand.name} con imágenes y precios de PcComponentes.`);
 }
 
 export default async function BrandPage({ params }: Props) {

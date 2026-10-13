@@ -62,7 +62,7 @@
 }
 .stepButton:hover { border-color: #a8b99c; background: #fff; }
 .stepButton:focus-visible, .optionCard:focus-within, .stepFooter button:focus-visible,
-.actions button:focus-visible, .selectedList button:focus-visible, .savedItem button:focus-visible {
+.actions button:focus-visible, .selectedList button:focus-visible, .selectedList a:focus-visible, .savedItem button:focus-visible {
   outline: 3px solid #91b76d;
   outline-offset: 2px;
 }
@@ -119,13 +119,15 @@
   margin: 2px 0 0;
   accent-color: #36583c;
 }
-.optionContent { display: grid; min-width: 0; gap: 8px; }
+.optionImage { flex: 0 0 72px; width: 72px; height: 72px; object-fit: contain; align-self: center; background: #f6f7f4; }
+.optionContent { display: grid; flex: 1 1 auto; min-width: 0; gap: 8px; }
 .optionTopline { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
 .optionName { color: #304336; font: 600 15px/1.3 var(--font-display); }
 .optionTopline strong { flex: 0 0 auto; color: #31533a; font: 600 14px var(--font-mono); }
 .variantTitle { color: #647663; font-size: 12px; }
 .optionSpecs { color: #58695c; font-size: 12px; line-height: 1.5; }
 .optionBrand { color: #89938a; font: 10px var(--font-mono); overflow-wrap: anywhere; }
+.referenceLink { display: inline-flex; align-items: center; gap: 4px; width: fit-content; color: #486849; font-size: 10px; text-decoration: underline; text-underline-offset: 3px; }
 .optionCheck { display: none; position: absolute; right: 11px; bottom: 10px; color: #36583c; }
 .optionSelected .optionCheck { display: inline-flex; }
 .noOptions, .staleSelection {
@@ -192,6 +194,7 @@
 .selectedList li > div { display: grid; min-width: 0; gap: 3px; }
 .selectedList li span { color: #8a958a; font: 9px var(--font-mono); text-transform: uppercase; }
 .selectedList li strong { overflow: hidden; color: #435448; font-size: 12px; font-weight: 550; text-overflow: ellipsis; white-space: nowrap; }
+.selectedList li .referenceLink { color: #486849; font-size: 10px; }
 .selectedList li button { flex: 0 0 auto; padding: 5px 0 5px 6px; color: #46613f; border: 0; background: transparent; font: 10px var(--font-mono); cursor: pointer; }
 .total { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding: 16px 0; color: #34483a; }
 .total span { font-size: 12px; }

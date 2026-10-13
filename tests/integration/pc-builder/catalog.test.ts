@@ -1,4 +1,5 @@
 import { afterAll, beforeEach, describe, expect, it, vi } from "vitest";
+import { demoProducts } from "@/lib/catalog";
 
 const supabaseMock = vi.hoisted(() => ({ createClient: vi.fn() }));
 vi.mock("@supabase/supabase-js", () => ({ createClient: supabaseMock.createClient }));
@@ -41,14 +42,25 @@ function setSupabaseMode() {
 }
 
 function catalogueResults() {
+  const reference = demoProducts[0]!;
   return {
-    products: queryResult([{ id: "pr_cpu", slug: "cpu-a", name: "CPU A", brand: "NODRIA", summary: "CPU de prueba", is_published: true }]),
+    products: queryResult([{
+      id: reference.id, slug: reference.slug, name: reference.name, brand: reference.brand,
+      summary: reference.summary, image_url: reference.image, image_alt: reference.imageAlt, is_published: true,
+    }]),
     categories: queryResult([{ id: "cat-components", slug: "componentes", is_active: true }]),
-    product_categories: queryResult([{ product_id: "pr_cpu", category_id: "cat-components" }]),
+    product_categories: queryResult([{ product_id: reference.id, category_id: "cat-components" }]),
     product_variants: queryResult([{
-      id: "00000000-0000-4000-8000-000000000001", product_id: "pr_cpu", sku: "NOD-CPU-A", title: "Única",
-      attributes: { pc_builder: { category: "cpu", socket: "AM5", memory_generations: ["DDR5"], estimated_power_w: 65, integrated_graphics: true } },
-      current_price: "199.00", currency: "EUR", is_active: true,
+      id: "00000000-0000-4000-8000-000000000001", product_id: reference.id, sku: reference.sku, title: "Referencia PcComponentes",
+      attributes: {
+        pc_builder: { category: "cpu", socket: "AM5", memory_generations: ["DDR5"], estimated_power_w: 65, integrated_graphics: true },
+        reference_price: {
+          source: "PcComponentes", seller: "PcComponentes", url: reference.priceReference!.productUrl,
+          observed_at: reference.priceReference!.checkedAt, price_eur: reference.price, image_url: reference.image,
+          mpn: reference.modelNumber,
+        },
+      },
+      current_price: reference.price.toFixed(2), currency: "EUR", is_active: true,
     }]),
   };
 }
@@ -68,9 +80,16 @@ describe("PC Builder catalogue loading boundary", () => {
     }
   });
 
-  it("does not expose fictional parts as purchasable in local demo mode", async () => {
+  it("loads the verified model/photo/price references in local demo mode without making them sellable", async () => {
     const { getPcBuilderCatalog } = await import("@/lib/pc-builder/catalog");
-    await expect(getPcBuilderCatalog()).resolves.toEqual({ source: "demo", components: [], omittedVariants: 0 });
+    const result = await getPcBuilderCatalog();
+    expect(result.source).toBe("demo");
+    expect(result.components).toHaveLength(64);
+    expect(result.omittedVariants).toBe(0);
+    expect(new Set(result.components.map(({ category }) => category)).size).toBe(8);
+    expect(result.components.every((component) => component.productUrl?.startsWith("https://www.pccomponentes.com/") &&
+      /^https:\/\/(img|thumb)\.pccomponentes\.com\//.test(component.imageUrl ?? "") && component.checkedAt === "2026-10-13" &&
+      component.priceEur > 0 && component.modelNumber)).toBe(true);
     expect(supabaseMock.createClient).not.toHaveBeenCalled();
   });
 
@@ -82,7 +101,7 @@ describe("PC Builder catalogue loading boundary", () => {
     expect(result.source).toBe("supabase");
     if (result.source !== "supabase") throw new Error("Expected the connected catalogue.");
     expect(result.components).toHaveLength(1);
-    expect(result.components[0]).toMatchObject({ variantId: "00000000-0000-4000-8000-000000000001", productId: "pr_cpu", priceEur: 199 });
+    expect(result.components[0]).toMatchObject({ variantId: "00000000-0000-4000-8000-000000000001", productId: demoProducts[0]!.id, priceEur: demoProducts[0]!.price });
     expect(supabaseMock.createClient).toHaveBeenCalledWith("http://127.0.0.1:56201", "test-publishable-key", expect.any(Object));
   });
 

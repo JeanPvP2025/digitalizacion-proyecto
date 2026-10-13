@@ -3,28 +3,27 @@ import { ArrowRight, BadgeCheck, Wrench } from "lucide-react";
 import { createPublicPageMetadata } from "@/lib/content/public-seo";
 
 export const metadata = createPublicPageMetadata(
-  "Garantía y asistencia (demo)",
-  "Las coberturas de las fichas NODRIA son datos ficticios. Esta demo no tramita garantías, reparaciones ni devoluciones reales.",
+  "Garantía y asistencia",
+  "NODRIA muestra referencias externas y no vende, repara ni tramita garantías o devoluciones de estos productos.",
 );
 
 export default function WarrantyPage() {
   return (
     <main className="page-wrap">
-      <p className="eyebrow">GARANTÍA · DEMOSTRACIÓN ACADÉMICA</p>
+      <p className="eyebrow">GARANTÍA · REFERENCIAS EXTERNAS</p>
       <h1 className="page-title">No termina<br />cuando llega<span className="title-period">.</span></h1>
       <p className="page-intro">
-        NODRIA y sus productos son ficticios. Esta página explica qué significa la información de garantía
-        que aparece en la interfaz de demostración; no describe una cobertura comercial ni asesoramiento legal.
+        NODRIA es un proyecto académico que enlaza a fichas de modelos reales. No vende esos productos
+        ni ofrece garantía, reparación o devolución; confirma las condiciones con el vendedor y el fabricante.
       </p>
       <div className="policy-grid">
         <article>
           <span className="policy-icon"><BadgeCheck size={19} /></span>
-          <h2>Las coberturas son ficticias.</h2>
+          <h2>NODRIA no tramita garantías.</h2>
           <p>
-            Las etiquetas de garantía del catálogo son datos de ejemplo y no crean una cobertura de NODRIA o de un fabricante.
-            No hay una compra real, factura ni producto cubierto dentro de esta demostración.
+            Las fichas de catálogo no crean una cobertura de NODRIA. No existe una compra o factura emitida por NODRIA.
           </p>
-          <p>Para una compra real, revisa la documentación de ese producto y del vendedor correspondiente.</p>
+          <p>Para una compra externa, revisa la documentación vigente del producto y del vendedor.</p>
         </article>
         <article>
           <span className="policy-icon"><Wrench size={19} /></span>

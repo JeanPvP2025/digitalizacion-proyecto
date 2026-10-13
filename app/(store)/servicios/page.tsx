@@ -11,7 +11,7 @@ const services = [
   {
     icon: Wrench,
     title: "Montaje a medida",
-    copy: "El PC Builder comprueba compatibilidades entre componentes ficticios y permite preparar una configuración para el carrito demo. No montamos ni probamos equipos reales.",
+    copy: "El PC Builder compara modelos reales, sus fichas e imágenes publicadas y datos técnicos disponibles. NODRIA no monta, vende ni verifica físicamente los equipos; confirma la compatibilidad final con el fabricante.",
     href: "/configurador",
     action: "Abrir el configurador demo",
   },
@@ -68,7 +68,7 @@ export default function ServicesPage() {
       <section className="service-bottom-cta">
         <div>
           <p className="eyebrow">PRUEBA UN FLUJO</p>
-          <h2>Configura un equipo ficticio.</h2>
+          <h2>Compara componentes reales.</h2>
         </div>
         <Link className="button button--accent" href="/configurador">Abrir PC Builder <ArrowRight size={14} /></Link>
       </section>

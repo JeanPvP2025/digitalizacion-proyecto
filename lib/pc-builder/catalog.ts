@@ -4,6 +4,7 @@ import { createClient } from "@supabase/supabase-js";
 import { getServerDataMode } from "@/lib/server/data-mode";
 import { getSupabaseCredentials } from "@/lib/supabase/config";
 import { mapPcBuilderRows, type PcBuilderCatalogRows } from "./catalog-mapping";
+import { getVerifiedReferenceBuilderCatalog } from "./reference-catalog";
 import type { PcBuilderCatalog } from "./types";
 
 const CATALOG_ERROR = "No se pudieron cargar las piezas del configurador. Inténtalo de nuevo.";
@@ -19,7 +20,7 @@ async function readPcBuilderCatalog(): Promise<PcBuilderCatalog> {
     });
     const [productsResult, categoriesResult] = await Promise.all([
       client.from("products")
-        .select("id,slug,name,brand,summary,is_published")
+        .select("id,slug,name,brand,summary,image_url,image_alt,is_published")
         .eq("is_published", true)
         .order("name"),
       client.from("categories")
@@ -59,10 +60,9 @@ async function readPcBuilderCatalog(): Promise<PcBuilderCatalog> {
 export async function getPcBuilderCatalog(): Promise<PcBuilderCatalog> {
   const mode = getServerDataMode();
   if (mode === "local-demo") {
-    // The checked-in fictional PC parts have no product or sellable variant IDs.
-    // Showing them as compatible or adding them to the cart would imply a sale
-    // that the catalogue cannot support.
-    return { source: "demo", components: [], omittedVariants: 0 };
+    // Show the same verified reference catalog as Supabase without claiming
+    // the external products are NODRIA inventory or checkout variants.
+    return { source: "demo", ...getVerifiedReferenceBuilderCatalog() };
   }
   if (mode === "unavailable") {
     return { source: "error", components: [], omittedVariants: 0, message: CATALOG_ERROR };

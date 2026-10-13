@@ -459,7 +459,7 @@ export function SearchBox({
                                 {action.product.category} · {action.product.brand} · {action.product.sku}
                               </span>
                             </span>
-                            <strong style={{ flex: "0 0 auto", fontSize: 11 }}>{priceFormatter.format(action.product.price)}</strong>
+                            <strong style={{ flex: "0 0 auto", fontSize: 11 }}>{priceFormatter.format(action.product.price)}{action.product.priceReference ? " · ref. PcComponentes" : ""}</strong>
                           </Link>
                         ) : action.kind === "category" ? (
                           <Link

@@ -33,7 +33,7 @@ export function EditorialCollectionPage({ collection }: { collection: EditorialC
           </article>
         ))}
       </div>
-      <p className={styles.disclosure}>Contenido académico con ejemplos ficticios. No son análisis de laboratorio, recomendaciones de compra ni ofertas comerciales.</p>
+      <p className={styles.disclosure}>Contenido académico basado en fichas comerciales. No son análisis de laboratorio, recomendaciones de compra ni ofertas de NODRIA.</p>
     </main>
   );
 }
@@ -77,7 +77,7 @@ export async function EditorialArticlePage({ collection, slug }: { collection: E
             <p role="status">El catálogo no está disponible ahora. El contenido editorial sigue visible; vuelve a intentarlo más tarde para consultar las fichas.</p>
           ) : (
             <>
-              {commerce.products.length > 0 && <ul>{commerce.products.map((product) => <li key={product.id}><Link href={`/producto/${encodeURIComponent(product.slug)}`}>{product.name}</Link><span> · ejemplo ficticio; consulta la ficha vigente</span></li>)}</ul>}
+              {commerce.products.length > 0 && <ul>{commerce.products.map((product) => <li key={product.id}><Link href={`/producto/${encodeURIComponent(product.slug)}`}>{product.name}</Link><span> · referencia de precio fechada; confirma la ficha vigente</span></li>)}</ul>}
               {commerce.categories.length > 0 && <p>{commerce.categories.map((category, index) => <span key={category.id}>{index > 0 && " · "}<Link href={`/catalogo?categoria=${encodeURIComponent(category.slug)}`}>{category.name}</Link></span>)}</p>}
               {!commerce.products.length && !commerce.categories.length && <p>No hay fichas relacionadas publicadas en el catálogo activo.</p>}
             </>
@@ -89,7 +89,7 @@ export async function EditorialArticlePage({ collection, slug }: { collection: E
           <ul>{related.map((item) => <li key={`${item.collection}-${item.slug}`}><Link href={editorialPath(item)}>{item.title}</Link></li>)}</ul>
         </nav>}
       </article>
-      <p className={styles.disclosure}>NODRIA es un proyecto académico. Las empresas, productos, precios, pedidos y procesos de esta demostración son ficticios.</p>
+      <p className={styles.disclosure}>NODRIA es un proyecto académico. Las referencias de producto, imágenes y precios proceden de PcComponentes y pueden cambiar; NODRIA no vende ni mantiene ese inventario. Las empresas, pedidos y procesos operativos de esta demostración son ficticios.</p>
     </main>
   );
 }

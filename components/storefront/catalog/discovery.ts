@@ -90,6 +90,7 @@ export function discoverCatalog(products: DiscoveryProduct[], categories: Discov
   const query = (params.get("q") ?? "").trim().slice(0, SEARCH_QUERY_MAX_LENGTH);
   const categorySlug = params.get("categoria") ?? "";
   const category = categories.find((item) => item.slug === categorySlug);
+  const referenceOnly = products.length > 0 && products.every((product) => Boolean(product.priceReference));
   const min = amount(params.get("min"));
   const max = amount(params.get("max"));
   const notices: string[] = [];
@@ -100,8 +101,8 @@ export function discoverCatalog(products: DiscoveryProduct[], categories: Discov
   const sort = allowedSorts.includes(requestedSort) ? requestedSort : "recomendados";
   if (sort !== requestedSort) notices.push("Ese orden no está disponible. Se muestra el orden recomendado.");
   const availability = params.get("disponibilidad");
-  if (availability && source !== "demo") notices.push("La disponibilidad se confirma al comprar. No se ha aplicado el filtro de stock al catálogo conectado.");
-  if (availability && source === "demo" && !["en-stock", "agotado"].includes(availability)) notices.push("Ese estado de disponibilidad no existe. Retira el filtro para ver productos.");
+  if (availability && (source !== "demo" || referenceOnly)) notices.push("NODRIA no tiene inventario conectado para estas referencias. Consulta la disponibilidad actual en PcComponentes.");
+  if (availability && source === "demo" && !referenceOnly && !["en-stock", "agotado"].includes(availability)) notices.push("Ese estado de disponibilidad no existe. Retira el filtro para ver productos.");
   const specifications = [...new Set(params.keys())].filter((key) => key.startsWith("spec.") && params.getAll(key).some(Boolean));
   const brands = params.getAll("marca").filter(Boolean);
   const searched = rankCatalogProducts(products, query) as DiscoveryProduct[];
@@ -111,7 +112,7 @@ export function discoverCatalog(products: DiscoveryProduct[], categories: Discov
     if (omit !== "marca" && brands.length && !brands.includes(product.brand)) return false;
     if (min !== undefined && product.price < min) return false;
     if (max !== undefined && product.price > max) return false;
-    if (omit !== "disponibilidad" && availability && source === "demo") {
+    if (omit !== "disponibilidad" && availability && source === "demo" && !referenceOnly) {
       if (availability === "en-stock" ? product.stock <= 0 : availability === "agotado" ? product.stock > 0 : true) return false;
     }
     // OR within a dimension; AND across dimensions. Values are exact data values.
@@ -128,17 +129,17 @@ export function discoverCatalog(products: DiscoveryProduct[], categories: Discov
   };
   for (const product of scoped) {
     addValue("marca", "Marca", product.brand);
-    if (source === "demo") addValue("disponibilidad", "Disponibilidad · demo", product.stock > 0 ? "en-stock" : "agotado");
+    if (source === "demo" && !referenceOnly) addValue("disponibilidad", "Disponibilidad · demo", product.stock > 0 ? "en-stock" : "agotado");
     if (category) for (const spec of product.specifications) addValue("spec." + spec.label, spec.label, spec.value);
   }
   // Keep stale selections visible and removable, even when no result exposes them.
   for (const key of new Set(params.keys())) {
     if (key === "marca" || key === "disponibilidad" || key.startsWith("spec.")) {
-      for (const value of params.getAll(key)) addValue(key, key === "marca" ? "Marca" : key === "disponibilidad" ? "Disponibilidad · demo" : key.slice(5), value);
+      for (const value of params.getAll(key)) addValue(key, key === "marca" ? "Marca" : key === "disponibilidad" ? referenceOnly ? "Disponibilidad sin verificar" : "Disponibilidad · demo" : key.slice(5), value);
     }
   }
   const facets: Facet[] = [...facetDefinitions.entries()]
-    .filter(([key, entry]) => (entry.values.size > 1 || params.getAll(key).some(Boolean)) && (key !== "disponibilidad" || source === "demo"))
+    .filter(([key, entry]) => (entry.values.size > 1 || params.getAll(key).some(Boolean)) && (key !== "disponibilidad" || source === "demo" && !referenceOnly))
     .map(([key, entry]) => ({
       key, label: entry.label,
       options: [...entry.values].sort(collator.compare).map((value) => ({
@@ -162,7 +163,7 @@ export function discoverCatalog(products: DiscoveryProduct[], categories: Discov
   if (sort === "precio-desc") results = [...results].sort((a, b) => b.price - a.price);
   if (sort === "mejor-valorados") results = [...results].sort((a, b) => b.rating - a.rating);
   const scopePrices = scoped.map((product) => product.price);
-  return { query, category, categorySlug, sort, min, max, notices, results, facets, selections, categoryOptions, allCategoryCount: searched.filter((product) => matches(product, "categoria")).length, priceRange: scopePrices.length ? { min: Math.min(...scopePrices), max: Math.max(...scopePrices) } : null };
+  return { query, category, categorySlug, sort, min, max, notices, results, facets, selections, categoryOptions, referenceOnly, allCategoryCount: searched.filter((product) => matches(product, "categoria")).length, priceRange: scopePrices.length ? { min: Math.min(...scopePrices), max: Math.max(...scopePrices) } : null };
 }
 
 export function availabilityLabel(value: string) {

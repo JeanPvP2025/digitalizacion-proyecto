@@ -4,7 +4,6 @@ import { consolidateCheckoutItems, CheckoutCartError, resolveCheckoutCartItems, 
 import { checkoutItemSelectorError, checkoutRequestSchema, type CheckoutRequest } from "@/lib/commerce/contracts";
 import { getCheckoutMode } from "@/lib/commerce/mode";
 import { demoProducts } from "@/lib/catalog";
-import { pcBuilderComponents } from "@/lib/pc-builder";
 import { consumeRateLimit } from "@/lib/server/rate-limit";
 import { persistDemoOrder, type DemoOrderRecord } from "@/lib/server/demo-orders";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
@@ -360,13 +359,13 @@ async function createDemoOrder(checkout: DemoRequestWithRequest) {
     if (!("productId" in item)) continue;
     const { productId, quantity } = item;
     if (productId.startsWith("builder:")) {
-      const component = pcBuilderComponents.find((item) => item.id === productId.slice("builder:".length));
-      if (!component) return NextResponse.json({ error: "Uno de los componentes guardados ya no está disponible." }, { status: 409 });
-      orderItems.push({ productId, name: component.name, sku: component.id.toUpperCase(), quantity, unitPrice: component.priceEur, lineTotal: money(component.priceEur * quantity), source: "pc_builder" });
-      continue;
+      return NextResponse.json({ error: "Las referencias del configurador se consultan con el vendedor; NODRIA no las vende ni puede crearles un pedido." }, { status: 409 });
     }
     const product = demoProducts.find((item) => item.id === productId);
     if (!product) return NextResponse.json({ error: "Uno de los productos del carrito ya no está disponible." }, { status: 409 });
+    if (product.priceReference) {
+      return NextResponse.json({ error: "Este modelo es una referencia externa. NODRIA no lo vende ni puede crearle un pedido." }, { status: 409 });
+    }
     if (quantity > product.stock) return NextResponse.json({ error: `${product.name} no tiene stock suficiente. Disponibles: ${product.stock}.` }, { status: 409 });
     orderItems.push({ productId, name: product.name, sku: product.sku, quantity, unitPrice: product.price, lineTotal: money(product.price * quantity), source: "catalogue" });
   }

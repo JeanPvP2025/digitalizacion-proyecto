@@ -14,7 +14,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const data = await getCatalogData();
   const landing = getCatalogCategory(data, slug);
   if (!landing) return { title: "Categoría no encontrada", robots: { index: false, follow: false } };
-  return createCatalogLandingMetadata(`/categorias/${encodeURIComponent(landing.category.slug)}`, `${landing.category.name} — catálogo`, `${landing.category.description} Explora ${landing.products.length} fichas ficticias del catálogo NODRIA.`);
+  return createCatalogLandingMetadata(`/categorias/${encodeURIComponent(landing.category.slug)}`, `${landing.category.name} — catálogo`, `${landing.category.description} Consulta ${landing.products.length} referencias externas del catálogo.`);
 }
 
 export default async function CategoryPage({ params }: Props) {

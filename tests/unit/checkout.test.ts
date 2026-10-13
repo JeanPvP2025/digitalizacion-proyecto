@@ -1,8 +1,8 @@
-import { mkdtemp, readFile, rm } from "node:fs/promises";
+import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
-import type { DemoOrderRecord } from "../../lib/server/demo-orders";
+import { demoProducts } from "@/lib/catalog";
 
 type CheckoutRoute = typeof import("../../app/api/checkout/route");
 type DemoOrders = typeof import("../../lib/server/demo-orders");
@@ -80,7 +80,7 @@ describe("demo checkout route", () => {
     expect((await malformed.json()).error).toContain("JSON válido");
 
     const invalidCustomer = await post(
-      orderBody([{ productId: "pr_loom27", quantity: 1 }], {
+      orderBody([{ productId: demoProducts[0]!.id, quantity: 1 }], {
         customer: { ...customer, email: "no-es-un-email" },
       }),
     );
@@ -90,61 +90,30 @@ describe("demo checkout route", () => {
 
   it("rejects client-supplied prices instead of trusting cart data", async () => {
     const response = await post({
-      ...orderBody([{ productId: "pr_loom27", quantity: 1 }]),
-      items: [{ productId: "pr_loom27", quantity: 1, price: 1 }],
+      ...orderBody([{ productId: demoProducts[0]!.id, quantity: 1 }]),
+      items: [{ productId: demoProducts[0]!.id, quantity: 1, price: 1 }],
     });
 
     expect(response.status).toBe(400);
     expect(await demoOrders.getDemoOrderCount()).toBe(0);
   });
 
-  it("re-reads fixture prices and persists a server-calculated order snapshot", async () => {
-    const response = await post(
-      orderBody([{ productId: "pr_loom27", quantity: 2 }]),
-    );
+  it("rejects a real retailer reference instead of creating a fictional NODRIA order", async () => {
+    const response = await post(orderBody([{ productId: demoProducts[0]!.id, quantity: 2 }]));
 
-    expect(response.status).toBe(201);
-    const responseBody = await response.json();
-    expect(responseBody.paymentStatus).toBe("approved");
-    expect(responseBody.orderStatus).toBe("confirmed");
-
-    const records = await demoOrders.getDemoOrderRecords();
-    expect(records).toHaveLength(1);
-    const [record] = records as DemoOrderRecord[];
-    expect(record.items).toEqual([
-      expect.objectContaining({
-        productId: "pr_loom27",
-        name: "Loom 27 4K",
-        sku: "NOD-LM27-4K",
-        quantity: 2,
-        unitPrice: 629,
-        lineTotal: 1258,
-        source: "catalogue",
-      }),
-    ]);
-    expect(record.subtotal).toBe(1258);
-    expect(record.shipping).toBe(0);
-    expect(record.tax).toBe(218.33);
-    expect(record.total).toBe(1258);
-    expect(record.timeline.map((event) => event.event)).toEqual([
-      "order_created",
-      "payment_approved",
-    ]);
-
-    const persisted = JSON.parse(
-      await readFile(join(temporaryWorkingDirectory, ".data", "orders.json"), "utf8"),
-    ) as DemoOrderRecord[];
-    expect(persisted[0]).toEqual(record);
+    expect(response.status).toBe(409);
+    expect((await response.json()).error).toContain("NODRIA no lo vende");
+    expect(await demoOrders.getDemoOrderRecords()).toHaveLength(0);
   });
 
   it("rejects quantities above current fixture stock", async () => {
     const beforeCount = await demoOrders.getDemoOrderCount();
     const response = await post(
-      orderBody([{ productId: "pr_foundry_s", quantity: 7 }]),
+      orderBody([{ productId: demoProducts[0]!.id, quantity: 7 }]),
     );
 
     expect(response.status).toBe(409);
-    expect((await response.json()).error).toContain("stock suficiente");
+    expect((await response.json()).error).toContain("NODRIA no lo vende");
     expect(await demoOrders.getDemoOrderCount()).toBe(beforeCount);
   });
 });

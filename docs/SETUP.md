@@ -1,6 +1,6 @@
 # Instalación y modos de ejecución
 
-Guía contrastada con el repositorio al **2026-10-07**. NODRIA es una aplicación académica ficticia; no conectes datos personales ni medios de pago reales.
+Guía actualizada el **2026-10-13**. NODRIA es una aplicación académica ficticia; el catálogo usa modelos, precios observados y fotos reales de PcComponentes, pero NODRIA no los vende. No conectes datos personales ni medios de pago reales.
 
 ## Requisitos
 
@@ -10,7 +10,7 @@ Guía contrastada con el repositorio al **2026-10-07**. NODRIA es una aplicació
 
 ## Opción A: demo local de archivos
 
-Es la opción prevista para presentar catálogo, checkout simulado, solicitud B2B pública y soporte público. No necesita Docker, proyecto Supabase ni cuenta de usuario.
+Es la opción prevista para presentar el catálogo real de solo consulta, el PC Builder, solicitud B2B pública y soporte. No necesita Docker, proyecto Supabase ni cuenta de usuario; no habilita una compra ni un pago.
 
 Desde la raíz del repositorio, en PowerShell:
 
@@ -35,9 +35,9 @@ Arranca la aplicación:
 pnpm dev
 ```
 
-Visita <http://localhost:3000>. Confirma que el checkout muestra **FINALIZAR PEDIDO · DEMO LOCAL** antes de introducir los datos ficticios del guion de [`DEMO_SCRIPT.md`](./DEMO_SCRIPT.md).
+Visita <http://localhost:3000>. Revisa que el catálogo muestre una fecha de precio, enlace a PcComponentes y una foto distinta por modelo. `/checkout` debe explicar que NODRIA no vende los artículos ni procesa pagos.
 
-En este modo, los pedidos y formularios enviados se guardan en archivos ignorados de Git bajo `.data/`. El carrito, favoritos y comparación viven en el almacenamiento del navegador. No se crea sesión Auth. No conectes simultáneamente estas variables a un proyecto remoto: las dos credenciales públicas Supabase, si están presentes, cambian el modo de datos y no se activa un fallback a archivos ante errores conectados.
+En este modo, los formularios de soporte y consultas B2B pueden guardar datos de demostración en archivos ignorados de Git bajo `.data/`. El catálogo es una referencia local de modelos externos; favoritos y comparación viven en el almacenamiento del navegador. No se crea sesión Auth ni se genera una orden de compra. No conectes simultáneamente estas variables a un proyecto remoto: las dos credenciales públicas Supabase, si están presentes, cambian el modo de datos y no se activa un fallback a archivos ante errores conectados.
 
 ## Opción B: Supabase local con Auth
 
@@ -128,7 +128,7 @@ La suite Playwright levanta Next.js en `127.0.0.1:4317` con `DEMO_MODE=true`, cr
 
 | Síntoma | Comprobación segura |
 |---|---|
-| Checkout dice que requiere credenciales Supabase o devuelve `503` | Para el recorrido de archivos, confirma `NODE_ENV=development`, `DEMO_MODE=true` y que las dos variables Supabase están vacías. Si quieres Supabase local, configura las dos claves públicas desde el CLI. No dejes solo una: credenciales incompletas deshabilitan el modo de archivos. |
+| Una foto del catálogo no carga | Confirma conexión a Internet y revisa en el navegador la URL `img.pccomponentes.com`/`thumb.pccomponentes.com` de la ficha. El modo local usa las fotos originales externas; no sustituye silenciosamente una imagen rota por una foto genérica. |
 | `/acceso` no puede iniciar sesión o el portal pide acceso | Auth no existe en Demo Mode. En modo conectado, confirma que Docker y Supabase local siguen activos, que `.env.local` apunta a las claves del proyecto local y que la cuenta se registró después del último reset. |
 | Checkout conectado crea el pedido pero no confirma el resultado simulado | Confirma que `.env.local` contiene `SUPABASE_SECRET_KEY` local, sin prefijo `NEXT_PUBLIC_`, y reinicia `pnpm dev` tras editar variables. No sustituyas la clave por una de producción. |
 | Catálogo conectado aparece vacío o falla | Consulta la terminal de Supabase y la de Next.js. No se usa el catálogo de fixtures como fallback en modo conectado. En Supabase local, aplica `pnpm dlx supabase@latest db reset --local --yes` y revisa que las migraciones/seed terminen correctamente. |

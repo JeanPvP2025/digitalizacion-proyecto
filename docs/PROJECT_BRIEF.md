@@ -14,7 +14,7 @@ Build a coherent product that demonstrates workflows across catalogue, discovery
 - Language and currency: Spanish (`es-ES`) and EUR.
 - Brand: NODRIA — “Tecnología con sentido.”
 - Visual direction: editorial commerce; deep forest green, warm paper, lime accent; Sora display, DM Sans body, IBM Plex Mono technical metadata.
-- All identities, organizations, tax IDs, product brands, reviews, orders, and transactions are fictional.
+- NODRIA, identities, organizations, tax IDs, reviews, orders, and transactions are fictional. Storefront models, model numbers, observed prices, specifications, and photos are references to real products published by PcComponentes España; NODRIA is not their seller.
 
 ## Technical baseline
 
@@ -27,7 +27,7 @@ Build a coherent product that demonstrates workflows across catalogue, discovery
 ## Demo and security rules
 
 - No real money, Stripe, or bank-card collection. Never request or store a card number.
-- Local checkout records demo orders, payment attempts and events beneath ignored `.data/` files. Quote and support intake also use local files. This filesystem fallback is only for local development.
+- The local demo storefront is read-only for product purchases: retailer references link to their seller, and NODRIA does not create purchase orders, collect money, ship, or handle returns for them. Quote and support intake may use local files. This filesystem fallback is only for local development.
 - Supabase values are `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`. Never put service-role/secret keys in browser code or `NEXT_PUBLIC_*` variables.
 - State clearly when data is local demo data. Do not claim Supabase persistence unless the configured code path is integrated and verified.
 - Do not run the local filesystem demo fallback in production.

@@ -2,59 +2,52 @@
 
 ## Alcance
 
-NODRIA es un proyecto académico con identidades, catálogo, pedidos y pagos ficticios. El checkout es una simulación; no acepta tarjetas ni procesa dinero. El proyecto de Vercel se llama `nodria` y Production usa `https://nodria-academico.vercel.app`. El dominio antiguo `https://nodria-staging.vercel.app` redirige permanentemente (`308`) al nuevo conservando path y query.
+NODRIA es una empresa académica ficticia. El catálogo está preparado para mostrar referencias reales de PcComponentes con modelo, precio fechado y foto original, pero NODRIA no vende esos artículos ni cobra/envía pedidos. El proyecto de Vercel se llama `nodria` y Production usa `https://nodria-academico.vercel.app`; el host antiguo redirige con `308`.
 
-## Verificaciones ya hechas
+## Estado de esta actualización — 2026-10-13
 
-- Proyecto Vercel `nodria`; el dominio final responde HTTP 200 en portada, acceso, configurador y backoffice CRM. El alias antiguo responde `308` a la URL equivalente en el dominio final.
-- El commit `4905c47` está `Ready` en Production. `robots.txt` y el sitemap responden 200 y contienen solo URLs de `nodria-academico.vercel.app` (74 entradas).
-- TypeScript, ESLint, 288 Vitest + 39 Node, Playwright demo/UX 19/19, build de producción y `git diff --check` pasan.
-- Supabase local: reset/migraciones/seed, 183 pgTAP, DB lint y 78 probes HTTP Auth/RLS pasan. Suites aisladas: checkout 4/4, dominios 6/6, B2B 1/1, customer/B2B 1/1 y roles 1/1.
-- El CLI de Supabase de esta sesión lista una organización distinta y no tiene acceso al proyecto `ypnhdxpejcbcyjiosrhf`. No se consideran certificados el catálogo, Auth/SMTP, RLS ni escrituras alojadas solo porque las rutas respondan 200.
+- Verificación local 2026-10-13: instalación congelada, TypeScript, ESLint, `pnpm test` (289 Vitest + 26 Node), E2E (17/17), build y `git diff --check` pasan; las 64 URL de imagen responden `200 image/jpeg`. No se aplicó la migración al Supabase remoto ni se publicó este árbol.
+- Los cambios de código no se han desplegado y la migración nueva no se ha aplicado a Supabase remoto.
+- Esta sesión no tuvo permisos de lectura ni escritura del proyecto Supabase. No se debe interpretar este documento como certificación de Auth/RLS o datos alojados.
 
-## 1. Verificar/aplicar datos de catálogo en Supabase
+## 1. Aplicar las referencias reales en Supabase
 
-La comprobación del sitio publicado el 2026-10-12 encontró 3 marcas y 44 fichas visibles; el PC Builder muestra 4–5 opciones por clase en vez de 8. Esto prueba que el catálogo desplegado no cumple el dataset esperado. No deduzcas por ello qué migración falta: ejecuta primero la consulta siguiente y revisa el historial de migraciones.
+La migración de esta versión es `supabase/migrations/20261013070617_verified_product_reference_catalog.sql`. Requiere que ya estén aplicadas las migraciones previas que crean categorías como `procesadores`, `placas-base`, `memoria-ram`, `cajas`, `fuentes-alimentacion`, `tarjetas-graficas`, `refrigeracion` y `ssd-internos`.
 
-En el proyecto `ypnhdxpejcbcyjiosrhf`, abre **SQL Editor** y ejecuta primero esta consulta de solo lectura:
+En el proyecto Supabase `ypnhdxpejcbcyjiosrhf`, abre **SQL Editor**, pega el contenido completo de ese archivo del repositorio y ejecútalo una vez. No necesitas consultar `supabase_migrations.schema_migrations`; si esa relación no existe en el SQL Editor, no es el historial que debes usar.
+
+La migración revisa el conjunto antes de modificarlo, publica 64 referencias con 8 productos por clase, desactiva las fichas sintéticas previas y retira su stock libre conservando las reservas. Conserva pedidos e historial, no elimina tablas ni pedidos y no cambia RLS o grants. Si muestra un error, detente y comparte el texto exacto; no vuelvas a ejecutar migraciones antiguas ni `seed.sql`.
+
+Tras `Success`, ejecuta estas consultas de solo lectura:
 
 ```sql
-select count(*) as productos_catalogo_ampliado,
-       count(distinct brand) as marcas_catalogo_ampliado
-from public.products
-where left(id, 9) = 'pr_depth_';
+select count(distinct p.id) as modelos_publicados,
+       count(distinct p.image_url) as fotos_unicas
+from public.products p
+join public.product_variants v on v.product_id = p.id
+where p.is_published
+  and v.is_active
+  and v.attributes #>> '{reference_price,source}' = 'PcComponentes';
 ```
 
-La migración inicial agrega 84 productos; la expansión agrega 32 piezas PC. El resultado final esperado en `pr_depth_` es **116 productos y 6 marcas** (más los 12 productos del seed base).
-
-Aplica solo lo que falte, después de comparar con `supabase_migrations.schema_migrations` en el proyecto correcto:
-
-- Si devuelve **0**, ejecuta primero `supabase/migrations/20261008135808_catalog_depth_dataset.sql` y después la migración PC Builder indicada abajo.
-- Si devuelve **32**, es probable que solo esté la expansión PC. Ejecuta la migración base `20261008135808_catalog_depth_dataset.sql`, comprueba el resultado y aplica la expansión únicamente si aún no está registrada.
-- Si devuelve **84**, la migración inicial ya está; ejecuta únicamente `supabase/migrations/20261009113024_pc_builder_catalog_expansion.sql`.
-- Si devuelve **116**, no repitas ninguna de esas dos migraciones.
-- Para cualquier otro conteo, detente y revisa filas parciales/colisiones con el historial antes de hacer cambios.
-
-La migración base añade 84 fichas sintéticas y la expansión PC añade otras 32 con inventario inicial demo; no cambian tablas, grants ni RLS. La secuencia prevista es base y luego expansión. En GitHub abre el SQL correspondiente de `main`, cópialo y ejecútalo solo en el SQL Editor del proyecto `ypnhdxpejcbcyjiosrhf`, una migración por vez. No ejecutes una migración si el historial ya la marca aplicada.
-
-Después verifica que haya ocho variantes válidas por clase:
+El resultado esperado para ambas columnas es **64**. Después verifica 8 opciones reales por clase:
 
 ```sql
 select v.attributes->'pc_builder'->>'category' as clase,
-       count(*) as opciones
+       count(distinct p.id) as opciones
 from public.product_variants v
 join public.products p on p.id = v.product_id
 where p.is_published
   and v.is_active
   and v.currency = 'EUR'
-  and v.attributes ? 'pc_builder'
+  and v.attributes #>> '{reference_price,source}' = 'PcComponentes'
 group by 1
 order by 1;
 ```
 
-El mínimo esperado son **8 opciones** para cada una de las ocho clases (`case`, `cooler`, `cpu`, `gpu`, `memory`, `motherboard`, `psu`, `storage`). El SQL Editor del operador devolvió 8–9 por clase. No borres opciones adicionales. Vuelve a cargar `/marcas`, `/categorias` y `/configurador` en el dominio final y comprueba el catálogo publicado.
+Cada una de las ocho clases (`case`, `cooler`, `cpu`, `gpu`, `memory`, `motherboard`, `psu`, `storage`) debe dar **8**. No borres registros adicionales.
 
-No ejecutes `supabase/seed.sql`, `db reset`, ni las migraciones históricas otra vez en el proyecto alojado. La migración no crea datos comerciales reales ni convierte el pago demo en pago real.
+No ejecutes `supabase/seed.sql`, `db reset`, ni las migraciones sintéticas históricas otra vez en el proyecto alojado.
 
 ## 2. Auth sin correo de confirmación
 
@@ -86,8 +79,8 @@ La advertencia de Vercel sobre el prefijo público en URL/publishable key es esp
 
 1. Abre `/acceso`, crea una cuenta ficticia y comprueba que inicia sesión y redirige al destino sin enviar correo.
 2. Cierra sesión e inicia sesión con la misma cuenta. La recuperación de contraseña por email no está disponible.
-3. Verifica `/configurador` y confirma que cada clase ofrece al menos ocho opciones; `/marcas` y `/categorias/ordenadores` deben mostrar el catálogo ampliado.
-4. Recorre una compra demo aprobada y una rechazada solo con datos ficticios; confirma que se indica expresamente que no hay cobro real.
+3. Verifica `/configurador` y confirma que cada clase ofrece ocho opciones; `/marcas` y `/categorias/componentes` deben mostrar el catálogo ampliado.
+4. Abre `/checkout` y confirma que en modo demo no aparecen campos de pago ni botones para crear una compra NODRIA.
 5. En Vercel, confirma que Production sigue apuntando a `main` y que el deployment aparece como `Ready`.
 
 El dominio Vercel final ya está configurado; no añadas el dominio antiguo como canónico. El proyecto solo puede marcarse como release remoto certificado después de verificar los conteos, el alta Auth sin correo y un recorrido autenticado real con una cuenta ficticia, además de los controles RLS pendientes.

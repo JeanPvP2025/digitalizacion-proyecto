@@ -1,6 +1,13 @@
 # Testing y gates
 
-## Corte de release — 2026-10-13
+## Verificación local de modelos, precios e imágenes — 2026-10-13
+
+- `pnpm install --frozen-lockfile`, `pnpm exec tsc --noEmit`, `pnpm lint`, `pnpm test` (**289 Vitest + 26 Node**), `pnpm test:e2e` (**17/17**), `pnpm build` y `git diff --check`: pasan.
+- Las pruebas de catálogo confirman 64 modelos/MPN con precio fechado y vendedor, foto propia por referencia y ocho modelos por cada clase de PC Builder. Las 64 URLs respondieron `200 image/jpeg` y las 64 imágenes tienen hashes de contenido distintos; Playwright comprobó una foto a través de `next/image`, enlaces a la ficha fuente y vista móvil.
+- Las E2E también confirman que NODRIA no inventa stock/reseñas ni simula una venta sobre artículos externos, y recorren destinos internos y overflow en 390/768 px.
+- Ninguna migración fue ejecutada contra Supabase remoto ni se desplegó este árbol local. Los avisos Playwright `NO_COLOR`/`FORCE_COLOR` y la hidratación con `caret-color: transparent` no causaron fallos; el estilo de caret no aparece en el código del repo.
+
+## Corte de release remoto — 2026-10-12 (histórico)
 
 - `pnpm install --frozen-lockfile`, `pnpm exec tsc --noEmit`, `pnpm lint`, `pnpm test` (**288 Vitest + 39 Node**), `pnpm test:e2e` (**19/19**), `pnpm build` y `git diff --check`: pasan.
 - Supabase local: migraciones y seed aplicados; pgTAP **183/183**; DB lint sin errores; auth/RLS HTTP **78/78**.

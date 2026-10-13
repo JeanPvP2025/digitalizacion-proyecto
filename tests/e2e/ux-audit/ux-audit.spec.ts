@@ -1,17 +1,20 @@
 import { expect, test } from "@playwright/test";
+import referenceCatalog from "../../../lib/catalog-data/verified-reference-products.json";
+
+const reference = referenceCatalog.products[0]!;
 
 const primaryRoutes = [
   "/",
   "/catalogo",
   "/catalogo?q=nvme",
   "/categorias",
-  "/categorias/ordenadores",
+  "/categorias/componentes",
   "/marcas",
-  "/marcas/nodria",
+  "/marcas/amd",
   "/campanas",
   "/campanas/puesto-de-trabajo",
-  "/producto/fluxbook-14-pro",
-  "/producto/fluxbook-14-pro/opiniones",
+  `/producto/${reference.slug}`,
+  `/producto/${reference.slug}/opiniones`,
   "/carrito",
   "/checkout",
   "/acceso",
@@ -148,16 +151,16 @@ test("skip link, search shortcut, and suggestions work with the keyboard", async
   await page.keyboard.press("Control+k");
   const search = page.locator('.header-search input[type="search"]');
   await expect(search).toBeFocused();
-  const searchResponse = await page.request.get("/api/search?q=Flux");
+  const searchResponse = await page.request.get(`/api/search?q=${encodeURIComponent(reference.modelNumber)}`);
   expect(searchResponse.status()).toBe(200);
-  await search.fill("Flux");
-  const option = page.getByRole("option", { name: /FluxBook 14 Pro/i });
+  await search.fill(reference.modelNumber);
+  const option = page.getByRole("option", { name: new RegExp(reference.name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i") });
   await expect(option).toBeVisible({ timeout: 30_000 });
   await page.keyboard.press("ArrowDown");
   await expect(search).toHaveAttribute("aria-activedescendant", /.+/);
   await page.keyboard.press("Enter");
-  await expect(page).toHaveURL(/\/producto\/fluxbook-14-pro$/);
-  await expect(page.getByRole("heading", { name: "FluxBook 14 Pro" })).toBeVisible();
+  await expect(page).toHaveURL(new RegExp(`/producto/${reference.slug}$`));
+  await expect(page.getByRole("heading", { name: reference.name })).toBeVisible();
 });
 
 test("B2B field errors are announced, associated, and focus the first invalid field without submitting", async ({ page }) => {
@@ -196,9 +199,11 @@ test("B2B landing and portal apply their CSS-module root classes", async ({ page
   expect(missingRootClasses, "B2B CSS-module roots missing in the rendered DOM").toEqual([]);
 });
 
-test("empty checkout disables the demo purchase action", async ({ page }) => {
+test("checkout explains that NODRIA does not sell catalog references", async ({ page }) => {
   await page.goto("/checkout", { waitUntil: "domcontentloaded" });
-  await expect(page.getByRole("button", { name: /confirmar compra demo/i })).toBeDisabled();
+  await expect(page.getByRole("heading", { name: "NODRIA no realiza ventas." })).toBeVisible();
+  await expect(page.getByRole("button", { name: /confirmar compra demo|simular resultado de pago/i })).toHaveCount(0);
+  await expect(page.getByText(/No se procesa ningún pago ni se crea un pedido en NODRIA/)).toBeVisible();
 });
 
 test("footer back-to-top affordance is keyboard operable", async ({ page }) => {

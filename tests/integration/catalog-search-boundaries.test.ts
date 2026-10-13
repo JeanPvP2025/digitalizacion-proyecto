@@ -1,4 +1,5 @@
 import { afterAll, beforeEach, describe, expect, it, vi } from "vitest";
+import { demoProducts } from "@/lib/catalog";
 
 const supabaseMock = vi.hoisted(() => ({ createClient: vi.fn() }));
 vi.mock("@supabase/supabase-js", () => ({ createClient: supabaseMock.createClient }));
@@ -11,16 +12,17 @@ const environmentKeys = [
 ] as const;
 const originalEnvironment = Object.fromEntries(environmentKeys.map((key) => [key, process.env[key]]));
 
+const reference = demoProducts[0]!;
 const connectedProduct = {
-  id: "db-product-814",
-  slug: "connected-router-814",
-  sku: "NOD-DB-814",
-  name: "Router conectado 814",
-  brand: "NODRIA",
-  summary: "Producto leído desde PostgreSQL para la prueba de frontera.",
-  description: "Descripción de prueba.",
-  image_url: null,
-  image_alt: "",
+  id: reference.id,
+  slug: reference.slug,
+  sku: reference.sku,
+  name: reference.name,
+  brand: reference.brand,
+  summary: reference.summary,
+  description: reference.summary,
+  image_url: reference.image,
+  image_alt: reference.imageAlt,
   badge: null,
   rating_average: 0,
   rating_count: 0,
@@ -51,9 +53,17 @@ function mockSupabaseClient(results: Record<string, ReturnType<typeof queryResul
 function connectedResults() {
   return {
     products: queryResult([connectedProduct]),
-    categories: queryResult([{ id: "db-category-network", slug: "redes", name: "Redes", description: "Redes conectadas", sort_order: 10, is_active: true }]),
-    product_categories: queryResult([{ product_id: connectedProduct.id, category_id: "db-category-network" }]),
-    product_variants: queryResult([{ id: "db-variant-814", product_id: connectedProduct.id, sku: connectedProduct.sku, title: "Única", current_price: "814.50", compare_at_price: null, currency: "EUR", is_active: true }]),
+    categories: queryResult([{ id: "db-category-components", slug: "componentes", name: "Componentes", description: "Componentes", sort_order: 10, is_active: true }]),
+    product_categories: queryResult([{ product_id: connectedProduct.id, category_id: "db-category-components" }]),
+    product_variants: queryResult([{
+      id: "db-variant-reference", product_id: connectedProduct.id, sku: connectedProduct.sku,
+      title: "Referencia PcComponentes", current_price: reference.price.toFixed(2), compare_at_price: null, currency: "EUR", is_active: true,
+      attributes: { reference_price: {
+        source: "PcComponentes", seller: "PcComponentes", url: reference.priceReference!.productUrl,
+        observed_at: reference.priceReference!.checkedAt, price_eur: reference.price, image_url: reference.image,
+        mpn: reference.modelNumber,
+      } },
+    }]),
     product_specifications: queryResult([{ product_id: connectedProduct.id, label: "Estándar", value: "Wi-Fi 7 desde DB", sort_order: 1 }]),
   };
 }
@@ -96,7 +106,7 @@ describe("catalog and search data boundaries", () => {
     const catalog = await catalogRepository.getCatalogData();
 
     expect(catalog.source).toBe("demo");
-    expect(catalog.products.map(({ id }) => id)).toContain("pr_fluxbook14");
+    expect(catalog.products.map(({ id }) => id)).toContain(reference.id);
   });
 
   it.each([
@@ -123,14 +133,14 @@ describe("catalog and search data boundaries", () => {
     supabaseMock.createClient.mockReturnValue(mockSupabaseClient(connectedResults()));
     const search = await import("../../app/api/search/route");
 
-    const response = await search.GET(request("/api/search?q=NOD-DB-814"));
+    const response = await search.GET(request("/api/search?q=" + encodeURIComponent(reference.sku)));
     const body = await response.json();
 
     expect(response.status).toBe(200);
     expect(body).toMatchObject({
       source: "supabase",
       total: 1,
-      results: [{ slug: connectedProduct.slug, name: connectedProduct.name, price: 814.5 }],
+      results: [{ slug: connectedProduct.slug, name: connectedProduct.name, price: reference.price }],
     });
     expect(body.results.some((product: { name: string }) => product.name === "FluxBook 14 Pro")).toBe(false);
     expect(response.headers.get("cache-control")).toBe("no-store");
@@ -143,7 +153,7 @@ describe("catalog and search data boundaries", () => {
     }));
     const search = await import("../../app/api/search/route");
 
-    const response = await search.GET(request("/api/search?q=FluxBook"));
+    const response = await search.GET(request("/api/search?q=" + encodeURIComponent(reference.sku)));
     const body = await response.json();
 
     expect(response.status).toBe(503);

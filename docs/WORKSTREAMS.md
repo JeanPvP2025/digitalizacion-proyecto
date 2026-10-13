@@ -2,18 +2,18 @@
 
 Tablero de conversaciones. El repositorio y las migraciones son fuente de verdad; un estado `Done` de agente no sustituye integración/gates del tech lead.
 
-## Cierre de release actual — 2026-10-13
+## Catálogo real — 2026-10-13
 
-No hay conversaciones o worktrees de implementación activos. El proyecto `nodria` está en Vercel Production en `https://nodria-academico.vercel.app`; `nodria-staging.vercel.app` queda como redirección permanente compatible.
+No hay conversaciones ni worktrees de implementación activos. Los cambios del catálogo están sin desplegar y la migración aún no se ha ejecutado en Supabase remoto.
 
 | Conversation | Role | Task | Ownership | Dependencies | State |
 |---|---|---|---|---|---|
-| Tech Lead (main) | UX de acceso y catálogo | Destino inicial por rol, copy de cara al usuario y variedad de fotos de catálogo | `components/storefront/auth-form.tsx`, `lib/catalog-mapping.ts`, UI y tests relacionados | Roles persistidos y categorías activas | ✅ Implementado; TypeScript, ESLint y suites locales pasan; deployment a Production pendiente |
-| Tech Lead (main) | CRM comercial — clientes y pedidos | Directorio/ficha de clientes; pedidos con filtros de estado y timeline en el CRM admin | `app/backoffice/crm/**`, `lib/crm/orders.ts`, `supabase/migrations/20261013100000_crm_customer_orders_workspace.sql`, docs CRM/RBAC | Aplicar migración en Supabase y validar sesión `sales_manager` | 🚧 Typecheck, lint y 23 pgTAP locales pasan; migration/roles Production y deployment pendientes |
-| Tech Lead (main) | Auth sin correo | Eliminar confirmación/reenvío/recuperación por email de la UI y mantener registro con sesión inmediata | `components/storefront/auth-form.tsx`, callback feedback, Auth docs | Supabase `Confirm Email` desactivado | 🚧 Código actualizado; falta guardar ajuste remoto y probar un registro nuevo |
-| Supabase project owner | External release verification | Desactivar `Confirm Email`, mantener registros habilitados y probar alta/inicio; completar RLS/JWT y recorrido de pedido demo | Supabase project `ypnhdxpejcbcyjiosrhf` | Acceso al proyecto | ⚠️ Catálogo verificado por SQL: 116 productos, 6 marcas, 8–9 opciones por clase; Auth/RLS alojados aún sin certificar |
+| Tech Lead (main) | Catálogo / PC Builder | 64 modelos reales, precios fechados y fotos únicas; eliminar referencias ficticias visibles; limitar compra demo | `lib/catalog-data/**`, `lib/catalog.ts`, `lib/pc-builder/**`, storefront, tests, migration y docs | Categorías existentes y permisos de lectura | ✅ Gates locales: 289 Vitest + 26 Node, E2E 17/17, build; 64 fotos HTTP 200. ⏳ Falta migración remota y deployment |
+| Project owner | Supabase data | Ejecutar `supabase/migrations/20261013070617_verified_product_reference_catalog.sql` y verificar 64 referencias/8 por clase | SQL Editor del proyecto conectado | Migraciones de categorías y catálogo base previas | ⏳ Pendiente; no se ha ejecutado remotamente |
+| Project owner | Release Vercel | Publicar cambios y revisar imágenes y catálogo en el dominio final | Proyecto Vercel `nodria` | Migración remota aplicada; cambios en `main` | ⏳ Pendiente |
+| Tech Lead (main) | Auth / CRM release gates | Mantener las verificaciones remotas documentadas y no declararlas certificadas sin evidencia | `docs/PRODUCTION_RUNBOOK.md`, Auth/RBAC, CRM | Cuenta Supabase y Vercel del operador | ⚠️ Estado de las comprobaciones remotas separado de este trabajo |
 
-La base local de integración tiene los slices implementados y los gates repetidos. La **release final aún no está completa**: falta aplicar y verificar el ajuste de Auth remoto, y no hay evidencia actual de RLS/JWT alojado. El catálogo, dominio, robots y sitemap ya están verificados.
+El agente coordina en local; las dos acciones externas restantes son aplicar la migración al proyecto correcto y desplegar después de verificarla. No ejecutar `db reset` ni el seed de desarrollo en producción.
 
 ## Ola 3 — completada e integrada
 

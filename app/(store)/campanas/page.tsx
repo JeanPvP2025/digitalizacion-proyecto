@@ -6,7 +6,7 @@ import { createCatalogLandingMetadata } from "@/lib/content/catalog-landing-meta
 import { getCatalogData } from "@/lib/catalog-repository";
 
 export const dynamic = "force-dynamic";
-export const metadata: Metadata = createCatalogLandingMetadata("/campanas", "Selecciones", "Selecciones temáticas formadas a partir de las fichas publicadas del catálogo ficticio NODRIA.");
+export const metadata: Metadata = createCatalogLandingMetadata("/campanas", "Selecciones", "Selecciones de componentes reales con precios e imágenes de referencia enlazados al vendedor.");
 
 export default async function CampaignsPage() {
   const data = await getCatalogData();

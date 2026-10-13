@@ -229,6 +229,46 @@ where not exists (
   select 1 from public.crm_leads where email = 'demo.cliente@nodria.example' and source = 'seed'
 );
 
+-- Keep legacy seed rows for historical references, but never expose the synthetic catalogue.
+do $$
+declare
+  v_stock record;
+begin
+  for v_stock in
+    select i.warehouse_id, i.variant_id, i.on_hand, i.reserved
+    from public.inventory i
+    join public.product_variants v on v.id = i.variant_id
+    join public.products p on p.id = v.product_id
+    where (p.id like 'pr_depth_%' or p.id like 'pr_nodria_%'
+       or p.id in ('pr_fluxbook14','pr_foundry_s','pr_loom27','pr_linkmesh','pr_slateair','pr_arcssd')
+       or p.sku like 'NOD-%' or p.image_url ilike '%images.unsplash.com%')
+      and i.on_hand > i.reserved
+  loop
+    perform private.adjust_inventory(
+      v_stock.warehouse_id, v_stock.variant_id,
+      v_stock.reserved - v_stock.on_hand,
+      'Retirada de inventario sintético de seed; referencia externa sin venta NODRIA'
+    );
+  end loop;
+
+  update public.product_variants variant
+     set is_active = false, updated_at = now()
+   where variant.product_id in (
+     select product.id from public.products product
+     where product.id like 'pr_depth_%' or product.id like 'pr_nodria_%'
+        or product.id in ('pr_fluxbook14','pr_foundry_s','pr_loom27','pr_linkmesh','pr_slateair','pr_arcssd')
+        or product.sku like 'NOD-%' or product.image_url ilike '%images.unsplash.com%'
+   );
+
+  update public.products product
+     set is_published = false, is_featured = false, badge = null,
+         rating_average = 0, rating_count = 0, updated_at = now()
+   where product.id like 'pr_depth_%' or product.id like 'pr_nodria_%'
+      or product.id in ('pr_fluxbook14','pr_foundry_s','pr_loom27','pr_linkmesh','pr_slateair','pr_arcssd')
+      or product.sku like 'NOD-%' or product.image_url ilike '%images.unsplash.com%';
+end;
+$$;
+
 insert into public.quote_inquiries (contact_name, email, phone, company, message, consent_to_contact, source)
 select 'Ana Martín', 'ana.martin@estudioprisma.example', '+34 910 000 322', 'Estudio Prisma',
   'Presupuesto para cuatro estaciones Foundry S Studio y cuatro monitores Loom 27 4K.', true, 'seed'

@@ -1,5 +1,16 @@
 # Registro de handoffs
 
+## Catálogo de referencias reales e imágenes — Tech Lead — 2026-10-13
+
+- **Objetivo:** sustituir productos/imágenes ficticios visibles por referencias de modelos reales y evitar que NODRIA aparezca como vendedor.
+- **Resultado:** `lib/catalog-data/verified-reference-products.json` contiene 64 fichas de PcComponentes España, 8 por cada una de 8 clases de PC Builder. Incluye modelo/MPN, precio observado el 13/10/2026, especificaciones, URL del vendedor y foto primaria única. Las 64 URL de imagen respondieron `200 image/jpeg`.
+- **Integración:** catálogo local, búsqueda, PDP, tarjetas y PC Builder usan el dataset; las fichas muestran fecha y enlace del vendedor. El checkout demo de solo consulta no solicita pago ni crea pedidos.
+- **Migración:** `supabase/migrations/20261013070617_verified_product_reference_catalog.sql` publica esas referencias, retira de publicación el catálogo sintético anterior y conserva historial/pedidos. Tiene preflight y upserts. No se ejecutó contra Supabase remoto.
+- **Pruebas locales:** instalación congelada, TypeScript, ESLint, `pnpm test` (289 Vitest + 26 Node), `pnpm test:e2e` (17/17), build y `git diff --check` pasan. Las 64 imágenes comerciales individuales respondieron `200 image/jpeg`.
+- **Archivos clave:** `lib/catalog-data/verified-reference-products.json`, `lib/catalog.ts`, `lib/catalog-mapping.ts`, `lib/pc-builder/reference-catalog.ts`, `supabase/migrations/20261013070617_verified_product_reference_catalog.sql`, `tests/catalog-data/verified-reference-catalog.test.mjs`.
+- **Estado Git:** cambios locales aún sin commit; ningún push/deploy ni mutación remota.
+- **Siguiente paso:** aplicar la migración manualmente en el proyecto Supabase correcto, verificar conteos, luego publicar y revisar `/catalogo`, PDP y `/configurador` en Vercel. No se debe desplegar antes de la migración porque el catálogo conectado aún contiene las filas antiguas.
+
 ## Cierre de release / reconciliación de producción — Tech Lead — 2026-10-12
 
 - **Resultado:** commit `4905c47` ya está en Vercel Production (`Ready`) bajo `https://nodria-academico.vercel.app`. Se fijó `NEXT_PUBLIC_SITE_URL`; el alias anterior responde 308 y conserva path/query. El deployment nuevo hace que `robots.txt` y las 74 URLs de `sitemap.xml` usen exclusivamente el dominio final.

@@ -79,7 +79,7 @@ export function CatalogView({ data, rawParams }: { data: CatalogData; rawParams:
               </section>
               {(model.priceRange || params.has("min") || params.has("max")) && <form className={styles.group} action="/catalogo" method="get" key={`price-${params.toString()}`}>
                 <fieldset className={styles.price}>
-                  <legend>Precio · EUR{data.source === "demo" ? " · demo" : ""}</legend>
+                  <legend>Precio · EUR{model.referenceOnly ? " · referencia" : data.source === "demo" ? " · demo" : ""}</legend>
                   {model.priceRange && <p className={styles.hint}>En esta selección: {formatPrice(model.priceRange.min)} – {formatPrice(model.priceRange.max)}</p>}
                   <HiddenParams params={params} except={["min", "max"]} />
                   <div className={styles.priceInputs}>
@@ -102,7 +102,7 @@ export function CatalogView({ data, rawParams }: { data: CatalogData; rawParams:
           {model.category && <div className={styles.categoryIntro}><h2>{model.category.name}</h2><p>{model.category.description}</p></div>}
           {model.results.length > 0 ? <div className="catalog-product-grid">{model.results.map((product, index) => <div key={product.id} className={styles.product}>
             {data.source === "demo" ? <ProductCard product={product} index={index} /> : <ConnectedProductCard product={product} index={index} />}
-            {data.source === "demo" && product.stock <= 0 && <p className={styles.soldOut}>Agotado · demo. No se puede añadir a la cesta.</p>}
+            {data.source === "demo" && !product.priceReference && product.stock <= 0 && <p className={styles.soldOut}>Agotado · demo. No se puede añadir a la cesta.</p>}
           </div>)}</div> : data.products.length === 0 ? <div className={styles.empty}><h2>Aún no hay productos publicados.</h2><p>El catálogo aparecerá aquí cuando haya productos publicados para explorar.</p></div> : <div className={styles.empty}>
             <h2>No encontramos lo que buscas.</h2>
             <p>{model.query ? `No hay coincidencias para “${model.query}” con esta selección.` : "No hay productos que cumplan todos estos filtros."} Cambia una opción o amplía el precio.</p>

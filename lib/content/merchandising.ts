@@ -82,7 +82,7 @@ export function getHomepageMerchandising(data: CatalogData): HomepageMerchandisi
   }
   const campaign: HomepageCampaign | null = campaignProducts.length ? {
     title: "Tu espacio de trabajo, pieza a pieza.",
-    description: "Piensa en el equipo, la pantalla, la conexión y el almacenamiento. Explora estas fichas ficticias como punto de partida; esta selección no es un pack ni certifica compatibilidad.",
+    description: "Compara componentes y SSD con imágenes y precios de referencia enlazados a PcComponentes. No es un pack ni certifica compatibilidad.",
     href: "/campanas/puesto-de-trabajo",
     products: campaignProducts,
   } : null;

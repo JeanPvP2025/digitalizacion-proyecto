@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowUpRight, GitCompareArrows, Heart, Star } from "lucide-react";
 import { useEffect, useState } from "react";
 import { COMPARE_KEY, FAVORITES_KEY } from "@/components/storefront/store-interactions";
@@ -112,12 +113,14 @@ export function ConnectedCollectionActions({ product }: { product: Product }) {
 }
 
 export function ConnectedProductCard({ product, index = 0 }: { product: Product; index?: number }) {
+  const checkedAt = product.priceReference?.checkedAt
+    ? new Intl.DateTimeFormat("es-ES", { dateStyle: "medium", timeZone: "UTC" }).format(new Date(`${product.priceReference.checkedAt}T00:00:00Z`))
+    : null;
   return (
     <article className="product-card" style={{ animationDelay: `${index * 70}ms` }}>
       <Link className="product-image-link" href={`/producto/${product.slug}`}>
         <div className="product-photo-wrap">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          {product.image ? <img className="product-photo" src={product.image} alt={product.imageAlt} loading={index > 2 ? "lazy" : "eager"} /> : <span className="product-photo-placeholder">Imagen no disponible</span>}
+          {product.image ? <Image className="product-photo" src={product.image} alt={product.imageAlt} fill sizes="(max-width: 760px) 46vw, (max-width: 1100px) 36vw, 24vw" loading={index > 2 ? "lazy" : "eager"} unoptimized /> : <span className="product-photo-placeholder">Imagen no disponible</span>}
           {product.badge && <span className="product-badge">{product.badge}</span>}
           <span className="product-open"><ArrowUpRight aria-hidden="true" size={16} /></span>
         </div>
@@ -129,8 +132,10 @@ export function ConnectedProductCard({ product, index = 0 }: { product: Product;
         </span>
       </div>
       <Link className="product-card-title" href={`/producto/${product.slug}`}><h3>{product.name}</h3></Link>
-      <div className="product-card-price"><strong>{formatPrice(product.price)}</strong>{product.previousPrice !== undefined && <del>{formatPrice(product.previousPrice)}</del>}</div>
-      <div className="product-card-stock">Disponibilidad por confirmar</div>
+      <div className="product-card-price"><strong>{formatPrice(product.price)}</strong></div>
+      {product.priceReference && <p className="product-card-reference">Precio de referencia · {checkedAt}</p>}
+      {product.priceReference && <a className="product-card-outbound" href={product.priceReference.productUrl} target="_blank" rel="noopener noreferrer">Ver ficha en PcComponentes <ArrowUpRight aria-hidden="true" size={12} /></a>}
+      <div className="product-card-stock">Disponibilidad en NODRIA no conectada</div>
       <ConnectedCollectionActions product={product} />
     </article>
   );

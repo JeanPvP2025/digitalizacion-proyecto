@@ -8,6 +8,12 @@ NODRIA es una empresa tecnológica ficticia para el mercado inicial de España, 
 
 La implementación usa Next.js 16.4, React 19.3, TypeScript 5 y Tailwind CSS 4. Es una aplicación Next.js modular con PostgreSQL/Supabase como destino de persistencia. No se proponen microservicios, colas, cachés o motores de búsqueda externos sin una necesidad medida.
 
+## Catálogo de referencias externas — 2026-10-13
+
+El catálogo público contiene referencias consultadas en PcComponentes España, con modelo/MPN, precio observado y fecha, especificaciones publicadas, enlace de vendedor e imagen primaria de ese modelo. `lib/catalog-data/verified-reference-products.json` es la fuente para modo demo local; `supabase/migrations/20261013070617_verified_product_reference_catalog.sql` replica las fichas en el catálogo conectado. El runtime valida que la URL del vendedor y el precio/imagen coincidan con los metadatos de variante.
+
+Estas fichas no representan oferta, stock ni inventario de NODRIA. Los enlaces abren el comercio de referencia; el modo demo no permite añadirlas a una compra de NODRIA ni crear un pedido. Los precios son snapshots fechados y deben confirmarse con el vendedor. Las imágenes se sirven desde su CDN y no se copian ni se presentan como activos propios.
+
 ## Vista de contexto
 
 ```mermaid
@@ -47,7 +53,7 @@ Los límites son módulos de negocio dentro de la misma aplicación y base relac
 
 - El catálogo distingue producto y variante vendible cuando haya opciones de compra. Los atributos técnicos deben tener un conjunto consultable por tipo de producto; JSON puede guardar extensiones, no reemplazar indiscriminadamente las relaciones importantes.
 - `categories.parent_id` expone la jerarquía en el catálogo de lectura; `getCatalogData()` conserva `parentId` y los IDs de todas las categorías por producto. El campo `Product.category` mantiene la categoría raíz para los consumidores existentes. Facetas por descendencia usan memberships explícitas; stock exacto no se expone en catálogo conectado.
-- El dataset de profundidad es una migración de datos aditiva e idempotente, no un seed de producción: inserta 84 productos ficticios y conserva los registros preexistentes. El Tech Lead validó su aplicación solo en Supabase local; staging requiere revisión y despliegue manual.
+- Históricamente, el dataset de profundidad insertó 84 productos sintéticos y la expansión añadió 32. Esa estrategia fue supersedida el 2026-10-13 por referencias reales; ver D-035 y `20261013070617_verified_product_reference_catalog.sql`.
 - El pedido conserva snapshots de descripción/SKU, precios, descuentos, impuestos y direcciones usados al confirmarse. Cambios posteriores en catálogo no reescriben el historial.
 - La disponibilidad se deriva de `physical - reserved`; reservar y liberar stock debe actualizarse de forma atómica con la transición de pedido correspondiente. No se mantiene una copia derivada sin una regla verificable.
 - Los importes se almacenan como `NUMERIC` en PostgreSQL, con moneda explícita en contratos que deban poder extenderse a otros mercados. No se usan cálculos monetarios con coma flotante binaria.
@@ -101,7 +107,7 @@ Los nombres públicos configurados son `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC
 
 ### Entornos de entrega
 
-El entorno alojado usa Vercel para Next.js y Supabase para base de datos/Auth. La rama `main` se despliega a Production en `https://nodria-academico.vercel.app`; `https://nodria-staging.vercel.app` es solo un alias con redirección permanente. Es una demo pública que no acepta dinero real. La política elegida no requiere SMTP: Auth debe permitir nuevos registros y tener `Confirm Email` desactivado; la UI no emite recuperación por correo. El operador verificó por SQL 116 productos de catálogo ampliado y 8–9 opciones PC por clase; no se inspeccionó RLS/JWT ni mutaciones alojadas desde esta sesión. Nunca resetear ni reconstruir la base remota para facilitar desarrollo.
+El entorno alojado usa Vercel para Next.js y Supabase para base de datos/Auth. La rama `main` se despliega a Production en `https://nodria-academico.vercel.app`; `https://nodria-staging.vercel.app` es solo un alias con redirección permanente. Es una demo pública que no acepta dinero real. La política elegida no requiere SMTP: Auth debe permitir nuevos registros y tener `Confirm Email` desactivado; la UI no emite recuperación por correo. El catálogo de código está preparado para 64 referencias reales, ocho por clase PC, pero esta migration aún no se ha ejecutado en el proyecto remoto. Nunca resetear ni reconstruir la base remota para facilitar desarrollo.
 
 Vercel Preview debe usar datos no productivos y credenciales separadas. Los cambios de schema deben desplegarse en orden controlado antes del código que los consume. El procedimiento concreto de migración y rollback debe seguir las herramientas y migraciones presentes en el repositorio cuando se implemente el workstream de base de datos.
 

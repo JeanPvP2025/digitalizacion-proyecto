@@ -24,28 +24,28 @@ type CampaignDefinition = Omit<CatalogCampaign, "categories" | "products" | "cat
 const campaignDefinitions: CampaignDefinition[] = [
   {
     slug: "puesto-de-trabajo", eyebrow: "ESPACIO DE TRABAJO",
-    title: "Un equipo que encaja en tu día.",
-    description: "Explora ordenadores y pantallas del catálogo ficticio. Las fichas sirven para comparar información publicada; no son una recomendación técnica ni una oferta comercial.",
-    categorySlugs: ["portatiles", "sobremesas", "estaciones-creativas", "monitores-oficina", "monitores-creacion", "routers", "sistemas-mesh", "ssd-internos", "ssd-externos", "discos-externos"],
-    fallbackSlugs: ["ordenadores", "monitores", "redes", "almacenamiento"],
+    title: "Componentes para tu próximo equipo.",
+    description: "Explora componentes reales con fotos y precios de referencia. Cada ficha enlaza al comercio donde se consultó; NODRIA no es el vendedor.",
+    categorySlugs: ["componentes", "almacenamiento"],
+    fallbackSlugs: ["componentes", "almacenamiento"],
   },
   {
     slug: "componentes-pc", eyebrow: "CONFIGURACIÓN ORIENTATIVA",
     title: "Piezas para explorar un PC.",
-    description: "Procesadores, placas, memoria y otras piezas ficticias. El configurador comprueba únicamente los atributos estructurados disponibles; no sustituye una revisión técnica completa.",
+    description: "Procesadores, placas, memoria y otras piezas reales con sus fotos y fichas de origen. El configurador solo comprueba los atributos publicados y señala lo que falta.",
     categorySlugs: ["procesadores", "placas-base", "memoria-ram", "cajas", "fuentes-alimentacion", "tarjetas-graficas", "refrigeracion", "ssd-internos"],
     fallbackSlugs: ["componentes"],
   },
   {
     slug: "conectividad", eyebrow: "REDES",
     title: "Conexiones que merece la pena comparar.",
-    description: "Consulta las fichas ficticias de red y sus características declaradas. La cobertura y el rendimiento dependen del entorno y no se han medido en una instalación real.",
+    description: "Las categorías de red todavía no tienen referencias verificadas publicadas.",
     categorySlugs: ["routers", "sistemas-mesh"], fallbackSlugs: ["redes"],
   },
   {
     slug: "almacenamiento", eyebrow: "TUS DATOS",
     title: "Más contexto para elegir almacenamiento.",
-    description: "Compara capacidad e interfaces tal como aparecen en fichas de demostración. No son ensayos independientes de velocidad, durabilidad o compatibilidad.",
+    description: "Compara capacidad e interfaces declaradas en las fichas del vendedor. No son ensayos independientes de velocidad, durabilidad o compatibilidad.",
     categorySlugs: ["ssd-internos", "ssd-externos", "discos-externos"], fallbackSlugs: ["almacenamiento"],
   },
 ];

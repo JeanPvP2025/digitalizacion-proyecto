@@ -25,56 +25,60 @@ type PcComponentBase<Category extends PcBuilderCategory> = {
   productSlug?: string;
   sku?: string;
   variantTitle?: string;
+  modelNumber?: string;
+  imageUrl?: string;
+  productUrl?: string;
+  checkedAt?: string;
 };
 
 export type CpuFixture = PcComponentBase<"cpu"> & {
-  socket: string;
-  memoryGenerations: readonly MemoryGeneration[];
-  estimatedPowerW: number;
-  integratedGraphics: boolean;
+  socket?: string;
+  memoryGenerations?: readonly MemoryGeneration[];
+  estimatedPowerW?: number;
+  integratedGraphics?: boolean;
 };
 
 export type MotherboardFixture = PcComponentBase<"motherboard"> & {
-  socket: string;
-  formFactor: MotherboardFormFactor;
-  memoryGeneration: MemoryGeneration;
-  maxMemoryGb: number;
-  estimatedPowerW: number;
+  socket?: string;
+  formFactor?: MotherboardFormFactor;
+  memoryGeneration?: MemoryGeneration;
+  maxMemoryGb?: number;
+  estimatedPowerW?: number;
 };
 
 export type MemoryFixture = PcComponentBase<"memory"> & {
-  generation: MemoryGeneration;
-  capacityGb: number;
-  kitModules: number;
-  speedMtPerS: number;
-  estimatedPowerW: number;
+  generation?: MemoryGeneration;
+  capacityGb?: number;
+  kitModules?: number;
+  speedMtPerS?: number;
+  estimatedPowerW?: number;
 };
 
 export type CaseFixture = PcComponentBase<"case"> & {
-  supportedFormFactors: readonly MotherboardFormFactor[];
-  maxGpuLengthMm: number;
-  estimatedPowerW: number;
+  supportedFormFactors?: readonly MotherboardFormFactor[];
+  maxGpuLengthMm?: number;
+  estimatedPowerW?: number;
 };
 
 export type GpuFixture = PcComponentBase<"gpu"> & {
-  lengthMm: number;
-  estimatedPowerW: number;
+  lengthMm?: number;
+  estimatedPowerW?: number;
 };
 
 export type PsuFixture = PcComponentBase<"psu"> & {
   capacityW: number;
-  efficiencyLabel: "80+ Bronze" | "80+ Gold" | "80+ Platinum";
+  efficiencyLabel?: "80+ Bronze" | "80+ Silver" | "80+ Gold" | "80+ Platinum";
 };
 
 export type StorageFixture = PcComponentBase<"storage"> & {
   capacityTb: number;
-  interface: "NVMe PCIe 4.0" | "NVMe PCIe 5.0";
-  estimatedPowerW: number;
+  interface?: "NVMe PCIe 3.0" | "NVMe PCIe 4.0" | "NVMe PCIe 5.0";
+  estimatedPowerW?: number;
 };
 
 export type CoolerFixture = PcComponentBase<"cooler"> & {
-  supportedSockets: readonly string[];
-  estimatedPowerW: number;
+  supportedSockets?: readonly string[];
+  estimatedPowerW?: number;
 };
 
 export type PcBuilderComponent =
@@ -96,7 +100,7 @@ export type PcBuilderCatalogComponent = PcBuilderComponent & {
 };
 
 export type PcBuilderCatalog =
-  | { source: "demo"; components: []; omittedVariants: 0 }
+  | { source: "demo"; components: PcBuilderCatalogComponent[]; omittedVariants: number }
   | { source: "supabase"; components: PcBuilderCatalogComponent[]; omittedVariants: number }
   | { source: "error"; components: []; omittedVariants: 0; message: string };
 

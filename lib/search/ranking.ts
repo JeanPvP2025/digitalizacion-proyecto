@@ -17,6 +17,7 @@ function document(product: Product): SearchDocument {
     sku: compact(product.sku),
     fields: [
       { tokens: searchTokens(product.name), weight: 1000, fuzzy: true },
+      { tokens: searchTokens(product.modelNumber ?? ""), weight: 980, fuzzy: false },
       { tokens: searchTokens(product.sku), weight: 950, fuzzy: false },
       { tokens: searchTokens(product.brand), weight: 800, fuzzy: true },
       { tokens: searchTokens(product.category), weight: 650, fuzzy: true },

@@ -9,7 +9,9 @@ function rows(): CatalogRows {
   return {
     products: [{
       id: "product-laptop", slug: "portatil-academico", sku: "NOD-LAP-1", name: "Portátil académico",
-      brand: "Marca A", summary: "Equipo de estudio", description: "", image_url: null, image_alt: "",
+      brand: "Marca A", summary: "Equipo de estudio", description: "",
+      image_url: "https://thumb.pccomponentes.com/w-530-530/articles/product-laptop.jpg",
+      image_alt: "Fotografía del modelo Portátil académico",
       badge: null, is_featured: false, is_published: true,
     }],
     categories: [
@@ -18,7 +20,11 @@ function rows(): CatalogRows {
       { id: "inactive", slug: "retired", name: "Retirada", description: "", sort_order: 101, parent_id: rootId, is_active: false },
     ],
     productCategories: [{ product_id: "product-laptop", category_id: rootId }, { product_id: "product-laptop", category_id: leafId }],
-    variants: [{ id: "variant-laptop", product_id: "product-laptop", sku: "NOD-LAP-1", title: "16 GB", current_price: "899", compare_at_price: null, currency: "EUR", is_active: true }],
+    variants: [{
+      id: "variant-laptop", product_id: "product-laptop", sku: "NOD-LAP-1", title: "16 GB", current_price: "899",
+      compare_at_price: null, currency: "EUR", is_active: true,
+      attributes: { reference_price: { source: "PcComponentes", seller: "PcComponentes", url: "https://www.pccomponentes.com/portatil-academico", observed_at: "2026-10-13", price_eur: 899, image_url: "https://thumb.pccomponentes.com/w-530-530/articles/product-laptop.jpg" } },
+    }],
     specifications: [
       { product_id: "product-laptop", label: "Memoria", value: "16 GB", sort_order: 1 },
       { product_id: "product-laptop", label: "Pantalla", value: "14 pulgadas", sort_order: 2 },

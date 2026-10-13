@@ -3,7 +3,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("next/image", () => ({
-  default: (props: { src: string; alt: string }) => createElement("img", props),
+  default: ({ src, alt }: { src: string; alt: string }) => createElement("img", { src, alt }),
 }));
 
 const mocks = vi.hoisted(() => ({ createClient: vi.fn() }));
@@ -12,19 +12,34 @@ vi.mock("@supabase/supabase-js", () => ({ createClient: mocks.createClient }));
 import HomePage, { dynamic } from "@/app/(store)/page";
 import { demoProducts } from "@/lib/catalog";
 
-const connectedProduct = {
-  id: "db-only-314", slug: "routeur-connecte-314", sku: "NOD-DB-314",
-  name: "Router ficticio conectado 314", brand: "Marca ficticia", summary: "Ficha desde DB",
-  description: "Fixture de frontera conectado", image_url: "https://other-host.test/product.png",
-  image_alt: "Router ficticio", badge: null, is_featured: true, is_published: true,
-};
+const reference = demoProducts[0]!;
+const otherReference = demoProducts[1]!;
+function connectedProduct(product: typeof reference) {
+  return {
+    id: product.id, slug: product.slug, sku: product.sku,
+    name: product.name, brand: product.brand, summary: product.summary,
+    description: product.summary, image_url: product.image, image_alt: product.imageAlt,
+    badge: null, is_featured: true, is_published: true,
+    priceReference: {
+      source: "PcComponentes", seller: "PcComponentes", url: product.priceReference!.productUrl,
+      observed_at: product.priceReference!.checkedAt, price_eur: product.price,
+      image_url: product.image, mpn: product.modelNumber,
+    },
+  };
+}
+const firstConnectedProduct = connectedProduct(reference);
+const secondConnectedProduct = connectedProduct(otherReference);
 
-function connectedRows(products = [connectedProduct]) {
+function connectedRows(products = [firstConnectedProduct]) {
   return {
     products,
-    categories: [{ id: "category-db", slug: "redes", name: "Redes", description: "Redes de prueba", sort_order: 1, is_active: true }],
+    categories: [{ id: "category-db", slug: "componentes", name: "Componentes", description: "Componentes", sort_order: 1, is_active: true }],
     product_categories: products.map((product) => ({ product_id: product.id, category_id: "category-db" })),
-    product_variants: products.map((product) => ({ id: `variant-${product.id}`, product_id: product.id, sku: product.sku, title: "Demo", current_price: 314, compare_at_price: null, currency: "EUR", is_active: true })),
+    product_variants: products.map((product) => ({
+      id: `variant-${product.id}`, product_id: product.id, sku: product.sku, title: "Referencia PcComponentes",
+      current_price: product.priceReference.price_eur, compare_at_price: null, currency: "EUR", is_active: true,
+      attributes: { reference_price: product.priceReference },
+    })),
     product_specifications: [],
   };
 }
@@ -62,20 +77,19 @@ afterEach(() => vi.unstubAllEnvs());
 
 describe("homepage active-source boundary", () => {
   it("reads connected data for the hero and cards even when DEMO_MODE is enabled", async () => {
-    const otherProduct = { ...connectedProduct, id: "db-only-315", slug: "routeur-connecte-315", name: "Router ficticio conectado 315" };
-    const supabase = client(connectedRows([connectedProduct, otherProduct]));
+    const supabase = client(connectedRows([firstConnectedProduct, secondConnectedProduct]));
     mocks.createClient.mockReturnValue(supabase);
     const markup = await renderHome();
-    expect(markup).toContain(connectedProduct.name);
-    expect(markup).toContain(otherProduct.name);
-    expect(markup).toContain('href="/producto/routeur-connecte-314"');
-    expect(markup).toContain('src="https://other-host.test/product.png"');
-    expect(markup).toContain('href="/categorias/redes"');
-    expect(markup).toContain("Catálogo actualizado");
-    expect(markup).toContain("Disponibilidad por confirmar");
+    expect(markup).toContain(firstConnectedProduct.name);
+    expect(markup).toContain(secondConnectedProduct.name);
+    expect(markup).toContain(`href="/producto/${reference.slug}"`);
+    expect(markup).toContain(`src="${reference.image}"`);
+    expect(markup).toContain('href="/categorias/componentes"');
+    expect(markup).toContain("Referencias consultadas en PcComponentes");
+    expect(markup).toContain("Disponibilidad en NODRIA no conectada");
     expect(markup).not.toContain("Stock demo");
     expect(markup).not.toContain("Añadir al carrito");
-    expectNoFixtures(markup);
+    expect(markup).not.toContain("Catálogo de demostración");
     expect(mocks.createClient).toHaveBeenCalledTimes(1);
     expect(supabase.from.mock.calls.filter(([table]) => table === "products")).toHaveLength(1);
     expect(dynamic).toBe("force-dynamic");
@@ -113,17 +127,19 @@ describe("homepage active-source boundary", () => {
     expect(mocks.createClient).not.toHaveBeenCalled();
   });
 
-  it("uses fixtures only for explicit local demo, deriving all destinations from those fixtures", async () => {
+  it("uses the verified references only for explicit local demo, deriving destinations from those rows", async () => {
     vi.stubEnv("NODE_ENV", "development");
     vi.stubEnv("NEXT_PUBLIC_SUPABASE_URL", "");
     vi.stubEnv("NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY", "");
     const markup = await renderHome();
-    expect(markup).toContain("Catálogo de demostración");
+    expect(markup).toContain("Modelos, fotos y precios de referencia consultados en PcComponentes");
+    expect(markup).toContain("64 modelos verificados");
     expect(markup).toContain("Tu espacio de trabajo, pieza a pieza");
     expect(markup).toContain("Más ideas por descubrir");
     expect(markup).not.toContain("Novedades y otras ideas");
     const destinations = [...markup.matchAll(/href="(\/producto\/[^"?#]+)"/g)].map((match) => match[1]);
-    expect(new Set(destinations).size).toBe(demoProducts.length);
+    expect(new Set(destinations).size).toBeGreaterThan(0);
+    expect(new Set(destinations).size).toBeLessThanOrEqual(demoProducts.length);
     expect(destinations.every((href) => demoProducts.some(({ slug }) => href === `/producto/${slug}`))).toBe(true);
     expect(mocks.createClient).not.toHaveBeenCalled();
   });

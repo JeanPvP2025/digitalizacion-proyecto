@@ -2,7 +2,8 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { AlertTriangle, Check, Cpu, HardDrive, MonitorCog, Save, ShoppingBag, Trash2, Zap } from "lucide-react";
+import Image from "next/image";
+import { AlertTriangle, ArrowUpRight, Check, Cpu, HardDrive, MonitorCog, Save, Trash2, Zap } from "lucide-react";
 import styles from "./pc-builder.module.css";
 import {
   checkBuildCompatibility,
@@ -10,7 +11,6 @@ import {
   pcBuilderCategories,
   requiredPcBuilderCategories,
 } from "@/lib/pc-builder/compatibility";
-import { addComponentsToCart } from "@/components/storefront/store-interactions";
 import type { PcBuildSelection, PcBuilderCatalog, PcBuilderCategory, PcBuilderComponent } from "@/lib/pc-builder/types";
 import {
   MAX_SAVED_PC_BUILDS,
@@ -33,11 +33,11 @@ const categoryTitle: Record<PcBuilderCategory, string> = {
   cooler: "Refrigeración",
 };
 const categoryDescription: Record<PcBuilderCategory, string> = {
-  cpu: "El punto de partida: socket, consumo declarado y gráficos integrados.",
+  cpu: "El punto de partida: socket, memoria admitida y gráficos integrados publicados.",
   motherboard: "Debe compartir socket con el procesador y admitir la memoria elegida.",
   memory: "Comprueba generación, capacidad y número de módulos.",
   case: "Revisa formato de placa y longitud máxima declarada para la gráfica.",
-  psu: "Dimensiona la fuente con el consumo estimado y un margen orientativo.",
+  psu: "Compara la potencia nominal y la certificación cuando aparezca en la ficha.",
   gpu: "Añade una gráfica dedicada y comprueba su longitud frente a la caja.",
   storage: "Amplía el equipo con una unidad de almacenamiento según los datos publicados.",
   cooler: "Añade refrigeración y comprueba el socket declarado.",
@@ -59,14 +59,14 @@ function emptySelection(): PcBuildSelection {
 }
 
 function componentSpecs(component: PcBuilderComponent) {
-  if (component.category === "cpu") return component.socket + " · " + component.estimatedPowerW + " W · " + (component.integratedGraphics ? "gráficos integrados" : "sin gráfica integrada");
-  if (component.category === "motherboard") return component.formFactor + " · " + component.socket + " · " + component.memoryGeneration + " · hasta " + component.maxMemoryGb + " GB";
-  if (component.category === "memory") return component.capacityGb + " GB (" + component.kitModules + " módulos) · " + component.generation + " · " + component.speedMtPerS + " MT/s";
-  if (component.category === "case") return component.supportedFormFactors.join(" / ") + " · GPU hasta " + component.maxGpuLengthMm + " mm";
-  if (component.category === "gpu") return component.lengthMm + " mm · consumo declarado " + component.estimatedPowerW + " W";
-  if (component.category === "psu") return component.capacityW + " W · " + component.efficiencyLabel;
-  if (component.category === "storage") return component.capacityTb + " TB · " + component.interface + " · " + component.estimatedPowerW + " W";
-  return component.supportedSockets.join(" / ") + " · consumo declarado " + component.estimatedPowerW + " W";
+  if (component.category === "cpu") return [component.socket && "Socket " + component.socket, component.estimatedPowerW && "TDP publicado " + component.estimatedPowerW + " W", component.integratedGraphics === undefined ? null : component.integratedGraphics ? "gráficos integrados" : "sin gráfica integrada", component.memoryGenerations?.join(" / ")].filter(Boolean).join(" · ");
+  if (component.category === "motherboard") return [component.formFactor, component.socket && "Socket " + component.socket, component.memoryGeneration, component.maxMemoryGb && "hasta " + component.maxMemoryGb + " GB"].filter(Boolean).join(" · ") || "Especificaciones técnicas limitadas en la ficha";
+  if (component.category === "memory") return [component.capacityGb && component.capacityGb + " GB", component.kitModules && component.kitModules + " módulos", component.generation, component.speedMtPerS && component.speedMtPerS + " MT/s"].filter(Boolean).join(" · ");
+  if (component.category === "case") return [component.supportedFormFactors?.join(" / "), component.maxGpuLengthMm && "GPU hasta " + component.maxGpuLengthMm + " mm"].filter(Boolean).join(" · ") || "Formato y espacio interior no publicados";
+  if (component.category === "gpu") return [component.lengthMm && component.lengthMm + " mm de longitud", component.estimatedPowerW && "potencia publicada " + component.estimatedPowerW + " W"].filter(Boolean).join(" · ") || "Dimensiones y potencia no publicadas";
+  if (component.category === "psu") return [component.capacityW + " W nominales", component.efficiencyLabel ?? "certificación no publicada"].filter(Boolean).join(" · ");
+  if (component.category === "storage") return [component.capacityTb + " TB", component.interface].filter(Boolean).join(" · ");
+  return component.supportedSockets?.join(" / ") ?? "Sockets compatibles no publicados";
 }
 
 function savedBuildDescription(build: SavedPcBuild, components: readonly PcBuilderComponent[]) {
@@ -134,7 +134,7 @@ export function PcBuilder({ catalog }: { catalog: PcBuilderCatalog }) {
   const statusLabel = catalog.source === "error"
     ? "Catálogo no disponible"
     : catalog.source === "demo"
-      ? "Sin piezas comprables"
+      ? "Referencias externas"
       : catalog.components.length === 0
         ? "Sin piezas validables"
         : result.status === "compatible"
@@ -200,7 +200,7 @@ export function PcBuilder({ catalog }: { catalog: PcBuilderCatalog }) {
       if (!writeSavedPcBuilds(window.localStorage, next)) throw new Error("storage unavailable");
       setSavedBuilds(next);
       setActiveSavedId(build.id);
-      setNotice("«" + build.name + "» se guardó en este navegador con los variant IDs seleccionados.");
+      setNotice("«" + build.name + "» se guardó en este navegador con las referencias seleccionadas.");
       window.dispatchEvent(new Event("nodria:pc-builds"));
     } catch {
       setNotice("Este navegador no permitió guardar la configuración. Puedes seguir usándola en esta visita.");
@@ -212,7 +212,7 @@ export function PcBuilder({ catalog }: { catalog: PcBuilderCatalog }) {
     setActiveSavedId(build.id);
     const restoredResult = checkBuildCompatibility(build.selection, catalog.components);
     setActiveCategory(restoredResult.missingCategories[0] ?? pcBuilderCategories[0]);
-    setNotice("Se recuperó «" + build.name + "». Las variantes que ya no estén disponibles requieren revisión.");
+    setNotice("Se recuperó «" + build.name + "». Las referencias que ya no aparezcan requieren revisión.");
   }
 
   function deleteBuild(id: string) {
@@ -235,23 +235,13 @@ export function PcBuilder({ catalog }: { catalog: PcBuilderCatalog }) {
     setNotice("Selección vaciada. Tus configuraciones guardadas siguen disponibles.");
   }
 
-  function addBuildToCart() {
-    if (catalog.source !== "supabase" || result.status !== "compatible") return;
-    const selectedVariants = result.selectedComponents
-      .map((component) => componentMap.get(component.variantId ?? component.id))
-      .filter((component): component is typeof catalog.components[number] => component !== undefined);
-    if (selectedVariants.length !== result.selectedComponents.length) return;
-    addComponentsToCart(selectedVariants);
-    setNotice(result.selectedComponents.length + " variante(s) añadidas al carrito. El servidor confirmará precio y stock al finalizar.");
-  }
-
   const categoryRestriction = catalog.source === "demo"
-    ? "El catálogo demo no contiene piezas PC con variant IDs. No se ofrecen fichas ficticias como compatibles o comprables."
+    ? "Modelos reales con fotos y precios de referencia. NODRIA no los vende ni mantiene inventario."
     : catalog.source === "error"
       ? catalog.message
       : catalog.components.length === 0
-        ? "El catálogo no tiene componentes PC con una variante EUR activa y atributos pc_builder completos. La compatibilidad y la compra quedan bloqueadas hasta que se publique ese contrato."
-        : "Se muestran solo variantes publicadas con atributos pc_builder completos. La disponibilidad real se confirma en checkout.";
+        ? "El catálogo conectado no ofrece referencias PC publicadas con precio e imagen propios."
+        : "Referencias de modelos reales con precios e imágenes consultados en PcComponentes; la revisión señala los datos técnicos que la ficha no publica.";
 
   return (
     <main className="builder-page">
@@ -259,7 +249,7 @@ export function PcBuilder({ catalog }: { catalog: PcBuilderCatalog }) {
         <div className="builder-banner-inner">
           <p className="eyebrow">NODRIA LAB · CONFIGURADOR</p>
           <h1>Construye con criterio.</h1>
-          <p>Un montaje paso a paso con variantes publicadas y reglas basadas en atributos reales. Revisa el conjunto antes de añadirlo al carrito.</p>
+          <p>Compara componentes reales paso a paso y revisa las compatibilidades publicadas. Abre las fichas del vendedor para confirmar precio y disponibilidad.</p>
         </div>
       </section>
 
@@ -331,7 +321,7 @@ export function PcBuilder({ catalog }: { catalog: PcBuilderCatalog }) {
                     <h2 id="builder-step-title">{categoryTitle[activeCategory]}</h2>
                     <p>{categoryDescription[activeCategory]}</p>
                   </div>
-                  <span className={styles.optionCount}>{currentOptions.length} {currentOptions.length === 1 ? "variante" : "variantes"}</span>
+                  <span className={styles.optionCount}>{currentOptions.length} {currentOptions.length === 1 ? "referencia" : "referencias"}</span>
                 </header>
 
                 {currentOptions.length === 0 ? (
@@ -340,13 +330,13 @@ export function PcBuilder({ catalog }: { catalog: PcBuilderCatalog }) {
                     <div>
                       <strong>{isOptional ? "No hay opciones publicadas" : "Esta pieza no está disponible"}</strong>
                       <p>{isOptional
-                        ? "Puedes continuar sin añadirla. El catálogo conectado no ofrece variantes con los datos necesarios."
-                        : "No encontramos variantes con atributos completos para validar esta categoría. La compra seguirá bloqueada mientras falte una pieza esencial."}</p>
+                        ? "Puedes continuar sin añadirla. No hay una referencia con datos suficientes para esta categoría."
+                        : "No encontramos referencias con datos suficientes para revisar esta categoría. Consulta la ficha del vendedor antes de elegir una pieza."}</p>
                     </div>
                   </div>
                 ) : (
                   <fieldset className={styles.options}>
-                    <legend className="sr-only">Elige una variante de {categoryTitle[activeCategory]}</legend>
+                    <legend className="sr-only">Elige una referencia de {categoryTitle[activeCategory]}</legend>
                     {currentOptions.map((component) => (
                       <label className={styles.optionCard + (selectedVariantId === component.variantId ? " " + styles.optionSelected : "")} key={component.variantId}>
                         <input
@@ -356,14 +346,15 @@ export function PcBuilder({ catalog }: { catalog: PcBuilderCatalog }) {
                           checked={selectedVariantId === component.variantId}
                           onChange={() => select(activeCategory, component.variantId)}
                         />
+                        {component.imageUrl && <Image className={styles.optionImage} src={component.imageUrl} alt={component.name} width={72} height={72} unoptimized />}
                         <span className={styles.optionContent}>
                           <span className={styles.optionTopline}>
                             <span className={styles.optionName}>{component.name}</span>
                             <strong>{formatter.format(component.priceEur)}</strong>
                           </span>
-                          {component.variantTitle !== "Estándar" && <span className={styles.variantTitle}>{component.variantTitle}</span>}
+                          {component.variantTitle !== "Estándar" && <span className={styles.variantTitle}>Precio de referencia · consultado {component.checkedAt}</span>}
                           <span className={styles.optionSpecs}>{componentSpecs(component)}</span>
-                          <span className={styles.optionBrand}>{component.manufacturer} · {component.sku}</span>
+                          <span className={styles.optionBrand}>{component.manufacturer}{component.modelNumber ? " · Modelo " + component.modelNumber : ""}</span>
                         </span>
                         <span className={styles.optionCheck} aria-hidden="true"><Check size={14} /></span>
                       </label>
@@ -374,7 +365,7 @@ export function PcBuilder({ catalog }: { catalog: PcBuilderCatalog }) {
                 {selectedVariantId && !currentOptions.some((component) => component.variantId === selectedVariantId) && (
                   <div className={styles.staleSelection} role="alert">
                     <AlertTriangle size={17} />
-                    <p>La variante guardada ya no está disponible. Elige otra para reemplazarla y poder revisar el montaje.</p>
+                    <p>La referencia guardada ya no aparece en el catálogo. Elige otra para revisar el montaje.</p>
                   </div>
                 )}
 
@@ -415,8 +406,8 @@ export function PcBuilder({ catalog }: { catalog: PcBuilderCatalog }) {
 
           <div className={styles.summaryStats}>
             <div><span>Piezas elegidas</span><strong>{selectedComponents.length}<small> / {pcBuilderCategories.length}</small></strong></div>
-            <div><span>Consumo estimado</span><strong>{result.estimatedDrawW === null ? "—" : "≈ " + result.estimatedDrawW + " W"}</strong></div>
-            <div><span>Fuente recomendada</span><strong>{result.recommendedPsuW === null ? "—" : "≥ " + result.recommendedPsuW + " W"}</strong></div>
+            <div><span>Consumo del montaje</span><strong>{result.estimatedDrawW === null ? "No verificado" : "≈ " + result.estimatedDrawW + " W"}</strong></div>
+            <div><span>Fuente sugerida</span><strong>{result.recommendedPsuW === null ? "No calculable" : "≥ " + result.recommendedPsuW + " W"}</strong></div>
           </div>
 
           <div className={styles.selectedList}>
@@ -433,6 +424,7 @@ export function PcBuilder({ catalog }: { catalog: PcBuilderCatalog }) {
                     <div>
                       <span>{categoryTitle[component.category]}</span>
                       <strong>{component.name}</strong>
+                      {component.productUrl && <a className={styles.referenceLink} href={component.productUrl} target="_blank" rel="noopener noreferrer">Ver ficha en PcComponentes <ArrowUpRight aria-hidden="true" size={13} /></a>}
                     </div>
                     <button type="button" onClick={() => setActiveCategory(component.category)} aria-label={"Editar " + categoryTitle[component.category]}>
                       {formatter.format(component.priceEur)}
@@ -444,7 +436,7 @@ export function PcBuilder({ catalog }: { catalog: PcBuilderCatalog }) {
           </div>
 
           <div className={styles.total}>
-            <span>Precio de componentes</span>
+            <span>Suma de precios de referencia</span>
             <strong>{formatter.format(result.totalPriceEur)}</strong>
           </div>
 
@@ -461,19 +453,14 @@ export function PcBuilder({ catalog }: { catalog: PcBuilderCatalog }) {
           <details className={styles.limits}>
             <summary>Qué comprueba esta revisión</summary>
             <p>{result.estimateNote}</p>
-            <p>La revisión cubre socket, memoria, formato de placa, espacio de GPU, compatibilidad declarada del cooler y una estimación de potencia. No incluye todavía BIOS/QVL, conectores de energía ni todos los espacios físicos.</p>
+            <p>La revisión cubre solo socket, memoria, formato de placa, espacio de GPU y sockets publicados. No incluye BIOS/QVL, conectores de energía ni todos los espacios físicos. Una regla satisfecha no certifica el montaje.</p>
           </details>
 
           <div className={styles.cartRestriction} id="builder-cart-restriction">
-            <ShoppingBag size={16} />
-            <p>{catalog.source === "supabase" && result.status === "compatible"
-              ? "Checkout volverá a validar en servidor las variantes, el precio y el stock."
-              : "Añadir al carrito se habilita con un montaje completo y compatible del catálogo conectado."}</p>
+            <ArrowUpRight size={16} />
+            <p>Son referencias de PcComponentes; NODRIA no las vende ni mantiene inventario. Abre cada ficha para comprobar precio y disponibilidad actuales.</p>
           </div>
           <div className={styles.actions}>
-            <button className="button button--accent" type="button" disabled={catalog.source !== "supabase" || result.status !== "compatible"} onClick={addBuildToCart} aria-describedby="builder-cart-restriction">
-              <ShoppingBag size={16} /> Añadir al carrito
-            </button>
             <button className={styles.saveButton} onClick={saveBuild} type="button" disabled={selectedComponents.length === 0}>
               <Save size={15} /> Guardar montaje
             </button>

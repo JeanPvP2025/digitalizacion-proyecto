@@ -3,6 +3,8 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { randomUUID } from "node:crypto";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
+import { demoProducts } from "@/lib/catalog";
+import { searchCatalogProducts } from "@/lib/search";
 
 const supabaseMock = vi.hoisted(() => ({ createClient: vi.fn() }));
 vi.mock("@/lib/supabase/server", () => ({ createSupabaseServerClient: supabaseMock.createClient }));
@@ -61,7 +63,7 @@ function request(url: string, body?: unknown, forwardedFor = `qa-${randomUUID()}
 
 function checkoutBody(overrides: Record<string, unknown> = {}) {
   return {
-    items: [{ productId: "pr_loom27", quantity: 1 }],
+    items: [{ productId: demoProducts[0]!.id, quantity: 1 }],
     idempotencyKey: randomUUID(),
     customer,
     paymentMethod: "approved",
@@ -140,13 +142,14 @@ describe("public route integration", () => {
   });
 
   it("normalizes a search query and reports exact totals before applying its limit", async () => {
-    const response = await search.GET(request("/api/search?q=  NODRIA  &limit=1"));
+    const response = await search.GET(request("/api/search?q=  AMD  &limit=1"));
+    const expected = searchCatalogProducts(demoProducts, "AMD", 1);
 
     expect(response.status).toBe(200);
     expect(await response.json()).toMatchObject({
-      query: "NODRIA",
-      total: 6,
-      results: [expect.objectContaining({ name: "FluxBook 14 Pro" })],
+      query: "AMD",
+      total: expected.total,
+      results: [expect.objectContaining({ name: expected.results[0]!.name })],
     });
   });
 
@@ -155,19 +158,19 @@ describe("public route integration", () => {
     expect(empty.status).toBe(400);
 
     const invalidQuantity = await checkout.POST(
-      request("/api/checkout", checkoutBody({ items: [{ productId: "pr_loom27", quantity: 0 }] })),
+      request("/api/checkout", checkoutBody({ items: [{ productId: demoProducts[0]!.id, quantity: 0 }] })),
     );
     expect(invalidQuantity.status).toBe(400);
 
     const clientPrice = await checkout.POST(request("/api/checkout", {
       ...checkoutBody(),
-      items: [{ productId: "pr_loom27", quantity: 1, price: 1 }],
+      items: [{ productId: demoProducts[0]!.id, quantity: 1, price: 1 }],
     }));
     expect(clientPrice.status).toBe(400);
     expect(await records("orders.json")).toHaveLength(0);
   });
 
-  it("makes checkout retries idempotent and persists one authoritative price snapshot", async () => {
+  it("does not create a NODRIA order from an external product reference", async () => {
     const body = checkoutBody();
     const ip = `checkout-retry-${randomUUID()}`;
     const first = await checkout.POST(request("/api/checkout", body, ip));
@@ -175,22 +178,19 @@ describe("public route integration", () => {
     const firstBody = await first.json();
     const retryBody = await retry.json();
 
-    expect(first.status).toBe(201);
-    expect(retry.status).toBe(200);
-    expect(retryBody.orderNumber).toBe(firstBody.orderNumber);
-    expect(retryBody.idempotencyKey).toBe(body.idempotencyKey);
-    expect(await records<Array<unknown>>("orders.json")).toHaveLength(1);
-    expect(await records<{ items: Array<{ unitPrice: number }>; total: number }>("orders.json")).toEqual([
-      expect.objectContaining({ items: [expect.objectContaining({ unitPrice: 629 })], total: 629 }),
-    ]);
+    expect(first.status).toBe(409);
+    expect(retry.status).toBe(409);
+    expect(firstBody.error).toContain("NODRIA no lo vende");
+    expect(retryBody.error).toContain("NODRIA no lo vende");
+    expect(await records<Array<unknown>>("orders.json")).toHaveLength(0);
   });
 
-  it("rejects insufficient demo stock and enforces the checkout attempt limit", async () => {
+  it("rejects external references and enforces the checkout attempt limit", async () => {
     const stockError = await checkout.POST(request("/api/checkout", checkoutBody({
-      items: [{ productId: "pr_foundry_s", quantity: 7 }],
+      items: [{ productId: demoProducts[0]!.id, quantity: 7 }],
     })));
     expect(stockError.status).toBe(409);
-    expect((await stockError.json()).error).toContain("stock suficiente");
+    expect((await stockError.json()).error).toContain("NODRIA no lo vende");
 
     const ip = `checkout-throttle-${randomUUID()}`;
     const statuses: number[] = [];
@@ -198,7 +198,7 @@ describe("public route integration", () => {
       const response = await checkout.POST(request("/api/checkout", checkoutBody(), ip));
       statuses.push(response.status);
     }
-    expect(statuses).toEqual([201, 201, 201, 201, 201, 201, 429]);
+    expect(statuses).toEqual([409, 409, 409, 409, 409, 409, 429]);
   });
 
   it("validates and persists B2B quote requests in isolated demo storage", async () => {
@@ -337,7 +337,7 @@ describe("public route integration", () => {
     const noDemoSupport = await supportRoute.POST(request("/api/support", support));
     expect(noDemoCheckout.status).toBe(503);
     expect(noDemoSupport.status).toBe(503);
-    expect(await records("orders.json")).toHaveLength(7);
+    expect(await records("orders.json")).toHaveLength(0);
     expect(await records("tickets.json")).toHaveLength(6);
     setNodeEnv("development");
   });

@@ -9,7 +9,7 @@ export const SEARCH_RESULT_MAX_LIMIT = 8;
 export const RECENT_SEARCH_LIMIT = 5;
 export const RECENT_SEARCHES_STORAGE_KEY = "nodria.searches.v1";
 
-export type CatalogSearchResult = Pick<Product, "slug" | "name" | "sku" | "brand" | "category" | "price">;
+export type CatalogSearchResult = Pick<Product, "slug" | "name" | "sku" | "brand" | "category" | "price" | "priceReference">;
 
 export type CatalogSearchResponse = {
   query: string;
@@ -27,8 +27,8 @@ export type CatalogSearchRecovery = {
 type SearchCategory = { name: string; slug: string };
 
 function toResult(product: Product): CatalogSearchResult {
-  const { slug, name, sku, brand, category, price } = product;
-  return { slug, name, sku, brand, category, price };
+  const { slug, name, sku, brand, category, price, priceReference } = product;
+  return { slug, name, sku, brand, category, price, priceReference };
 }
 
 export function searchCatalogProducts(
