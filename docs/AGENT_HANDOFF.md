@@ -1,6 +1,6 @@
 # Registro de handoffs
 
-## Handoff activo — tienda propia con checkout auto-aprobado — 2026-10-13
+## Handoff completado — tienda propia con checkout auto-aprobado — 2026-10-13
 
 ### Trabajo realizado
 
@@ -18,10 +18,15 @@
 ### Contratos y siguientes pasos
 
 - El resultado elegido en cliente ya no permite rechazo: el schema solo acepta `approved` y el servidor vuelve a fijarlo. La confirmación requiere verificar el pedido, pago `paid`, reserva, stock y timeline en Supabase local y luego remotamente.
-- La migración se debe ejecutar manualmente por el propietario en el SQL Editor correcto antes del despliegue. No se ha aplicado aquí a la base remota.
+- La persona propietaria confirmó la ejecución manual de `20261013120000_nodria_storefront_checkout.sql` en SQL Editor con `Success. No rows returned`. El conector Supabase de esta sesión rechazó la consulta de solo lectura por falta de permisos; no se verificaron directamente grants, políticas, stock ni filas después de esa ejecución.
 - Verificación local completada: `pnpm install --frozen-lockfile`, TypeScript, ESLint, `pnpm test` (293 Vitest + 26 Node), `pnpm test:e2e` (18/18), `pnpm build` y `git diff --check` pasan.
-- No se ejecutaron Supabase reset/pgTAP/DB lint: el motor Docker Desktop no estaba activo. Pendiente de aplicar y verificar la migración en Supabase antes del deploy; este handoff no certifica compra conectada remota.
-- Commit local `4e30e52` en `main`; sin push ni deploy. Las pruebas E2E muestran una advertencia de hidratación `caret-color: transparent` pero finalizan sin fallos.
+- Push completado: commit `4e30e52` integra la tienda y `3cbc5f5` documenta gates, ambos en `origin/main`. El smoke público comprobó HTTP 200 en inicio, catálogo, configurador, checkout y una ficha de producto; no encontró enlaces de compra externos ni el copy anterior al vendedor.
+- No se ejecutaron Supabase reset/pgTAP/DB lint: el motor Docker Desktop no estaba activo. Tampoco se hizo una compra autenticada conectada en la base alojada; este handoff no certifica persistencia remota ni RLS.
+- Las pruebas E2E muestran una advertencia de hidratación `caret-color: transparent`, pero finalizan sin fallos.
+
+### Pendiente verificable
+
+- Con una cuenta ficticia, completar el checkout publicado y confirmar la creación de un único pedido, el pago demo aprobado, las líneas con precio snapshot, la reserva de stock y la cronología. Si falla, recopilar el mensaje de UI y los logs de Vercel/Supabase antes de reintentar.
 
 ## Handoff anterior (histórico): catálogo de consulta — 2026-10-13
 

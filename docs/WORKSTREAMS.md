@@ -4,9 +4,9 @@
 
 | Conversation | Role | Task | Ownership | Dependencies | State |
 |---|---|---|---|---|---|
-| Tech Lead (main) | Storefront/Commerce Integration | Retirar navegación comercial externa y conectar catálogo, stock, carrito, pago aprobado, pedido y reseñas | Storefront, checkout, mappings, tests, migration y docs | Catálogo publicado y RPCs existentes | ✅ Gates locales completos; esperando migración manual |
-| Project owner | Supabase operator | Ejecutar `20261013120000_nodria_storefront_checkout.sql`; verificar stock y RPCs | SQL Editor del proyecto | Catálogo y migraciones base aplicadas | ⏳ Pendiente de ejecución manual |
-| Project owner | Vercel release | Desplegar el commit tras gates/migración y probar compra conectada | Proyecto Vercel `nodria` | Supabase migration + app commit | ⏳ Pendiente |
+| Tech Lead (main) | Storefront/Commerce Integration | Retirar navegación comercial externa y conectar catálogo, stock, carrito, pago aprobado, pedido y reseñas | Storefront, checkout, mappings, tests, migration y docs | Catálogo publicado y RPCs existentes | ✅ Integrado; commits `4e30e52` y `3cbc5f5` en `origin/main`; gates locales y smoke público pasan |
+| Project owner | Supabase operator | Aplicar `20261013120000_nodria_storefront_checkout.sql` y comprobar funciones/stock | SQL Editor del proyecto | Catálogo y migraciones base aplicadas | 🚧 Aplicación confirmada por el operador; verificación de grants/stock sigue pendiente |
+| Project owner | Vercel release | Publicar la tienda y probar una compra conectada | Proyecto Vercel `nodria` | Migración Supabase + app commit | 🚧 El storefront actualizado responde 200; recorrido autenticado y persistencia del pedido siguen pendientes |
 
 No se han creado conversaciones independientes para esta corrección. Las olas que siguen abajo ya finalizaron y se conservan como historial, no como trabajo activo. No ejecutar `db reset` ni `seed.sql` en producción.
 

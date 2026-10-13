@@ -1,6 +1,6 @@
 # Arquitectura inicial de NODRIA
 
-**Estado de este documento:** actualización 2026-10-13. Vercel Production sirve `https://nodria-academico.vercel.app`. NODRIA presenta una tienda propia de demostración: el catálogo se puede añadir al carrito, completar en el checkout interno y registrar como pedido; la pasarela ficticia aprueba automáticamente sin cargo ni tarjeta. El stock y las transacciones son datos de demostración. Los gates locales pasan; la nueva migración requiere aplicación manual y la prueba remota de compra conectada sigue pendiente. Ver `STATUS.md` y `PRODUCTION_RUNBOOK.md`.
+**Estado de este documento:** actualización 2026-10-13. Vercel Production sirve `https://nodria-academico.vercel.app` con la tienda propia de demostración. El operador informó que la migración de storefront terminó en Supabase; el checkout aprueba automáticamente sin cargo ni tarjeta. El smoke público y los gates locales pasan. No se ha verificado en remoto una compra autenticada ni la persistencia/RLS resultante. Ver `STATUS.md` y `PRODUCTION_RUNBOOK.md`.
 
 ## Objetivo y restricciones
 
@@ -107,7 +107,7 @@ Los nombres públicos configurados son `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC
 
 ### Entornos de entrega
 
-El entorno alojado usa Vercel para Next.js y Supabase para base de datos/Auth. La rama `main` se despliega a Production en `https://nodria-academico.vercel.app`; `https://nodria-staging.vercel.app` es solo un alias con redirección permanente. Es una demo pública que no acepta dinero real. La política elegida no requiere SMTP: Auth debe permitir nuevos registros y tener `Confirm Email` desactivado; la UI no emite recuperación por correo. El catálogo de código está preparado para 64 referencias reales, ocho por clase PC, pero esta migration aún no se ha ejecutado en el proyecto remoto. Nunca resetear ni reconstruir la base remota para facilitar desarrollo.
+El entorno alojado usa Vercel para Next.js y Supabase para base de datos/Auth. La rama `main` se despliega a Production en `https://nodria-academico.vercel.app`; `https://nodria-staging.vercel.app` es solo un alias con redirección permanente. Es una demo pública que no acepta dinero real. La política elegida no requiere SMTP: Auth debe permitir nuevos registros y tener `Confirm Email` desactivado; la UI no emite recuperación por correo. El catálogo contiene 64 referencias reales, ocho por clase PC; el operador informó que ejecutó la migración de tienda el 2026-10-13, aunque la lectura remota de grants/stock no pudo confirmarse desde esta sesión. Nunca resetear ni reconstruir la base remota para facilitar desarrollo.
 
 Vercel Preview debe usar datos no productivos y credenciales separadas. Los cambios de schema deben desplegarse en orden controlado antes del código que los consume. El procedimiento concreto de migración y rollback debe seguir las herramientas y migraciones presentes en el repositorio cuando se implemente el workstream de base de datos.
 

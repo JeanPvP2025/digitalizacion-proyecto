@@ -6,17 +6,17 @@ NODRIA es una tienda académica ficticia con catálogo, carrito y pedidos intern
 
 ## Estado de esta actualización — 2026-10-13
 
-- El operador confirmó previamente 64 modelos publicados, 64 imágenes únicas y ocho opciones por clase en Supabase. Esa confirmación no incluye la migración de la tienda/stock/reseñas de esta iteración.
-- Los cambios actuales de catálogo interno, carrito y checkout requieren completar los gates y aplicar la migración `20261013120000_nodria_storefront_checkout.sql` antes de desplegarlos.
-- Una respuesta Vercel `Ready` o un HTTP 200 solo acredita el despliegue/ruta; no certifica una sesión autenticada, RLS, escritura de pedidos ni el recorrido conectado.
+- El operador confirmó el 2026-10-13 que `20261013120000_nodria_storefront_checkout.sql` terminó en Supabase con `Success. No rows returned`.
+- Los commits `4e30e52` y `3cbc5f5` se publicaron en `origin/main`; inicio, catálogo, configurador, checkout y una ficha de producto respondieron HTTP 200 en `https://nodria-academico.vercel.app`. La comprobación encontró cero enlaces externos de compra y el copy actual de NODRIA.
+- Esta sesión no pudo leer Supabase por falta de permiso en el conector. Deben comprobarse los conteos, funciones/grants y disponibilidad con las consultas de abajo, y falta una compra autenticada de extremo a extremo. Un HTTP 200 solo confirma que la ruta responde.
 
-## 1. Habilitar el catálogo vendible de demostración
+## 1. Verificar el catálogo y el stock de demostración
 
-En Supabase SQL Editor, abre y ejecuta el contenido completo de [`supabase/migrations/20261013120000_nodria_storefront_checkout.sql`](../supabase/migrations/20261013120000_nodria_storefront_checkout.sql). Requiere que el catálogo real, `private.adjust_inventory`, `product_reviews`, `inventory` y los almacenes ya existan. La migración agrega dos funciones públicas de lectura agregada, crea/activa el almacén NODRIA-DEMO, asigna 12 unidades ficticias a cada variante publicada elegible y marca la variante con `nodria_store.mode = academic_demo`.
+La persona propietaria ya informó que ejecutó la migración completa [`supabase/migrations/20261013120000_nodria_storefront_checkout.sql`](../supabase/migrations/20261013120000_nodria_storefront_checkout.sql) en Supabase SQL Editor. Si esa confirmación corresponde al proyecto `ypnhdxpejcbcyjiosrhf`, no la repitas: ejecuta las consultas de comprobación siguientes. La migración agrega funciones públicas de lectura agregada, crea/activa el almacén NODRIA-DEMO, asigna stock ficticio y marca las variantes de tienda.
 
 La migración usa una transacción y es idempotente respecto a las variantes marcadas. No ejecuta `db reset` ni `seed.sql`, no borra pedidos y no requiere que exista `supabase_migrations.schema_migrations` en el SQL Editor. Ejecuta primero una copia de seguridad normal del proyecto antes de hacer cualquier cambio de base de datos.
 
-Después de `Success`, comprueba la preparación del catálogo y disponibilidad:
+Comprueba la preparación del catálogo y disponibilidad:
 
 ```sql
 select count(distinct p.id) as productos_publicados,

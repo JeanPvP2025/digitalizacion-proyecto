@@ -1,15 +1,15 @@
 # Estado del proyecto
 
-## Iteración activa: tienda propia con checkout simulado — 2026-10-13
+## Iteración actual: tienda propia con checkout simulado — 2026-10-13
 
-- ✅ El propietario confirmó previamente en Supabase 64 modelos publicados, 64 fotos únicas y ocho opciones por clase.
-- ✅ La tienda se queda dentro de NODRIA: catálogo, fichas, búsqueda, PC Builder→carrito→checkout y pedidos internos; ya no hay enlaces/copy de compra externa. El pago demo se aprueba automáticamente, no pide tarjeta ni mueve dinero. Las reseñas reales requieren pedido entregado y moderación; las muestras se etiquetan y no cuentan.
+- ✅ La persona propietaria informó que `20261013120000_nodria_storefront_checkout.sql` terminó en Supabase SQL Editor con `Success. No rows returned`.
+- ✅ Los commits `4e30e52` (tienda) y `3cbc5f5` (documentación/gates) se publicaron en `origin/main`. El sitio de producción sirve la interfaz actualizada.
+- ✅ Smoke HTTP de producción: `/`, `/catalogo`, `/configurador`, `/checkout` y una ficha de producto devuelven 200. Las páginas revisadas no incluyen enlaces externos de compra ni el aviso antiguo al vendedor.
 - ✅ Gates locales: instalación congelada, TypeScript, ESLint, 293 Vitest + 26 Node, E2E 18/18, build y `git diff --check`.
-- ⏳ Falta ejecutar manualmente `supabase/migrations/20261013120000_nodria_storefront_checkout.sql` en el proyecto Supabase correcto y confirmar sus funciones/stock.
-- ⏳ Después de aplicar la migración, publicar en Vercel y recorrer una compra conectada autenticada.
-- ⚠️ No se ejecutaron reset/pgTAP/DB lint: Docker Desktop no tiene activo el motor. La migración remota tampoco se aplicó ni se verificó en esta sesión.
-- ⚠️ Los modelos, precios observados e imágenes son reales; stock/pedidos/pago/envíos son ficticios. Las licencias de imágenes remotas siguen por verificar para uso comercial.
-- ⚠️ Playwright imprime una advertencia de hidratación por `caret-color: transparent` en inputs; las 18 pruebas pasan. El commit local `4e30e52` está en `main`; no se ha enviado ni desplegado porque Supabase necesita primero la migración.
+- 🚧 Falta completar una compra con una cuenta ficticia en el entorno alojado y verificar el pedido, pago demo, reserva/stock y timeline persistidos. El conector de solo lectura a Supabase no tiene permiso en esta sesión, así que no pude confirmar directamente los grants, RLS o las filas creadas por la migración.
+- ⚠️ No se ejecutaron reset/pgTAP/DB lint: Docker Desktop no tiene activo el motor local.
+- ⚠️ Modelos, precios observados y fotografías corresponden a referencias reales; stock, pedidos, pagos y envíos son ficticios. Las licencias de fotografías remotas deben confirmarse antes de cualquier uso comercial. El pago demo no cobra, pide tarjeta ni envía productos.
+- ⚠️ Playwright imprime una advertencia de hidratación por `caret-color: transparent` en inputs; las 18 pruebas pasan.
 
 ## Corte previo de catálogo de consulta (histórico)
 
