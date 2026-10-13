@@ -1,6 +1,6 @@
 # Instalación y modos de ejecución
 
-Guía actualizada el **2026-10-13**. NODRIA es una aplicación académica ficticia; el catálogo usa modelos, precios observados y fotos reales de PcComponentes, pero NODRIA no los vende. No conectes datos personales ni medios de pago reales.
+Guía actualizada el **2026-10-13**. NODRIA es una tienda académica propia con modelos, precios observados y fotografías reales. El carrito y los pedidos permanecen dentro del sitio; el pago se aprueba automáticamente como simulación. No se hacen cargos ni envíos, y no uses datos personales reales.
 
 ## Requisitos
 
@@ -10,7 +10,7 @@ Guía actualizada el **2026-10-13**. NODRIA es una aplicación académica fictic
 
 ## Opción A: demo local de archivos
 
-Es la opción prevista para presentar el catálogo real de solo consulta, el PC Builder, solicitud B2B pública y soporte. No necesita Docker, proyecto Supabase ni cuenta de usuario; no habilita una compra ni un pago.
+Esta opción presenta el catálogo, el PC Builder y las rutas públicas sin Supabase. El checkout local escribe pedidos de demostración en `.data/`; los formularios de soporte y consultas B2B también pueden usar persistencia local. No es la configuración de Production.
 
 Desde la raíz del repositorio, en PowerShell:
 
@@ -35,9 +35,9 @@ Arranca la aplicación:
 pnpm dev
 ```
 
-Visita <http://localhost:3000>. Revisa que el catálogo muestre una fecha de precio, enlace a PcComponentes y una foto distinta por modelo. `/checkout` debe explicar que NODRIA no vende los artículos ni procesa pagos.
+Visita <http://localhost:3000>. Comprueba que las fichas no incluyan enlaces comerciales externos, que cada producto tenga una foto propia y que se pueda añadir al carrito. En `/checkout`, completa un pedido de prueba: debe confirmarse automáticamente y explicar que no hubo cargo ni envío.
 
-En este modo, los formularios de soporte y consultas B2B pueden guardar datos de demostración en archivos ignorados de Git bajo `.data/`. El catálogo es una referencia local de modelos externos; favoritos y comparación viven en el almacenamiento del navegador. No se crea sesión Auth ni se genera una orden de compra. No conectes simultáneamente estas variables a un proyecto remoto: las dos credenciales públicas Supabase, si están presentes, cambian el modo de datos y no se activa un fallback a archivos ante errores conectados.
+En este modo, los pedidos, formularios de soporte y consultas B2B pueden guardar datos de demostración en archivos ignorados de Git bajo `.data/`. Favoritos, comparación y carrito viven en el almacenamiento del navegador. El pago solo simula una aprobación y no genera cobro, envío ni transacción comercial. No conectes simultáneamente estas variables a un proyecto remoto: las credenciales públicas de Supabase cambian el modo de datos y un error conectado nunca activa el fallback a archivos.
 
 ## Opción B: Supabase local con Auth
 

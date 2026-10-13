@@ -98,22 +98,49 @@ describe("demo checkout route", () => {
     expect(await demoOrders.getDemoOrderCount()).toBe(0);
   });
 
-  it("rejects a real retailer reference instead of creating a fictional NODRIA order", async () => {
+  it("creates an automatically approved internal demo order without collecting card details", async () => {
     const response = await post(orderBody([{ productId: demoProducts[0]!.id, quantity: 2 }]));
+    const body = await response.json();
 
-    expect(response.status).toBe(409);
-    expect((await response.json()).error).toContain("NODRIA no lo vende");
-    expect(await demoOrders.getDemoOrderRecords()).toHaveLength(0);
+    expect(response.status).toBe(201);
+    expect(body).toMatchObject({ mode: "demo", paymentStatus: "approved", orderStatus: "confirmed" });
+    expect(body.message).toContain("no se ha realizado ningún cargo");
+    const [order] = await demoOrders.getDemoOrderRecords();
+    expect(order.items).toMatchObject([{ productId: demoProducts[0]!.id, quantity: 2, unitPrice: demoProducts[0]!.price }]);
+    expect(order.paymentAttempt).toMatchObject({ method: "nodria_demo", status: "approved" });
   });
 
-  it("rejects quantities above current fixture stock", async () => {
+  it("rejects quantities above the checkout request limit", async () => {
     const beforeCount = await demoOrders.getDemoOrderCount();
     const response = await post(
-      orderBody([{ productId: demoProducts[0]!.id, quantity: 7 }]),
+      orderBody([{ productId: demoProducts[0]!.id, quantity: 11 }]),
     );
 
-    expect(response.status).toBe(409);
-    expect((await response.json()).error).toContain("NODRIA no lo vende");
+    expect(response.status).toBe(400);
+    expect(await demoOrders.getDemoOrderCount()).toBe(beforeCount);
+  });
+
+  it("replays the same key and payload once, then rejects a different payload under that key", async () => {
+    const key = crypto.randomUUID();
+    const beforeCount = await demoOrders.getDemoOrderCount();
+    const original = orderBody([{ productId: demoProducts[0]!.id, quantity: 1 }], { idempotencyKey: key });
+    const first = await post(original);
+    const retry = await post(original);
+    const changed = await post({ ...original, items: [{ productId: demoProducts[0]!.id, quantity: 2 }] });
+
+    expect(first.status).toBe(201);
+    expect(retry.status).toBe(200);
+    expect((await first.json()).orderNumber).toBe((await retry.json()).orderNumber);
+    expect(changed.status).toBe(409);
+    expect((await changed.json()).error).toContain("otros artículos o datos de entrega");
+    expect(await demoOrders.getDemoOrderCount()).toBe(beforeCount + 1);
+  });
+
+  it("rejects client attempts to choose a non-approved payment outcome", async () => {
+    const beforeCount = await demoOrders.getDemoOrderCount();
+    const response = await post(orderBody([{ productId: demoProducts[0]!.id, quantity: 1 }], { paymentMethod: "declined" }));
+
+    expect(response.status).toBe(400);
     expect(await demoOrders.getDemoOrderCount()).toBe(beforeCount);
   });
 });

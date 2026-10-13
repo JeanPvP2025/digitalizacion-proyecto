@@ -27,8 +27,6 @@ type PcComponentBase<Category extends PcBuilderCategory> = {
   variantTitle?: string;
   modelNumber?: string;
   imageUrl?: string;
-  productUrl?: string;
-  checkedAt?: string;
 };
 
 export type CpuFixture = PcComponentBase<"cpu"> & {

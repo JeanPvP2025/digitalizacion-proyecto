@@ -7,13 +7,6 @@ export type ProductSpecification = {
   value: string;
 };
 
-export type ProductPriceReference = {
-  retailer: "PcComponentes";
-  productUrl: string;
-  checkedAt: string;
-  modelNumber?: string;
-};
-
 export type Product = {
   id: string;
   slug: string;
@@ -29,7 +22,6 @@ export type Product = {
   stock: number;
   image: string;
   imageAlt: string;
-  priceReference?: ProductPriceReference;
   badge?: string;
   summary: string;
   specifications: ProductSpecification[];
@@ -42,7 +34,7 @@ const featuredReferenceIds = new Set(
     .map((product) => product.id),
 );
 
-/** Product references checked against PcComponentes. They are not NODRIA inventory or offers. */
+/** Product records used by NODRIA's academic storefront simulation. */
 export const demoProducts: Product[] = verifiedReferenceCatalog.products.map((product) => ({
   id: product.id,
   slug: product.slug,
@@ -54,27 +46,21 @@ export const demoProducts: Product[] = verifiedReferenceCatalog.products.map((pr
   price: product.priceEur,
   rating: 0,
   reviewCount: 0,
-  stock: 0,
+  stock: 12,
   image: product.imageUrl,
   imageAlt: product.imageAlt,
-  priceReference: {
-    retailer: "PcComponentes",
-    productUrl: product.productUrl,
-    checkedAt: product.checkedAt,
-    modelNumber: product.modelNumber,
-  },
-  summary: product.summary,
+  summary: `${product.brand} · modelo ${product.modelNumber}. Precio de catálogo para la experiencia de compra de demostración NODRIA.`,
   specifications: product.specifications,
   featured: featuredReferenceIds.has(product.id),
 }));
 
 export const categories = [
-  { name: "Componentes", code: "componentes", description: "Procesadores, placas, memoria, gráficas, cajas, fuentes y refrigeración con fichas de referencia." },
-  { name: "Almacenamiento", code: "almacenamiento", description: "SSD con precio e imagen de referencia enlazados al vendedor." },
+  { name: "Componentes", code: "componentes", description: "Procesadores, placas, memoria, gráficas, cajas, fuentes y refrigeración." },
+  { name: "Almacenamiento", code: "almacenamiento", description: "Unidades SSD para ampliar tu equipo." },
 ] as const;
 
 export const formatPrice = (price: number) =>
   new Intl.NumberFormat("es-ES", { style: "currency", currency: "EUR", minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(price);
 
-/** Explicitly local-mode lookup; the records themselves are verified external references. */
+/** Explicitly local-mode lookup for the academic storefront simulation. */
 export const getDemoProduct = (slug: string) => demoProducts.find((product) => product.slug === slug);

@@ -1,5 +1,18 @@
 # Estado del proyecto
 
+## Iteración activa: tienda propia con checkout simulado — 2026-10-13
+
+- ✅ El propietario confirmó previamente en Supabase 64 modelos publicados, 64 fotos únicas y ocho opciones por clase.
+- ✅ La tienda se queda dentro de NODRIA: catálogo, fichas, búsqueda, PC Builder→carrito→checkout y pedidos internos; ya no hay enlaces/copy de compra externa. El pago demo se aprueba automáticamente, no pide tarjeta ni mueve dinero. Las reseñas reales requieren pedido entregado y moderación; las muestras se etiquetan y no cuentan.
+- ✅ Gates locales: instalación congelada, TypeScript, ESLint, 293 Vitest + 26 Node, E2E 18/18, build y `git diff --check`.
+- ⏳ Falta ejecutar manualmente `supabase/migrations/20261013120000_nodria_storefront_checkout.sql` en el proyecto Supabase correcto y confirmar sus funciones/stock.
+- ⏳ Después de aplicar la migración, publicar en Vercel y recorrer una compra conectada autenticada.
+- ⚠️ No se ejecutaron reset/pgTAP/DB lint: Docker Desktop no tiene activo el motor. La migración remota tampoco se aplicó ni se verificó en esta sesión.
+- ⚠️ Los modelos, precios observados e imágenes son reales; stock/pedidos/pago/envíos son ficticios. Las licencias de imágenes remotas siguen por verificar para uso comercial.
+- ⚠️ Playwright imprime una advertencia de hidratación por `caret-color: transparent` en inputs; las 17 pruebas pasan. El árbol de trabajo está en `main` y aún no se ha commiteado ni desplegado.
+
+## Corte previo de catálogo de consulta (histórico)
+
 Actualización de catálogo **2026-10-13**. La migración está aplicada en Supabase Production; el operador confirmó 64 modelos, 64 fotos únicas y ocho productos en cada una de las ocho clases. El commit `8ea5b78` está en `main` y Vercel informó `success`; `/`, `/catalogo` y `/configurador` responden HTTP 200. Esto valida el catálogo y su despliegue, no todos los flujos autenticados de la aplicación.
 
 El catálogo local ahora contiene **64 referencias reales** de PcComponentes España: modelos y números de fabricante exactos, precio consultado el 13/10/2026, ficha de vendedor y foto comercial individual. Hay 8 productos por cada una de las 8 clases del PC Builder. Las 64 imágenes devolvieron `200 image/jpeg` y sus 64 cuerpos tienen hashes distintos.

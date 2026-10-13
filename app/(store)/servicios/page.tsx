@@ -11,7 +11,7 @@ const services = [
   {
     icon: Wrench,
     title: "Montaje a medida",
-    copy: "El PC Builder compara modelos reales, sus fichas e imágenes publicadas y datos técnicos disponibles. NODRIA no monta, vende ni verifica físicamente los equipos; confirma la compatibilidad final con el fabricante.",
+    copy: "El PC Builder compara modelos reales, sus fichas e imágenes publicadas y datos técnicos disponibles. Puedes añadir el montaje al carrito de NODRIA y completar un pedido de demostración; la compatibilidad final se confirma con el fabricante.",
     href: "/configurador",
     action: "Abrir el configurador demo",
   },

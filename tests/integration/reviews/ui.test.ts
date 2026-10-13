@@ -103,7 +103,7 @@ describe("product reviews UI", () => {
 
   it("keeps the demo read-only and states that it does not persist opinions", async () => {
     const markup = await renderOpinionsPage();
-    expect(markup).toContain("La demo no guarda opiniones");
+    expect(markup).toContain("El modo de demostración no guarda opiniones");
     expect(markup).not.toContain("Enviar opinión");
     expect(mocks.listPublishedProductReviews).not.toHaveBeenCalled();
   });

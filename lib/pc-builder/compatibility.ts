@@ -251,6 +251,6 @@ export function checkBuildCompatibility(
     errors,
     warnings,
     estimateNote:
-      "Solo se comparan atributos publicados por las fichas del fabricante o comercio. Si un dato necesario no aparece, se muestra como no verificado y requiere comprobación manual. La potencia de CPU/GPU publicada no equivale al consumo exacto de un equipo. NODRIA no vende estos productos ni valida stock o compatibilidad completa.",
+      "Solo se comparan atributos técnicos publicados para estos modelos. Si un dato necesario no aparece, se muestra como no verificado y requiere comprobación manual. La potencia de CPU/GPU publicada no equivale al consumo exacto de un equipo. NODRIA valida el stock al confirmar; la compatibilidad completa requiere una revisión técnica del montaje.",
   };
 }

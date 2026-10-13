@@ -1,53 +1,48 @@
-# Salida a producción de la demo NODRIA
+# Runbook de la tienda de demostración NODRIA
 
 ## Alcance
 
-NODRIA es una empresa académica ficticia. El catálogo está preparado para mostrar referencias reales de PcComponentes con modelo, precio fechado y foto original, pero NODRIA no vende esos artículos ni cobra/envía pedidos. El proyecto de Vercel se llama `nodria` y Production usa `https://nodria-academico.vercel.app`; el host antiguo redirige con `308`.
+NODRIA es una tienda académica ficticia con catálogo, carrito y pedidos internos. Los precios/modelos/fotos corresponden a productos reales; stock, cuentas, pedidos y reseñas son datos de demostración. El checkout aprueba automáticamente una pasarela ficticia, sin cargos, tarjetas ni envíos. Vercel Production usa `https://nodria-academico.vercel.app`.
 
 ## Estado de esta actualización — 2026-10-13
 
-- Verificación local 2026-10-13: instalación congelada, TypeScript, ESLint, `pnpm test` (289 Vitest + 26 Node), E2E (17/17), build y `git diff --check` pasaron; las 64 URL de imagen respondieron `200 image/jpeg`.
-- El operador aplicó la migración corregida en Supabase Production y confirmó 64 modelos publicados, 64 fotos únicas y ocho opciones por clase. Commit `8ea5b78` está en `main`; Vercel informó `success`. Smoke posterior: `/`, `/catalogo` y `/configurador` responden HTTP 200; el HTML de catálogo/configurador contiene las 64 referencias.
-- Los resultados del SQL Editor confirman el dataset, pero no certifican autenticación, autorización/RLS por rol, pedidos ni operaciones comerciales en remoto. No se ejecutó una aceptación autenticada completa en producción.
+- El operador confirmó previamente 64 modelos publicados, 64 imágenes únicas y ocho opciones por clase en Supabase. Esa confirmación no incluye la migración de la tienda/stock/reseñas de esta iteración.
+- Los cambios actuales de catálogo interno, carrito y checkout requieren completar los gates y aplicar la migración `20261013120000_nodria_storefront_checkout.sql` antes de desplegarlos.
+- Una respuesta Vercel `Ready` o un HTTP 200 solo acredita el despliegue/ruta; no certifica una sesión autenticada, RLS, escritura de pedidos ni el recorrido conectado.
 
-## 1. Aplicar las referencias reales en Supabase
+## 1. Habilitar el catálogo vendible de demostración
 
-La migración de esta versión es `supabase/migrations/20261013070617_verified_product_reference_catalog.sql`. Requiere que ya estén aplicadas las migraciones previas que crean categorías como `procesadores`, `placas-base`, `memoria-ram`, `cajas`, `fuentes-alimentacion`, `tarjetas-graficas`, `refrigeracion` y `ssd-internos`.
+En Supabase SQL Editor, abre y ejecuta el contenido completo de [`supabase/migrations/20261013120000_nodria_storefront_checkout.sql`](../supabase/migrations/20261013120000_nodria_storefront_checkout.sql). Requiere que el catálogo real, `private.adjust_inventory`, `product_reviews`, `inventory` y los almacenes ya existan. La migración agrega dos funciones públicas de lectura agregada, crea/activa el almacén NODRIA-DEMO, asigna 12 unidades ficticias a cada variante publicada elegible y marca la variante con `nodria_store.mode = academic_demo`.
 
-En el proyecto Supabase `ypnhdxpejcbcyjiosrhf`, esta migración ya se ejecutó correctamente el 2026-10-13. No vuelvas a ejecutarla como parte de la entrega. No necesitas consultar `supabase_migrations.schema_migrations`; si esa relación no existe en el SQL Editor, no es el historial que debes usar.
+La migración usa una transacción y es idempotente respecto a las variantes marcadas. No ejecuta `db reset` ni `seed.sql`, no borra pedidos y no requiere que exista `supabase_migrations.schema_migrations` en el SQL Editor. Ejecuta primero una copia de seguridad normal del proyecto antes de hacer cualquier cambio de base de datos.
 
-La migración publicó 64 referencias con 8 productos por clase, desactivó las fichas sintéticas previas y retiró su stock libre conservando las reservas. Conserva pedidos e historial, no elimina tablas ni pedidos y no cambia RLS o grants. El operador confirmó 64 modelos y 64 fotos únicas en las consultas siguientes.
-
-Tras `Success`, ejecuta estas consultas de solo lectura:
+Después de `Success`, comprueba la preparación del catálogo y disponibilidad:
 
 ```sql
-select count(distinct p.id) as modelos_publicados,
-       count(distinct p.image_url) as fotos_unicas
+select count(distinct p.id) as productos_publicados,
+       count(distinct p.image_url) as fotos_unicas,
+       count(*) filter (where v.attributes #>> '{nodria_store,mode}' = 'academic_demo') as variantes_nodria
 from public.products p
-join public.product_variants v on v.product_id = p.id
-where p.is_published
-  and v.is_active
-  and v.attributes #>> '{reference_price,source}' = 'PcComponentes';
+join public.product_variants v on v.product_id = p.id and v.is_active
+where p.is_published;
+
+select count(*) as variantes_con_stock,
+       min(disponible) as stock_minimo,
+       max(disponible) as stock_maximo
+from (
+  select i.variant_id, sum(i.on_hand - i.reserved)::int as disponible
+  from public.inventory i
+  join public.warehouses w on w.id = i.warehouse_id and w.is_active and w.code = 'NODRIA-DEMO'
+  join public.product_variants v on v.id = i.variant_id and v.is_active
+  where v.attributes #>> '{nodria_store,mode}' = 'academic_demo'
+  group by i.variant_id
+) stock;
+
+select has_function_privilege('anon', 'public.get_public_catalog_availability()', 'EXECUTE') as stock_publico,
+       has_function_privilege('anon', 'public.get_public_product_review_summary()', 'EXECUTE') as resumen_resenas_publico;
 ```
 
-El resultado esperado para ambas columnas es **64**. Después verifica 8 opciones reales por clase:
-
-```sql
-select v.attributes->'pc_builder'->>'category' as clase,
-       count(distinct p.id) as opciones
-from public.product_variants v
-join public.products p on p.id = v.product_id
-where p.is_published
-  and v.is_active
-  and v.currency = 'EUR'
-  and v.attributes #>> '{reference_price,source}' = 'PcComponentes'
-group by 1
-order by 1;
-```
-
-Cada una de las ocho clases (`case`, `cooler`, `cpu`, `gpu`, `memory`, `motherboard`, `psu`, `storage`) debe dar **8**. No borres registros adicionales.
-
-No ejecutes `supabase/seed.sql`, `db reset`, ni las migraciones sintéticas históricas otra vez en el proyecto alojado.
+El primer resultado debería mostrar 64 productos, 64 fotos únicas y 64 variantes marcadas para la tienda; el segundo debe mostrar stock positivo en las variantes habilitadas. La tercera consulta debe devolver `true` en las dos columnas. No ejecutes `supabase/seed.sql`, `db reset` ni migraciones sintéticas históricas en el proyecto alojado.
 
 ## 2. Auth sin correo de confirmación
 
@@ -80,7 +75,9 @@ La advertencia de Vercel sobre el prefijo público en URL/publishable key es esp
 1. Abre `/acceso`, crea una cuenta ficticia y comprueba que inicia sesión y redirige al destino sin enviar correo.
 2. Cierra sesión e inicia sesión con la misma cuenta. La recuperación de contraseña por email no está disponible.
 3. Verifica `/configurador` y confirma que cada clase ofrece ocho opciones; `/marcas` y `/categorias/componentes` deben mostrar el catálogo ampliado.
-4. Abre `/checkout` y confirma que en modo demo no aparecen campos de pago ni botones para crear una compra NODRIA.
-5. En Vercel, confirma que Production sigue apuntando a `main` y que el deployment aparece como `Ready`.
+4. En `/catalogo`, añade un modelo al carrito; en `/checkout`, usa los datos ficticios ya precargados y confirma el pedido. Debe aparecer una referencia interna y el pago aprobado por la pasarela ficticia.
+5. Comprueba que no aparecen campos de tarjeta. No uses datos personales reales: no se cobra ni se envía nada. El pedido y el stock son datos de demostración.
+6. En `/producto/<slug>/opiniones`, comprueba que las reseñas de muestra se identifican como ejemplos y que no alteran la valoración ni el contador real.
+7. En Vercel, confirma que Production sigue apuntando a `main` y que el deployment aparece como `Ready`.
 
 El dominio Vercel final ya está configurado; no añadas el dominio antiguo como canónico. El proyecto solo puede marcarse como release remoto certificado después de verificar los conteos, el alta Auth sin correo y un recorrido autenticado real con una cuenta ficticia, además de los controles RLS pendientes.

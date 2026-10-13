@@ -82,7 +82,7 @@ export function getHomepageMerchandising(data: CatalogData): HomepageMerchandisi
   }
   const campaign: HomepageCampaign | null = campaignProducts.length ? {
     title: "Tu espacio de trabajo, pieza a pieza.",
-    description: "Compara componentes y SSD con imágenes y precios de referencia enlazados a PcComponentes. No es un pack ni certifica compatibilidad.",
+    description: "Compara componentes y SSD disponibles en NODRIA. Revisa las especificaciones antes de montar tu equipo.",
     href: "/campanas/puesto-de-trabajo",
     products: campaignProducts,
   } : null;

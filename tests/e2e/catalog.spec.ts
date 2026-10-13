@@ -1,66 +1,74 @@
 import { expect, test } from "@playwright/test";
-import referenceCatalog from "../../lib/catalog-data/verified-reference-products.json";
+import { demoProducts } from "../../lib/catalog";
 
-const reference = referenceCatalog.products[0]!;
-const cheapestReferences = [...referenceCatalog.products].sort((a, b) => a.priceEur - b.priceEur).slice(0, 3);
+const product = demoProducts[0]!;
+const cheapestProducts = [...demoProducts].sort((a, b) => a.price - b.price).slice(0, 3);
 
-test.beforeEach(async ({ page }) => {
-  await page.route("https://**/*", (route) => route.abort());
+test("el catálogo presenta productos de NODRIA y ofrece una compra interna", async ({ page }) => {
+  await page.goto(`/catalogo?q=${encodeURIComponent(product.modelNumber ?? product.sku)}`);
+
+  await expect(page.getByRole("heading", { name: product.name })).toBeVisible();
+  await expect(page.getByText(product.modelNumber!, { exact: false }).first()).toBeVisible();
+  await expect(page.getByText("NODRIA", { exact: false }).first()).toBeVisible();
+  await expect(page.getByRole("button", { name: /añadir al carrito/i }).first()).toBeEnabled();
+  await expect(page.locator('a[href^="http"]')).toHaveCount(0);
+  await expect(page.getByText(/pccomponentes|vendedor externo|consultar precio/i)).toHaveCount(0);
 });
 
-test("catalog search shows the exact model, observed price, and its real product photo", async ({ page }) => {
-  await page.goto(`/catalogo?q=${encodeURIComponent(reference.modelNumber)}`);
+test("la ficha del producto enlaza a reseñas internas y evita enlaces comerciales externos", async ({ page }) => {
+  await page.goto(`/producto/${product.slug}`);
 
-  await expect(page.getByRole("heading", { name: reference.name })).toBeVisible();
-  await expect(page.getByText("Precio de referencia · PcComponentes", { exact: false }).first()).toBeVisible();
-  const image = page.locator(`img[alt="${reference.imageAlt}"]`).first();
-  await expect(image).toBeVisible();
-  const imageSrc = await image.getAttribute("src");
-  expect(imageSrc).toBeTruthy();
-  const optimizedImage = new URL(imageSrc!, page.url());
-  expect(optimizedImage.pathname).toBe("/_next/image");
-  expect(optimizedImage.searchParams.get("url")).toBe(reference.imageUrl);
-  await expect(page.getByRole("link", { name: /ver en pccomponentes/i }).first()).toHaveAttribute("href", reference.productUrl);
-  await expect(page.getByText("Disponibilidad comercial no conectada").first()).toBeVisible();
-  await expect(page.getByRole("button", { name: /añadir al carrito/i })).toHaveCount(0);
+  await expect(page.getByRole("heading", { name: `${product.name}.` })).toBeVisible();
+  await expect(page.getByRole("button", { name: /añadir al carrito/i })).toBeEnabled();
+  const reviewsLink = page.getByRole("link", { name: "Ver opiniones", exact: true });
+  await expect(reviewsLink).toHaveAttribute("href", `/producto/${product.slug}/opiniones`);
+  await expect(page.locator('a[href^="http"]')).toHaveCount(0);
+
+  await reviewsLink.click();
+  await expect(page).toHaveURL(new RegExp(`/producto/${product.slug}/opiniones$`));
+  await expect(page.getByText(/ejemplo de demostración.*no verificada/i).first()).toBeVisible();
 });
 
-test("favorites and comparison use real catalog records", async ({ page }) => {
-  await page.addInitScript((productId) => {
-    localStorage.setItem("nodria.favorites.v1", JSON.stringify([productId]));
-    localStorage.setItem("nodria.compare.v1", JSON.stringify([productId]));
-  }, reference.id);
+test("añadir desde una ficha actualiza el carrito y conduce al checkout de NODRIA", async ({ page }) => {
+  await page.goto(`/producto/${product.slug}`);
+  await page.getByRole("button", { name: /añadir al carrito/i }).click();
 
-  await page.goto("/favoritos");
-  await expect(page.getByRole("heading", { name: reference.name })).toBeVisible();
-  await expect(page.getByRole("link", { name: /ver en pccomponentes/i }).first()).toHaveAttribute("href", reference.productUrl);
-
-  await page.goto("/comparar");
-  await expect(page.getByRole("region", { name: "Tabla comparativa de productos" })).toBeVisible();
-  await expect(page.getByText(reference.name, { exact: false }).first()).toBeVisible();
+  await page.goto("/carrito");
+  await expect(page.getByRole("heading", { name: product.name })).toBeVisible();
+  await expect(page.getByText(/TU SELECCIÓN · 1 ARTÍCULOS/i)).toBeVisible();
+  await page.getByRole("link", { name: /continuar|finalizar|tramitar/i }).click();
+  await expect(page).toHaveURL(/\/checkout/);
+  await expect(page.getByText("El pago de demostración NODRIA se aprobará automáticamente al confirmar el pedido.")).toBeVisible();
+  await expect(page.locator('input[autocomplete="cc-number"], input[name*="card" i]')).toHaveCount(0);
+  await expect(page.getByRole("button", { name: "Confirmar pedido" })).toBeEnabled();
 });
 
-test("product page links out to the seller and does not invent reviews or stock", async ({ page }) => {
-  await page.goto(`/producto/${reference.slug}`);
+test("checkout sin artículos muestra un regreso claro al catálogo", async ({ page }) => {
+  await page.goto("/checkout");
 
-  await expect(page.getByRole("heading", { name: `${reference.name}.` })).toBeVisible();
-  await expect(page.getByRole("link", { name: "Consultar ficha del vendedor" })).toHaveAttribute("href", reference.productUrl);
-  await expect(page.getByText("NODRIA no vende este artículo ni mantiene inventario comercial.")).toBeVisible();
-  await expect(page.getByText("Las opiniones de la tienda externa no se importan a NODRIA.")).toBeVisible();
-  await expect(page.getByRole("link", { name: "Leer opiniones y opinar" })).toHaveCount(0);
-  await expect(page.locator(".detail-rating")).not.toContainText(/\b\d+(?:[.,]\d+)?\s*\/\s*5\b/);
-
-  await page.goto(`/producto/${reference.slug}/opiniones`);
-  await expect(page).toHaveURL(new RegExp(`/producto/${reference.slug}/opiniones$`));
-  await expect(page.getByRole("heading", { name: `Opiniones de ${reference.name}.` })).toBeVisible();
-  await expect(page.getByRole("status").filter({ hasText: "El modo de demostración no guarda opiniones" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Tu carrito está vacío." })).toBeVisible();
+  await expect(page.getByRole("link", { name: /volver al catálogo/i })).toHaveAttribute("href", "/catalogo");
+  await expect(page.getByRole("button", { name: "Confirmar pedido" })).toHaveCount(0);
+  await expect(page.getByLabel("Número de tarjeta")).toHaveCount(0);
 });
 
-test("catalog price sorting follows the real source snapshots", async ({ page }) => {
+test("el checkout demo confirma pedido sin cargo y sin datos bancarios", async ({ page }) => {
+  await page.addInitScript(({ id, name, price, image, sku }) => {
+    localStorage.setItem("nodria.cart.v2", JSON.stringify([{ id, slug: "fixture", name, price, image, sku, quantity: 1, type: "product" }]));
+  }, { id: product.id, name: product.name, price: product.price, image: product.image, sku: product.sku });
+
+  await page.goto("/checkout");
+  await expect(page.getByRole("heading", { name: "Un último paso." })).toBeVisible();
+  await page.getByRole("button", { name: "Confirmar pedido" }).click();
+  await expect(page.getByRole("heading", { name: "Tu pedido está confirmado." })).toBeVisible();
+  await expect(page.locator(".demo-payment-warning")).toContainText(/no se ha realizado ningún cargo/i);
+  await expect(page.locator('input[autocomplete="cc-number"], input[name*="card" i]')).toHaveCount(0);
+});
+
+test("el orden por precio sigue el catálogo de NODRIA", async ({ page }) => {
   await page.goto("/catalogo?orden=precio-asc");
-
-  const productNames = await page.locator(".catalog-product-grid .product-card h3").allTextContents();
-  expect(productNames.slice(0, 3)).toEqual(cheapestReferences.map((product) => product.name));
+  const names = await page.locator(".catalog-product-grid .product-card h3").allTextContents();
+  expect(names.slice(0, 3)).toEqual(cheapestProducts.map((item) => item.name));
 });
 
 test("search API rejects malformed filters and returns an empty result consistently", async ({ page }) => {
@@ -74,18 +82,6 @@ test("search API rejects malformed filters and returns an empty result consisten
   expect(invalidLimit.status()).toBe(400);
   expect(noMatch.status()).toBe(200);
   await expect(noMatch.json()).resolves.toMatchObject({ total: 0, results: [] });
-});
-
-test("NODRIA cart and checkout do not pretend to sell external retailer references", async ({ page }) => {
-  await page.goto("/carrito");
-  await expect(page.getByRole("heading", { name: "Empieza por algo que te inspire." })).toBeVisible();
-  await expect(page.getByRole("link", { name: "Explorar tecnología" })).toHaveAttribute("href", "/catalogo");
-
-  await page.goto("/checkout");
-  await expect(page.getByRole("heading", { name: "NODRIA no realiza ventas." })).toBeVisible();
-  await expect(page.getByText(/No se procesa ningún pago ni se crea un pedido en NODRIA/)).toBeVisible();
-  await expect(page.getByRole("button", { name: /confirmar compra|simular resultado de pago/i })).toHaveCount(0);
-  await expect(page.locator('input[autocomplete="cc-number"], input[name*="card" i]')).toHaveCount(0);
 });
 
 test("B2B and support forms expose required fields before any submission", async ({ page }) => {

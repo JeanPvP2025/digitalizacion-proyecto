@@ -36,10 +36,12 @@ async function readPublishedCatalog(client: SupabaseClient): Promise<CatalogRows
   if (!products.length) return { products, categories, productCategories: [], variants: [], specifications: [] };
 
   const productIds = products.map((product) => product.id);
-  const [linkResult, variantResult, specificationResult] = await Promise.all([
+  const [linkResult, variantResult, specificationResult, availabilityResult, reviewSummaryResult] = await Promise.all([
     client.from("product_categories").select("product_id,category_id").in("product_id", productIds),
     client.from("product_variants").select("id,product_id,sku,title,current_price,compare_at_price,currency,is_active,attributes").in("product_id", productIds).eq("is_active", true),
     client.from("product_specifications").select("product_id,label,value,sort_order").in("product_id", productIds).order("sort_order"),
+    client.rpc("get_public_catalog_availability"),
+    client.rpc("get_public_product_review_summary"),
   ]);
 
   for (const result of [linkResult, variantResult, specificationResult]) {
@@ -52,6 +54,8 @@ async function readPublishedCatalog(client: SupabaseClient): Promise<CatalogRows
     productCategories: (linkResult.data ?? []) as CatalogRows["productCategories"],
     variants: (variantResult.data ?? []) as CatalogRows["variants"],
     specifications: (specificationResult.data ?? []) as CatalogRows["specifications"],
+    availability: availabilityResult.error ? [] : (availabilityResult.data ?? []) as CatalogRows["availability"],
+    publishedReviews: reviewSummaryResult.error ? [] : (reviewSummaryResult.data ?? []) as CatalogRows["publishedReviews"],
   };
 }
 
@@ -77,7 +81,7 @@ export async function getCatalogData(): Promise<CatalogData> {
 }
 
 export function getCatalogSourceNotice(source: CatalogData["source"]): string | null {
-  if (source === "demo") return "Modelos, fotos y precios de referencia consultados en PcComponentes. NODRIA no vende ni mantiene stock.";
-  if (source === "supabase") return "Referencias consultadas en PcComponentes. Confirma allí el precio y la disponibilidad actuales.";
+  if (source === "demo") return "Catálogo NODRIA de demostración: modelos, precios y disponibilidad para recorrer la tienda sin cargos ni envíos reales.";
+  if (source === "supabase") return "Tienda NODRIA conectada. El catálogo y la disponibilidad se validan antes de registrar cada pedido; los pagos son simulados.";
   return null;
 }

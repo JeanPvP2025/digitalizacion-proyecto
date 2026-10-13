@@ -1,9 +1,17 @@
 # Registro de decisiones
 
-## D-035 — Referencias comerciales reales, sin suplantar al vendedor
+## D-036 — Tienda NODRIA con pago ficticio de aprobación automática
 
 - **Fecha:** 2026-10-13
-- **Estado:** Confirmada.
+- **Estado:** Confirmada para la entrega académica.
+- **Contexto:** La UI previa enviaba a un comercio externo y el checkout era de solo consulta. La persona usuaria pide que catálogo, carrito, pedidos y opiniones se recorran como una tienda propia.
+- **Decisión:** Mostrar los 64 modelos reales, MPN, precios observados, especificaciones e imágenes dentro de NODRIA; eliminar enlaces y copy que manden a comprar fuera. Habilitar el carrito y pedido interno con una pasarela ficticia que siempre aprueba. La experiencia no cobra, pide tarjeta, envía ni reembolsa dinero real.
+- **Consecuencias:** El servidor fija el resultado como aprobado, recalcula precio/stock y valida idempotencia; las variantes se marcan `nodria_store.mode = academic_demo`; el stock es de prueba. Las reseñas reales requieren pedido elegible y moderación; los ejemplos quedan identificados y excluidos del promedio. Las fotos son recursos remotos de terceros y los derechos de uso comercial deben confirmarse por separado.
+
+## D-035 — Referencias comerciales reales, sin suplantar al vendedor (supersedida)
+
+- **Fecha:** 2026-10-13
+- **Estado:** Supersedida por D-036.
 - **Contexto:** El catálogo de demostración usaba nombres, precios y fotografías ficticios repetidos; la persona usuaria pidió modelos, precios e imágenes reales.
 - **Decisión:** Publicar 64 referencias verificadas en PcComponentes España, con precio observado/fecha, MPN, especificaciones, enlace al vendedor e imagen primaria única por producto. NODRIA sigue siendo una empresa académica ficticia y no afirma vender, almacenar, enviar ni garantizar estas referencias. El checkout de modo demo es de solo consulta.
 - **Consecuencias:** El dataset local y la migración conectada deben mantener el mismo modelo y URL de imagen. Una compra va al vendedor. No se inventa disponibilidad ni reseñas. Para uso comercial de las fotografías, se debe obtener autorización/licencia.

@@ -7,7 +7,7 @@ function variantIdForSku(sku: string) {
   return `${digest.slice(0, 8)}-${digest.slice(8, 12)}-4${digest.slice(13, 16)}-8${digest.slice(17, 20)}-${digest.slice(20, 32)}`;
 }
 
-/** Build the same reference-only rows locally that the Supabase migration publishes. */
+/** Build the same NODRIA storefront rows locally that Supabase publishes. */
 export function getVerifiedReferenceBuilderCatalog() {
   const rootIds: Record<string, string> = { componentes: "root-componentes", almacenamiento: "root-almacenamiento" };
   const leafSlugs = [...new Set(verifiedReferenceCatalog.products.map((product) => product.categorySlug))];
@@ -23,7 +23,7 @@ export function getVerifiedReferenceBuilderCatalog() {
     slug: product.slug,
     name: product.name,
     brand: product.brand,
-    summary: product.summary,
+    summary: `${product.brand} · modelo ${product.modelNumber}. Precio de catálogo de demostración NODRIA.`,
     image_url: product.imageUrl,
     image_alt: product.imageAlt,
     is_published: true,
@@ -41,17 +41,12 @@ export function getVerifiedReferenceBuilderCatalog() {
     id: variantIdForSku(product.sku),
     product_id: product.id,
     sku: product.sku,
-    title: "Referencia PcComponentes",
+    title: "Estándar",
     attributes: {
       pc_builder: product.pcBuilder,
-      reference_price: {
-        source: product.source,
-        seller: product.seller,
-        url: product.productUrl,
-        observed_at: product.checkedAt,
-        price_eur: product.priceEur,
-        image_url: product.imageUrl,
-        mpn: product.modelNumber,
+      nodria_store: {
+        mode: "academic_demo",
+        model_number: product.modelNumber,
       },
     },
     current_price: product.priceEur,

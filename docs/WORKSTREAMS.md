@@ -1,5 +1,17 @@
 # Workstreams
 
+## Iteración actual — tienda propia y compra demo — 2026-10-13
+
+| Conversation | Role | Task | Ownership | Dependencies | State |
+|---|---|---|---|---|---|
+| Tech Lead (main) | Storefront/Commerce Integration | Retirar navegación comercial externa y conectar catálogo, stock, carrito, pago aprobado, pedido y reseñas | Storefront, checkout, mappings, tests, migration y docs | Catálogo publicado y RPCs existentes | ✅ Gates locales completos; esperando migración manual |
+| Project owner | Supabase operator | Ejecutar `20261013120000_nodria_storefront_checkout.sql`; verificar stock y RPCs | SQL Editor del proyecto | Catálogo y migraciones base aplicadas | ⏳ Pendiente de ejecución manual |
+| Project owner | Vercel release | Desplegar el commit tras gates/migración y probar compra conectada | Proyecto Vercel `nodria` | Supabase migration + app commit | ⏳ Pendiente |
+
+No se han creado conversaciones independientes para esta corrección. Las olas que siguen abajo ya finalizaron y se conservan como historial, no como trabajo activo. No ejecutar `db reset` ni `seed.sql` en producción.
+
+## Tablero de olas anteriores (histórico)
+
 Tablero de conversaciones. El repositorio y las migraciones son fuente de verdad; un estado `Done` de agente no sustituye integración/gates del tech lead.
 
 ## Catálogo real — 2026-10-13

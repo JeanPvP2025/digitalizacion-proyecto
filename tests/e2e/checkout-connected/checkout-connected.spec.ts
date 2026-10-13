@@ -6,7 +6,7 @@ type CheckoutRequest = {
   items: Array<{ variantId: string; quantity: number }>;
   customer: { name: string; email: string; phone: string; address: string; postalCode: string; city: string; province: string };
   idempotencyKey: string;
-  paymentMethod: "approved" | "declined" | "temporary_error";
+  paymentMethod: "approved";
 };
 
 function requestFor(fixtures: CheckoutConnectedFixtures, key: CheckoutFixtureKey, user: CheckoutConnectedUser, idempotencyKey = randomUUID()): CheckoutRequest {
@@ -98,34 +98,19 @@ test("aprueba una compra variantId y mantiene pedido, pago, reserva, stock y tim
   expect(state?.cartItems).toHaveLength(1);
 });
 
-test("rechaza el pago, libera la reserva y no duplica pedido, pago ni timeline al repetir", async ({ page }) => {
+test("rechaza que el cliente intente elegir un pago rechazado", async ({ page }) => {
   const fixtures = await loadFixtures();
   const user = fixtures.users.declined;
-  const catalog = fixtures.catalog.declined;
   await signIn(page, user);
-  const payload = requestFor(fixtures, "declined", user, randomUUID());
-  payload.paymentMethod = "declined";
+  const payload = { ...requestFor(fixtures, "declined", user), paymentMethod: "declined" } as unknown as CheckoutRequest;
 
-  const first = await browserCheckout(page, payload);
-  expect(first.status).toBe(201);
-  expect(first.body).toMatchObject({ paymentStatus: "declined", orderStatus: "cancelled" });
-  const retry = await browserCheckout(page, payload);
-  expect(retry.status).toBe(200);
-  expect(retry.body.orderId).toBe(first.body.orderId);
-
-  const state = await inspectOrder(createAdminClient(), user.email, payload.idempotencyKey, catalog.variantId);
-  expect(state?.order.status).toBe("cancelled");
-  expect(state?.payments).toHaveLength(1);
-  expect(state?.payments[0]).toMatchObject({ provider: "demo", status: "failed" });
-  expect(state?.reservations).toHaveLength(1);
-  expect(state?.reservations[0].released_at).toBeTruthy();
-  expect(state?.inventory).toMatchObject([{ on_hand: 30, reserved: 0 }]);
-  expect(state?.events.map((event) => event.event_key)).toEqual(["order_created", "payment_failed"]);
-  expect(state?.carts).toHaveLength(1);
-  expect(state?.cartItems).toHaveLength(1);
+  const response = await browserCheckout(page, payload);
+  expect(response.status).toBe(400);
+  expect(response.body.error).toContain("datos del pedido");
+  expect(await inspectOrder(createAdminClient(), user.email, payload.idempotencyKey, fixtures.catalog.declined.variantId)).toBeNull();
 });
 
-test("un refresh conserva la clave del formulario y permite reintentar el mismo checkout tras error temporal", async ({ page }) => {
+test("un refresh conserva la clave del formulario tras perder la respuesta y reintenta el mismo pedido", async ({ page }) => {
   const fixtures = await loadFixtures();
   const user = fixtures.users.retry;
   const catalog = fixtures.catalog.retry;
@@ -133,10 +118,20 @@ test("un refresh conserva la clave del formulario y permite reintentar el mismo 
   await addLegacyCart(page, fixtures, "retry");
   await page.goto("/checkout");
   const captured: Array<Record<string, unknown>> = [];
+  let simulatedNetworkLoss = false;
   page.on("request", (request) => {
     if (request.url().endsWith("/api/checkout") && request.method() === "POST") {
       try { captured.push(request.postDataJSON() as Record<string, unknown>); } catch { /* Ignore non-JSON requests. */ }
     }
+  });
+  await page.route("**/api/checkout", async (route) => {
+    if (route.request().method() !== "POST" || simulatedNetworkLoss) return route.continue();
+    const response = await route.fetch();
+    if (response.status() === 201) {
+      simulatedNetworkLoss = true;
+      return route.fulfill({ status: 503, contentType: "application/json", body: JSON.stringify({ error: "Respuesta de red interrumpida después de registrar el pedido." }) });
+    }
+    return route.fulfill({ response });
   });
 
   await page.getByLabel("Nombre y apellidos").fill(user.name);
@@ -145,9 +140,8 @@ test("un refresh conserva la clave del formulario y permite reintentar el mismo 
   await page.getByLabel("Código postal").fill("28013");
   await page.getByLabel("Municipio").fill("Madrid");
   await page.getByLabel("Provincia").fill("Madrid");
-  await page.getByLabel("DEMO-ERROR").check();
-  await page.getByRole("button", { name: "Simular resultado de pago" }).click();
-  await expect(page.locator(".checkout-error[role='alert']")).toContainText("error temporal");
+  await page.getByRole("button", { name: "Confirmar pedido" }).click();
+  await expect(page.locator(".checkout-error[role='alert']")).toContainText("Respuesta de red interrumpida");
   const originalKey = captured[0]?.idempotencyKey;
   expect(typeof originalKey).toBe("string");
 
@@ -158,9 +152,8 @@ test("un refresh conserva la clave del formulario y permite reintentar el mismo 
   await page.getByLabel("Código postal").fill("28013");
   await page.getByLabel("Municipio").fill("Madrid");
   await page.getByLabel("Provincia").fill("Madrid");
-  await page.getByLabel("DEMO-APROBADO").check();
-  await page.getByRole("button", { name: "Simular resultado de pago" }).click();
-  await expect(page.getByRole("heading", { name: "El pago demo está aprobado." })).toBeVisible();
+  await page.getByRole("button", { name: "Confirmar pedido" }).click();
+  await expect(page.getByRole("heading", { name: "Tu pedido está confirmado." })).toBeVisible();
   expect(captured).toHaveLength(2);
   expect(captured[1]?.idempotencyKey).toBe(originalKey);
 
@@ -170,21 +163,20 @@ test("un refresh conserva la clave del formulario y permite reintentar el mismo 
   expect(state?.payments[0].status).toBe("paid");
   expect(state?.reservations).toHaveLength(1);
   expect(state?.inventory).toMatchObject([{ on_hand: 30, reserved: 1 }]);
-  expect(state?.events.map((event) => event.event_key)).toEqual(["order_created", "payment_temporary_error", "payment_paid"]);
+  expect(state?.events.map((event) => event.event_key)).toEqual(["order_created", "payment_paid"]);
 
   const variantPayload = requestFor(fixtures, "retry", user, randomUUID());
-  variantPayload.paymentMethod = "temporary_error";
-  const pending = await browserCheckout(page, variantPayload);
-  expect(pending.status).toBe(503);
-  await page.reload();
-  await page.goto("/checkout");
-  const variantRetry = await browserCheckout(page, { ...variantPayload, paymentMethod: "approved" });
+  const variantCreated = await browserCheckout(page, variantPayload);
+  const variantRetry = await browserCheckout(page, variantPayload);
+  expect(variantCreated.status).toBe(201);
   expect(variantRetry.status).toBe(200);
   expect(variantRetry.body.orderStatus).toBe("paid");
+  const variantChanged = await browserCheckout(page, { ...variantPayload, customer: { ...variantPayload.customer, address: "Calle distinta 21" } });
+  expect(variantChanged.status).toBe(409);
   const variantState = await inspectOrder(createAdminClient(), user.email, variantPayload.idempotencyKey, catalog.variantId);
   expect(variantState?.payments).toHaveLength(1);
   expect(variantState?.reservations).toHaveLength(1);
-  expect(variantState?.events.map((event) => event.event_key)).toEqual(["order_created", "payment_temporary_error", "payment_paid"]);
+  expect(variantState?.events.map((event) => event.event_key)).toEqual(["order_created", "payment_paid"]);
 });
 
 test("dos sesiones compran en paralelo con una unidad: solo una confirma y stock reservado no supera físico", async ({ browser }) => {

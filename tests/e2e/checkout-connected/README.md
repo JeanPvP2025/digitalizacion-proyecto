@@ -18,12 +18,12 @@ El setup crea usuarios ficticios confirmados por Admin Auth, productos/variantes
 
 ## Cobertura y límites
 
-- Approved y declined desde una sesión de navegador autenticada, comprobando pedido, pago, reserva, stock y eventos de timeline mediante lectura de PostgREST privilegiado desde Node.
+- Pago automáticamente aprobado desde una sesión de navegador autenticada, comprobando pedido, pago, reserva, stock y eventos de timeline mediante lectura de PostgREST privilegiado desde Node.
 - `variantId`, repetición de la misma clave/payload, rechazo de payload distinto y ausencia de pedidos/pagos/reservas/eventos duplicados.
-- Refresh real después de error temporal: el formulario conserva clave/fingerprint de `sessionStorage` y el reintento aprobado completa el mismo pedido.
+- Refresh real después de perder la respuesta: el formulario conserva clave/fingerprint de `sessionStorage` y el reintento devuelve el mismo pedido ya aprobado.
 - Dos sesiones GoTrue y dos POST simultáneos contra una unidad: un ganador confirmado y una respuesta 409 sin oversell ni segundo pedido.
-- El submit actual del formulario todavía envía `productId`. El retry de UI usa esa compatibilidad de producto único; los escenarios de ruta conectada envían `variantId` directamente desde `fetch` ejecutado por Chromium. Por tanto, la suite verifica el contrato real de ruta con variantes, pero también deja expuesto que el bridge UI → `variantId` requiere integración de producto.
+- El formulario del storefront envía `variantId`; el servidor vuelve a leer el precio, estado de publicación y stock. Los reintentos consultan `find_checkout_order` antes de crear o modificar un carrito, así la misma compra no genera un carrito convertido adicional.
 
-La suite usa fixture de una unidad para concurrencia y elimina todos sus datos. No ejecutar simultáneamente contra otra suite que modifique el mismo proyecto local. No apunta a proyectos remotos ni es una certificación de producción.
+La suite usa fixture de una unidad para concurrencia y elimina todos sus datos. No ejecuta pagos rechazados: el cliente no puede elegir el resultado y el servidor siempre fija aprobación. No ejecutar simultáneamente contra otra suite que modifique el mismo proyecto local. No apunta a proyectos remotos ni es una certificación de producción.
 
-Hallazgo de integración: repetir la misma clave/payload devuelve el mismo pedido y mantiene una sola transacción de pago, reserva y secuencia de eventos, pero el Route Handler crea otro carrito convertido con su línea antes de que el RPC detecte el pedido idempotente. La prueba conserva la aserción del estado de compra; este carrito extra se entrega al Tech Lead como bug de producto separado.
+La clave de idempotencia se valida con el fingerprint de productos/direcciones. El mismo payload devuelve el pedido existente sin duplicar carrito, pago, reserva ni eventos; un payload distinto se rechaza con conflicto. La suite usa Supabase local aislado y no certifica el entorno remoto.

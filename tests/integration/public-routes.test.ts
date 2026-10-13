@@ -170,7 +170,7 @@ describe("public route integration", () => {
     expect(await records("orders.json")).toHaveLength(0);
   });
 
-  it("does not create a NODRIA order from an external product reference", async () => {
+  it("creates an internal NODRIA demo order and replays the same idempotent order", async () => {
     const body = checkoutBody();
     const ip = `checkout-retry-${randomUUID()}`;
     const first = await checkout.POST(request("/api/checkout", body, ip));
@@ -178,19 +178,20 @@ describe("public route integration", () => {
     const firstBody = await first.json();
     const retryBody = await retry.json();
 
-    expect(first.status).toBe(409);
-    expect(retry.status).toBe(409);
-    expect(firstBody.error).toContain("NODRIA no lo vende");
-    expect(retryBody.error).toContain("NODRIA no lo vende");
-    expect(await records<Array<unknown>>("orders.json")).toHaveLength(0);
+    expect(first.status).toBe(201);
+    expect(retry.status).toBe(200);
+    expect(firstBody).toMatchObject({ mode: "demo", paymentStatus: "approved", orderStatus: "confirmed" });
+    expect(retryBody.orderNumber).toBe(firstBody.orderNumber);
+    expect(firstBody.message).toContain("no se ha realizado ningún cargo");
+    expect(await records<Array<unknown>>("orders.json")).toHaveLength(1);
   });
 
-  it("rejects external references and enforces the checkout attempt limit", async () => {
+  it("enforces the server quantity limit and checkout attempt limit", async () => {
     const stockError = await checkout.POST(request("/api/checkout", checkoutBody({
-      items: [{ productId: demoProducts[0]!.id, quantity: 7 }],
+      items: [{ productId: demoProducts[0]!.id, quantity: 11 }],
     })));
-    expect(stockError.status).toBe(409);
-    expect((await stockError.json()).error).toContain("NODRIA no lo vende");
+    expect(stockError.status).toBe(400);
+    expect(await records<Array<unknown>>("orders.json")).toHaveLength(1);
 
     const ip = `checkout-throttle-${randomUUID()}`;
     const statuses: number[] = [];
@@ -198,7 +199,7 @@ describe("public route integration", () => {
       const response = await checkout.POST(request("/api/checkout", checkoutBody(), ip));
       statuses.push(response.status);
     }
-    expect(statuses).toEqual([409, 409, 409, 409, 409, 409, 429]);
+    expect(statuses).toEqual([201, 201, 201, 201, 201, 201, 429]);
   });
 
   it("validates and persists B2B quote requests in isolated demo storage", async () => {
@@ -333,12 +334,14 @@ describe("public route integration", () => {
 
   it("does not enable local support or checkout persistence in production", async () => {
     setNodeEnv("production");
+    const beforeOrders = await records("orders.json");
+    const beforeTickets = await records("tickets.json");
     const noDemoCheckout = await checkout.POST(request("/api/checkout", checkoutBody()));
     const noDemoSupport = await supportRoute.POST(request("/api/support", support));
     expect(noDemoCheckout.status).toBe(503);
     expect(noDemoSupport.status).toBe(503);
-    expect(await records("orders.json")).toHaveLength(0);
-    expect(await records("tickets.json")).toHaveLength(6);
+    expect(await records("orders.json")).toEqual(beforeOrders);
+    expect(await records("tickets.json")).toEqual(beforeTickets);
     setNodeEnv("development");
   });
 });

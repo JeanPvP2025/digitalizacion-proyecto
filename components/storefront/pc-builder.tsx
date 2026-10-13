@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { AlertTriangle, ArrowUpRight, Check, Cpu, HardDrive, MonitorCog, Save, Trash2, Zap } from "lucide-react";
+import { AlertTriangle, Check, Cpu, HardDrive, MonitorCog, Save, ShoppingBag, Trash2, Zap } from "lucide-react";
 import styles from "./pc-builder.module.css";
 import {
   checkBuildCompatibility,
@@ -12,6 +12,8 @@ import {
   requiredPcBuilderCategories,
 } from "@/lib/pc-builder/compatibility";
 import type { PcBuildSelection, PcBuilderCatalog, PcBuilderCategory, PcBuilderComponent } from "@/lib/pc-builder/types";
+import { toPcBuilderCartLines } from "@/lib/pc-builder/cart";
+import { addBuilderLinesToCart } from "@/components/storefront/store-interactions";
 import {
   MAX_SAVED_PC_BUILDS,
   PC_BUILDER_SAVED_KEY,
@@ -134,7 +136,7 @@ export function PcBuilder({ catalog }: { catalog: PcBuilderCatalog }) {
   const statusLabel = catalog.source === "error"
     ? "Catálogo no disponible"
     : catalog.source === "demo"
-      ? "Referencias externas"
+      ? "Catálogo de demostración"
       : catalog.components.length === 0
         ? "Sin piezas validables"
         : result.status === "compatible"
@@ -236,12 +238,22 @@ export function PcBuilder({ catalog }: { catalog: PcBuilderCatalog }) {
   }
 
   const categoryRestriction = catalog.source === "demo"
-    ? "Modelos reales con fotos y precios de referencia. NODRIA no los vende ni mantiene inventario."
+    ? "Modelos y precios del catálogo NODRIA. El stock se simula para esta experiencia académica."
     : catalog.source === "error"
       ? catalog.message
       : catalog.components.length === 0
-        ? "El catálogo conectado no ofrece referencias PC publicadas con precio e imagen propios."
-        : "Referencias de modelos reales con precios e imágenes consultados en PcComponentes; la revisión señala los datos técnicos que la ficha no publica.";
+        ? "El catálogo NODRIA no tiene piezas publicadas para configurar."
+        : "Elige componentes de la tienda NODRIA. La revisión señala los datos técnicos que cada ficha no publica.";
+
+  const buildComplete = requiredPcBuilderCategories.every((category) => selectedComponents.some((component) => component.category === category));
+  const hasCompatibilityErrors = result.issues.some((issue) => issue.severity === "error");
+  const canAddToCart = buildComplete && !hasCompatibilityErrors && selectedComponents.length > 0;
+
+  function addBuildToCart() {
+    if (!canAddToCart) return;
+    addBuilderLinesToCart(toPcBuilderCartLines(selectedComponents));
+    setNotice("Montaje añadido al carrito. El stock se validará al confirmar el pedido.");
+  }
 
   return (
     <main className="builder-page">
@@ -249,7 +261,7 @@ export function PcBuilder({ catalog }: { catalog: PcBuilderCatalog }) {
         <div className="builder-banner-inner">
           <p className="eyebrow">NODRIA LAB · CONFIGURADOR</p>
           <h1>Construye con criterio.</h1>
-          <p>Compara componentes reales paso a paso y revisa las compatibilidades publicadas. Abre las fichas del vendedor para confirmar precio y disponibilidad.</p>
+          <p>Elige componentes, revisa la compatibilidad y añade el montaje completo al carrito para terminar tu pedido en NODRIA.</p>
         </div>
       </section>
 
@@ -331,7 +343,7 @@ export function PcBuilder({ catalog }: { catalog: PcBuilderCatalog }) {
                       <strong>{isOptional ? "No hay opciones publicadas" : "Esta pieza no está disponible"}</strong>
                       <p>{isOptional
                         ? "Puedes continuar sin añadirla. No hay una referencia con datos suficientes para esta categoría."
-                        : "No encontramos referencias con datos suficientes para revisar esta categoría. Consulta la ficha del vendedor antes de elegir una pieza."}</p>
+                        : "No encontramos productos con datos suficientes para revisar esta categoría. Prueba con otra pieza."}</p>
                     </div>
                   </div>
                 ) : (
@@ -352,7 +364,7 @@ export function PcBuilder({ catalog }: { catalog: PcBuilderCatalog }) {
                             <span className={styles.optionName}>{component.name}</span>
                             <strong>{formatter.format(component.priceEur)}</strong>
                           </span>
-                          {component.variantTitle !== "Estándar" && <span className={styles.variantTitle}>Precio de referencia · consultado {component.checkedAt}</span>}
+                          {component.variantTitle !== "Estándar" && <span className={styles.variantTitle}>{component.variantTitle}</span>}
                           <span className={styles.optionSpecs}>{componentSpecs(component)}</span>
                           <span className={styles.optionBrand}>{component.manufacturer}{component.modelNumber ? " · Modelo " + component.modelNumber : ""}</span>
                         </span>
@@ -424,7 +436,7 @@ export function PcBuilder({ catalog }: { catalog: PcBuilderCatalog }) {
                     <div>
                       <span>{categoryTitle[component.category]}</span>
                       <strong>{component.name}</strong>
-                      {component.productUrl && <a className={styles.referenceLink} href={component.productUrl} target="_blank" rel="noopener noreferrer">Ver ficha en PcComponentes <ArrowUpRight aria-hidden="true" size={13} /></a>}
+                      {component.modelNumber && <span className={styles.referenceLink}>Modelo {component.modelNumber}</span>}
                     </div>
                     <button type="button" onClick={() => setActiveCategory(component.category)} aria-label={"Editar " + categoryTitle[component.category]}>
                       {formatter.format(component.priceEur)}
@@ -436,7 +448,7 @@ export function PcBuilder({ catalog }: { catalog: PcBuilderCatalog }) {
           </div>
 
           <div className={styles.total}>
-            <span>Suma de precios de referencia</span>
+            <span>Subtotal del montaje</span>
             <strong>{formatter.format(result.totalPriceEur)}</strong>
           </div>
 
@@ -457,10 +469,13 @@ export function PcBuilder({ catalog }: { catalog: PcBuilderCatalog }) {
           </details>
 
           <div className={styles.cartRestriction} id="builder-cart-restriction">
-            <ArrowUpRight size={16} />
-            <p>Son referencias de PcComponentes; NODRIA no las vende ni mantiene inventario. Abre cada ficha para comprobar precio y disponibilidad actuales.</p>
+            <ShoppingBag size={16} />
+            <p>El pago se aprobará automáticamente en esta demostración. No hay cargo ni envío real. El stock se comprueba al confirmar el pedido.</p>
           </div>
           <div className={styles.actions}>
+            <button className={styles.saveButton} onClick={addBuildToCart} type="button" disabled={!canAddToCart}>
+              <ShoppingBag size={15} /> Añadir montaje al carrito
+            </button>
             <button className={styles.saveButton} onClick={saveBuild} type="button" disabled={selectedComponents.length === 0}>
               <Save size={15} /> Guardar montaje
             </button>

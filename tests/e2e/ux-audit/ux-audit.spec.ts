@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { demoProducts } from "../../../lib/catalog";
 import referenceCatalog from "../../../lib/catalog-data/verified-reference-products.json";
 
 const reference = referenceCatalog.products[0]!;
@@ -199,11 +200,17 @@ test("B2B landing and portal apply their CSS-module root classes", async ({ page
   expect(missingRootClasses, "B2B CSS-module roots missing in the rendered DOM").toEqual([]);
 });
 
-test("checkout explains that NODRIA does not sell catalog references", async ({ page }) => {
+test("checkout keeps payment inside NODRIA and approves the demo without card details", async ({ page }) => {
+  const product = demoProducts[0]!;
+  await page.addInitScript(({ id, name, price, image, sku }) => {
+    localStorage.setItem("nodria.cart.v2", JSON.stringify([{ id, slug: "fixture", name, price, image, sku, quantity: 1, type: "product" }]));
+  }, { id: product.id, name: product.name, price: product.price, image: product.image, sku: product.sku });
   await page.goto("/checkout", { waitUntil: "domcontentloaded" });
-  await expect(page.getByRole("heading", { name: "NODRIA no realiza ventas." })).toBeVisible();
-  await expect(page.getByRole("button", { name: /confirmar compra demo|simular resultado de pago/i })).toHaveCount(0);
-  await expect(page.getByText(/No se procesa ningún pago ni se crea un pedido en NODRIA/)).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Un último paso." })).toBeVisible();
+  await expect(page.getByText("El pago de demostración NODRIA se aprobará automáticamente al confirmar el pedido.")).toBeVisible();
+  await expect(page.getByRole("button", { name: "Confirmar pedido" })).toBeVisible();
+  await expect(page.locator('input[autocomplete="cc-number"], input[name*="card" i]')).toHaveCount(0);
+  await expect(page.locator(".demo-payment-warning")).toContainText(/no se realiza ningún cargo/i);
 });
 
 test("footer back-to-top affordance is keyboard operable", async ({ page }) => {

@@ -6,7 +6,7 @@ import { createCatalogLandingMetadata } from "@/lib/content/catalog-landing-meta
 import { getCatalogData } from "@/lib/catalog-repository";
 
 export const dynamic = "force-dynamic";
-export const metadata: Metadata = createCatalogLandingMetadata("/categorias", "Categorías", "Explora referencias de componentes y almacenamiento con imágenes y precios consultados en PcComponentes.");
+export const metadata: Metadata = createCatalogLandingMetadata("/categorias", "Categorías", "Explora componentes y almacenamiento disponibles en la tienda NODRIA.");
 
 export default async function CategoriesPage() {
   const data = await getCatalogData();
@@ -15,7 +15,7 @@ export default async function CategoriesPage() {
   return <main>
     <CatalogLandingHero eyebrow="CATÁLOGO · CATEGORÍAS" title="Encuentra tu punto de partida." description="Recorre las categorías y sus familias de producto. Solo se muestran grupos con fichas publicadas en el catálogo activo." count={categories.length} countLabel={categories.length === 1 ? "categoría disponible" : "categorías disponibles"} />
     <section className={styles.directory} aria-labelledby="categories-title">
-      <div className={styles.directoryHeading}><div><h2 id="categories-title">Explora por categoría</h2><p>Los modelos, fotografías y especificaciones proceden de las fichas enlazadas. El precio es una referencia consultada, no una oferta de NODRIA.</p></div><span>{categories.length.toString().padStart(2, "0")}</span></div>
+      <div className={styles.directoryHeading}><div><h2 id="categories-title">Explora por categoría</h2><p>Compara modelos, fotografías, especificaciones y precios dentro de la tienda NODRIA.</p></div><span>{categories.length.toString().padStart(2, "0")}</span></div>
       {categories.length ? <div className={styles.cardGrid}>{categories.map((category, index) => <CatalogLinkCard key={category.id} href={`/categorias/${encodeURIComponent(category.slug)}`} eyebrow={`FAMILIA ${String(index + 1).padStart(2, "0")}`} title={category.name} description={category.description} count={category.count} />)}</div> : <div className={styles.empty} role="status"><strong>Aún no hay categorías con productos publicados.</strong><p>Vuelve a consultar el catálogo más adelante.</p></div>}
     </section>
   </main>;

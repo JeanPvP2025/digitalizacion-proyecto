@@ -66,16 +66,16 @@ export default async function ProductReviewsPage({ params }: RouteProps) {
     <main className={styles.reviewsPage}>
       <Link className={styles.backLink} href={"/producto/" + slug}><ArrowLeft size={15} /> Volver al producto</Link>
       <header className={styles.reviewsHeader}>
-        <p className={styles.eyebrow}>COMUNIDAD NODRIA · OPINIONES VERIFICADAS</p>
+        <p className={styles.eyebrow}>COMUNIDAD NODRIA · OPINIONES</p>
         <h1>Opiniones de {product.name}<span>.</span></h1>
-        <p>Solo las personas que recibieron este producto pueden opinar. Cada opinión se revisa antes de publicarse.</p>
+        <p>Las opiniones verificadas requieren un pedido entregado y se revisan antes de publicarse. El contenido de ejemplo aparece identificado por separado.</p>
         {published?.ok && <span className={styles.reviewCount}>{published.data.total} {published.data.total === 1 ? "opinión publicada" : "opiniones publicadas"}</span>}
       </header>
 
       <section className={styles.reviewSection} aria-labelledby="published-reviews">
         <div className={styles.sectionHeading}>
           <div>
-            <p className={styles.eyebrow}>EXPERIENCIAS REALES</p>
+            <p className={styles.eyebrow}>{connected ? "OPINIONES DE CLIENTES" : "CONTENIDO DE MUESTRA"}</p>
             <h2 id="published-reviews">Opiniones publicadas</h2>
           </div>
           <ShieldCheck size={22} aria-hidden="true" />
@@ -85,6 +85,17 @@ export default async function ProductReviewsPage({ params }: RouteProps) {
           state={reviewState}
         />
       </section>
+
+      {connected && <section className={styles.reviewSection} aria-labelledby="review-examples">
+        <div className={styles.sectionHeading}>
+          <div>
+            <p className={styles.eyebrow}>CONTENIDO SEPARADO</p>
+            <h2 id="review-examples">Ejemplo de presentación</h2>
+          </div>
+        </div>
+        <p className={styles.statusNote}>Estas opiniones ilustran el diseño y no se incluyen en la valoración ni en el total de reseñas de clientes.</p>
+        <ProductReviewList reviews={[]} state="demo" />
+      </section>}
 
       <section className={styles.submitSection} aria-labelledby="write-review">
         <p className={styles.eyebrow}>TU EXPERIENCIA</p>

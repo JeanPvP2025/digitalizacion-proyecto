@@ -4,26 +4,25 @@ import { createPublicPageMetadata } from "@/lib/content/public-seo";
 
 export const metadata = createPublicPageMetadata(
   "Garantía y asistencia",
-  "NODRIA muestra referencias externas y no vende, repara ni tramita garantías o devoluciones de estos productos.",
+  "Consulta la cobertura de garantía y el flujo de asistencia que representa la tienda NODRIA.",
 );
 
 export default function WarrantyPage() {
   return (
     <main className="page-wrap">
-      <p className="eyebrow">GARANTÍA · REFERENCIAS EXTERNAS</p>
-      <h1 className="page-title">No termina<br />cuando llega<span className="title-period">.</span></h1>
+      <p className="eyebrow">GARANTÍA · ASISTENCIA</p>
+      <h1 className="page-title">Acompañamiento<br />después de elegir<span className="title-period">.</span></h1>
       <p className="page-intro">
-        NODRIA es un proyecto académico que enlaza a fichas de modelos reales. No vende esos productos
-        ni ofrece garantía, reparación o devolución; confirma las condiciones con el vendedor y el fabricante.
+        La experiencia incluye las pantallas de soporte, garantía y devolución de una tienda tecnológica. Los casos se guardan como datos de demostración y no generan reparaciones o envíos reales.
       </p>
       <div className="policy-grid">
         <article>
           <span className="policy-icon"><BadgeCheck size={19} /></span>
-          <h2>NODRIA no tramita garantías.</h2>
+          <h2>Consulta la cobertura.</h2>
           <p>
-            Las fichas de catálogo no crean una cobertura de NODRIA. No existe una compra o factura emitida por NODRIA.
+            La ficha de cada modelo reúne sus especificaciones. Para una compra real, la cobertura depende de las condiciones comerciales vigentes y del fabricante.
           </p>
-          <p>Para una compra externa, revisa la documentación vigente del producto y del vendedor.</p>
+          <p>Los pedidos de esta web son simulados y no generan factura ni garantía comercial.</p>
         </article>
         <article>
           <span className="policy-icon"><Wrench size={19} /></span>
@@ -36,7 +35,7 @@ export default function WarrantyPage() {
         </article>
       </div>
       <p className="legal-demo-note">
-        No introduzcas datos personales reales. Puedes consultar también los <Link href="/envios">límites de envíos y devoluciones</Link>.
+        Usa datos ficticios al probar los formularios. Consulta también <Link href="/envios">envíos y devoluciones</Link>.
       </p>
     </main>
   );

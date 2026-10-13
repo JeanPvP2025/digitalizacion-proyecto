@@ -33,11 +33,7 @@ function catalogRows(categories: readonly PcBuilderCategory[] = pcBuilderCategor
       id: variantId(index + 1), product_id: productId(index + 1), sku: `NOD-PC-${index + 1}`,
       title: "Única", attributes: {
         pc_builder: attributesByCategory[category],
-        reference_price: {
-          source: "PcComponentes", seller: "PcComponentes", url: `https://www.pccomponentes.com/componente-${category}`,
-          observed_at: "2026-10-13", price_eur: 100,
-          image_url: `https://thumb.pccomponentes.com/w-530-530/articles/product-${index + 1}.jpg`,
-        },
+        nodria_store: { mode: "academic_demo", model_number: `MODEL-${index + 1}` },
       },
       current_price: "100.00", currency: "EUR", is_active: true,
     })),
@@ -67,16 +63,15 @@ describe("PC Builder catalogue contract and compatibility", () => {
     expect(result.omittedVariants).toBe(1);
   });
 
-  it("omits free text but accepts published references when optional technical data is absent", () => {
+  it("omits free text and requires NODRIA store provenance", () => {
     const rows = catalogRows(["storage"]);
     rows.variants[0].attributes = { capacity: "2 TB", interface: "NVMe PCIe 4.0 ×4" };
     const genericSpecs = mapPcBuilderRows(rows);
     expect(genericSpecs).toEqual({ components: [], omittedVariants: 1 });
 
-    const verifiedPrice = (catalogRows(["storage"]).variants[0].attributes as { reference_price: Record<string, unknown> }).reference_price;
     rows.variants[0].attributes = {
       pc_builder: { ...attributesByCategory.storage, estimated_power_w: undefined },
-      reference_price: verifiedPrice,
+      nodria_store: { mode: "academic_demo", model_number: "MODEL-1" },
     };
     const missingEstimate = mapPcBuilderRows(rows);
     expect(missingEstimate.components).toHaveLength(1);

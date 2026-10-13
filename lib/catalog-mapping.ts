@@ -1,4 +1,4 @@
-import type { Product, ProductCategory, ProductPriceReference, ProductSpecification } from "@/lib/catalog";
+import type { Product, ProductCategory, ProductSpecification } from "@/lib/catalog";
 
 export type CatalogCategory = {
   id: string;
@@ -57,12 +57,17 @@ type SpecificationRow = {
   sort_order: number;
 };
 
+type AvailabilityRow = { variant_id: string; available_quantity: number | string };
+type PublishedReviewRow = { product_id: string; average_rating: number | string; review_count: number | string };
+
 export type CatalogRows = {
   products: ProductRow[];
   categories: CategoryRow[];
   productCategories: ProductCategoryRow[];
   variants: VariantRow[];
   specifications: SpecificationRow[];
+  availability?: AvailabilityRow[];
+  publishedReviews?: PublishedReviewRow[];
 };
 
 export type CatalogData =
@@ -73,50 +78,29 @@ export type CatalogData =
 export const CATALOG_READ_ERROR = "No se pudo cargar el catálogo. Inténtalo de nuevo más tarde.";
 const productCategories = new Set<ProductCategory>(["Ordenadores", "Componentes", "Monitores", "Redes", "Telefonía", "Almacenamiento"]);
 
-type PcComponentReference = {
-  source: "PcComponentes";
-  seller: "PcComponentes";
-  url: string;
-  observed_at: string;
-  price_eur: number;
-  image_url: string;
-  mpn?: string | null;
-};
-
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
-function isPcComponentHost(hostname: string): boolean {
-  return hostname === "www.pccomponentes.com";
+function getModelNumber(attributes: unknown): string | undefined {
+  if (!isRecord(attributes) || !isRecord(attributes.nodria_store)) return undefined;
+  const modelNumber = attributes.nodria_store.model_number;
+  return typeof modelNumber === "string" && modelNumber.trim() ? modelNumber.trim() : undefined;
 }
 
-function getPriceReference(variant: VariantRow, productImageUrl: string): { reference: ProductPriceReference; price: number; modelNumber?: string } | null {
-  if (!isRecord(variant.attributes) || !isRecord(variant.attributes.reference_price)) return null;
-  const reference = variant.attributes.reference_price as Partial<PcComponentReference>;
-  const price = Number(variant.current_price);
-  if (reference.source !== "PcComponentes" || reference.seller !== "PcComponentes" ||
-      typeof reference.url !== "string" || typeof reference.observed_at !== "string" ||
-      !/^\d{4}-\d{2}-\d{2}$/.test(reference.observed_at) ||
-      typeof reference.price_eur !== "number" || !Number.isFinite(reference.price_eur) ||
-      typeof reference.image_url !== "string" || reference.image_url !== productImageUrl ||
-      Math.abs(reference.price_eur - price) > 0.001) return null;
-  try {
-    const url = new URL(reference.url);
-    if (url.protocol !== "https:" || !isPcComponentHost(url.hostname)) return null;
-  } catch {
-    return null;
+function isNodriaStoreVariant(attributes: unknown): boolean {
+  return isRecord(attributes) && isRecord(attributes.nodria_store) && attributes.nodria_store.mode === "academic_demo";
+}
+
+function publishedReviewAggregates(reviews: PublishedReviewRow[] = []) {
+  const totals = new Map<string, { count: number; average: number }>();
+  for (const review of reviews) {
+    const count = Number(review.review_count);
+    const average = Number(review.average_rating);
+    if (!Number.isSafeInteger(count) || count < 1 || !Number.isFinite(average) || average < 1 || average > 5) continue;
+    totals.set(review.product_id, { count, average });
   }
-  return {
-    reference: {
-      retailer: "PcComponentes",
-      productUrl: reference.url,
-      checkedAt: reference.observed_at,
-      ...(typeof reference.mpn === "string" && reference.mpn.trim() ? { modelNumber: reference.mpn.trim() } : {}),
-    },
-    price,
-    ...(typeof reference.mpn === "string" && reference.mpn.trim() ? { modelNumber: reference.mpn.trim() } : {}),
-  };
+  return totals;
 }
 
 function isExactProductPhoto(url: string | null): url is string {
@@ -172,6 +156,8 @@ export function mapCatalogRows(rows: CatalogRows): { products: CatalogProduct[];
   }
 
   const categoriesById = new Map(categories.map((category) => [category.id, category]));
+  const availabilityByVariant = new Map((rows.availability ?? []).map((item) => [item.variant_id, item.available_quantity]));
+  const reviewAggregates = publishedReviewAggregates(rows.publishedReviews);
   const seenImageUrls = new Set<string>();
   const products = rows.products
     .filter((product) => product.is_published)
@@ -184,16 +170,15 @@ export function mapCatalogRows(rows: CatalogRows): { products: CatalogProduct[];
         .map((id) => categoriesById.get(id))
         .filter((item): item is CatalogCategory & { name: ProductCategory } => item !== undefined && isProductCategory(item.name))
         .sort((a, b) => a.sortOrder - b.sortOrder)[0];
-      // Only products with a source-checked model price and its own product photo enter the store.
-      if (!variant || !category || !isExactProductPhoto(product.image_url) || !product.image_alt.trim() || seenImageUrls.has(product.image_url)) return [];
-      const priceReference = getPriceReference(variant, product.image_url);
-      if (!priceReference) return [];
+      // Only published products with their own product photo enter the store.
+      if (!variant || !category || !isNodriaStoreVariant(variant.attributes) || !isExactProductPhoto(product.image_url) || !product.image_alt.trim() || seenImageUrls.has(product.image_url)) return [];
       seenImageUrls.add(product.image_url);
 
       const specifications = (specificationsByProduct.get(product.id) ?? [])
         .sort((a, b) => a.sortOrder - b.sortOrder)
         .map(({ specification }) => specification);
 
+      const aggregate = reviewAggregates.get(product.id) ?? { count: 0, average: 0 };
       return [{
         id: product.id,
         categoryIds: productCategoryIds,
@@ -202,14 +187,11 @@ export function mapCatalogRows(rows: CatalogRows): { products: CatalogProduct[];
         name: product.name,
         category: category.name,
         brand: product.brand,
-        ...(priceReference.modelNumber ? { modelNumber: priceReference.modelNumber } : {}),
-        price: priceReference.price,
-        priceReference: priceReference.reference,
-        // Seeded aggregate ratings are not backed by a connected review workflow yet.
-        rating: 0,
-        reviewCount: 0,
-        // Exact inventory is protected by RLS. Connected storefront UI must not treat this as stock.
-        stock: 0,
+        ...(getModelNumber(variant.attributes) ? { modelNumber: getModelNumber(variant.attributes) } : {}),
+        price: Number(variant.current_price),
+        rating: aggregate.count > 0 ? aggregate.average : 0,
+        reviewCount: aggregate.count,
+        stock: Math.max(0, Number(availabilityByVariant.get(variant.id) ?? 0)),
         image: product.image_url,
         imageAlt: product.image_alt,
         ...(product.badge ? { badge: product.badge } : {}),

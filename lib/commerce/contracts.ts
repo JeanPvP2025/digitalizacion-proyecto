@@ -31,26 +31,21 @@ export const checkoutCustomerSchema = z.object({
   province: z.string().trim().min(2).max(80),
 }).strict();
 
-export const checkoutPaymentMethodSchema = z.enum([
-  "approved",
-  "declined",
-  "insufficient_funds",
-  "processing",
-  "temporary_error",
-]);
-
 export const checkoutRequestSchema = z.object({
   items: z.array(checkoutItemSchema).min(1).max(32),
   idempotencyKey: z.uuid(),
   customer: checkoutCustomerSchema,
-  paymentMethod: checkoutPaymentMethodSchema.optional(),
+  paymentMethod: z.literal("approved").optional(),
 }).strict();
+
+export const checkoutPaymentStatusSchema = z.enum(["approved", "declined", "insufficient_funds", "processing", "temporary_error"]);
+export type CheckoutPaymentStatus = z.infer<typeof checkoutPaymentStatusSchema>;
 
 const demoCheckoutResponseSchema = z.object({
   mode: z.literal("demo"),
   orderNumber: z.string().min(8).max(64),
   idempotencyKey: z.uuid(),
-  paymentStatus: z.enum(["approved", "declined", "insufficient_funds", "processing", "temporary_error"]),
+  paymentStatus: checkoutPaymentStatusSchema,
   orderStatus: z.enum(["confirmed", "payment_processing", "pending"]),
   message: z.string().min(1).max(300),
 }).strict();
@@ -60,7 +55,7 @@ const supabaseCheckoutResponseSchema = z.object({
   orderId: z.uuid(),
   orderNumber: z.string().min(8).max(64),
   idempotencyKey: z.uuid(),
-  paymentStatus: z.enum(["approved", "declined", "insufficient_funds", "processing", "temporary_error"]),
+  paymentStatus: checkoutPaymentStatusSchema,
   orderStatus: z.enum(["pending_payment", "paid", "processing", "shipped", "delivered", "cancelled", "refunded"]),
   total: z.number().finite().nonnegative(),
   currency: z.string().regex(/^[A-Z]{3}$/),

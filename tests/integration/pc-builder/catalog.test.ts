@@ -51,14 +51,10 @@ function catalogueResults() {
     categories: queryResult([{ id: "cat-components", slug: "componentes", is_active: true }]),
     product_categories: queryResult([{ product_id: reference.id, category_id: "cat-components" }]),
     product_variants: queryResult([{
-      id: "00000000-0000-4000-8000-000000000001", product_id: reference.id, sku: reference.sku, title: "Referencia PcComponentes",
+      id: "00000000-0000-4000-8000-000000000001", product_id: reference.id, sku: reference.sku, title: "Estándar",
       attributes: {
         pc_builder: { category: "cpu", socket: "AM5", memory_generations: ["DDR5"], estimated_power_w: 65, integrated_graphics: true },
-        reference_price: {
-          source: "PcComponentes", seller: "PcComponentes", url: reference.priceReference!.productUrl,
-          observed_at: reference.priceReference!.checkedAt, price_eur: reference.price, image_url: reference.image,
-          mpn: reference.modelNumber,
-        },
+        nodria_store: { mode: "academic_demo", model_number: reference.modelNumber },
       },
       current_price: reference.price.toFixed(2), currency: "EUR", is_active: true,
     }]),
@@ -80,15 +76,14 @@ describe("PC Builder catalogue loading boundary", () => {
     }
   });
 
-  it("loads the verified model/photo/price references in local demo mode without making them sellable", async () => {
+  it("loads NODRIA's models, photos, prices, and compatibility in local demo mode", async () => {
     const { getPcBuilderCatalog } = await import("@/lib/pc-builder/catalog");
     const result = await getPcBuilderCatalog();
     expect(result.source).toBe("demo");
     expect(result.components).toHaveLength(64);
     expect(result.omittedVariants).toBe(0);
     expect(new Set(result.components.map(({ category }) => category)).size).toBe(8);
-    expect(result.components.every((component) => component.productUrl?.startsWith("https://www.pccomponentes.com/") &&
-      /^https:\/\/(img|thumb)\.pccomponentes\.com\//.test(component.imageUrl ?? "") && component.checkedAt === "2026-10-13" &&
+    expect(result.components.every((component) => /^https:\/\/(img|thumb)\.pccomponentes\.com\//.test(component.imageUrl ?? "") &&
       component.priceEur > 0 && component.modelNumber)).toBe(true);
     expect(supabaseMock.createClient).not.toHaveBeenCalled();
   });

@@ -23,12 +23,13 @@ function rows(): CatalogRows {
     variants: [{
       id: "variant-laptop", product_id: "product-laptop", sku: "NOD-LAP-1", title: "16 GB", current_price: "899",
       compare_at_price: null, currency: "EUR", is_active: true,
-      attributes: { reference_price: { source: "PcComponentes", seller: "PcComponentes", url: "https://www.pccomponentes.com/portatil-academico", observed_at: "2026-10-13", price_eur: 899, image_url: "https://thumb.pccomponentes.com/w-530-530/articles/product-laptop.jpg" } },
+      attributes: { nodria_store: { mode: "academic_demo", model_number: "MPN-LAPTOP-1" } },
     }],
     specifications: [
       { product_id: "product-laptop", label: "Memoria", value: "16 GB", sort_order: 1 },
       { product_id: "product-laptop", label: "Pantalla", value: "14 pulgadas", sort_order: 2 },
     ],
+    availability: [{ variant_id: "variant-laptop", available_quantity: 12 }],
   };
 }
 
@@ -39,7 +40,7 @@ describe("catalog discovery integration contract", () => {
     expect(mapped.categories.some((category) => category.id === "inactive")).toBe(false);
     expect(mapped.products[0]).toMatchObject({ category: "Ordenadores", categoryIds: [rootId, leafId] });
 
-    const result = discoverCatalog(mapped.products, mapped.categories, new URLSearchParams("categoria=portatiles"), "supabase");
+    const result = discoverCatalog(mapped.products, mapped.categories, new URLSearchParams("categoria=portatiles"));
     expect(result.results.map(({ id }) => id)).toEqual(["product-laptop"]);
     expect(result.categoryOptions.find(({ slug }) => slug === "portatiles")).toMatchObject({ selected: true, count: 1, depth: 1 });
   });
@@ -52,17 +53,17 @@ describe("catalog discovery integration contract", () => {
     expect(next.getAll("marca")).toEqual(["Marca A", "Marca B"]);
   });
 
-  it("does not expose stock facets in connected mode and ignores malformed bounds safely", () => {
+  it("filters the connected stock facet from aggregate availability and ignores malformed bounds", () => {
     const mapped = mapCatalogRows(rows());
-    const result = discoverCatalog(mapped.products, mapped.categories, new URLSearchParams("disponibilidad=en-stock&min=NaN&max=-1"), "supabase");
+    const result = discoverCatalog(mapped.products, mapped.categories, new URLSearchParams("disponibilidad=en-stock&min=NaN&max=-1"));
     expect(result.results).toHaveLength(1);
-    expect(result.facets.some(({ key }) => key === "disponibilidad")).toBe(false);
-    expect(result.notices).toHaveLength(2);
+    expect(result.facets.some(({ key }) => key === "disponibilidad")).toBe(true);
+    expect(result.notices).toHaveLength(1);
   });
 
   it("keeps technical selections active while counting matching categories", () => {
     const mapped = mapCatalogRows(rows());
-    const result = discoverCatalog(mapped.products, mapped.categories, new URLSearchParams("categoria=portatiles&spec.Memoria=32+GB"), "supabase");
+    const result = discoverCatalog(mapped.products, mapped.categories, new URLSearchParams("categoria=portatiles&spec.Memoria=32+GB"));
     expect(result.results).toHaveLength(0);
     expect(result.categoryOptions.find(({ slug }) => slug === "portatiles")?.count).toBe(0);
   });

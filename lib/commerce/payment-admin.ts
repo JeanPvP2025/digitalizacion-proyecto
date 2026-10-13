@@ -3,7 +3,8 @@ import "server-only";
 import { createHash } from "node:crypto";
 import { createClient } from "@supabase/supabase-js";
 import { getSupabaseCredentials } from "@/lib/supabase/config";
-import type { CheckoutRequest } from "@/lib/commerce/contracts";
+
+export type DemoPaymentOutcome = "approved" | "declined" | "insufficient_funds" | "processing" | "temporary_error";
 
 /**
  * `resolve_demo_payment` is deliberately executable only by service_role.
@@ -29,13 +30,13 @@ export function createSupabasePaymentAdminClient() {
 export function getDemoPaymentEventId(
   userId: string,
   idempotencyKey: string,
-  method: NonNullable<CheckoutRequest["paymentMethod"]>,
+  method: DemoPaymentOutcome,
 ) {
   return createHash("sha256")
     .update(`${userId}:${idempotencyKey}:${method}`)
     .digest("hex");
 }
 
-export function toDatabaseDemoPaymentOutcome(method: NonNullable<CheckoutRequest["paymentMethod"]>) {
+export function toDatabaseDemoPaymentOutcome(method: DemoPaymentOutcome) {
   return method === "declined" || method === "insufficient_funds" ? "failed" : method;
 }

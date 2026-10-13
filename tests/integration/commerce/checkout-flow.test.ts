@@ -312,7 +312,7 @@ describe("connected Supabase checkout", () => {
 
     expect(response.status).toBe(409);
     expect((await response.json()).error).toContain("checkout demo local");
-    expect(clients.variantSelects).toHaveLength(0);
+    expect(clients.variantSelects).toHaveLength(1);
     expect(clients.placeOrderArgs).toHaveLength(0);
   });
 
@@ -347,20 +347,16 @@ describe("connected Supabase checkout", () => {
     expect(clients.placeOrderArgs).toHaveLength(0);
   });
 
-  it.each([
-    ["declined", "declined"],
-    ["insufficient_funds", "insufficient_funds"],
-  ] as const)("records %s as a failed payment and cancelled order", async (method, paymentStatus) => {
-    const clients = makeConnectedClients({ paymentResults: [{ data: "failed", error: null }] });
+  it.each(["declined", "insufficient_funds", "processing", "temporary_error"])("rejects client-selected payment result %s", async (method) => {
+    const clients = makeConnectedClients();
     checkoutMocks.createUserClient.mockResolvedValue(clients.userClient);
     checkoutMocks.createPaymentAdminClient.mockReturnValue(clients.paymentAdmin);
 
-    const response = await request(makeBody({ paymentMethod: method }));
-    const body = await response.json();
+    const response = await request(makeBody({ paymentMethod: method as CheckoutBody["paymentMethod"] }));
 
-    expect(response.status).toBe(201);
-    expect(body).toMatchObject({ paymentStatus, orderStatus: "cancelled" });
-    expect(clients.paymentArgs[0].p_outcome).toBe("failed");
+    expect(response.status).toBe(400);
+    expect(clients.placeOrderArgs).toHaveLength(0);
+    expect(clients.paymentArgs).toHaveLength(0);
   });
 
   it("replays the same order and payment event without creating a second order", async () => {
@@ -419,7 +415,7 @@ describe("connected Supabase checkout", () => {
     expect(clients.paymentArgs[1].p_event_id).toBe(clients.paymentArgs[0].p_event_id);
   });
 
-  it("keeps processing/error outcomes pending and allows a later outcome on the same order", async () => {
+  it("keeps a transient server payment response pending and resolves the same order on retry", async () => {
     const clients = makeConnectedClients({ paymentResults: [
       { data: "pending", error: null },
       { data: "pending", error: null },
@@ -427,19 +423,19 @@ describe("connected Supabase checkout", () => {
     ] });
     checkoutMocks.createUserClient.mockResolvedValue(clients.userClient);
     checkoutMocks.createPaymentAdminClient.mockReturnValue(clients.paymentAdmin);
-    const body = makeBody({ paymentMethod: "processing" });
+    const body = makeBody();
 
     const processing = await request(body);
-    const temporaryError = await request({ ...body, paymentMethod: "temporary_error" });
-    const approved = await request({ ...body, paymentMethod: "approved" });
+    const secondPending = await request(body);
+    const approved = await request(body);
 
-    expect(processing.status).toBe(201);
-    expect((await processing.json()).orderStatus).toBe("pending_payment");
-    expect(temporaryError.status).toBe(503);
+    expect(processing.status).toBe(503);
+    expect((await processing.json()).error).toContain("sigue procesándose");
+    expect(secondPending.status).toBe(503);
     expect(approved.status).toBe(200);
     expect((await approved.json()).orderStatus).toBe("paid");
     expect(clients.getOrderCreateCount()).toBe(1);
-    expect(new Set(clients.paymentArgs.map((args) => args.p_event_id)).size).toBe(3);
+    expect(new Set(clients.paymentArgs.map((args) => args.p_event_id)).size).toBe(1);
   });
 
   it("does not create a pending order when the server-only key is missing", async () => {

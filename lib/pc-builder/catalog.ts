@@ -60,8 +60,7 @@ async function readPcBuilderCatalog(): Promise<PcBuilderCatalog> {
 export async function getPcBuilderCatalog(): Promise<PcBuilderCatalog> {
   const mode = getServerDataMode();
   if (mode === "local-demo") {
-    // Show the same verified reference catalog as Supabase without claiming
-    // the external products are NODRIA inventory or checkout variants.
+    // Show the same NODRIA product catalog as Supabase in local development.
     return { source: "demo", ...getVerifiedReferenceBuilderCatalog() };
   }
   if (mode === "unavailable") {

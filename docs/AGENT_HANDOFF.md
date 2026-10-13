@@ -1,5 +1,30 @@
 # Registro de handoffs
 
+## Handoff activo — tienda propia con checkout auto-aprobado — 2026-10-13
+
+### Trabajo realizado
+
+- Se retiraron de la experiencia pública los enlaces y textos que mandaban a comprar fuera; el catálogo sigue usando los 64 modelos, precios observados, especificaciones y fotos individuales.
+- Las fichas conectadas requieren la marca de variante NODRIA; la lectura de stock y del promedio de reseñas se hace mediante funciones agregadas. Las reseñas de ejemplo permanecen etiquetadas como contenido ilustrativo.
+- El carrito admite productos y montajes del PC Builder. Checkout fija pago aprobado, crea el pedido interno y no pide tarjeta ni realiza cargos/envíos. Se añadió comparación de fingerprint para reintentos locales con la misma clave.
+- Se creó `supabase/migrations/20261013120000_nodria_storefront_checkout.sql` para marcar variantes, inventario de demostración, categorías sin copy anterior y funciones públicas de stock/reseñas.
+
+### Archivos principales
+
+- Storefront y checkout: `app/(store)/**`, `app/api/checkout/route.ts`, `components/storefront/**`, `lib/catalog*.ts`, `lib/commerce/**`, `lib/pc-builder/**`.
+- Datos y tests: `lib/catalog-data/verified-reference-products.json`, `lib/server/demo-orders.ts`, `lib/reviews/demo-samples.ts`, `tests/**`.
+- Migración y documentación: `supabase/migrations/20261013120000_nodria_storefront_checkout.sql`, `docs/**`.
+
+### Contratos y siguientes pasos
+
+- El resultado elegido en cliente ya no permite rechazo: el schema solo acepta `approved` y el servidor vuelve a fijarlo. La confirmación requiere verificar el pedido, pago `paid`, reserva, stock y timeline en Supabase local y luego remotamente.
+- La migración se debe ejecutar manualmente por el propietario en el SQL Editor correcto antes del despliegue. No se ha aplicado aquí a la base remota.
+- Verificación local completada: `pnpm install --frozen-lockfile`, TypeScript, ESLint, `pnpm test` (293 Vitest + 26 Node), `pnpm test:e2e` (18/18), `pnpm build` y `git diff --check` pasan.
+- No se ejecutaron Supabase reset/pgTAP/DB lint: el motor Docker Desktop no estaba activo. Pendiente de aplicar y verificar la migración en Supabase antes del deploy; este handoff no certifica compra conectada remota.
+- No hay commit ni deploy de esta iteración. Las pruebas E2E muestran una advertencia de hidratación `caret-color: transparent` pero finalizan sin fallos.
+
+## Handoff anterior (histórico): catálogo de consulta — 2026-10-13
+
 ## Catálogo de referencias reales e imágenes — Tech Lead — 2026-10-13
 
 - **Objetivo:** sustituir productos/imágenes ficticios visibles por referencias de modelos reales y evitar que NODRIA aparezca como vendedor.

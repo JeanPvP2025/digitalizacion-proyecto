@@ -7,14 +7,14 @@ import { CatalogLandingHero, CatalogLinkCard, CatalogReadFailure } from "@/compo
 import styles from "@/components/storefront/catalog-landings.module.css";
 
 export const dynamic = "force-dynamic";
-export const metadata: Metadata = createCatalogLandingMetadata("/marcas", "Marcas", "Explora marcas reales presentes en las referencias de PcComponentes.");
+export const metadata: Metadata = createCatalogLandingMetadata("/marcas", "Marcas", "Explora marcas y modelos disponibles en el catálogo NODRIA.");
 
 export default async function BrandsPage() {
   const data = await getCatalogData();
   if (data.source === "error") return <CatalogReadFailure message={data.message} />;
   const brands = getCatalogBrands(data);
   return <main>
-    <CatalogLandingHero eyebrow="CATÁLOGO · MARCAS" title="Ideas que empiezan por una marca." description="Consulta modelos y fotografías de producto publicados por cada fabricante. Los importes son referencias externas; NODRIA no vende estos artículos." count={brands.length} countLabel={brands.length === 1 ? "marca disponible" : "marcas disponibles"} />
+    <CatalogLandingHero eyebrow="CATÁLOGO · MARCAS" title="Ideas que empiezan por una marca." description="Consulta modelos, fotografías y precios disponibles en el catálogo NODRIA." count={brands.length} countLabel={brands.length === 1 ? "marca disponible" : "marcas disponibles"} />
     {getCatalogSourceNotice(data.source) && <p className={styles.source} role="status">{getCatalogSourceNotice(data.source)}</p>}
     <section className={styles.directory} aria-labelledby="brands-title">
       <div className={styles.directoryHeading}><div><h2 id="brands-title">Marcas del catálogo</h2><p>Solo aparecen marcas con productos publicados en la fuente activa.</p></div><span>{brands.length.toString().padStart(2, "0")}</span></div>

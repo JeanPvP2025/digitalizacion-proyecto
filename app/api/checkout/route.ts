@@ -1,16 +1,18 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { consolidateCheckoutItems, CheckoutCartError, resolveCheckoutCartItems, type CheckoutVariantRow } from "@/lib/commerce/cart";
-import { checkoutItemSelectorError, checkoutRequestSchema, type CheckoutRequest } from "@/lib/commerce/contracts";
+import { checkoutItemSelectorError, checkoutRequestSchema, type CheckoutPaymentStatus, type CheckoutRequest } from "@/lib/commerce/contracts";
 import { getCheckoutMode } from "@/lib/commerce/mode";
 import { demoProducts } from "@/lib/catalog";
 import { consumeRateLimit } from "@/lib/server/rate-limit";
-import { persistDemoOrder, type DemoOrderRecord } from "@/lib/server/demo-orders";
+import { DemoOrderIdempotencyConflict, persistDemoOrder, type DemoOrderRecord } from "@/lib/server/demo-orders";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { getVerifiedReferenceBuilderCatalog } from "@/lib/pc-builder/reference-catalog";
 import {
   createSupabasePaymentAdminClient,
   getDemoPaymentEventId,
   toDatabaseDemoPaymentOutcome,
+  type DemoPaymentOutcome,
 } from "@/lib/commerce/payment-admin";
 
 const demoOrderStatusSchema = z.enum(["confirmed", "payment_processing", "pending"]);
@@ -58,12 +60,6 @@ function clientIp(request: Request) {
 
 function money(value: number) {
   return Math.round(value * 100) / 100;
-}
-
-function demoPaymentStatus(method: NonNullable<CheckoutRequest["paymentMethod"]>) {
-  if (method === "approved") return "approved" as const;
-  if (method === "processing") return "processing" as const;
-  return method;
 }
 
 function checkoutErrorResponse(error: unknown) {
@@ -174,7 +170,7 @@ async function resolveConnectedPayment(
   orderId: string,
   userId: string,
   idempotencyKey: string,
-  paymentMethod: NonNullable<CheckoutRequest["paymentMethod"]>,
+  paymentMethod: DemoPaymentOutcome,
 ) {
   const paymentEventId = getDemoPaymentEventId(userId, idempotencyKey, paymentMethod);
   const { data, error } = await paymentAdmin.rpc("resolve_demo_payment", {
@@ -191,7 +187,7 @@ async function resolveConnectedPayment(
 function supabaseOrderResponse(
   order: z.infer<typeof databaseOrderSchema>,
   idempotencyKey: string,
-  paymentStatus: NonNullable<CheckoutRequest["paymentMethod"]>,
+  paymentStatus: CheckoutPaymentStatus,
   status = 200,
 ) {
   const paymentMessage = paymentStatus === "approved"
@@ -228,9 +224,7 @@ async function createSupabaseOrder(checkout: CheckoutRequest) {
     return NextResponse.json({ error: "Inicia sesión para finalizar el pedido." }, { status: 401 });
   }
   const userId = authData.user.id;
-  if (!checkout.paymentMethod) {
-    return NextResponse.json({ error: "Elige un resultado para la simulación de pago." }, { status: 400 });
-  }
+  const paymentMethod: DemoPaymentOutcome = "approved";
 
   // The RPC is intentionally limited to service_role. Resolve its outcome only
   // after authenticating the customer through the publishable-key session.
@@ -245,10 +239,6 @@ async function createSupabaseOrder(checkout: CheckoutRequest) {
 
   try {
     const items = consolidateCheckoutItems(checkout.items);
-    if (items.some((item) => "productId" in item && item.productId.startsWith("builder:"))) {
-      throw new CheckoutCartError("demo_only", "Las piezas del configurador solo se pueden pedir en el checkout demo local.");
-    }
-
     const variants = await loadSellableCheckoutVariants(supabase, items);
     const cartItems = resolveCheckoutCartItems(items, variants);
 
@@ -274,13 +264,16 @@ async function createSupabaseOrder(checkout: CheckoutRequest) {
     const existing = existingResult.data[0];
     if (existing) {
       const paymentState = await resolveConnectedPayment(
-        paymentAdmin, existing.order_id, userId, checkout.idempotencyKey, checkout.paymentMethod,
+        paymentAdmin, existing.order_id, userId, checkout.idempotencyKey, paymentMethod,
       );
+      if (paymentState === "pending") {
+        return NextResponse.json({ error: "El pago sigue procesándose. Conserva esta referencia y vuelve a intentar confirmar el pedido." }, { status: 503 });
+      }
       const paymentStatus = paymentState === "paid"
         ? "approved"
         : paymentState === "failed"
-          ? checkout.paymentMethod === "insufficient_funds" ? "insufficient_funds" : "declined"
-          : checkout.paymentMethod;
+          ? "declined"
+          : paymentMethod;
       const existingOrder = databaseOrderSchema.parse({
         id: existing.order_id,
         order_number: existing.order_number,
@@ -292,9 +285,6 @@ async function createSupabaseOrder(checkout: CheckoutRequest) {
         grand_total: existing.grand_total,
         currency: existing.currency,
       });
-      if (paymentStatus === "temporary_error" && paymentState === "pending") {
-        return NextResponse.json({ error: "El pago demo tuvo un error temporal. El pedido sigue pendiente; cambia el resultado o reintenta con la misma referencia." }, { status: 503 });
-      }
       return supabaseOrderResponse(existingOrder, checkout.idempotencyKey, paymentStatus, 200);
     }
 
@@ -318,22 +308,21 @@ async function createSupabaseOrder(checkout: CheckoutRequest) {
       currency: row.currency,
     };
     const paymentState = await resolveConnectedPayment(
-      paymentAdmin, row.order_id, userId, checkout.idempotencyKey, checkout.paymentMethod,
+      paymentAdmin, row.order_id, userId, checkout.idempotencyKey, paymentMethod,
     );
+    if (paymentState === "pending") {
+      return NextResponse.json({ error: "El pedido se ha guardado y el pago sigue procesándose. Conserva esta referencia y vuelve a intentar confirmar." }, { status: 503 });
+    }
     const paymentStatus = paymentState === "paid"
       ? "approved"
       : paymentState === "failed"
-        ? checkout.paymentMethod === "insufficient_funds" ? "insufficient_funds" : "declined"
-        : checkout.paymentMethod;
+        ? "declined"
+        : paymentMethod;
     resolvedOrder.status = paymentState === "paid"
       ? "paid"
       : paymentState === "failed"
         ? "cancelled"
         : "pending_payment";
-
-    if (paymentStatus === "temporary_error" && paymentState === "pending") {
-      return NextResponse.json({ error: "El pago demo tuvo un error temporal. El pedido sigue pendiente; cambia el resultado o reintenta con la misma referencia." }, { status: 503 });
-    }
 
     return supabaseOrderResponse(resolvedOrder, checkout.idempotencyKey, paymentStatus, 201);
   } catch (error) {
@@ -346,37 +335,33 @@ async function createDemoOrder(checkout: DemoRequestWithRequest) {
     return NextResponse.json({ error: "Has realizado demasiados intentos de demostración. Espera un minuto y vuelve a probar." }, { status: 429 });
   }
 
-  if (!checkout.data.paymentMethod) {
-    return NextResponse.json({ error: "Elige un resultado para la simulación local." }, { status: 400 });
-  }
-
   const consolidated = consolidateCheckoutItems(checkout.data.items);
-  if (consolidated.some((item) => "variantId" in item)) {
-    return NextResponse.json({ error: "No se ha podido validar la selección del carrito. Actualízalo y vuelve a intentarlo." }, { status: 400 });
-  }
   const orderItems: DemoOrderRecord["items"] = [];
+  const builderComponents = getVerifiedReferenceBuilderCatalog().components;
   for (const item of consolidated) {
+    if ("variantId" in item) {
+      const component = builderComponents.find((candidate) => candidate.variantId === item.variantId);
+      if (!component) return NextResponse.json({ error: "Una pieza del montaje ya no está disponible." }, { status: 409 });
+      if (item.quantity > 12) return NextResponse.json({ error: `${component.name} supera la disponibilidad de demostración.` }, { status: 409 });
+      orderItems.push({ productId: component.productId, name: component.name, sku: component.sku, quantity: item.quantity,
+        unitPrice: component.priceEur, lineTotal: money(component.priceEur * item.quantity), source: "pc_builder" });
+      continue;
+    }
     if (!("productId" in item)) continue;
     const { productId, quantity } = item;
-    if (productId.startsWith("builder:")) {
-      return NextResponse.json({ error: "Las referencias del configurador se consultan con el vendedor; NODRIA no las vende ni puede crearles un pedido." }, { status: 409 });
-    }
     const product = demoProducts.find((item) => item.id === productId);
     if (!product) return NextResponse.json({ error: "Uno de los productos del carrito ya no está disponible." }, { status: 409 });
-    if (product.priceReference) {
-      return NextResponse.json({ error: "Este modelo es una referencia externa. NODRIA no lo vende ni puede crearle un pedido." }, { status: 409 });
-    }
     if (quantity > product.stock) return NextResponse.json({ error: `${product.name} no tiene stock suficiente. Disponibles: ${product.stock}.` }, { status: 409 });
     orderItems.push({ productId, name: product.name, sku: product.sku, quantity, unitPrice: product.price, lineTotal: money(product.price * quantity), source: "catalogue" });
   }
 
   const subtotal = money(orderItems.reduce((sum, item) => sum + item.lineTotal, 0));
-  const shipping = subtotal === 0 || subtotal >= 100 ? 0 : 5.9;
+  const shipping = 0;
   const total = money(subtotal + shipping);
   const tax = money(total - total / 1.21);
   const timestamp = new Date().toISOString();
-  const payment = demoPaymentStatus(checkout.data.paymentMethod);
-  const orderStatus = payment === "approved" ? "confirmed" as const : payment === "processing" ? "payment_processing" as const : "pending" as const;
+  const payment = "approved" as const;
+  const orderStatus = "confirmed" as const;
   const sequence = Math.floor(Math.random() * 0xffffff).toString(16).toUpperCase().padStart(6, "0");
   const record: DemoOrderRecord = {
     id: crypto.randomUUID(),
@@ -392,7 +377,7 @@ async function createDemoOrder(checkout: DemoRequestWithRequest) {
     tax,
     shipping,
     total,
-    paymentAttempt: { id: crypto.randomUUID(), method: `demo_${checkout.data.paymentMethod}`, status: payment, createdAt: timestamp },
+    paymentAttempt: { id: crypto.randomUUID(), method: "nodria_demo", status: payment, createdAt: timestamp },
     timeline: [
       { event: "order_created", label: "Pedido demo registrado", createdAt: timestamp },
       { event: `payment_${payment}`, label: `Intento de pago simulado: ${payment}`, createdAt: timestamp },
@@ -407,10 +392,13 @@ async function createDemoOrder(checkout: DemoRequestWithRequest) {
       idempotencyKey: checkout.data.idempotencyKey,
       paymentStatus: saved.paymentStatus === "invalid" ? "temporary_error" as const : saved.paymentStatus,
       orderStatus: demoOrderStatusSchema.parse(saved.status),
-      message: "Registro persistente de demostración local. La respuesta de pago es ficticia y no se ha realizado ningún cargo.",
+      message: "Pedido confirmado. El pago de demostración se ha aprobado automáticamente; no se ha realizado ningún cargo ni envío real.",
     };
     return NextResponse.json(response, { status: saved.id === record.id ? 201 : 200 });
   } catch (error) {
+    if (error instanceof DemoOrderIdempotencyConflict) {
+      return NextResponse.json({ error: "Esta referencia de compra ya se usó con otros artículos o datos de entrega. Inicia otra compra." }, { status: 409 });
+    }
     console.error("NODRIA demo checkout persistence failed", error);
     return NextResponse.json({ error: "No se ha podido guardar el pedido demo. Repite el intento con la misma referencia." }, { status: 500 });
   }

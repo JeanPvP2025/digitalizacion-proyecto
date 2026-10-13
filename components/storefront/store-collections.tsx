@@ -171,7 +171,7 @@ function CompareContents({ productsFromCatalog, source }: { productsFromCatalog:
                 {product.image ? <Image src={product.image} alt={product.imageAlt} width={240} height={180} unoptimized /> : <span className="product-photo-placeholder">Imagen no disponible</span>}
                 <strong>{product.name}</strong>
               </Link>
-              <small>{formatPrice(product.price)}{product.priceReference ? " · precio de referencia" : source === "demo" ? " · demo local" : ""}</small>
+              <small>{formatPrice(product.price)}</small>
               <button className="compare-remove" type="button" onClick={() => remove(product.id)}>Quitar</button>
             </th>)}</tr></thead>
             <tbody>
@@ -182,7 +182,7 @@ function CompareContents({ productsFromCatalog, source }: { productsFromCatalog:
                 const distinct = new Set(values.filter((value) => value !== "—")).size > 1;
                 return <tr key={attribute}><th scope="row">{attribute.toUpperCase()}</th>{products.map((product, index) => <td className={distinct && values[index] !== "—" ? "is-different" : ""} key={product.id}>{values[index]}</td>)}</tr>;
               })}
-              <tr><th scope="row">DISPONIBILIDAD</th>{products.map((product) => <td key={product.id}>{product.priceReference ? <a href={product.priceReference.productUrl} target="_blank" rel="noopener noreferrer">Consultar en PcComponentes</a> : source === "demo" ? product.stock > 0 ? `${product.stock} unidades · demo local` : "Sin stock · demo local" : "Disponibilidad por confirmar"}</td>)}</tr>
+              <tr><th scope="row">DISPONIBILIDAD</th>{products.map((product) => <td key={product.id}>{product.stock > 0 ? `${product.stock} unidades disponibles` : "Agotado"}</td>)}</tr>
             </tbody>
           </table>
         </div>

@@ -8,6 +8,8 @@ export type PcBuilderCartLine = {
   sku: string;
   quantity: number;
   type: "builder";
+  image?: string;
+  slug?: string;
 };
 
 export type CheckoutCartItem = { productId: string; quantity: number } | { variantId: string; quantity: number };
@@ -22,6 +24,8 @@ export function toPcBuilderCartLines(components: readonly PcBuilderCatalogCompon
     sku: component.sku,
     quantity: 1,
     type: "builder",
+    ...(component.imageUrl ? { image: component.imageUrl } : {}),
+    ...(component.productSlug ? { slug: component.productSlug } : {}),
   }));
 }
 

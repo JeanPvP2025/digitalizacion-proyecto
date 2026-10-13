@@ -92,25 +92,6 @@ function isCategory(value: unknown): value is PcBuilderCategory {
   return typeof value === "string" && categoryOrder.includes(value as PcBuilderCategory);
 }
 
-function hasVerifiedPriceReference(value: unknown, currentPrice: number | string, productImage: string | null): boolean {
-  if (!isRecord(value) || !isRecord(value.reference_price)) return false;
-  const reference = value.reference_price;
-  if (reference.source !== "PcComponentes" || reference.seller !== "PcComponentes" ||
-      typeof reference.url !== "string" || typeof reference.observed_at !== "string" ||
-      typeof reference.image_url !== "string" || reference.image_url !== productImage ||
-      !/^\d{4}-\d{2}-\d{2}$/.test(reference.observed_at) ||
-      typeof reference.price_eur !== "number" || Math.abs(reference.price_eur - Number(currentPrice)) > 0.001) return false;
-  try {
-    const url = new URL(reference.url);
-    const image = new URL(reference.image_url);
-    return url.protocol === "https:" && url.hostname === "www.pccomponentes.com" &&
-      image.protocol === "https:" && ["img.pccomponentes.com", "thumb.pccomponentes.com"].includes(image.hostname) &&
-      image.pathname.includes("/articles/");
-  } catch {
-    return false;
-  }
-}
-
 function parseVariantComponent(
   variant: PcBuilderVariantRow,
   product: PcBuilderProductRow,
@@ -124,7 +105,8 @@ function parseVariantComponent(
   const root = isRecord(variant.attributes) ? variant.attributes : null;
   const builder = root && isRecord(root.pc_builder) ? root.pc_builder : null;
   if (!builder || !isCategory(builder.category)) return null;
-  const reference = root && isRecord(root.reference_price) ? root.reference_price : null;
+  const store = root && isRecord(root.nodria_store) ? root.nodria_store : null;
+  if (store?.mode !== "academic_demo") return null;
 
   const base = {
     id: variant.id,
@@ -133,10 +115,8 @@ function parseVariantComponent(
     productSlug: product.slug,
     sku: variant.sku,
     variantTitle: variant.title,
-    modelNumber: reference && nonEmptyString(reference.mpn) ? reference.mpn.trim() : undefined,
+    modelNumber: store && nonEmptyString(store.model_number) ? store.model_number.trim() : undefined,
     imageUrl: product.image_url ?? undefined,
-    productUrl: reference && nonEmptyString(reference.url) ? reference.url : undefined,
-    checkedAt: reference && nonEmptyString(reference.observed_at) ? reference.observed_at : undefined,
     name: product.name,
     manufacturer: product.brand,
     priceEur: Number(variant.current_price),
@@ -209,9 +189,8 @@ function parseVariantComponent(
 
 /**
  * Only published products in the active Componentes or Almacenamiento
- * catalogue categories and with a complete `attributes.pc_builder` contract
- * become selectable. Display specifications are deliberately not parsed into
- * compatibility rules because their values are not a stable data contract.
+ * categories with the store's `attributes.pc_builder` contract become
+ * selectable. Display specifications are not compatibility rules.
  */
 export function mapPcBuilderRows(rows: PcBuilderCatalogRows) {
   const activeCategoryIds = new Set(rows.categories
@@ -229,10 +208,6 @@ export function mapPcBuilderRows(rows: PcBuilderCatalogRows) {
   for (const variant of rows.variants) {
     if (!variant.is_active || !products.has(variant.product_id)) continue;
     if (variant.currency !== "EUR") {
-      omittedVariants += 1;
-      continue;
-    }
-    if (!hasVerifiedPriceReference(variant.attributes, variant.current_price, products.get(variant.product_id)?.image_url ?? null)) {
       omittedVariants += 1;
       continue;
     }

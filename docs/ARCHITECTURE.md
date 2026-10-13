@@ -1,6 +1,6 @@
 # Arquitectura inicial de NODRIA
 
-**Estado de este documento:** actualizado el 2026-10-12. El proyecto Vercel `nodria` sirve `https://nodria-academico.vercel.app` en Production; el dominio anterior `nodria-staging.vercel.app` responde con redirección permanente al dominio final. Las rutas públicas y los gates locales están verificados. El acceso disponible a Supabase corresponde a otra organización, por lo que el estado remoto de las migraciones de catálogo, Auth, RLS y workflows autenticados no se pudo confirmar en esta sesión. NODRIA es una demo académica ficticia; no procesa pagos reales. Ver `STATUS.md` y `PRODUCTION_RUNBOOK.md`.
+**Estado de este documento:** actualización 2026-10-13. Vercel Production sirve `https://nodria-academico.vercel.app`. NODRIA presenta una tienda propia de demostración: el catálogo se puede añadir al carrito, completar en el checkout interno y registrar como pedido; la pasarela ficticia aprueba automáticamente sin cargo ni tarjeta. El stock y las transacciones son datos de demostración. Los gates locales pasan; la nueva migración requiere aplicación manual y la prueba remota de compra conectada sigue pendiente. Ver `STATUS.md` y `PRODUCTION_RUNBOOK.md`.
 
 ## Objetivo y restricciones
 
@@ -8,11 +8,11 @@ NODRIA es una empresa tecnológica ficticia para el mercado inicial de España, 
 
 La implementación usa Next.js 16.4, React 19.3, TypeScript 5 y Tailwind CSS 4. Es una aplicación Next.js modular con PostgreSQL/Supabase como destino de persistencia. No se proponen microservicios, colas, cachés o motores de búsqueda externos sin una necesidad medida.
 
-## Catálogo de referencias externas — 2026-10-13
+## Catálogo propio y checkout simulado — 2026-10-13
 
-El catálogo público contiene referencias consultadas en PcComponentes España, con modelo/MPN, precio observado y fecha, especificaciones publicadas, enlace de vendedor e imagen primaria de ese modelo. `lib/catalog-data/verified-reference-products.json` es la fuente para modo demo local; `supabase/migrations/20261013070617_verified_product_reference_catalog.sql` replica las fichas en el catálogo conectado. El runtime valida que la URL del vendedor y el precio/imagen coincidan con los metadatos de variante.
+El catálogo contiene 64 modelos reales, MPN, precios observados, especificaciones y una foto única por ficha. El frontend no muestra un vendedor ni ofrece enlaces de compra externos. `lib/catalog-data/verified-reference-products.json` alimenta el modo local y las migraciones poblaron el catálogo conectado. Las imágenes se sirven desde un CDN remoto; antes de un uso comercial debe asegurarse la licencia correspondiente.
 
-Estas fichas no representan oferta, stock ni inventario de NODRIA. Los enlaces abren el comercio de referencia; el modo demo no permite añadirlas a una compra de NODRIA ni crear un pedido. Los precios son snapshots fechados y deben confirmarse con el vendedor. Las imágenes se sirven desde su CDN y no se copian ni se presentan como activos propios.
+Cada variante publicable lleva `attributes.nodria_store.mode = 'academic_demo'`. El catálogo calcula disponibilidad mediante una función agregada `SECURITY INVOKER`; grants/RLS limitan la lectura al almacén `NODRIA-DEMO`, variantes demo activas y productos publicados. Otra función agregada consulta reseñas publicadas. La migración `20261013120000_nodria_storefront_checkout.sql` convierte variantes de catálogo elegibles, crea stock de demostración y quita metadatos de vendedor del runtime. Las cantidades no representan existencias comerciales reales.
 
 ## Vista de contexto
 
@@ -29,7 +29,7 @@ flowchart LR
   Server --> DemoPay[Simulador de pago ficticio]
 ```
 
-El simulador no es una pasarela externa ni procesa dinero. Checkout autentica en servidor, acepta `variantId`, relee catálogo/stock, valida retries por fingerprint antes de mutar la cesta, persiste por RPC y resuelve el resultado con secreto server-only. La emisión B2B valida tenant/stock y deja el pedido pendiente; owner/admin registra después un anticipo demo idempotente con auditoría, y fulfillment consume reservas solo si está pagado. Procurement conecta recepciones con el ledger. Aprobar una devolución crea reembolso simulado y unidades `pending_inspection`; el almacén puede inspeccionarlas y reponer/desechar con autorización, ledger idempotente y cierre auditado. CSS global usa PostCSS Tailwind; `.module.css` usa el procesamiento nativo de Next/Turbopack.
+El simulador no es una pasarela externa ni procesa dinero. Checkout autentica en servidor, acepta `variantId`, relee catálogo/stock, valida retries por fingerprint antes de mutar la cesta, persiste por RPC y resuelve siempre el resultado como aprobado. La reserva de stock, el pedido, el pago simulado y la cronología se guardan en la base. La emisión B2B valida tenant/stock y deja el pedido pendiente; owner/admin registra después un anticipo demo idempotente con auditoría, y fulfillment consume reservas solo si está pagado. Procurement conecta recepciones con el ledger. Aprobar una devolución crea el reembolso simulado y unidades `pending_inspection`; estas acciones no generan cargos ni transferencias reales. CSS global usa PostCSS Tailwind; `.module.css` usa el procesamiento nativo de Next/Turbopack.
 
 ## Límites de dominio
 

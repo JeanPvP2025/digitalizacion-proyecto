@@ -6,9 +6,6 @@ import { formatPrice } from "@/lib/catalog";
 import { ProductActions } from "@/components/storefront/store-interactions";
 
 export function ProductCard({ product, index = 0 }: { product: Product; index?: number }) {
-  const checkedAt = product.priceReference?.checkedAt
-    ? new Intl.DateTimeFormat("es-ES", { dateStyle: "medium", timeZone: "UTC" }).format(new Date(`${product.priceReference.checkedAt}T00:00:00Z`))
-    : null;
   return (
     <article className="product-card" style={{ animationDelay: `${index * 70}ms` }}>
       <Link className="product-image-link" href={`/producto/${product.slug}`}>
@@ -27,8 +24,7 @@ export function ProductCard({ product, index = 0 }: { product: Product; index?: 
       <div className="product-card-meta"><span>{product.category}</span></div>
       <Link className="product-card-title" href={`/producto/${product.slug}`}><h3>{product.name}</h3></Link>
       <div className="product-card-price"><strong>{formatPrice(product.price)}</strong></div>
-      {product.priceReference && <a className="product-card-reference" href={product.priceReference.productUrl} target="_blank" rel="noopener noreferrer">Precio de referencia · PcComponentes{checkedAt ? ` · ${checkedAt}` : ""}</a>}
-      <div className="product-card-stock">Disponibilidad comercial no conectada</div>
+      <div className="product-card-stock">{product.stock > 0 ? "Disponible" : "Agotado"}</div>
       <ProductActions product={product} compact />
     </article>
   );

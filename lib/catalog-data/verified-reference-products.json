@@ -1,7 +1,6 @@
 {
-  "source": "PcComponentes España",
   "checkedAt": "2026-10-13",
-  "purpose": "Catálogo académico de referencias externas; NODRIA no es vendedor",
+  "purpose": "Catálogo NODRIA de demostración con modelos de fabricantes reales.",
   "products": [
     {
       "id": "ref-cpu-100-100000718box",
@@ -14,13 +13,10 @@
       "rootCategory": "Componentes",
       "categorySlug": "procesadores",
       "priceEur": 223.49,
-      "productUrl": "https://www.pccomponentes.com/procesador-amd-ryzen-5-9600-38-52ghz",
       "imageUrl": "https://img.pccomponentes.com/articles/1087/10871286/1630-amd-ryzen-5-9600-38-52ghz.jpg",
       "imageAlt": "AMD Ryzen 5 9600 3.8/5.2GHz",
       "checkedAt": "2026-10-13",
-      "source": "PcComponentes",
-      "seller": "PcComponentes",
-      "summary": "Referencia comercial de AMD. Precio consultado el 13/10/2026; confirma el importe y la disponibilidad actuales en PcComponentes.",
+      "summary": "AMD · modelo 100-100000718BOX.",
       "specifications": [
         {
           "label": "Socket",
@@ -96,13 +92,10 @@
       "rootCategory": "Componentes",
       "categorySlug": "procesadores",
       "priceEur": 196.68,
-      "productUrl": "https://www.pccomponentes.com/procesador-amd-ryzen-5-9600x-3-9-5-4ghz",
       "imageUrl": "https://img.pccomponentes.com/articles/1084/10845782/1692-amd-ryzen-5-9600x-39-54ghz-comprar.jpg",
       "imageAlt": "AMD Ryzen 5 9600X 3.9/5.4GHz",
       "checkedAt": "2026-10-13",
-      "source": "PcComponentes",
-      "seller": "PcComponentes",
-      "summary": "Referencia comercial de AMD. Precio consultado el 13/10/2026; confirma el importe y la disponibilidad actuales en PcComponentes.",
+      "summary": "AMD · modelo 100-100001405WOF.",
       "specifications": [
         {
           "label": "Socket",
@@ -178,13 +171,10 @@
       "rootCategory": "Componentes",
       "categorySlug": "procesadores",
       "priceEur": 310.74,
-      "productUrl": "https://www.pccomponentes.com/procesador-amd-ryzen-9-7900x-4-7-ghz-box-sin-ventilador",
       "imageUrl": "https://img.pccomponentes.com/articles/1057/10570012/1713-amd-ryzen-9-7900x-47-ghz-box-sin-ventilador.jpg",
       "imageAlt": "AMD Ryzen 9 7900X 4.7 GHz Box sin Ventilador",
       "checkedAt": "2026-10-13",
-      "source": "PcComponentes",
-      "seller": "PcComponentes",
-      "summary": "Referencia comercial de AMD. Precio consultado el 13/10/2026; confirma el importe y la disponibilidad actuales en PcComponentes.",
+      "summary": "AMD · modelo 100-100000589WOF.",
       "specifications": [
         {
           "label": "Socket",
@@ -260,13 +250,10 @@
       "rootCategory": "Componentes",
       "categorySlug": "procesadores",
       "priceEur": 218.11,
-      "productUrl": "https://www.pccomponentes.com/procesador-amd-ryzen-7-8700f-4-1-5ghz-box",
       "imageUrl": "https://img.pccomponentes.com/articles/1083/10831979/1754-amd-ryzen-7-8700f-41-5ghz-box.jpg",
       "imageAlt": "AMD Ryzen 7 8700F 4.1/5GHz Box",
       "checkedAt": "2026-10-13",
-      "source": "PcComponentes",
-      "seller": "PcComponentes",
-      "summary": "Referencia comercial de AMD. Precio consultado el 13/10/2026; confirma el importe y la disponibilidad actuales en PcComponentes.",
+      "summary": "AMD · modelo 100-100001590BOX.",
       "specifications": [
         {
           "label": "Socket",
@@ -337,13 +324,10 @@
       "rootCategory": "Componentes",
       "categorySlug": "procesadores",
       "priceEur": 149.56,
-      "productUrl": "https://www.pccomponentes.com/procesador-amd-ryzen-5-8400f-4-2-4-7ghz-box",
       "imageUrl": "https://img.pccomponentes.com/articles/1083/10831980/1992-amd-ryzen-5-8400f-42-47ghz-box.jpg",
       "imageAlt": "AMD Ryzen 5 8400F 4.2/4.7GHz Box",
       "checkedAt": "2026-10-13",
-      "source": "PcComponentes",
-      "seller": "PcComponentes",
-      "summary": "Referencia comercial de AMD. Precio consultado el 13/10/2026; confirma el importe y la disponibilidad actuales en PcComponentes.",
+      "summary": "AMD · modelo 100-100001591BOX.",
       "specifications": [
         {
           "label": "Socket",
@@ -414,13 +398,10 @@
       "rootCategory": "Componentes",
       "categorySlug": "procesadores",
       "priceEur": 698.63,
-      "productUrl": "https://www.pccomponentes.com/procesador-amd-ryzen-9-9950x3d-4-3-5-7ghz-box",
       "imageUrl": "https://img.pccomponentes.com/articles/1087/10870443/1415-amd-ryzen-9-9950x3d-43-57ghz-box.jpg",
       "imageAlt": "AMD Ryzen 9 9950X3D 4.3/5.7GHz Box",
       "checkedAt": "2026-10-13",
-      "source": "PcComponentes",
-      "seller": "PcComponentes",
-      "summary": "Referencia comercial de AMD. Precio consultado el 13/10/2026; confirma el importe y la disponibilidad actuales en PcComponentes.",
+      "summary": "AMD · modelo 100-100000719WOF.",
       "specifications": [
         {
           "label": "Socket",
@@ -496,13 +477,10 @@
       "rootCategory": "Componentes",
       "categorySlug": "procesadores",
       "priceEur": 595.09,
-      "productUrl": "https://www.pccomponentes.com/procesador-amd-ryzen-9-9900x3d-4-4-5-5ghz-box",
       "imageUrl": "https://img.pccomponentes.com/articles/1087/10871366/1726-amd-ryzen-9-9900x3d-44-55ghz-box.jpg",
       "imageAlt": "AMD Ryzen 9 9900X3D 4.4/5.5GHz Box",
       "checkedAt": "2026-10-13",
-      "source": "PcComponentes",
-      "seller": "PcComponentes",
-      "summary": "Referencia comercial de AMD. Precio consultado el 13/10/2026; confirma el importe y la disponibilidad actuales en PcComponentes.",
+      "summary": "AMD · modelo 100-100001368WOF.",
       "specifications": [
         {
           "label": "Socket",
@@ -578,13 +556,10 @@
       "rootCategory": "Componentes",
       "categorySlug": "procesadores",
       "priceEur": 302,
-      "productUrl": "https://www.pccomponentes.com/procesador-amd-ryzen-7-7700-8-nucleos-3-8-ghz-frecuencia-base-5-3-ghz-turbo-graficos-integrados-box",
       "imageUrl": "https://img.pccomponentes.com/articles/1097/10974509/1566-procesador-amd-ryzen-7-7700-8-nucleos-38-ghz-frecuencia-base-53-ghz-turbo-graficos-integrados-box.jpg",
       "imageAlt": "Procesador AMD Ryzen 7 7700 8 Núcleos 3.8 GHz Frecuencia Base 5.3 GHz Turbo Gráficos Integrados Box",
       "checkedAt": "2026-10-13",
-      "source": "PcComponentes",
-      "seller": "PcComponentes",
-      "summary": "Referencia comercial de AMD. Precio consultado el 13/10/2026; confirma el importe y la disponibilidad actuales en PcComponentes.",
+      "summary": "AMD · modelo 100-100000592SBX.",
       "specifications": [
         {
           "label": "Socket",
@@ -660,13 +635,10 @@
       "rootCategory": "Componentes",
       "categorySlug": "placas-base",
       "priceEur": 255,
-      "productUrl": "https://www.pccomponentes.com/placa-base-asus-rog-strix-b650-a-gaming-wifi-amd-b650-am5-ddr5-atx-wifi-6e-rgb",
       "imageUrl": "https://img.pccomponentes.com/articles/1059/10594879/1886-placa-base-asus-rog-strix-b650-a-gaming-wifi-amd-b650-am5-ddr5-atx-wifi-6e-rgb.jpg",
       "imageAlt": "Placa Base ASUS ROG Strix B650-A Gaming WiFi AMD B650 AM5 DDR5 ATX WiFi 6E RGB",
       "checkedAt": "2026-10-13",
-      "source": "PcComponentes",
-      "seller": "PcComponentes",
-      "summary": "Referencia comercial de ASUS. Precio consultado el 13/10/2026; confirma el importe y la disponibilidad actuales en PcComponentes.",
+      "summary": "ASUS · modelo 90MB1BP0-M0EAY0.",
       "specifications": [
         {
           "label": "Socket",
@@ -715,13 +687,10 @@
       "rootCategory": "Componentes",
       "categorySlug": "placas-base",
       "priceEur": 242.8,
-      "productUrl": "https://www.pccomponentes.com/placa-base-msi-mag-b850-tomahawk-wifi-am5-ddr5-atx-wifi-7-5g-lan-triple-m-2-pcie-5-0",
       "imageUrl": "https://img.pccomponentes.com/articles/1097/10970763/1652-placa-base-msi-mag-b850-tomahawk-wifi-am5-ddr5-atx-wifi-7-5g-lan-triple-m2-pcie-50-foto.jpg",
       "imageAlt": "Placa Base MSI MAG B850 Tomahawk Wifi AM5 DDR5 ATX WiFi 7 5G LAN Triple M.2 PCIe 5.0",
       "checkedAt": "2026-10-13",
-      "source": "PcComponentes",
-      "seller": "PcComponentes",
-      "summary": "Referencia comercial de MSI. Precio consultado el 13/10/2026; confirma el importe y la disponibilidad actuales en PcComponentes.",
+      "summary": "MSI · modelo 911-7E53-001.",
       "specifications": [
         {
           "label": "Socket",
@@ -769,13 +738,10 @@
       "rootCategory": "Componentes",
       "categorySlug": "placas-base",
       "priceEur": 129.6,
-      "productUrl": "https://www.pccomponentes.com/placa-base-asrock-b650-amd-b650-am5-micro-atx-b650m-pro-rs-ddr5-pcie-5-0-rgb",
       "imageUrl": "https://img.pccomponentes.com/articles/1089/10890603/1112-placa-base-asrock-b650-amd-b650-am5-micro-atx-b650m-pro-rs-ddr5-pcie-50-rgb.jpg",
       "imageAlt": "Placa Base Asrock B650 AMD B650 AM5 Micro ATX B650M Pro RS DDR5 PCIe 5.0 RGB",
       "checkedAt": "2026-10-13",
-      "source": "PcComponentes",
-      "seller": "PcComponentes",
-      "summary": "Referencia comercial de Asrock. Precio consultado el 13/10/2026; confirma el importe y la disponibilidad actuales en PcComponentes.",
+      "summary": "Asrock · modelo 90-MXBLP0-A0UAYZ.",
       "specifications": [
         {
           "label": "Socket",
@@ -824,13 +790,10 @@
       "rootCategory": "Componentes",
       "categorySlug": "placas-base",
       "priceEur": 120.95,
-      "productUrl": "https://www.pccomponentes.com/placa-base-gigabyte-b650-atx-am5-b650-eagle-ddr5-pcie-5-0-usb-3-2-gen2-lan-gbe",
       "imageUrl": "https://img.pccomponentes.com/articles/1088/10888381/154-placa-base-gigabyte-b650-atx-am5-b650-eagle-ddr5-pcie-50-usb-32-gen2-lan-gbe.jpg",
       "imageAlt": "Placa Base Gigabyte B650 ATX AM5 B650 EAGLE DDR5 PCIe 5.0 USB 3.2 Gen2 LAN GbE",
       "checkedAt": "2026-10-13",
-      "source": "PcComponentes",
-      "seller": "PcComponentes",
-      "summary": "Referencia comercial de Gigabyte. Precio consultado el 13/10/2026; confirma el importe y la disponibilidad actuales en PcComponentes.",
+      "summary": "Gigabyte · modelo B650 EAGLE.",
       "specifications": [
         {
           "label": "Socket",
@@ -879,13 +842,10 @@
       "rootCategory": "Componentes",
       "categorySlug": "placas-base",
       "priceEur": 120,
-      "productUrl": "https://www.pccomponentes.com/placa-base-gigabyte-b650-amd-am5-microatx-b650m-gaming-plus-wifi-ddr5-2xm-2-2-5gbe-wifi-6e-bluetooth-5-3",
       "imageUrl": "https://img.pccomponentes.com/articles/1088/10888361/1445-placa-base-gigabyte-b650-amd-am5-microatx-b650m-gaming-plus-wifi-ddr5-2xm2-25gbe-wifi-6e-bluetooth-53-review.jpg",
       "imageAlt": "Placa Base Gigabyte B650 AMD AM5 MicroATX B650M GAMING PLUS WIFI DDR5 2xM.2 2.5GbE WiFi 6E Bluetooth 5.3",
       "checkedAt": "2026-10-13",
-      "source": "PcComponentes",
-      "seller": "PcComponentes",
-      "summary": "Referencia comercial de Gigabyte. Precio consultado el 13/10/2026; confirma el importe y la disponibilidad actuales en PcComponentes.",
+      "summary": "Gigabyte · modelo B650M GAMING PLUS WF.",
       "specifications": [
         {
           "label": "Socket",
@@ -934,13 +894,10 @@
       "rootCategory": "Componentes",
       "categorySlug": "placas-base",
       "priceEur": 210.39,
-      "productUrl": "https://www.pccomponentes.com/placa-base-asrock-b650-atx-am5-steel-legend-wifi-6e-ddr5-192gb-m-2-raid-rgb",
       "imageUrl": "https://img.pccomponentes.com/articles/1089/10890601/1955-placa-base-asrock-b650-atx-am5-steel-legend-wifi-6e-ddr5-192gb-m2-raid-rgb.jpg",
       "imageAlt": "Placa Base Asrock B650 ATX AM5 Steel Legend WiFi 6E DDR5 192GB M.2 RAID RGB",
       "checkedAt": "2026-10-13",
-      "source": "PcComponentes",
-      "seller": "PcComponentes",
-      "summary": "Referencia comercial de Asrock. Precio consultado el 13/10/2026; confirma el importe y la disponibilidad actuales en PcComponentes.",
+      "summary": "Asrock · modelo 90-MXBN90-A0UAYZ.",
       "specifications": [
         {
           "label": "Socket",
@@ -989,13 +946,10 @@
       "rootCategory": "Componentes",
       "categorySlug": "placas-base",
       "priceEur": 163.99,
-      "productUrl": "https://www.pccomponentes.com/placa-base-asus-tuf-gaming-b650-plus-wifi-b650-am5-ddr5-atx-wifi-6-2-5gbe-m-2-rgb",
       "imageUrl": "https://img.pccomponentes.com/articles/1059/10594882/1829-placa-base-asus-tuf-gaming-b650-plus-wifi-b650-am5-ddr5-atx-wifi-6-25gbe-m2-rgb.jpg",
       "imageAlt": "Placa Base ASUS TUF GAMING B650-PLUS WIFI B650 AM5 DDR5 ATX WiFi 6 2.5GbE M.2 RGB",
       "checkedAt": "2026-10-13",
-      "source": "PcComponentes",
-      "seller": "PcComponentes",
-      "summary": "Referencia comercial de ASUS. Precio consultado el 13/10/2026; confirma el importe y la disponibilidad actuales en PcComponentes.",
+      "summary": "ASUS · modelo 90MB1BZ0-M0EAY0.",
       "specifications": [
         {
           "label": "Socket",
@@ -1044,13 +998,10 @@
       "rootCategory": "Componentes",
       "categorySlug": "placas-base",
       "priceEur": 128.8,
-      "productUrl": "https://www.pccomponentes.com/placa-base-asus-prime-b650m-a-ii-csm",
       "imageUrl": "https://img.pccomponentes.com/articles/1083/10834725/1625-asus-prime-b650m-a-ii-csm.jpg",
       "imageAlt": "ASUS PRIME B650M-A II-CSM",
       "checkedAt": "2026-10-13",
-      "source": "PcComponentes",
-      "seller": "PcComponentes",
-      "summary": "Referencia comercial de ASUS. Precio consultado el 13/10/2026; confirma el importe y la disponibilidad actuales en PcComponentes.",
+      "summary": "ASUS · modelo 90MB1EH0-M0EAYC.",
       "specifications": [
         {
           "label": "Socket",
@@ -1094,13 +1045,10 @@
       "rootCategory": "Componentes",
       "categorySlug": "memoria-ram",
       "priceEur": 549.9,
-      "productUrl": "https://www.pccomponentes.com/memoria-ram-forgeon-cyclone-pro-rgb-ddr5-6000-mhz-32gb-2x16gb-cl36-negra",
       "imageUrl": "https://img.pccomponentes.com/articles/1116/11160506/3388-forgeon-cyclone-pro-rgb-ddr5-6000-mhz-32gb-2x16gb-cl36-negra-review.jpg",
       "imageAlt": "Forgeon Cyclone PRO RGB DDR5 6000 MHz 32GB 2x16GB CL36 Intel XMP AMD Expo Negra",
       "checkedAt": "2026-10-13",
-      "source": "PcComponentes",
-      "seller": "PcComponentes",
-      "summary": "Referencia comercial de Forgeon. Precio consultado el 13/10/2026; confirma el importe y la disponibilidad actuales en PcComponentes.",
+      "summary": "Forgeon · modelo FO-DDR-PRO-32GBCL36-B.",
       "specifications": [
         {
           "label": "Tipo",
@@ -1164,13 +1112,10 @@
       "rootCategory": "Componentes",
       "categorySlug": "memoria-ram",
       "priceEur": 539.99,
-      "productUrl": "https://www.pccomponentes.com/memoria-ram-corsair-vengeance-32gb2x16gb-ddr5-6000mhz-cl38-intel-xmp-amd-expo-negra",
       "imageUrl": "https://img.pccomponentes.com/articles/1115/11157781/1729-memoria-ram-corsair-vengeance-32gb2x16gb-ddr5-6000mhz-cl38-intel-xmp-amd-expo-negra.jpg",
       "imageAlt": "Memoria RAM Corsair Vengeance 32GB 2x16GB DDR5 6000 MHz CL38 Intel XMP AMD Expo Negra",
       "checkedAt": "2026-10-13",
-      "source": "PcComponentes",
-      "seller": "PcComponentes",
-      "summary": "Referencia comercial de Corsair. Precio consultado el 13/10/2026; confirma el importe y la disponibilidad actuales en PcComponentes.",
+      "summary": "Corsair · modelo CMK32GX5M2D6000Z38.",
       "specifications": [
         {
           "label": "Tipo",
@@ -1234,13 +1179,10 @@
       "rootCategory": "Componentes",
       "categorySlug": "memoria-ram",
       "priceEur": 589.95,
-      "productUrl": "https://www.pccomponentes.com/memoria-ram-team-group-t-force-delta-rgb-ddr5-6000mhz-32gb-2x16gb-cl30-dual-amd-expo-e-intel-xmp-negro",
       "imageUrl": "https://img.pccomponentes.com/articles/1065/10657909/1685-team-group-t-force-delta-rgb-ddr5-6000mhz-32gb-2x16gb-cl30-foto.jpg",
       "imageAlt": "Team Group T-Force Delta RGB DDR5 6000MHz 32GB 2x16GB CL30 Dual AMD EXPO e Intel XMP Negro",
       "checkedAt": "2026-10-13",
-      "source": "PcComponentes",
-      "seller": "PcComponentes",
-      "summary": "Referencia comercial de Team Group. Precio consultado el 13/10/2026; confirma el importe y la disponibilidad actuales en PcComponentes.",
+      "summary": "Team Group · modelo FF3D532G6000HC30DC01.",
       "specifications": [
         {
           "label": "Tipo",
@@ -1304,13 +1246,10 @@
       "rootCategory": "Componentes",
       "categorySlug": "memoria-ram",
       "priceEur": 625.99,
-      "productUrl": "https://www.pccomponentes.com/memoria-ram-corsair-vengeance-rgb-ddr5-6000mhz-pc5-48000-32gb-2x16gb-cl30-dual-intel-xmp-y-amd-expo",
       "imageUrl": "https://img.pccomponentes.com/articles/1066/10662597/152-corsair-vengeance-rgb-ddr5-4800mhz-32gb-2x16gb-cl30.jpg",
       "imageAlt": "Corsair Vengeance RGB DDR5 6000MHz PC5-48000 32GB 2x16GB CL30 Dual Intel XMP y AMD EXPO",
       "checkedAt": "2026-10-13",
-      "source": "PcComponentes",
-      "seller": "PcComponentes",
-      "summary": "Referencia comercial de Corsair. Precio consultado el 13/10/2026; confirma el importe y la disponibilidad actuales en PcComponentes.",
+      "summary": "Corsair · modelo CMH32GX5M2B6000Z30K.",
       "specifications": [
         {
           "label": "Tipo",
@@ -1374,13 +1313,10 @@
       "rootCategory": "Componentes",
       "categorySlug": "memoria-ram",
       "priceEur": 554.99,
-      "productUrl": "https://www.pccomponentes.com/memoria-ram-corsair-vengeance-rgb-32gb-2x16gb-ddr5-6000mhz-cl38-amd-expo-gris",
       "imageUrl": "https://img.pccomponentes.com/articles/1115/11156943/1390-memoria-ram-corsair-vengeance-rgb-32gb-2x16gb-ddr5-6000mhz-cl38-amd-expo-gris-especificaciones.jpg",
       "imageAlt": "Memoria RAM Corsair Vengeance RGB 32GB 2x16GB DDR5 6000MHz CL38 AMD EXPO Gris",
       "checkedAt": "2026-10-13",
-      "source": "PcComponentes",
-      "seller": "PcComponentes",
-      "summary": "Referencia comercial de Corsair. Precio consultado el 13/10/2026; confirma el importe y la disponibilidad actuales en PcComponentes.",
+      "summary": "Corsair · modelo CMH32GX5M2D6000Z38.",
       "specifications": [
         {
           "label": "Tipo",
@@ -1444,13 +1380,10 @@
       "rootCategory": "Componentes",
       "categorySlug": "memoria-ram",
       "priceEur": 628.99,
-      "productUrl": "https://www.pccomponentes.com/memoria-ram-corsair-vengeance-ddr5-white-6000mhz-32gb-2x16gb-cl30-dual-intel-xmp-3-0-y-amd-expo",
       "imageUrl": "https://img.pccomponentes.com/articles/1087/10875500/1144-corsair-vengeance-ddr5-white-6000mhz-32gb-2x16gb-cl30-dual-intel-xmp-30-y-amd-expo.jpg",
       "imageAlt": "Corsair Vengeance DDR5 White 6000MHz 32GB 2x16GB CL30 Dual Intel XMP 3.0 y AMD EXPO",
       "checkedAt": "2026-10-13",
-      "source": "PcComponentes",
-      "seller": "PcComponentes",
-      "summary": "Referencia comercial de Corsair. Precio consultado el 13/10/2026; confirma el importe y la disponibilidad actuales en PcComponentes.",
+      "summary": "Corsair · modelo CMK32GX5M2B6000Z30W.",
       "specifications": [
         {
           "label": "Tipo",
@@ -1514,13 +1447,10 @@
       "rootCategory": "Componentes",
       "categorySlug": "memoria-ram",
       "priceEur": 625.58,
-      "productUrl": "https://www.pccomponentes.com/memoria-ram-goodram-irdm-32gb-2x16gb-ddr5-6000mhz-cl30-dual-channel-xmp-expo-disipador",
       "imageUrl": "https://img.pccomponentes.com/articles/1096/10968176/1366-memoria-ram-goodram-irdm-32gb-2x16gb-ddr5-6000mhz-cl30-dual-channel-xmp-expo-disipador.jpg",
       "imageAlt": "Memoria RAM Goodram IRDM 32GB 2x16GB DDR5 6000MHz CL30 Dual Channel XMP EXPO Disipador",
       "checkedAt": "2026-10-13",
-      "source": "PcComponentes",
-      "seller": "PcComponentes",
-      "summary": "Referencia comercial de Goodram. Precio consultado el 13/10/2026; confirma el importe y la disponibilidad actuales en PcComponentes.",
+      "summary": "Goodram · modelo IRDM DDR5 IR-6000D564L30S/32GDC.",
       "specifications": [
         {
           "label": "Tipo",
@@ -1584,13 +1514,10 @@
       "rootCategory": "Componentes",
       "categorySlug": "memoria-ram",
       "priceEur": 1299,
-      "productUrl": "https://www.pccomponentes.com/memoria-ram-kingston-fury-beast-ddr5-6000mhz-64gb-2x32gb-cl30-amd-expo",
       "imageUrl": "https://img.pccomponentes.com/articles/1084/10843609/1420-kingston-fury-beast-ddr5-6000mhz-64gb-2x32gb-cl30-amd-expo.jpg",
       "imageAlt": "Kingston FURY Beast DDR5 6000MHz 64GB 2x32GB CL30 AMD EXPO",
       "checkedAt": "2026-10-13",
-      "source": "PcComponentes",
-      "seller": "PcComponentes",
-      "summary": "Referencia comercial de Kingston. Precio consultado el 13/10/2026; confirma el importe y la disponibilidad actuales en PcComponentes.",
+      "summary": "Kingston · modelo KF560C30BBEK2-64.",
       "specifications": [
         {
           "label": "Tipo",
@@ -1649,13 +1576,10 @@
       "rootCategory": "Componentes",
       "categorySlug": "cajas",
       "priceEur": 231.99,
-      "productUrl": "https://www.pccomponentes.com/torre-pc-caja-nzxt-h9-flow-rgb-plus-negro-vidrio-templado-atx-eatx-matx-mini-itx-iluminacion-multi",
       "imageUrl": "https://img.pccomponentes.com/articles/1094/10947293/1857-caja-nzxt-h9-flow-rgb-negro-vidrio-templado-atx-eatx-matx-mini-itx-iluminacion-multi.jpg",
       "imageAlt": "Caja NZXT H9 Flow RGB+ Negro Vidrio Templado ATX EATX mATX Mini-ITX Iluminación Multi",
       "checkedAt": "2026-10-13",
-      "source": "PcComponentes",
-      "seller": "PcComponentes",
-      "summary": "Referencia comercial de NZXT. Precio consultado el 13/10/2026; confirma el importe y la disponibilidad actuales en PcComponentes.",
+      "summary": "NZXT · modelo CM-H92FB-P1.",
       "specifications": [
         {
           "label": "Formato",
@@ -1707,13 +1631,10 @@
       "rootCategory": "Componentes",
       "categorySlug": "cajas",
       "priceEur": 105.9,
-      "productUrl": "https://www.pccomponentes.com/corsair-4000d-airflow-cristal-templado-usb-31-negra",
       "imageUrl": "https://img.pccomponentes.com/articles/32/323024/1801-corsair-4000d-airflow-cristal-templado-usb-31-negra.jpg",
       "imageAlt": "Corsair 4000D Airflow Cristal Templado USB 3.1 Negra",
       "checkedAt": "2026-10-13",
-      "source": "PcComponentes",
-      "seller": "PcComponentes",
-      "summary": "Referencia comercial de Corsair. Precio consultado el 13/10/2026; confirma el importe y la disponibilidad actuales en PcComponentes.",
+      "summary": "Corsair · modelo CC-9011200-WW.",
       "specifications": [
         {
           "label": "Formato",
@@ -1765,13 +1686,10 @@
       "rootCategory": "Componentes",
       "categorySlug": "cajas",
       "priceEur": 42.99,
-      "productUrl": "https://www.pccomponentes.com/torre-pc-caja-pc-keep-out-gaming-xc-200-mesh-rgb-ventana-lateral-atx",
       "imageUrl": "https://img.pccomponentes.com/articles/1108/11080093/1230-caja-pc-keep-out-gaming-xc-200-mesh-rgb-ventana-lateral-atx.jpg",
       "imageAlt": "Caja PC Keep Out Gaming XC-200 MESH RGB Ventana Lateral ATX",
       "checkedAt": "2026-10-13",
-      "source": "PcComponentes",
-      "seller": "PcComponentes",
-      "summary": "Referencia comercial de Keep Out Gaming. Precio consultado el 13/10/2026; confirma el importe y la disponibilidad actuales en PcComponentes.",
+      "summary": "Keep Out Gaming · modelo HAZKEEPOUTXC200MESH.",
       "specifications": [
         {
           "label": "Formato",
@@ -1807,13 +1725,10 @@
       "rootCategory": "Componentes",
       "categorySlug": "cajas",
       "priceEur": 158.66,
-      "productUrl": "https://www.pccomponentes.com/torre-pc-caja-pc-arctic-xtender-e-atx-vidrio-templado-rgb-5-ventiladores",
       "imageUrl": "https://img.pccomponentes.com/articles/1112/11120523/1368-caja-pc-arctic-xtender-e-atx-vidrio-templado-rgb-5-ventiladores.jpg",
       "imageAlt": "Caja PC ARCTIC Xtender E-ATX Vidrio Templado RGB 5 Ventiladores",
       "checkedAt": "2026-10-13",
-      "source": "PcComponentes",
-      "seller": "PcComponentes",
-      "summary": "Referencia comercial de Arctic. Precio consultado el 13/10/2026; confirma el importe y la disponibilidad actuales en PcComponentes.",
+      "summary": "Arctic · modelo ACPCC00023A.",
       "specifications": [
         {
           "label": "Formato",
@@ -1870,13 +1785,10 @@
       "rootCategory": "Componentes",
       "categorySlug": "cajas",
       "priceEur": 24.99,
-      "productUrl": "https://www.pccomponentes.com/torre-pc-caja-pc-darkflash-m305-mini-tower-micro-atx-sin-ventiladores-blanco",
       "imageUrl": "https://img.pccomponentes.com/articles/1109/11095300/1963-caja-pc-darkflash-m305-mini-tower-micro-atx-sin-ventiladores-blanco-21437df2-a3f3-4957-b55c-74b3eb63790a.jpg",
       "imageAlt": "Caja PC Darkflash M305 Mini Tower Micro-ATX Sin Ventiladores Blanco",
       "checkedAt": "2026-10-13",
-      "source": "PcComponentes",
-      "seller": "PcComponentes",
-      "summary": "Referencia comercial de darkFlash. Precio consultado el 13/10/2026; confirma el importe y la disponibilidad actuales en PcComponentes.",
+      "summary": "darkFlash · modelo M305_White.",
       "specifications": [
         {
           "label": "Formato",
@@ -1927,13 +1839,10 @@
       "rootCategory": "Componentes",
       "categorySlug": "cajas",
       "priceEur": 49.84,
-      "productUrl": "https://www.pccomponentes.com/torre-pc-caja-pc-cooler-master-elite-302-lite-mini-tower-negro-vidrio-templado-usb-c",
       "imageUrl": "https://img.pccomponentes.com/articles/1119/11197639/193-caja-pc-cooler-master-elite-302-lite-mini-tower-negro-vidrio-templado-usb-c.jpg",
       "imageAlt": "Caja PC Cooler Master Elite 302 Lite Mini-tower Negro Vidrio Templado USB-C",
       "checkedAt": "2026-10-13",
-      "source": "PcComponentes",
-      "seller": "PcComponentes",
-      "summary": "Referencia comercial de Cooler Master. Precio consultado el 13/10/2026; confirma el importe y la disponibilidad actuales en PcComponentes.",
+      "summary": "Cooler Master · modelo E302L-KGNN-S00.",
       "specifications": [
         {
           "label": "Formato",
@@ -1974,13 +1883,10 @@
       "rootCategory": "Componentes",
       "categorySlug": "cajas",
       "priceEur": 58.96,
-      "productUrl": "https://www.pccomponentes.com/torre-pc-caja-pc-antec-ax85-argb-midi-tower-negro-atx-ventana-lateral-4x-ventiladores-2x-usb-3-2",
       "imageUrl": "https://img.pccomponentes.com/articles/1092/10926641/1769-caja-pc-antec-ax85-argb-midi-tower-negro-atx-ventana-lateral-4x-ventiladores-2x-usb-32-b25a318e-f520-4e39-a76a-18bcfcd4c776.jpg",
       "imageAlt": "Caja PC Antec AX85 ARGB Midi Tower Negro ATX Ventana Lateral 4x Ventiladores 2x USB 3.2",
       "checkedAt": "2026-10-13",
-      "source": "PcComponentes",
-      "seller": "PcComponentes",
-      "summary": "Referencia comercial de Antec. Precio consultado el 13/10/2026; confirma el importe y la disponibilidad actuales en PcComponentes.",
+      "summary": "Antec · modelo 0-761345-10173-8.",
       "specifications": [
         {
           "label": "Formato",
@@ -2036,13 +1942,10 @@
       "rootCategory": "Componentes",
       "categorySlug": "cajas",
       "priceEur": 28.99,
-      "productUrl": "https://www.pccomponentes.com/torre-pc-caja-pc-darkflash-c275p-mini-tower-m-atx-cristal-templado-negro",
       "imageUrl": "https://img.pccomponentes.com/articles/1109/11094354/1548-caja-pc-darkflash-c275p-mini-tower-m-atx-cristal-templado-negro.jpg",
       "imageAlt": "Caja PC Darkflash C275P Mini Tower M-ATX Cristal Templado Negro",
       "checkedAt": "2026-10-13",
-      "source": "PcComponentes",
-      "seller": "PcComponentes",
-      "summary": "Referencia comercial de darkFlash. Precio consultado el 13/10/2026; confirma el importe y la disponibilidad actuales en PcComponentes.",
+      "summary": "darkFlash · modelo C275P_Black.",
       "specifications": [
         {
           "label": "Formato",
@@ -2097,13 +2000,10 @@
       "rootCategory": "Componentes",
       "categorySlug": "fuentes-alimentacion",
       "priceEur": 31.99,
-      "productUrl": "https://www.pccomponentes.com/fuente-alimentacion-tempest-psu-gpsu-750w-v2-fuente-de-alimentacion-atx",
       "imageUrl": "https://thumb.pccomponentes.com/w-530-530/articles/1097/10978234/1425-tempest-psu-gpsu-750w-v2-fuente-de-alimentacion-atx.jpg",
       "imageAlt": "Tempest PSU GPSU 750W V2 Fuente de Alimentación ATX",
       "checkedAt": "2026-10-13",
-      "source": "PcComponentes",
-      "seller": "PcComponentes",
-      "summary": "Referencia comercial de Tempest. Precio consultado el 13/10/2026; confirma el importe y la disponibilidad actuales en PcComponentes.",
+      "summary": "Tempest · modelo TP-GPSU-750B-V2.",
       "specifications": [
         {
           "label": "Potencia nominal",
@@ -2139,13 +2039,10 @@
       "rootCategory": "Componentes",
       "categorySlug": "fuentes-alimentacion",
       "priceEur": 130.86,
-      "productUrl": "https://www.pccomponentes.com/fuente-alimentacion-be-quiet-pure-power-13-m-850w-atx-80-plus-gold-modular-negra",
       "imageUrl": "https://img.pccomponentes.com/articles/1091/10918121/130-fuente-alimentacion-be-quiet-pure-power-13-m-850w-atx-80-plus-gold-modular-negra-opiniones.jpg",
       "imageAlt": "Fuente alimentación be quiet! Pure Power 13 M 850W ATX 80 PLUS Gold modular negra",
       "checkedAt": "2026-10-13",
-      "source": "PcComponentes",
-      "seller": "PcComponentes",
-      "summary": "Referencia comercial de be quiet!. Precio consultado el 13/10/2026; confirma el importe y la disponibilidad actuales en PcComponentes.",
+      "summary": "be quiet! · modelo BP027EU.",
       "specifications": [
         {
           "label": "Potencia nominal",
@@ -2187,13 +2084,10 @@
       "rootCategory": "Componentes",
       "categorySlug": "fuentes-alimentacion",
       "priceEur": 103.99,
-      "productUrl": "https://www.pccomponentes.com/fuente-alimentacion-fuente-de-alimentacion-be-quiet-750w-80plus-gold-pure-power-12-atx-3-1-negro-extras-refrigeracion-activa",
       "imageUrl": "https://img.pccomponentes.com/articles/1088/10888311/1911-fuente-de-alimentacion-be-quiet-750w-80plus-gold-pure-power-12-atx-31-negro-extras-refrigeracion-activa.jpg",
       "imageAlt": "Fuente de Alimentación be quiet! 750W 80PLUS Gold PURE POWER 12 ATX 3.1 Negro Extras refrigeración activa",
       "checkedAt": "2026-10-13",
-      "source": "PcComponentes",
-      "seller": "PcComponentes",
-      "summary": "Referencia comercial de be quiet!. Precio consultado el 13/10/2026; confirma el importe y la disponibilidad actuales en PcComponentes.",
+      "summary": "be quiet! · modelo BP003EU.",
       "specifications": [
         {
           "label": "Potencia nominal",
@@ -2230,13 +2124,10 @@
       "rootCategory": "Componentes",
       "categorySlug": "fuentes-alimentacion",
       "priceEur": 44.99,
-      "productUrl": "https://www.pccomponentes.com/fuente-alimentacion-fuente-de-alimentacion-gigabyte-550w-80-plus-silver-atx-3-1-no-modular-proteccion-avanzada",
       "imageUrl": "https://img.pccomponentes.com/articles/1088/10889452/1450-fuente-de-alimentacion-gigabyte-550w-80-plus-silver-atx-31-no-modular-proteccion-avanzada.jpg",
       "imageAlt": "Fuente de Alimentación Gigabyte 550W 80 PLUS Silver ATX 3.1 No Modular Protección Avanzada",
       "checkedAt": "2026-10-13",
-      "source": "PcComponentes",
-      "seller": "PcComponentes",
-      "summary": "Referencia comercial de Gigabyte. Precio consultado el 13/10/2026; confirma el importe y la disponibilidad actuales en PcComponentes.",
+      "summary": "Gigabyte · modelo GP-P550SS EU.",
       "specifications": [
         {
           "label": "Potencia nominal",
@@ -2278,13 +2169,10 @@
       "rootCategory": "Componentes",
       "categorySlug": "fuentes-alimentacion",
       "priceEur": 44.92,
-      "productUrl": "https://www.pccomponentes.com/fuente-alimentacion-fuente-de-alimentacion-fsp-hyper-80-plus-pro-550w-certificacion-80-plus-bronze-atx",
       "imageUrl": "https://img.pccomponentes.com/articles/1103/11034453/1355-fuente-de-alimentacion-fsp-hyper-80-pro-550w-certificacion-80-plus-bronze-atx.jpg",
       "imageAlt": "Fuente de Alimentación FSP HYPER 80+ PRO 550W Certificación 80 PLUS Bronze ATX",
       "checkedAt": "2026-10-13",
-      "source": "PcComponentes",
-      "seller": "PcComponentes",
-      "summary": "Referencia comercial de FSP. Precio consultado el 13/10/2026; confirma el importe y la disponibilidad actuales en PcComponentes.",
+      "summary": "FSP · modelo 9PA5509407.",
       "specifications": [
         {
           "label": "Potencia nominal",
@@ -2326,13 +2214,10 @@
       "rootCategory": "Componentes",
       "categorySlug": "fuentes-alimentacion",
       "priceEur": 142.99,
-      "productUrl": "https://www.pccomponentes.com/fuente-alimentacion-fuente-de-alimentacion-cougar-cgrgdn-1000-1000w-80-plus-gold-modular",
       "imageUrl": "https://img.pccomponentes.com/articles/1115/11157802/1908-fuente-de-alimentacion-cougar-cgrgdn-1000-1000w-80-plus-gold-modular-7e65bc64-8ff8-479a-975c-f67af9eb0296.jpg",
       "imageAlt": "Fuente de alimentación Cougar CGRGDN-1000 1000W 80 Plus Gold modular",
       "checkedAt": "2026-10-13",
-      "source": "PcComponentes",
-      "seller": "PcComponentes",
-      "summary": "Referencia comercial de Cougar. Precio consultado el 13/10/2026; confirma el importe y la disponibilidad actuales en PcComponentes.",
+      "summary": "Cougar · modelo 31GR100001P01.",
       "specifications": [
         {
           "label": "Potencia nominal",
@@ -2374,13 +2259,10 @@
       "rootCategory": "Componentes",
       "categorySlug": "fuentes-alimentacion",
       "priceEur": 100.99,
-      "productUrl": "https://www.pccomponentes.com/fuente-alimentacion-fuente-de-alimentacion-thermaltake-850w-80-plus-gold-atx-3-1-totalmente-modular",
       "imageUrl": "https://img.pccomponentes.com/articles/1089/10890356/1814-fuente-de-alimentacion-thermaltake-850w-80-plus-gold-atx-31-totalmente-modular.jpg",
       "imageAlt": "Fuente de Alimentación Thermaltake 850W 80 PLUS Gold ATX 3.1 Totalmente Modular",
       "checkedAt": "2026-10-13",
-      "source": "PcComponentes",
-      "seller": "PcComponentes",
-      "summary": "Referencia comercial de Thermaltake. Precio consultado el 13/10/2026; confirma el importe y la disponibilidad actuales en PcComponentes.",
+      "summary": "Thermaltake · modelo PS-TPT-0850FNFAGE-3.",
       "specifications": [
         {
           "label": "Potencia nominal",
@@ -2422,13 +2304,10 @@
       "rootCategory": "Componentes",
       "categorySlug": "fuentes-alimentacion",
       "priceEur": 189.99,
-      "productUrl": "https://www.pccomponentes.com/fuente-alimentacion-forgeon-bolt-psu-1000w-80-plus-gold-full-modular-blanca",
       "imageUrl": "https://img.pccomponentes.com/articles/1073/10731662/186-forgeon-bolt-psu-1000w-gold-full-modular-blanca.jpg",
       "imageAlt": "Forgeon Bolt PSU 1000W 80+ Gold Full Modular Blanca",
       "checkedAt": "2026-10-13",
-      "source": "PcComponentes",
-      "seller": "PcComponentes",
-      "summary": "Referencia comercial de Forgeon. Precio consultado el 13/10/2026; confirma el importe y la disponibilidad actuales en PcComponentes.",
+      "summary": "Forgeon · modelo FO-PSU-BOL1001W.",
       "specifications": [
         {
           "label": "Potencia nominal",
@@ -2469,13 +2348,10 @@
       "rootCategory": "Componentes",
       "categorySlug": "tarjetas-graficas",
       "priceEur": 1386.95,
-      "productUrl": "https://www.pccomponentes.com/tarjeta-grafica-gigabyte-geforce-rtx-5070-ti-eagle-oc-sff-16gb-gddr7-reflex-2-rtx-ai-dlss4",
       "imageUrl": "https://img.pccomponentes.com/articles/1087/10870403/153-gigabyte-geforce-rtx-5070-ti-eagle-oc-sff-16gb-gddr7-reflex-2-rtx-ai-dlss4-6c704dfa-9173-4204-becf-04a93a8ba7c0.jpg",
       "imageAlt": "Gigabyte GeForce RTX 5070 Ti EAGLE OC SFF 16GB GDDR7 Reflex 2 RTX AI DLSS4",
       "checkedAt": "2026-10-13",
-      "source": "PcComponentes",
-      "seller": "PcComponentes",
-      "summary": "Referencia comercial de Gigabyte. Precio consultado el 13/10/2026; confirma el importe y la disponibilidad actuales en PcComponentes.",
+      "summary": "Gigabyte · modelo 9VN507TEO-00-G10.",
       "specifications": [
         {
           "label": "GPU",
@@ -2526,13 +2402,10 @@
       "rootCategory": "Componentes",
       "categorySlug": "tarjetas-graficas",
       "priceEur": 1118.92,
-      "productUrl": "https://www.pccomponentes.com/tarjeta-grafica-zotac-gaming-geforce-rtx-5070-solid-12gb-gddr7-reflex-2-rtx-ai-dlss4",
       "imageUrl": "https://img.pccomponentes.com/articles/1087/10871426/1241-zotac-gaming-geforce-rtx-5070-solid-12gb-gddr7-reflex-2-rtx-ai-dlss4-840e82ad-aa54-4dca-9961-8157c22b41d2.jpg",
       "imageAlt": "ZOTAC GAMING GeForce RTX 5070 SOLID 12GB GDDR7 Reflex 2 RTX AI DLSS4",
       "checkedAt": "2026-10-13",
-      "source": "PcComponentes",
-      "seller": "PcComponentes",
-      "summary": "Referencia comercial de Zotac. Precio consultado el 13/10/2026; confirma el importe y la disponibilidad actuales en PcComponentes.",
+      "summary": "Zotac · modelo ZT-B50700D-10P.",
       "specifications": [
         {
           "label": "GPU",
@@ -2584,13 +2457,10 @@
       "rootCategory": "Componentes",
       "categorySlug": "tarjetas-graficas",
       "priceEur": 1188.53,
-      "productUrl": "https://www.pccomponentes.com/tarjeta-grafica-xfx-radeon-rx-9070-xt-gaming-edition-16gb-gddr6-blanco",
       "imageUrl": "https://img.pccomponentes.com/articles/1096/10967944/5650-tarjeta-grafica-xfx-radeon-rx-9070-xt-gaming-edition-16gb-gddr6-blanco-caracteristicas.jpg",
       "imageAlt": "Tarjeta Gráfica XFX Radeon RX 9070 XT Gaming Edition 16GB GDDR6 Blanco",
       "checkedAt": "2026-10-13",
-      "source": "PcComponentes",
-      "seller": "PcComponentes",
-      "summary": "Referencia comercial de XFX. Precio consultado el 13/10/2026; confirma el importe y la disponibilidad actuales en PcComponentes.",
+      "summary": "XFX · modelo RX-97TQICKW9.",
       "specifications": [
         {
           "label": "GPU",
@@ -2636,13 +2506,10 @@
       "rootCategory": "Componentes",
       "categorySlug": "tarjetas-graficas",
       "priceEur": 1219.99,
-      "productUrl": "https://www.pccomponentes.com/tarjeta-grafica-sapphire-pulse-amd-radeon-rx-9070-xt-16gb-gddr6-fsr-4",
       "imageUrl": "https://img.pccomponentes.com/articles/1086/10867461/1596-sapphire-pulse-amd-radeon-rx-9070-xt-16gb-gddr6-fsr-4.jpg",
       "imageAlt": "Sapphire PULSE AMD Radeon RX 9070 XT 16GB GDDR6 FSR 4",
       "checkedAt": "2026-10-13",
-      "source": "PcComponentes",
-      "seller": "PcComponentes",
-      "summary": "Referencia comercial de Sapphire. Precio consultado el 13/10/2026; confirma el importe y la disponibilidad actuales en PcComponentes.",
+      "summary": "Sapphire · modelo 11348-03-20G.",
       "specifications": [
         {
           "label": "GPU",
@@ -2694,13 +2561,10 @@
       "rootCategory": "Componentes",
       "categorySlug": "tarjetas-graficas",
       "priceEur": 484.99,
-      "productUrl": "https://www.pccomponentes.com/msi-geforce-rtx-4060-ti-ventus-3x-oc-8-gb-gddr6-dlss3",
       "imageUrl": "https://img.pccomponentes.com/articles/1074/10744731/1997-msi-geforce-rtx-4060-ti-ventus-3x-oc-8-gb-gddr6-dlss3.jpg",
       "imageAlt": "MSI GeForce RTX 4060 Ti VENTUS 3X OC 8 GB GDDR6 DLSS3",
       "checkedAt": "2026-10-13",
-      "source": "PcComponentes",
-      "seller": "PcComponentes",
-      "summary": "Referencia comercial de MSI. Precio consultado el 13/10/2026; confirma el importe y la disponibilidad actuales en PcComponentes.",
+      "summary": "MSI · modelo 912-V515-016.",
       "specifications": [
         {
           "label": "GPU",
@@ -2752,13 +2616,10 @@
       "rootCategory": "Componentes",
       "categorySlug": "tarjetas-graficas",
       "priceEur": 355.99,
-      "productUrl": "https://www.pccomponentes.com/gigabyte-geforce-rtx-4060-gaming-oc-8gb-gddr6-dlss3",
       "imageUrl": "https://img.pccomponentes.com/articles/1073/10739328/1669-gigabyte-geforce-rtx-4060-gaming-oc-8gb-gddr6-dlss3-ad8a0641-2fbd-41d5-8da1-bb347989fbeb.jpg",
       "imageAlt": "Gigabyte GeForce RTX­­ 4060 GAMING OC 8GB GDDR6 DLSS3",
       "checkedAt": "2026-10-13",
-      "source": "PcComponentes",
-      "seller": "PcComponentes",
-      "summary": "Referencia comercial de Gigabyte. Precio consultado el 13/10/2026; confirma el importe y la disponibilidad actuales en PcComponentes.",
+      "summary": "Gigabyte · modelo GV-N4060GAMING OC-8GD 1.0.",
       "specifications": [
         {
           "label": "GPU",
@@ -2804,13 +2665,10 @@
       "rootCategory": "Componentes",
       "categorySlug": "tarjetas-graficas",
       "priceEur": 345.99,
-      "productUrl": "https://www.pccomponentes.com/asus-dual-geforce-rtx-4060-oc-edition-8gb-gddr6-dlss3",
       "imageUrl": "https://img.pccomponentes.com/articles/1074/10741371/1931-asus-dual-geforce-rtx-4060-oc-edition-8gb-gddr6-dlss3.jpg",
       "imageAlt": "ASUS Dual GeForce RTX 4060 OC Edition 8GB GDDR6 DLSS3",
       "checkedAt": "2026-10-13",
-      "source": "PcComponentes",
-      "seller": "PcComponentes",
-      "summary": "Referencia comercial de ASUS. Precio consultado el 13/10/2026; confirma el importe y la disponibilidad actuales en PcComponentes.",
+      "summary": "ASUS · modelo 90YV0JC0-M0NA00.",
       "specifications": [
         {
           "label": "GPU",
@@ -2856,13 +2714,10 @@
       "rootCategory": "Componentes",
       "categorySlug": "tarjetas-graficas",
       "priceEur": 1525.62,
-      "productUrl": "https://www.pccomponentes.com/tarjeta-grafica-msi-geforce-rtx-5070-ti-gaming-trio-oc-16gb-gddr7-reflex-2-rtx-ai-dlss4",
       "imageUrl": "https://img.pccomponentes.com/articles/1087/10876376/1788-msi-geforce-rtx-5070-ti-gaming-trio-oc-16gb-gddr7-reflex-2-rtx-ai-dlss4-15eaaa05-49c8-4682-b25e-93b0ea15ebf2.jpg",
       "imageAlt": "MSI GeForce RTX 5070 Ti GAMING TRIO OC 16GB GDDR7 Reflex 2 RTX AI DLSS4",
       "checkedAt": "2026-10-13",
-      "source": "PcComponentes",
-      "seller": "PcComponentes",
-      "summary": "Referencia comercial de MSI. Precio consultado el 13/10/2026; confirma el importe y la disponibilidad actuales en PcComponentes.",
+      "summary": "MSI · modelo 912-V531-286.",
       "specifications": [
         {
           "label": "GPU",
@@ -2908,13 +2763,10 @@
       "rootCategory": "Componentes",
       "categorySlug": "refrigeracion",
       "priceEur": 37.95,
-      "productUrl": "https://www.pccomponentes.com/ventilador-cpu-refrigeracion-aire-nox-socket-am4-am5-intel-120mm-hummer-h-200-lcd-doble-ventilador-lcd",
       "imageUrl": "https://img.pccomponentes.com/articles/1101/11019788/3809-refrigeracion-aire-nox-socket-am4-am5-intel-120mm-hummer-h-200-lcd-doble-ventilador-lcd-mejor-precio.jpg",
       "imageAlt": "Refrigeración Aire NOX Socket AM4/AM5/Intel 120mm Hummer H-200 LCD Doble Ventilador LCD",
       "checkedAt": "2026-10-13",
-      "source": "PcComponentes",
-      "seller": "PcComponentes",
-      "summary": "Referencia comercial de NOX. Precio consultado el 13/10/2026; confirma el importe y la disponibilidad actuales en PcComponentes.",
+      "summary": "NOX · modelo NXHUMMERH200LCD.",
       "specifications": [
         {
           "label": "Tipo",
@@ -2964,13 +2816,10 @@
       "rootCategory": "Componentes",
       "categorySlug": "refrigeracion",
       "priceEur": 104.96,
-      "productUrl": "https://www.pccomponentes.com/nfortec-atria-x-kit-de-refrigeracion-liquida-240mm-blanco",
       "imageUrl": "https://img.pccomponentes.com/articles/1074/10743501/1617-nfortec-atria-x-kit-de-refrigeracion-liquida-240mm-blanco.jpg",
       "imageAlt": "Nfortec ATRIA X Kit de Refrigeración Líquida 240mm Blanco",
       "checkedAt": "2026-10-13",
-      "source": "PcComponentes",
-      "seller": "PcComponentes",
-      "summary": "Referencia comercial de Nfortec. Precio consultado el 13/10/2026; confirma el importe y la disponibilidad actuales en PcComponentes.",
+      "summary": "Nfortec · modelo NF-WC-ATRIAX-240-W.",
       "specifications": [
         {
           "label": "Tipo",
@@ -3022,13 +2871,10 @@
       "rootCategory": "Componentes",
       "categorySlug": "refrigeracion",
       "priceEur": 106.99,
-      "productUrl": "https://www.pccomponentes.com/corsair-icue-link-titan-240-rx-rgb-kit-refrigeracion-liquida-240mm-blanca",
       "imageUrl": "https://thumb.pccomponentes.com/w-530-530/articles/1084/10847557/1493-corsair-icue-link-titan-240-rx-rgb-kit-refrigeracion-liquida-240mm-blanca.jpg",
       "imageAlt": "Corsair iCUE LINK TITAN 240 RX RGB Kit Refrigeración Líquida 240mm Blanca",
       "checkedAt": "2026-10-13",
-      "source": "PcComponentes",
-      "seller": "PcComponentes",
-      "summary": "Referencia comercial de Corsair. Precio consultado el 13/10/2026; confirma el importe y la disponibilidad actuales en PcComponentes.",
+      "summary": "Corsair · modelo CW-9061020-WW.",
       "specifications": [
         {
           "label": "Tipo",
@@ -3073,13 +2919,10 @@
       "rootCategory": "Componentes",
       "categorySlug": "refrigeracion",
       "priceEur": 101.25,
-      "productUrl": "https://www.pccomponentes.com/refrigeracion-liquida-darkflash-dn-d240-240-mm-lcd-2-ventiladores-argb-alto-rendimiento",
       "imageUrl": "https://img.pccomponentes.com/articles/1108/11085244/133-refrigeracion-liquida-darkflash-dn-d240-240-mm-lcd-2-ventiladores-argb-alto-rendimiento-mejor-precio.jpg",
       "imageAlt": "Refrigeración líquida darkFlash DN-D240 240 mm LCD 2 ventiladores ARGB alto rendimiento",
       "checkedAt": "2026-10-13",
-      "source": "PcComponentes",
-      "seller": "PcComponentes",
-      "summary": "Referencia comercial de darkFlash. Precio consultado el 13/10/2026; confirma el importe y la disponibilidad actuales en PcComponentes.",
+      "summary": "darkFlash · modelo DN-D240 BLACK.",
       "specifications": [
         {
           "label": "Tipo",
@@ -3124,13 +2967,10 @@
       "rootCategory": "Componentes",
       "categorySlug": "refrigeracion",
       "priceEur": 106.99,
-      "productUrl": "https://www.pccomponentes.com/refrigeracion-liquida-be-quiet-pure-loop-3-lx-360mm-3-ventiladores-rgb-pwm",
       "imageUrl": "https://img.pccomponentes.com/articles/1096/10968990/1825-refrigeracion-liquida-be-quiet-pure-loop-3-lx-360mm-3-ventiladores-rgb-pwm-opiniones.jpg",
       "imageAlt": "Refrigeración Líquida Be quiet PURE LOOP 3 LX 360mm 3 Ventiladores RGB PWM",
       "checkedAt": "2026-10-13",
-      "source": "PcComponentes",
-      "seller": "PcComponentes",
-      "summary": "Referencia comercial de Be quiet. Precio consultado el 13/10/2026; confirma el importe y la disponibilidad actuales en PcComponentes.",
+      "summary": "Be quiet · modelo BW031EU.",
       "specifications": [
         {
           "label": "Tipo",
@@ -3175,13 +3015,10 @@
       "rootCategory": "Componentes",
       "categorySlug": "refrigeracion",
       "priceEur": 106,
-      "productUrl": "https://www.pccomponentes.com/refrigeracion-liquida-nzxt-kraken-core-360-rgb-360mm-3-ventiladores-iluminacion-led",
       "imageUrl": "https://img.pccomponentes.com/articles/1099/10990468/1396-refrigeracion-liquida-nzxt-kraken-core-360-rgb-360mm-3-ventiladores-iluminacion-led-mejor-precio.jpg",
       "imageAlt": "Refrigeración Líquida NZXT Kraken Core 360 RGB 360mm 3 Ventiladores Iluminación LED",
       "checkedAt": "2026-10-13",
-      "source": "PcComponentes",
-      "seller": "PcComponentes",
-      "summary": "Referencia comercial de NZXT. Precio consultado el 13/10/2026; confirma el importe y la disponibilidad actuales en PcComponentes.",
+      "summary": "NZXT · modelo RL-KR36C-B1.",
       "specifications": [
         {
           "label": "Tipo",
@@ -3226,13 +3063,10 @@
       "rootCategory": "Componentes",
       "categorySlug": "refrigeracion",
       "priceEur": 106,
-      "productUrl": "https://www.pccomponentes.com/refrigeracion-liquida-antec-vortex-lum-360-argb-360mm-3-ventiladores-iluminacion-led",
       "imageUrl": "https://img.pccomponentes.com/articles/1098/10987994/1990-refrigeracion-liquida-antec-vortex-lum-360-argb-360mm-3-ventiladores-iluminacion-led-471635de-e3d4-417a-924e-edd836dc0d5d.jpg",
       "imageAlt": "Refrigeración Líquida Antec Vortex Lum 360 ARGB 360mm 3 Ventiladores Iluminación LED",
       "checkedAt": "2026-10-13",
-      "source": "PcComponentes",
-      "seller": "PcComponentes",
-      "summary": "Referencia comercial de Antec. Precio consultado el 13/10/2026; confirma el importe y la disponibilidad actuales en PcComponentes.",
+      "summary": "Antec · modelo 0-761345-40055-8.",
       "specifications": [
         {
           "label": "Tipo",
@@ -3284,13 +3118,10 @@
       "rootCategory": "Componentes",
       "categorySlug": "refrigeracion",
       "priceEur": 23.99,
-      "productUrl": "https://www.pccomponentes.com/ventilador-cpu-refrigeracion-aire-fsp-socket-am4-am5-lga-1200-120-mm-ne5-argb-negro",
       "imageUrl": "https://img.pccomponentes.com/articles/1105/11052416/1904-refrigeracion-aire-fsp-socket-am4-am5-lga-1200-120-mm-ne5-argb-negro-review.jpg",
       "imageAlt": "Refrigeración Aire FSP Socket AM4 AM5 LGA 1200 120 mm NE5 ARGB Negro",
       "checkedAt": "2026-10-13",
-      "source": "PcComponentes",
-      "seller": "PcComponentes",
-      "summary": "Referencia comercial de FSP. Precio consultado el 13/10/2026; confirma el importe y la disponibilidad actuales en PcComponentes.",
+      "summary": "FSP · modelo POO0000010.",
       "specifications": [
         {
           "label": "Tipo",
@@ -3340,13 +3171,10 @@
       "rootCategory": "Almacenamiento",
       "categorySlug": "ssd-internos",
       "priceEur": 158.99,
-      "productUrl": "https://www.pccomponentes.com/disco-duro-intenso-premium-ssd-1tb-m-2-nvme-pcie-3-0",
       "imageUrl": "https://img.pccomponentes.com/articles/1038/10385042/1216-intenso-premium-ssd-1tb-m2-nvme-pcie-30-especificaciones.jpg",
       "imageAlt": "Intenso Premium SSD 1TB M.2 NVMe PCIe 3.0",
       "checkedAt": "2026-10-13",
-      "source": "PcComponentes",
-      "seller": "PcComponentes",
-      "summary": "Referencia comercial de Intenso. Precio consultado el 13/10/2026; confirma el importe y la disponibilidad actuales en PcComponentes.",
+      "summary": "Intenso · modelo 3835460.",
       "specifications": [
         {
           "label": "Capacidad",
@@ -3393,13 +3221,10 @@
       "rootCategory": "Almacenamiento",
       "categorySlug": "ssd-internos",
       "priceEur": 265.99,
-      "productUrl": "https://www.pccomponentes.com/disco-duro-intenso-premium-ssd-2tb-m-2-nvme-pcie-3-0",
       "imageUrl": "https://img.pccomponentes.com/articles/1064/10649297/1523-intenso-premium-ssd-2tb-m2-pcie-gen-3x4.jpg",
       "imageAlt": "Intenso Premium SSD 2TB M.2 NVMe PCIe 3.0",
       "checkedAt": "2026-10-13",
-      "source": "PcComponentes",
-      "seller": "PcComponentes",
-      "summary": "Referencia comercial de Intenso. Precio consultado el 13/10/2026; confirma el importe y la disponibilidad actuales en PcComponentes.",
+      "summary": "Intenso · modelo 3835470.",
       "specifications": [
         {
           "label": "Capacidad",
@@ -3446,13 +3271,10 @@
       "rootCategory": "Almacenamiento",
       "categorySlug": "ssd-internos",
       "priceEur": 172.95,
-      "productUrl": "https://www.pccomponentes.com/disco-duro-forgeon-nimbus-disco-ssd-1tb-6400-mb-s-nvme-pcie-4-0-m-2-2280",
       "imageUrl": "https://img.pccomponentes.com/articles/1101/11016171/1128-forgeon-nimbus-disco-ssd-1tb-6400-mb-s-nvme-pcie-40-m2-2280.jpg",
       "imageAlt": "Forgeon Nimbus Disco SSD 1TB 6400 MB/s NVMe PCIe 4.0 M.2 2280",
       "checkedAt": "2026-10-13",
-      "source": "PcComponentes",
-      "seller": "PcComponentes",
-      "summary": "Referencia comercial de Forgeon. Precio consultado el 13/10/2026; confirma el importe y la disponibilidad actuales en PcComponentes.",
+      "summary": "Forgeon · modelo FO-SSD-N-1TB-6.",
       "specifications": [
         {
           "label": "Capacidad",
@@ -3499,13 +3321,10 @@
       "rootCategory": "Almacenamiento",
       "categorySlug": "ssd-internos",
       "priceEur": 1089,
-      "productUrl": "https://www.pccomponentes.com/disco-duro-wd-red-sn700-4tb-ssd-m-2-nvme-pcie-3-0",
       "imageUrl": "https://img.pccomponentes.com/articles/1000/10000797/1625-wd-red-sn700-4tb-ssd-m2-nvme-pcie-30-foto.jpg",
       "imageAlt": "WD Red SN700 4TB SSD M.2 NVMe PCIe 3.0",
       "checkedAt": "2026-10-13",
-      "source": "PcComponentes",
-      "seller": "PcComponentes",
-      "summary": "Referencia comercial de Sandisk. Precio consultado el 13/10/2026; confirma el importe y la disponibilidad actuales en PcComponentes.",
+      "summary": "Sandisk · modelo WDS400T1R0C.",
       "specifications": [
         {
           "label": "Capacidad",
@@ -3552,13 +3371,10 @@
       "rootCategory": "Almacenamiento",
       "categorySlug": "ssd-internos",
       "priceEur": 93.25,
-      "productUrl": "https://www.pccomponentes.com/disco-duro-adata-legend-710-256gb-ssd-m-2-nvme-nand-gen3x4",
       "imageUrl": "https://img.pccomponentes.com/articles/1084/10847934/142-adata-legend-710-256gb-ssd-m2-nvme-nand-gen3x4.jpg",
       "imageAlt": "Adata Legend 710 256GB SSD M.2 NVMe NAND Gen3x4",
       "checkedAt": "2026-10-13",
-      "source": "PcComponentes",
-      "seller": "PcComponentes",
-      "summary": "Referencia comercial de Adata. Precio consultado el 13/10/2026; confirma el importe y la disponibilidad actuales en PcComponentes.",
+      "summary": "Adata · modelo ALEG-710-256GCS.",
       "specifications": [
         {
           "label": "Capacidad",
@@ -3605,13 +3421,10 @@
       "rootCategory": "Almacenamiento",
       "categorySlug": "ssd-internos",
       "priceEur": 218.99,
-      "productUrl": "https://www.pccomponentes.com/disco-duro-samsung-990-pro-1tb-disco-ssd-7450mb-s-nvme-pcie-4-0-m-2-gen4",
       "imageUrl": "https://img.pccomponentes.com/articles/1064/10648533/1721-samsung-990-pro-1tb-ssd-pcie-40-nvme-m2.jpg",
       "imageAlt": "Samsung 990 Pro 1TB Disco SSD 7450MB/S NVMe PCIe 4.0 M.2 Gen4",
       "checkedAt": "2026-10-13",
-      "source": "PcComponentes",
-      "seller": "PcComponentes",
-      "summary": "Referencia comercial de Samsung. Precio consultado el 13/10/2026; confirma el importe y la disponibilidad actuales en PcComponentes.",
+      "summary": "Samsung · modelo MZ-V9P1T0BW.",
       "specifications": [
         {
           "label": "Capacidad",
@@ -3658,13 +3471,10 @@
       "rootCategory": "Almacenamiento",
       "categorySlug": "ssd-internos",
       "priceEur": 269.73,
-      "productUrl": "https://www.pccomponentes.com/disco-duro-ssd-kingston-nv3-1tb-m-2-2230-pcie-4-0-nvme-6000mb-s-3d-nand-gaming",
       "imageUrl": "https://img.pccomponentes.com/articles/1093/10932024/1572-ssd-kingston-nv3-1tb-m2-2230-pcie-40-nvme-6000mb-s-3d-nand-gaming.jpg",
       "imageAlt": "SSD Kingston NV3 1TB M.2 2230 PCIe 4.0 NVMe 6000MB/s 3D NAND Gaming",
       "checkedAt": "2026-10-13",
-      "source": "PcComponentes",
-      "seller": "PcComponentes",
-      "summary": "Referencia comercial de Kingston. Precio consultado el 13/10/2026; confirma el importe y la disponibilidad actuales en PcComponentes.",
+      "summary": "Kingston · modelo SNV3SM3/1T0.",
       "specifications": [
         {
           "label": "Capacidad",
@@ -3711,13 +3521,10 @@
       "rootCategory": "Almacenamiento",
       "categorySlug": "ssd-internos",
       "priceEur": 94.99,
-      "productUrl": "https://www.pccomponentes.com/disco-duro-intenso-premium-ssd-500gb-m-2-nvme-pcie-3-0",
       "imageUrl": "https://img.pccomponentes.com/articles/1073/10735317/1866-intenso-premium-ssd-500gb-m2-nvme-pcie-30-mejor-precio.jpg",
       "imageAlt": "Intenso Premium SSD 500GB M.2 NVMe PCIe 3.0",
       "checkedAt": "2026-10-13",
-      "source": "PcComponentes",
-      "seller": "PcComponentes",
-      "summary": "Referencia comercial de Intenso. Precio consultado el 13/10/2026; confirma el importe y la disponibilidad actuales en PcComponentes.",
+      "summary": "Intenso · modelo 3835450.",
       "specifications": [
         {
           "label": "Capacidad",

@@ -1,51 +1,55 @@
-# Guion académico de demo NODRIA
+# Guion de demostración NODRIA
 
-**Duración:** 8–12 minutos · **Actualizado:** 2026-10-13 · **Entorno recomendado:** modo local de solo consulta.
+**Duración:** 8–12 minutos · **Actualizado:** 2026-10-13.
 
-NODRIA es una empresa ficticia. El catálogo contiene **modelos, números de fabricante, precios observados, especificaciones y fotos reales** de PcComponentes España. NODRIA no es el vendedor: no tiene estos artículos en stock ni recibe pedidos, pagos, envíos o devoluciones. Los datos de personas, organizaciones, soporte y CRM siguen siendo de demostración; no uses información real.
+NODRIA es una tienda académica de demostración. Los productos, modelos, precios observados, especificaciones y fotografías corresponden a productos reales; cuentas, stock, pedidos, pago, CRM y operaciones son simulados. La pasarela aprueba automáticamente y no solicita tarjeta, cobra ni envía nada. No introduzcas datos personales reales.
 
 ## Antes de presentar
 
-1. Sigue [Instalación y modos de ejecución](./SETUP.md), apartado “Demo local de archivos”, y abre <http://localhost:3000>.
-2. Comprueba que `/checkout` indica que NODRIA no realiza ventas y no presenta un formulario de pago.
-3. Mantén conexión a Internet para cargar las fotos primarias del vendedor y abrir sus fichas. Los precios llevan fecha de consulta y pueden haber cambiado.
-4. Usa solo nombres, correos y organizaciones `.example`/`.test` si recorres formularios B2B o soporte.
+1. Inicia el sitio siguiendo [SETUP.md](./SETUP.md) o usa el despliegue de Vercel si ya tiene la migración aplicada.
+2. Para compra conectada, usa una cuenta de prueba confirmada y la base Supabase con la migración `20261013120000_nodria_storefront_checkout.sql` aplicada.
+3. Verifica que `/catalogo` tenga productos y que `/checkout` indique con claridad que el pago es de demostración y no solicita tarjeta.
+4. Los ejemplos de reseñas deben conservar su etiqueta de ejemplo; solo los comentarios publicados después de un pedido entregado cuentan como reseñas de clientes.
 
 ## Recorrido
 
 ### 0:00–2:00 · Portada y catálogo
 
-1. En la portada, explica que los productos destacados son referencias comerciales verificables.
-2. Abre `/catalogo`, busca por marca o número de modelo y comprueba que cada tarjeta muestra su precio de referencia, fecha, disponibilidad no verificada y enlace al vendedor.
-3. Señala que las fotos corresponden al modelo enlazado y que cada ficha tiene una imagen propia.
+1. Muestra la portada y explica que NODRIA mantiene su propio catálogo dentro del sitio.
+2. En `/catalogo`, busca por fabricante, modelo o SKU y prueba filtros, ordenación y disponibilidad.
+3. Abre una tarjeta y comprueba que la ficha, el precio y la foto pertenecen al mismo modelo. La navegación de compra permanece dentro de NODRIA.
 
-### 2:00–5:00 · Ficha de producto
+### 2:00–4:00 · Ficha y opiniones
 
-1. Abre una ficha desde la tarjeta.
-2. Revisa el número de modelo, foto, especificaciones, precio y fecha.
-3. Usa **Ver precio y disponibilidad actuales en PcComponentes** para abrir la fuente original. La compra, si se desea, sucede directamente con ese vendedor.
-4. Muestra que no se importan reseñas externas y que NODRIA no afirma tener stock.
+1. Revisa especificaciones, disponibilidad, compatibilidad orientativa y precio.
+2. Abre opiniones. Distingue los ejemplos ilustrativos de reseñas publicadas y validadas.
+3. Explica que se puede escribir una reseña real solo para una línea de un pedido entregado; la publicación requiere moderación.
 
-### 5:00–8:00 · PC Builder
+### 4:00–6:00 · PC Builder y carrito
 
-1. Abre `/configurador` y muestra las ocho clases de componentes, con ocho referencias reales por clase.
-2. Compara piezas y observa el precio de referencia agregado.
-3. Explica que la revisión de compatibilidad se limita a los datos estructurados disponibles; no certifica el montaje completo.
-4. Abre la ficha del vendedor de una pieza seleccionada. No envíes la selección a carrito ni a checkout de NODRIA.
+1. Abre `/configurador`, selecciona piezas y comprueba compatibilidad por socket, memoria, formato, espacio y potencia cuando esos datos estén publicados.
+2. Añade el montaje al carrito desde el configurador.
+3. En el carrito, cambia cantidades o elimina una línea y continúa al checkout.
 
-### 8:00–10:00 · Alcance académico
+### 6:00–8:00 · Checkout y cuenta
 
-Si interesa la parte de negocio, abre una consulta B2B o el formulario de soporte usando datos de prueba. La empresa, los clientes, los pedidos, las organizaciones y las operaciones de backoffice son escenarios académicos; no describen una tienda real.
+1. Completa el checkout con los datos ficticios de prueba.
+2. Confirma el pedido: la pasarela de demostración lo aprueba automáticamente.
+3. Muestra número, total y estado confirmado. En Supabase conectado, revisa en la cuenta el pedido asociado. El servidor valida precio/stock, guarda snapshots, pago demo, reserva y eventos.
+4. Recuerda que no hay cargo, tarjeta ni envío real.
 
-## Límites que deben explicarse
+### 8:00–10:00 · Operaciones internas (opcional)
 
-- Los precios son una captura fechada del vendedor, no un precio vigente garantizado.
-- NODRIA no tiene relación comercial con PcComponentes y no confirma disponibilidad ni condiciones.
-- Las imágenes se cargan desde el CDN público del vendedor; el sitio no afirma ser titular de esas fotos.
-- No se procesa dinero ni se solicitan números de tarjeta.
-- La compatibilidad del PC Builder es parcial y no reemplaza las fichas de fabricante ni una comprobación física.
-- Formularios, empresas y usuarios de soporte/CRM usan datos de demostración; no incluyas información personal real.
+Con cuentas de rol preparadas, muestra CRM, detalle del pedido, inventario y soporte. Las acciones internas dependen de Auth/RLS y solo deben recorrerse en el proyecto de pruebas con datos ficticios.
 
-## Restablecer el entorno local
+## Límites
 
-Para limpiar tickets y consultas locales, detén `pnpm dev` y elimina el directorio `.data/` local. Borra también los datos del sitio del navegador para retirar favoritos y comparaciones. No uses `db reset`, `seed.sql` ni operaciones de limpieza contra Supabase remoto.
+- NODRIA no es un comercio listo para recibir pagos reales; el pago siempre se aprueba por diseño.
+- Cantidades de stock, clientes, pedidos, actividad de backoffice y empresas son de demostración.
+- Las fotografías se cargan desde una CDN remota; confirma derechos de uso antes de una explotación comercial.
+- La compatibilidad del configurador es parcial y no certifica un equipo montado.
+- No uses emails, teléfonos, direcciones ni tarjetas reales durante la presentación.
+
+## Limpiar el modo local
+
+Detén `pnpm dev`, elimina `.data/` local y borra los datos del sitio del navegador para retirar pedidos de prueba, favoritos y comparaciones. No uses `db reset`, `seed.sql` ni scripts de limpieza contra Supabase remoto.

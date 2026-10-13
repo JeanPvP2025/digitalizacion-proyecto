@@ -5,7 +5,7 @@ import type { CatalogParams } from "@/components/storefront/catalog/discovery";
 import { getCatalogData } from "@/lib/catalog-repository";
 
 export const dynamic = "force-dynamic";
-export const metadata: Metadata = { title: "Catálogo de componentes", description: "Explora componentes de PC con modelos, imágenes y precios de referencia consultados en PcComponentes." };
+export const metadata: Metadata = { title: "Catálogo de componentes", description: "Explora componentes de PC, modelos, fotografías y precios en la tienda NODRIA." };
 
 async function CatalogResults({ searchParams }: { searchParams: Promise<CatalogParams> }) {
   const [rawParams, data] = await Promise.all([searchParams, getCatalogData()]);

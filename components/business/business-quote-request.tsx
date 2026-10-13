@@ -85,7 +85,7 @@ export function BusinessQuoteRequest({
                 </button>
               </div>
               <div className={styles.lineFoot}>
-                <span>{selected.sku} · precio de catálogo de referencia</span>
+                <span>{selected.sku} · precio de catálogo NODRIA</span>
                 <strong>{money(selected.currentPrice, selected.currency)}</strong>
               </div>
             </div>
@@ -104,14 +104,14 @@ export function BusinessQuoteRequest({
 
       <div className={styles.submitRow}>
         <div className={styles.estimate}>
-          <span>Referencia de catálogo · IVA incluido</span>
+          <span>Precio de catálogo NODRIA · IVA incluido</span>
           <strong>{allSameCurrency ? money(estimate, currency) : "Monedas mixtas"}</strong>
         </div>
         <button className={styles.submitButton} disabled={!lines.length || !allSameCurrency || lines.some((line) => !Number.isInteger(line.quantity) || line.quantity < 1)} type="submit">
           Enviar a ventas <ArrowRight aria-hidden="true" size={15} />
         </button>
       </div>
-      <p className={styles.helper}>La referencia usa precios actuales del catálogo. El equipo comercial revisará la disponibilidad y guardará una oferta con precios propios antes de enviarla.</p>
+      <p className={styles.helper}>La propuesta toma los precios actuales del catálogo NODRIA. El equipo comercial revisará la disponibilidad y guardará la oferta antes de enviarla.</p>
     </form>
   );
 }

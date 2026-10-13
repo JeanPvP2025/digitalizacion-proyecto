@@ -25,7 +25,7 @@ const campaignDefinitions: CampaignDefinition[] = [
   {
     slug: "puesto-de-trabajo", eyebrow: "ESPACIO DE TRABAJO",
     title: "Componentes para tu próximo equipo.",
-    description: "Explora componentes reales con fotos y precios de referencia. Cada ficha enlaza al comercio donde se consultó; NODRIA no es el vendedor.",
+    description: "Explora componentes y periféricos disponibles en el catálogo NODRIA, con fotografías y especificaciones por modelo.",
     categorySlugs: ["componentes", "almacenamiento"],
     fallbackSlugs: ["componentes", "almacenamiento"],
   },
@@ -45,7 +45,7 @@ const campaignDefinitions: CampaignDefinition[] = [
   {
     slug: "almacenamiento", eyebrow: "TUS DATOS",
     title: "Más contexto para elegir almacenamiento.",
-    description: "Compara capacidad e interfaces declaradas en las fichas del vendedor. No son ensayos independientes de velocidad, durabilidad o compatibilidad.",
+    description: "Compara capacidad e interfaces de unidades de almacenamiento incluidas en el catálogo NODRIA.",
     categorySlugs: ["ssd-internos", "ssd-externos", "discos-externos"], fallbackSlugs: ["almacenamiento"],
   },
 ];

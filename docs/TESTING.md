@@ -1,6 +1,13 @@
 # Testing y gates
 
-## Verificación local de modelos, precios e imágenes — 2026-10-13
+## Tienda propia, reseñas y checkout demo — 2026-10-13
+
+- `pnpm install --frozen-lockfile`, `pnpm exec tsc --noEmit`, `pnpm lint`, `pnpm test` (**293 Vitest + 26 Node**), `pnpm test:e2e` (**18/18**), `pnpm build` y `git diff --check`: pasan.
+- E2E recorre catálogo interno, producto/reseñas, carrito, checkout aprobado sin tarjeta, formularios públicos, backoffice protegido y responsive móvil/tablet.
+- `supabase/migrations/20261013120000_nodria_storefront_checkout.sql` no se ha ejecutado. No se validaron reset, pgTAP, DB lint ni checkout autenticado conectado porque el motor Docker Desktop no estaba activo; la verificación remota queda para después de la aplicación manual.
+- Playwright muestra una diferencia de hidratación de `caret-color: transparent` en inputs, sin fallar las pruebas; Windows avisa del cambio de finales LF/CRLF.
+
+## Catálogo real e imágenes — histórico anterior al checkout — 2026-10-13
 
 - `pnpm install --frozen-lockfile`, `pnpm exec tsc --noEmit`, `pnpm lint`, `pnpm test` (**289 Vitest + 26 Node**), `pnpm test:e2e` (**17/17**), `pnpm build` y `git diff --check`: pasan.
 - Las pruebas de catálogo confirman 64 modelos/MPN con precio fechado y vendedor, foto propia por referencia y ocho modelos por cada clase de PC Builder. Las 64 URLs respondieron `200 image/jpeg` y las 64 imágenes tienen hashes de contenido distintos; Playwright comprobó una foto a través de `next/image`, enlaces a la ficha fuente y vista móvil.

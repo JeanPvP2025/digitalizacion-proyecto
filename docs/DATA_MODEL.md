@@ -1,6 +1,12 @@
 # Modelo de datos NODRIA
 
-## Referencias de catálogo — actualización 2026-10-13
+## Tienda propia y disponibilidad demo — actualización 2026-10-13
+
+La migración `20261013120000_nodria_storefront_checkout.sql` retira `attributes.reference_price` de las variantes elegibles y usa `attributes.nodria_store` (`mode`, MPN, fecha de observación e indicador de inicialización). `get_public_catalog_availability()` y `get_public_product_review_summary()` son funciones `SECURITY INVOKER`; la primera devuelve disponibilidad agregada solo del almacén `NODRIA-DEMO` para productos publicados y variantes marcadas. RLS limita la lectura subyacente. La segunda devuelve solo media/conteo de reseñas publicadas. El stock inicial de 12 unidades por variante es ficticio y no acredita inventario comercial.
+
+El carrito conserva el `variantId` para las piezas del PC Builder y reconstruye precio, publicación y stock en servidor. Checkout guarda snapshots de líneas, pago de demo aprobado, reserva y timeline mediante las RPC existentes. El cliente no puede seleccionar el resultado de pago.
+
+## Catálogo de consulta anterior (histórico) — actualización 2026-10-13
 
 La migración `20261013070617_verified_product_reference_catalog.sql` crea/upsertea 64 referencias de PcComponentes en `products`, `product_categories`, `product_variants` y `product_specifications`. La variante guarda en `attributes.reference_price` el proveedor, vendedor, URL, precio observado, fecha, imagen y MPN; `attributes.pc_builder` contiene únicamente atributos usados por el configurador.
 

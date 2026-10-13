@@ -36,6 +36,9 @@ function queryResult(data: unknown, error: unknown = null) {
 
 function mockSupabaseClient(results: Record<string, ReturnType<typeof queryResult>>) {
   return {
+    rpc: vi.fn((name: string) => Promise.resolve(queryResult(name === "get_public_catalog_availability"
+      ? [{ variant_id: "db-variant-reference", available_quantity: 8 }]
+      : []))),
     from: vi.fn((table: string) => {
       const result = results[table] ?? queryResult([]);
       const query = {
@@ -57,12 +60,8 @@ function connectedResults() {
     product_categories: queryResult([{ product_id: connectedProduct.id, category_id: "db-category-components" }]),
     product_variants: queryResult([{
       id: "db-variant-reference", product_id: connectedProduct.id, sku: connectedProduct.sku,
-      title: "Referencia PcComponentes", current_price: reference.price.toFixed(2), compare_at_price: null, currency: "EUR", is_active: true,
-      attributes: { reference_price: {
-        source: "PcComponentes", seller: "PcComponentes", url: reference.priceReference!.productUrl,
-        observed_at: reference.priceReference!.checkedAt, price_eur: reference.price, image_url: reference.image,
-        mpn: reference.modelNumber,
-      } },
+      title: "Estándar", current_price: reference.price.toFixed(2), compare_at_price: null, currency: "EUR", is_active: true,
+      attributes: { nodria_store: { mode: "academic_demo", model_number: reference.modelNumber } },
     }]),
     product_specifications: queryResult([{ product_id: connectedProduct.id, label: "Estándar", value: "Wi-Fi 7 desde DB", sort_order: 1 }]),
   };

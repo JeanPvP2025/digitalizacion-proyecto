@@ -1,11 +1,11 @@
 # Seguridad y RLS
 
-## Catálogo externo y fotografías — 2026-10-13
+## Catálogo NODRIA y compra simulada — 2026-10-13
 
-- Las referencias públicas solo se aceptan con URLs HTTPS de `www.pccomponentes.com` y fotos de `img.pccomponentes.com`/`thumb.pccomponentes.com` dentro de `/articles/`. El mapper rechaza dominios o imágenes repetidas y exige que el precio de referencia coincida con el precio de variante.
-- Ningún dato de catálogo habilita checkout: el modo demo impide crear pedidos con esas referencias y no expone campos de pago. Las imágenes son URLs públicas del vendedor, no subidas por usuarios.
-- El precio observado no acredita disponibilidad, stock ni relación comercial. El usuario sigue al vendedor para comprar; NODRIA no gestiona cobro ni datos de tarjeta.
-- La migración no crea tablas, policies, grants ni funciones. Despublica fixtures comerciales previas y conserva pedidos/historial. No se aplicó al Supabase remoto en esta sesión.
+- La UI no expone URLs de vendedor ni enlaces de compra fuera de NODRIA. Las fotografías proceden de CDN remoto de terceros; uso comercial requiere confirmar derechos/licencia.
+- Solo variantes con `attributes.nodria_store.mode = 'academic_demo'` pueden entrar en el catálogo. El runtime comprueba imagen de producto única. Los RPC públicos usan `SECURITY INVOKER`; las políticas RLS y grants permiten leer únicamente inventario del almacén `NODRIA-DEMO` para variantes publicadas y marcadas como demo. El resumen agregado solo devuelve reseñas con estado `published`.
+- Checkout ignora cualquier intento de elegir un resultado de pago no aprobado. El servidor recalcula el carrito/precio/stock, aplica la clave idempotente y nunca pide, transmite ni guarda números de tarjeta.
+- La migración `20261013120000_nodria_storefront_checkout.sql` introduce funciones de lectura agregada y stock de demostración; debe revisarse y aplicarse manualmente en el proyecto Supabase correcto antes de desplegar los cambios de UI. No usa service-role en el navegador ni abre DML público.
 
 Estado base **2026-10-12**, con cambio de catálogo documentado el 2026-10-13. La publicación final usa Vercel project `nodria` y `https://nodria-academico.vercel.app`; el alias `nodria-staging.vercel.app` redirige con 308. Los gates locales pasan. El acceso Supabase de esta sesión no autorizó consultas; no se ejecutaron JWT/RLS ni mutaciones contra la base alojada. Una respuesta HTTP 200 no equivale a autorización o aislamiento verificado.
 

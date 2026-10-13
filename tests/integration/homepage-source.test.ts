@@ -20,11 +20,7 @@ function connectedProduct(product: typeof reference) {
     name: product.name, brand: product.brand, summary: product.summary,
     description: product.summary, image_url: product.image, image_alt: product.imageAlt,
     badge: null, is_featured: true, is_published: true,
-    priceReference: {
-      source: "PcComponentes", seller: "PcComponentes", url: product.priceReference!.productUrl,
-      observed_at: product.priceReference!.checkedAt, price_eur: product.price,
-      image_url: product.image, mpn: product.modelNumber,
-    },
+    rating_average: 0, rating_count: 0, price: product.price, modelNumber: product.modelNumber,
   };
 }
 const firstConnectedProduct = connectedProduct(reference);
@@ -36,9 +32,9 @@ function connectedRows(products = [firstConnectedProduct]) {
     categories: [{ id: "category-db", slug: "componentes", name: "Componentes", description: "Componentes", sort_order: 1, is_active: true }],
     product_categories: products.map((product) => ({ product_id: product.id, category_id: "category-db" })),
     product_variants: products.map((product) => ({
-      id: `variant-${product.id}`, product_id: product.id, sku: product.sku, title: "Referencia PcComponentes",
-      current_price: product.priceReference.price_eur, compare_at_price: null, currency: "EUR", is_active: true,
-      attributes: { reference_price: product.priceReference },
+      id: `variant-${product.id}`, product_id: product.id, sku: product.sku, title: "Estándar",
+      current_price: product.price, compare_at_price: null, currency: "EUR", is_active: true,
+      attributes: { nodria_store: { mode: "academic_demo", model_number: product.modelNumber } },
     })),
     product_specifications: [],
   };
@@ -46,6 +42,12 @@ function connectedRows(products = [firstConnectedProduct]) {
 
 function client(rows: Record<string, unknown>, error = false) {
   return {
+    rpc: vi.fn((name: string) => Promise.resolve({
+      data: name === "get_public_catalog_availability"
+        ? ((rows.products as Array<{ id: string }> | undefined) ?? []).map((product) => ({ variant_id: `variant-${product.id}`, available_quantity: 12 }))
+        : [],
+      error: null,
+    })),
     from: vi.fn((table: string) => {
       const query = {
         select: vi.fn(() => query), eq: vi.fn(() => query), order: vi.fn(() => query), in: vi.fn(() => query),
@@ -85,10 +87,9 @@ describe("homepage active-source boundary", () => {
     expect(markup).toContain(`href="/producto/${reference.slug}"`);
     expect(markup).toContain(`src="${reference.image}"`);
     expect(markup).toContain('href="/categorias/componentes"');
-    expect(markup).toContain("Referencias consultadas en PcComponentes");
-    expect(markup).toContain("Disponibilidad en NODRIA no conectada");
-    expect(markup).not.toContain("Stock demo");
-    expect(markup).not.toContain("Añadir al carrito");
+    expect(markup).toContain("Tienda NODRIA conectada");
+    expect(markup).toContain("Disponible");
+    expect(markup).toContain("Añadir al carrito");
     expect(markup).not.toContain("Catálogo de demostración");
     expect(mocks.createClient).toHaveBeenCalledTimes(1);
     expect(supabase.from.mock.calls.filter(([table]) => table === "products")).toHaveLength(1);
@@ -127,13 +128,13 @@ describe("homepage active-source boundary", () => {
     expect(mocks.createClient).not.toHaveBeenCalled();
   });
 
-  it("uses the verified references only for explicit local demo, deriving destinations from those rows", async () => {
+  it("uses the NODRIA catalog only for explicit local demo", async () => {
     vi.stubEnv("NODE_ENV", "development");
     vi.stubEnv("NEXT_PUBLIC_SUPABASE_URL", "");
     vi.stubEnv("NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY", "");
     const markup = await renderHome();
-    expect(markup).toContain("Modelos, fotos y precios de referencia consultados en PcComponentes");
-    expect(markup).toContain("64 modelos verificados");
+    expect(markup).toContain("Catálogo NODRIA de demostración");
+    expect(markup).toContain("64 productos");
     expect(markup).toContain("Tu espacio de trabajo, pieza a pieza");
     expect(markup).toContain("Más ideas por descubrir");
     expect(markup).not.toContain("Novedades y otras ideas");
