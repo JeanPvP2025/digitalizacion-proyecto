@@ -6,7 +6,7 @@ El catálogo local ahora contiene **64 referencias reales** de PcComponentes Esp
 
 - ✅ **Modelos, precios y fotos:** dataset local sin productos sintéticos visibles; cada precio tiene vendedor y fecha, cada producto enlaza a su propia ficha, y no se muestran reseñas ni stock inventados.
 - ✅ **Límite comercial:** NODRIA no es PcComponentes ni otro vendedor. El catálogo y el configurador son de consulta; el modo demo no ofrece carrito de compra, cobro, envío ni devoluciones.
-- ⏳ **Supabase remoto:** el primer intento de `20261013070617_verified_product_reference_catalog.sql` falló con `42601` al insertar especificaciones y no alcanzó el `COMMIT`. Se corrigió el SQL; falta volver a ejecutar el archivo completo y comprobar los conteos. No se pudo probar en PostgreSQL local porque Docker no está iniciado.
+- ⏳ **Supabase remoto:** los intentos manuales de `20261013070617_verified_product_reference_catalog.sql` fallaron con `42601` al insertar especificaciones; el último apunta al `SELECT` de `INSERT ... SELECT`. La migración local ahora recorre el array JSON por índice y usa `INSERT ... VALUES`, sin `SELECT` ni `WITH ORDINALITY` en ese bloque. La prueba estática dirigida pasa; falta validar en PostgreSQL, ejecutar la versión completa y comprobar los conteos. No se ha confirmado remotamente el resultado ni el rollback.
 - ⏳ **Vercel:** falta subir/desplegar estos cambios y revisar catálogo, imágenes y configurador en el dominio final.
 - ⚠️ **Uso de fotografías:** se enlazan las imágenes del catálogo público de PcComponentes. Un uso comercial de NODRIA requeriría permiso/licencia del titular; el proyecto sigue siendo una demo académica.
 

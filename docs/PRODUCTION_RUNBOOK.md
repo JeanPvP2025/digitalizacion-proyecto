@@ -7,7 +7,7 @@ NODRIA es una empresa académica ficticia. El catálogo está preparado para mos
 ## Estado de esta actualización — 2026-10-13
 
 - Verificación local 2026-10-13: instalación congelada, TypeScript, ESLint, `pnpm test` (289 Vitest + 26 Node), E2E (17/17), build y `git diff --check` pasan; las 64 URL de imagen responden `200 image/jpeg`. No se aplicó la migración al Supabase remoto ni se publicó este árbol.
-- Los cambios de código no se han desplegado. El primer intento de la migración devolvió `42601` en `WITH ORDINALITY`; se corrigió el archivo local y esa ejecución no llegó a `COMMIT`. Hay que ejecutar de nuevo el archivo completo y verificar conteos antes de publicar.
+- Los cambios de código no se han desplegado. Los intentos manuales devolvieron `42601` en el bloque que inserta especificaciones, primero con `WITH ORDINALITY` y después con `INSERT ... SELECT`. El archivo local ahora recorre el array JSON por índice y usa `INSERT ... VALUES`, sin `SELECT` en ese bloque. La prueba estática dirigida pasa, pero Docker no está iniciado para validar PostgreSQL localmente. No puedo verificar desde aquí si el editor remoto revirtió la transacción: ejecuta el archivo corregido completo y comprueba los conteos antes de publicar.
 - Esta sesión no tuvo permisos de lectura ni escritura del proyecto Supabase. No se debe interpretar este documento como certificación de Auth/RLS o datos alojados.
 
 ## 1. Aplicar las referencias reales en Supabase

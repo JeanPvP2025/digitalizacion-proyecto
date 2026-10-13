@@ -6,7 +6,7 @@
 - Las pruebas de catálogo confirman 64 modelos/MPN con precio fechado y vendedor, foto propia por referencia y ocho modelos por cada clase de PC Builder. Las 64 URLs respondieron `200 image/jpeg` y las 64 imágenes tienen hashes de contenido distintos; Playwright comprobó una foto a través de `next/image`, enlaces a la ficha fuente y vista móvil.
 - Las E2E también confirman que NODRIA no inventa stock/reseñas ni simula una venta sobre artículos externos, y recorren destinos internos y overflow en 390/768 px.
 - La migración remota no quedó aplicada y este árbol no se desplegó. Los avisos Playwright `NO_COLOR`/`FORCE_COLOR` y la hidratación con `caret-color: transparent` no causaron fallos; el estilo de caret no aparece en el código del repo.
-- Corrección posterior al intento manual: PostgreSQL reportó `42601` por combinar `jsonb_to_recordset` con `WITH ORDINALITY`. Se cambió a `jsonb_array_elements(... ) WITH ORDINALITY`; `node --test tests/catalog-data/verified-reference-catalog.test.mjs` pasa 2/2. Docker no está iniciado, así que no se pudo aplicar esta migración a un PostgreSQL local.
+- Correcciones tras los intentos manuales: PostgreSQL reportó `42601` tanto para la declaración original con `jsonb_to_recordset ... WITH ORDINALITY` como para el `INSERT ... SELECT` posterior. El SQL ahora recorre las especificaciones por índice en PL/pgSQL e inserta con `VALUES`, sin `SELECT` en ese bloque. `node --test tests/catalog-data/verified-reference-catalog.test.mjs` pasa 2/2; Docker no está iniciado, así que la sintaxis no se ha validado contra PostgreSQL local.
 
 ## Corte de release remoto — 2026-10-12 (histórico)
 
