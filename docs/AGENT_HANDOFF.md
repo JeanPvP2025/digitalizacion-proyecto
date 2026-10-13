@@ -21,7 +21,7 @@
 - La migración se debe ejecutar manualmente por el propietario en el SQL Editor correcto antes del despliegue. No se ha aplicado aquí a la base remota.
 - Verificación local completada: `pnpm install --frozen-lockfile`, TypeScript, ESLint, `pnpm test` (293 Vitest + 26 Node), `pnpm test:e2e` (18/18), `pnpm build` y `git diff --check` pasan.
 - No se ejecutaron Supabase reset/pgTAP/DB lint: el motor Docker Desktop no estaba activo. Pendiente de aplicar y verificar la migración en Supabase antes del deploy; este handoff no certifica compra conectada remota.
-- No hay commit ni deploy de esta iteración. Las pruebas E2E muestran una advertencia de hidratación `caret-color: transparent` pero finalizan sin fallos.
+- Commit local `4e30e52` en `main`; sin push ni deploy. Las pruebas E2E muestran una advertencia de hidratación `caret-color: transparent` pero finalizan sin fallos.
 
 ## Handoff anterior (histórico): catálogo de consulta — 2026-10-13
 

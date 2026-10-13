@@ -9,7 +9,7 @@
 - ⏳ Después de aplicar la migración, publicar en Vercel y recorrer una compra conectada autenticada.
 - ⚠️ No se ejecutaron reset/pgTAP/DB lint: Docker Desktop no tiene activo el motor. La migración remota tampoco se aplicó ni se verificó en esta sesión.
 - ⚠️ Los modelos, precios observados e imágenes son reales; stock/pedidos/pago/envíos son ficticios. Las licencias de imágenes remotas siguen por verificar para uso comercial.
-- ⚠️ Playwright imprime una advertencia de hidratación por `caret-color: transparent` en inputs; las 17 pruebas pasan. El árbol de trabajo está en `main` y aún no se ha commiteado ni desplegado.
+- ⚠️ Playwright imprime una advertencia de hidratación por `caret-color: transparent` en inputs; las 18 pruebas pasan. El commit local `4e30e52` está en `main`; no se ha enviado ni desplegado porque Supabase necesita primero la migración.
 
 ## Corte previo de catálogo de consulta (histórico)
 
