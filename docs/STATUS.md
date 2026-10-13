@@ -1,13 +1,14 @@
 # Estado del proyecto
 
-Actualización de catálogo **2026-10-13**. Los cambios de esta actualización están en el árbol de trabajo local y todavía no se han desplegado ni aplicado al Supabase remoto. No se ejecutaron mutaciones contra producción en esta sesión.
+Actualización de catálogo **2026-10-13**. La migración está aplicada en Supabase Production; el operador confirmó 64 modelos, 64 fotos únicas y ocho productos en cada una de las ocho clases. El commit `8ea5b78` está en `main` y Vercel informó `success`; `/`, `/catalogo` y `/configurador` responden HTTP 200. Esto valida el catálogo y su despliegue, no todos los flujos autenticados de la aplicación.
 
 El catálogo local ahora contiene **64 referencias reales** de PcComponentes España: modelos y números de fabricante exactos, precio consultado el 13/10/2026, ficha de vendedor y foto comercial individual. Hay 8 productos por cada una de las 8 clases del PC Builder. Las 64 imágenes devolvieron `200 image/jpeg` y sus 64 cuerpos tienen hashes distintos.
 
 - ✅ **Modelos, precios y fotos:** dataset local sin productos sintéticos visibles; cada precio tiene vendedor y fecha, cada producto enlaza a su propia ficha, y no se muestran reseñas ni stock inventados.
 - ✅ **Límite comercial:** NODRIA no es PcComponentes ni otro vendedor. El catálogo y el configurador son de consulta; el modo demo no ofrece carrito de compra, cobro, envío ni devoluciones.
-- ⏳ **Supabase remoto:** los intentos manuales de `20261013070617_verified_product_reference_catalog.sql` fallaron con `42601` al insertar especificaciones; el último apunta al `SELECT` de `INSERT ... SELECT`. La migración local ahora recorre el array JSON por índice y usa `INSERT ... VALUES`, sin `SELECT` ni `WITH ORDINALITY` en ese bloque. La prueba estática dirigida pasa; falta validar en PostgreSQL, ejecutar la versión completa y comprobar los conteos. No se ha confirmado remotamente el resultado ni el rollback.
-- ⏳ **Vercel:** falta subir/desplegar estos cambios y revisar catálogo, imágenes y configurador en el dominio final.
+- ✅ **Supabase remoto:** migración aplicada y conteos verificados por el operador en SQL Editor: 64 modelos, 64 imágenes distintas y 8 por cada clase del configurador.
+- ✅ **Vercel:** commit `8ea5b78` desplegado; Vercel informó `success`. Smoke HTTP: `/`, `/catalogo` y `/configurador` responden 200; catálogo y configurador muestran 64 referencias.
+- 🚧 **Entrega global:** listo como demo académica de catálogo/configurador. No certificar como comercio electrónico operativo: compra/cobro/envío están deliberadamente desactivados y no se hizo una prueba remota autenticada de todos los roles, Auth y RLS.
 - ⚠️ **Uso de fotografías:** se enlazan las imágenes del catálogo público de PcComponentes. Un uso comercial de NODRIA requeriría permiso/licencia del titular; el proyecto sigue siendo una demo académica.
 
 ### Catálogo verificado y checkout de solo consulta — 2026-10-13

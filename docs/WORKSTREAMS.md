@@ -4,16 +4,16 @@ Tablero de conversaciones. El repositorio y las migraciones son fuente de verdad
 
 ## Catálogo real — 2026-10-13
 
-No hay conversaciones ni worktrees de implementación activos. Los cambios del catálogo están sin desplegar y la migración aún no se ha ejecutado en Supabase remoto.
+No hay conversaciones ni worktrees de implementación activos. El catálogo se integró en `main`, se aplicó en Supabase Production y se desplegó a Vercel el 2026-10-13.
 
 | Conversation | Role | Task | Ownership | Dependencies | State |
 |---|---|---|---|---|---|
-| Tech Lead (main) | Catálogo / PC Builder | 64 modelos reales, precios fechados y fotos únicas; eliminar referencias ficticias visibles; limitar compra demo | `lib/catalog-data/**`, `lib/catalog.ts`, `lib/pc-builder/**`, storefront, tests, migration y docs | Categorías existentes y permisos de lectura | ✅ Gates locales previos: 289 Vitest + 26 Node, E2E 17/17, build; 64 fotos HTTP 200. ✅ Test estático SQL 2/2. ⏳ Validar migración con PostgreSQL/Supabase |
-| Project owner | Supabase data | Ejecutar `supabase/migrations/20261013070617_verified_product_reference_catalog.sql` completo y verificar 64 referencias/8 por clase | SQL Editor del proyecto conectado | Migraciones de categorías y catálogo base previas | ⏳ Último intento falló en `INSERT ... SELECT`; el archivo local se corrigió para evitar `SELECT` en el bloque de especificaciones; pendiente reejecución y verificación |
-| Project owner | Release Vercel | Publicar cambios y revisar imágenes y catálogo en el dominio final | Proyecto Vercel `nodria` | Migración remota aplicada; cambios en `main` | ⏳ Pendiente |
+| Tech Lead (main) | Catálogo / PC Builder | 64 modelos reales, precios fechados y fotos únicas; eliminar referencias ficticias visibles; limitar compra demo | `lib/catalog-data/**`, `lib/catalog.ts`, `lib/pc-builder/**`, storefront, tests, migration y docs | Categorías existentes y permisos de lectura | ✅ Gates locales previos: 289 Vitest + 26 Node, E2E 17/17, build; test SQL estático 2/2; smoke remoto HTTP y 64 referencias visibles |
+| Project owner | Supabase data | Aplicar catálogo real y comprobar 64 referencias/8 por clase | SQL Editor del proyecto conectado | Migraciones de categorías y catálogo base previas | ✅ Aplicado; el operador confirmó 64 modelos, 64 fotos únicas y 8 opciones en cada clase |
+| Project owner | Release Vercel | Publicar cambios y revisar imágenes y catálogo en el dominio final | Proyecto Vercel `nodria` | Migración remota aplicada; cambios en `main` | ✅ Commit `8ea5b78`; Vercel `success`; `/`, `/catalogo` y `/configurador` responden 200 |
 | Tech Lead (main) | Auth / CRM release gates | Mantener las verificaciones remotas documentadas y no declararlas certificadas sin evidencia | `docs/PRODUCTION_RUNBOOK.md`, Auth/RBAC, CRM | Cuenta Supabase y Vercel del operador | ⚠️ Estado de las comprobaciones remotas separado de este trabajo |
 
-El agente coordina en local; las dos acciones externas restantes son aplicar la migración al proyecto correcto y desplegar después de verificarla. No ejecutar `db reset` ni el seed de desarrollo en producción.
+La entrega comprobada es la demo académica de catálogo/configurador. Falta una aceptación autenticada de roles y backoffice en remoto para certificar la aplicación completa; la compra real está fuera del alcance actual. No ejecutar `db reset` ni el seed de desarrollo en producción.
 
 ## Ola 3 — completada e integrada
 

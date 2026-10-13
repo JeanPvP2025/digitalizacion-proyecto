@@ -6,17 +6,17 @@ NODRIA es una empresa académica ficticia. El catálogo está preparado para mos
 
 ## Estado de esta actualización — 2026-10-13
 
-- Verificación local 2026-10-13: instalación congelada, TypeScript, ESLint, `pnpm test` (289 Vitest + 26 Node), E2E (17/17), build y `git diff --check` pasan; las 64 URL de imagen responden `200 image/jpeg`. No se aplicó la migración al Supabase remoto ni se publicó este árbol.
-- Los cambios de código no se han desplegado. Los intentos manuales devolvieron `42601` en el bloque que inserta especificaciones, primero con `WITH ORDINALITY` y después con `INSERT ... SELECT`. El archivo local ahora recorre el array JSON por índice y usa `INSERT ... VALUES`, sin `SELECT` en ese bloque. La prueba estática dirigida pasa, pero Docker no está iniciado para validar PostgreSQL localmente. No puedo verificar desde aquí si el editor remoto revirtió la transacción: ejecuta el archivo corregido completo y comprueba los conteos antes de publicar.
-- Esta sesión no tuvo permisos de lectura ni escritura del proyecto Supabase. No se debe interpretar este documento como certificación de Auth/RLS o datos alojados.
+- Verificación local 2026-10-13: instalación congelada, TypeScript, ESLint, `pnpm test` (289 Vitest + 26 Node), E2E (17/17), build y `git diff --check` pasaron; las 64 URL de imagen respondieron `200 image/jpeg`.
+- El operador aplicó la migración corregida en Supabase Production y confirmó 64 modelos publicados, 64 fotos únicas y ocho opciones por clase. Commit `8ea5b78` está en `main`; Vercel informó `success`. Smoke posterior: `/`, `/catalogo` y `/configurador` responden HTTP 200; el HTML de catálogo/configurador contiene las 64 referencias.
+- Los resultados del SQL Editor confirman el dataset, pero no certifican autenticación, autorización/RLS por rol, pedidos ni operaciones comerciales en remoto. No se ejecutó una aceptación autenticada completa en producción.
 
 ## 1. Aplicar las referencias reales en Supabase
 
 La migración de esta versión es `supabase/migrations/20261013070617_verified_product_reference_catalog.sql`. Requiere que ya estén aplicadas las migraciones previas que crean categorías como `procesadores`, `placas-base`, `memoria-ram`, `cajas`, `fuentes-alimentacion`, `tarjetas-graficas`, `refrigeracion` y `ssd-internos`.
 
-En el proyecto Supabase `ypnhdxpejcbcyjiosrhf`, abre **SQL Editor**, pega el contenido completo de ese archivo del repositorio y ejecútalo una vez. No necesitas consultar `supabase_migrations.schema_migrations`; si esa relación no existe en el SQL Editor, no es el historial que debes usar.
+En el proyecto Supabase `ypnhdxpejcbcyjiosrhf`, esta migración ya se ejecutó correctamente el 2026-10-13. No vuelvas a ejecutarla como parte de la entrega. No necesitas consultar `supabase_migrations.schema_migrations`; si esa relación no existe en el SQL Editor, no es el historial que debes usar.
 
-La migración revisa el conjunto antes de modificarlo, publica 64 referencias con 8 productos por clase, desactiva las fichas sintéticas previas y retira su stock libre conservando las reservas. Conserva pedidos e historial, no elimina tablas ni pedidos y no cambia RLS o grants. El primer intento falló en la extracción de especificaciones por una sintaxis de `WITH ORDINALITY` ya corregida en este archivo. En esa ejecución no se alcanzó el `COMMIT`; copia el archivo corregido completo y ejecútalo de nuevo. Si aparece otro error, detente y comparte el texto exacto; no ejecutes migraciones antiguas ni `seed.sql`.
+La migración publicó 64 referencias con 8 productos por clase, desactivó las fichas sintéticas previas y retiró su stock libre conservando las reservas. Conserva pedidos e historial, no elimina tablas ni pedidos y no cambia RLS o grants. El operador confirmó 64 modelos y 64 fotos únicas en las consultas siguientes.
 
 Tras `Success`, ejecuta estas consultas de solo lectura:
 
