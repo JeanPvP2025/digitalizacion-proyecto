@@ -7,7 +7,7 @@ NODRIA es una empresa académica ficticia. El catálogo está preparado para mos
 ## Estado de esta actualización — 2026-10-13
 
 - Verificación local 2026-10-13: instalación congelada, TypeScript, ESLint, `pnpm test` (289 Vitest + 26 Node), E2E (17/17), build y `git diff --check` pasan; las 64 URL de imagen responden `200 image/jpeg`. No se aplicó la migración al Supabase remoto ni se publicó este árbol.
-- Los cambios de código no se han desplegado y la migración nueva no se ha aplicado a Supabase remoto.
+- Los cambios de código no se han desplegado. El primer intento de la migración devolvió `42601` en `WITH ORDINALITY`; se corrigió el archivo local y esa ejecución no llegó a `COMMIT`. Hay que ejecutar de nuevo el archivo completo y verificar conteos antes de publicar.
 - Esta sesión no tuvo permisos de lectura ni escritura del proyecto Supabase. No se debe interpretar este documento como certificación de Auth/RLS o datos alojados.
 
 ## 1. Aplicar las referencias reales en Supabase
@@ -16,7 +16,7 @@ La migración de esta versión es `supabase/migrations/20261013070617_verified_p
 
 En el proyecto Supabase `ypnhdxpejcbcyjiosrhf`, abre **SQL Editor**, pega el contenido completo de ese archivo del repositorio y ejecútalo una vez. No necesitas consultar `supabase_migrations.schema_migrations`; si esa relación no existe en el SQL Editor, no es el historial que debes usar.
 
-La migración revisa el conjunto antes de modificarlo, publica 64 referencias con 8 productos por clase, desactiva las fichas sintéticas previas y retira su stock libre conservando las reservas. Conserva pedidos e historial, no elimina tablas ni pedidos y no cambia RLS o grants. Si muestra un error, detente y comparte el texto exacto; no vuelvas a ejecutar migraciones antiguas ni `seed.sql`.
+La migración revisa el conjunto antes de modificarlo, publica 64 referencias con 8 productos por clase, desactiva las fichas sintéticas previas y retira su stock libre conservando las reservas. Conserva pedidos e historial, no elimina tablas ni pedidos y no cambia RLS o grants. El primer intento falló en la extracción de especificaciones por una sintaxis de `WITH ORDINALITY` ya corregida en este archivo. En esa ejecución no se alcanzó el `COMMIT`; copia el archivo corregido completo y ejecútalo de nuevo. Si aparece otro error, detente y comparte el texto exacto; no ejecutes migraciones antiguas ni `seed.sql`.
 
 Tras `Success`, ejecuta estas consultas de solo lectura:
 

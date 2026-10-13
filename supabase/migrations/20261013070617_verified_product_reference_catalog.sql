@@ -207,8 +207,8 @@ begin
       updated_at = now();
 
     insert into public.product_specifications(product_id, label, value, sort_order)
-    select v_row.id, spec.label, spec.value, spec.ordinality::integer * 10
-    from jsonb_to_recordset(v_row.specifications) with ordinality as spec(label text, value text, ordinality bigint)
+    select v_row.id, spec.item ->> 'label', spec.item ->> 'value', spec.ordinality::integer * 10
+    from jsonb_array_elements(v_row.specifications) with ordinality as spec(item, ordinality)
     on conflict (product_id, label) do update set
       value = excluded.value, sort_order = excluded.sort_order;
   end loop;

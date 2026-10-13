@@ -54,6 +54,10 @@ test("the migration upserts real photo-bound references and retires legacy synth
     assert.ok(migration.includes(product.modelNumber));
   }
   assert.match(migration, /'image_url', v_row\."imageUrl"/);
+  assert.match(migration, /jsonb_array_elements\(v_row\.specifications\)\s+with ordinality as spec\(item, ordinality\)/i);
+  assert.match(migration, /spec\.item\s*->>\s*'label'/);
+  assert.match(migration, /spec\.item\s*->>\s*'value'/);
+  assert.doesNotMatch(migration, /jsonb_to_recordset\(v_row\.specifications\)\s+with ordinality/i);
   assert.match(migration, /is_published = false/);
   assert.match(migration, /private\.adjust_inventory/);
   assert.doesNotMatch(migration, /\bdelete\s+from\s+public\.(products|orders|order_items)\b/i);
