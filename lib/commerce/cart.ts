@@ -14,19 +14,26 @@ export class CheckoutCartError extends Error {
   }
 }
 
-export function consolidateCheckoutItems(items: RequestedCheckoutItem[], maxQuantity = 10) {
+export function consolidateCheckoutItems(items: RequestedCheckoutItem[], maxQuantity = 10, variantToProductMap?: Map<string, string>) {
   const consolidated = new Map<string, RequestedCheckoutItem>();
 
   for (const item of items) {
-    const key = "productId" in item ? `product:${item.productId}` : `variant:${item.variantId}`;
+    const key = "productId" in item
+      ? `product:${item.productId}`
+      : (variantToProductMap?.get(item.variantId) ? `product:${variantToProductMap.get(item.variantId)}` : `variant:${item.variantId}`);
     const existing = consolidated.get(key);
     const quantity = (existing?.quantity ?? 0) + item.quantity;
     if (quantity > maxQuantity) {
       throw new CheckoutCartError("quantity_limit", "No se pueden pedir más de 10 unidades del mismo artículo.");
     }
-    consolidated.set(key, "productId" in item
-      ? { productId: item.productId, quantity }
-      : { variantId: item.variantId, quantity });
+    const resolvedProductId = "productId" in item
+      ? item.productId
+      : (variantToProductMap?.get(item.variantId) ?? (existing && "productId" in existing ? existing.productId : undefined));
+    if (resolvedProductId) {
+      consolidated.set(key, { productId: resolvedProductId, quantity });
+    } else if ("variantId" in item) {
+      consolidated.set(key, { variantId: item.variantId, quantity });
+    }
   }
 
   return [...consolidated.values()];

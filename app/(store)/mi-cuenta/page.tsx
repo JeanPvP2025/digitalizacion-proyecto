@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
 import { Suspense } from "react";
 import { ArrowRight, Box, Heart, LifeBuoy, LogOut, Settings2, UserRound } from "lucide-react";
 import { getDemoOrderRecords } from "@/lib/server/demo-orders";
@@ -83,9 +84,22 @@ async function AccountContent({ searchParams }: { searchParams: SearchParams }) 
 
     isDemo = false;
   } else {
+    try {
+      const cookieStore = await cookies();
+      const demoEmailCookie = cookieStore.get("nodria_demo_email")?.value;
+      const demoNameCookie = cookieStore.get("nodria_demo_name")?.value;
+      if (demoEmailCookie) email = decodeURIComponent(demoEmailCookie);
+      if (demoNameCookie) name = decodeURIComponent(demoNameCookie);
+    } catch {
+      // fallback to default demo persona if cookie resolution fails
+    }
+
     const allOrders = await getDemoOrderRecords();
     orders = allOrders
-      .filter((order) => order.customer.email.toLowerCase() === email.toLowerCase())
+      .filter((order) => {
+        const orderEmail = order.customer.email.toLowerCase();
+        return orderEmail === email.toLowerCase() || orderEmail === "alex.garcia@demo.nodria.test";
+      })
       .map((order) => ({ id: order.id, number: order.orderNumber, status: order.status, createdAt: order.createdAt, total: order.total }));
   }
 

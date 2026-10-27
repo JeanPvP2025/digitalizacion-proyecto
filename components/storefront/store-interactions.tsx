@@ -4,7 +4,7 @@ import { ArrowRight, Check, Heart, ShoppingBag } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import type { Product } from "@/lib/catalog";
+import { formatPrice, type Product } from "@/lib/catalog";
 import type { PcBuilderCartLine } from "@/lib/pc-builder/cart";
 
 export type CartLine = { id: string; variantId?: string; slug?: string; name: string; price: number; image?: string; sku?: string; quantity: number; type: "product" | "builder" };
@@ -161,12 +161,12 @@ export function CartPage({ checkoutEnabled }: { checkoutEnabled: boolean }) {
               {line.image ? <Image src={line.image} alt="" width={88} height={88} unoptimized /> : <span className="cart-line-image-fallback" aria-hidden="true"><ShoppingBag size={21} /></span>}
               <div className="cart-line-info">{line.sku && <span className="mono-label">Modelo · {line.sku}</span>}{line.slug ? <Link href={`/producto/${line.slug}`}><h2>{line.name}</h2></Link> : <Link href={line.type === "builder" ? "/configurador" : "/catalogo"}><h2>{line.name}</h2></Link>}<span className="stock-status">{line.type === "builder" ? "Stock validado al confirmar" : "Disponibilidad validada al confirmar"}</span></div>
               <div className="quantity-control" aria-label={`Cantidad de ${line.name}`}><button aria-label="Reducir cantidad" type="button" onClick={() => changeQuantity(line.id, line.quantity - 1)}>−</button><span>{line.quantity}</span><button aria-label="Aumentar cantidad" type="button" onClick={() => changeQuantity(line.id, line.quantity + 1)}>+</button></div>
-              <strong className="cart-line-price">{new Intl.NumberFormat("es-ES", { style: "currency", currency: "EUR", maximumFractionDigits: 2 }).format(line.price * line.quantity)}</strong>
+              <strong className="cart-line-price">{formatPrice(line.price * line.quantity)}</strong>
               <button className="remove-line" type="button" onClick={() => changeQuantity(line.id, 0)}>Eliminar</button>
             </article>)}
             <button className="text-button clear-cart" onClick={emptyCart} type="button">Vaciar carrito</button>
           </section>
-          <aside className="cart-summary"><span className="mono-label">RESUMEN DEL PEDIDO</span><div><span>Productos</span><strong>{new Intl.NumberFormat("es-ES", { style: "currency", currency: "EUR", maximumFractionDigits: 2 }).format(subtotal)}</strong></div><div><span>Envío</span><strong>Gratis</strong></div><p>El precio final y la disponibilidad se validan en el servidor antes de confirmar el pedido.</p><div className="summary-total"><span>Total estimado</span><strong>{new Intl.NumberFormat("es-ES", { style: "currency", currency: "EUR", maximumFractionDigits: 2 }).format(subtotal)}</strong></div>{checkoutEnabled ? <><Link className="button button--accent checkout-button" href="/checkout">Continuar al pago <ArrowRight size={15} /></Link><span className="checkout-assurance">Pago de demostración sin cargo real.</span></> : <p className="checkout-assurance">Checkout no disponible temporalmente. Inténtalo más tarde.</p>}</aside>
+          <aside className="cart-summary"><span className="mono-label">RESUMEN DEL PEDIDO</span><div><span>Productos</span><strong>{formatPrice(subtotal)}</strong></div><div><span>Envío</span><strong>Gratis</strong></div><p>El precio final y la disponibilidad se validan en el servidor antes de confirmar el pedido.</p><div className="summary-total"><span>Total estimado</span><strong>{formatPrice(subtotal)}</strong></div>{checkoutEnabled ? <><Link className="button button--accent checkout-button" href="/checkout">Continuar al pago <ArrowRight size={15} /></Link><span className="checkout-assurance">Pago de demostración sin cargo real.</span></> : <p className="checkout-assurance">Checkout no disponible temporalmente. Inténtalo más tarde.</p>}</aside>
         </div>
       )}
     </main>

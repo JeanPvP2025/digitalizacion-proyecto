@@ -40,13 +40,11 @@ export function StoreHeader() {
         <div className="header-subnav">
           <span className="subnav-label">EXPLORA</span>
           <Link className="mobile-nav-link" href="/catalogo">Tienda</Link>
-          <Link href="/catalogo?categoria=ordenadores">Ordenadores</Link>
           <Link href="/catalogo?categoria=componentes">Componentes</Link>
-          <Link href="/catalogo?categoria=monitores">Monitores</Link>
-          <Link href="/catalogo?categoria=redes">Redes</Link>
-          <Link href="/catalogo?categoria=telefonia">Telefonía</Link>
           <Link href="/catalogo?categoria=almacenamiento">Almacenamiento</Link>
-          <Link className="mobile-nav-link" href="/configurador">PC Builder</Link>
+          <Link href="/configurador">PC Builder</Link>
+          <Link href="/categorias">Categorías</Link>
+          <Link href="/marcas">Marcas</Link>
           <Link className="mobile-nav-link" href="/empresas">Empresas</Link>
           <Link className="mobile-nav-link" href="/mi-cuenta">Mi espacio</Link>
           <span className="subnav-spacer" />

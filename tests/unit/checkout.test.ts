@@ -3,6 +3,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 import { demoProducts } from "@/lib/catalog";
+import { getVerifiedReferenceBuilderCatalog } from "@/lib/pc-builder/reference-catalog";
 
 type CheckoutRoute = typeof import("../../app/api/checkout/route");
 type DemoOrders = typeof import("../../lib/server/demo-orders");
@@ -142,5 +143,34 @@ describe("demo checkout route", () => {
 
     expect(response.status).toBe(400);
     expect(await demoOrders.getDemoOrderCount()).toBe(beforeCount);
+  });
+
+  it("rejects combining catalogue and PC builder lines for the same product when exceeding max limit", async () => {
+    const builderComp = getVerifiedReferenceBuilderCatalog().components.find((c) => c.productId === demoProducts[0]!.id)!;
+    const response = await post({
+      ...orderBody([]),
+      items: [
+        { productId: demoProducts[0]!.id, quantity: 6 },
+        { variantId: builderComp.variantId, quantity: 6 },
+      ],
+    });
+
+    expect(response.status).toBe(400);
+    expect((await response.json()).error).toContain("No se pueden pedir más de 10 unidades");
+  });
+
+  it("consolidates catalogue and PC builder lines within limits and creates approved demo order", async () => {
+    const builderComp = getVerifiedReferenceBuilderCatalog().components.find((c) => c.productId === demoProducts[0]!.id)!;
+    const response = await post({
+      ...orderBody([]),
+      items: [
+        { productId: demoProducts[0]!.id, quantity: 2 },
+        { variantId: builderComp.variantId, quantity: 3 },
+      ],
+    });
+
+    expect(response.status).toBe(201);
+    const body = await response.json();
+    expect(body.orderStatus).toBe("confirmed");
   });
 });

@@ -7,6 +7,7 @@ import { checkoutResponseSchema, type CheckoutResponse } from "@/lib/commerce/co
 import type { CheckoutMode } from "@/lib/commerce/mode";
 import { clearCart, readCart, type CartLine } from "@/components/storefront/store-interactions";
 import { toCheckoutCartItems } from "@/lib/pc-builder/cart";
+import { formatPrice } from "@/lib/catalog";
 
 const IDEMPOTENCY_STORAGE_KEY = "nodria.checkout.idempotency.v1";
 
@@ -20,9 +21,7 @@ type CheckoutCustomer = {
   province: string;
 };
 
-function money(value: number) {
-  return new Intl.NumberFormat("es-ES", { style: "currency", currency: "EUR", maximumFractionDigits: 2 }).format(value);
-}
+const money = formatPrice;
 
 function cartFingerprint(lines: CartLine[]) {
   return JSON.stringify(lines.map(({ id, variantId, quantity }) => ({ id, variantId, quantity })).sort((left, right) => left.id.localeCompare(right.id)));
@@ -143,6 +142,14 @@ export function CheckoutForm({ mode }: { mode: CheckoutMode }) {
       idempotencyRef.current = null;
       if ((checkoutResult.mode === "supabase" && checkoutResult.orderStatus !== "pending_payment") ||
           (checkoutResult.mode === "demo" && (checkoutResult.paymentStatus === "approved" || checkoutResult.paymentStatus === "processing"))) {
+        if (checkoutResult.mode === "demo") {
+          try {
+            document.cookie = `nodria_demo_email=${encodeURIComponent(customer.email)}; path=/; max-age=86400; SameSite=Lax`;
+            document.cookie = `nodria_demo_name=${encodeURIComponent(customer.name)}; path=/; max-age=86400; SameSite=Lax`;
+          } catch {
+            // ignore cookie errors in environments where document is restricted
+          }
+        }
         if (cartFingerprint(readCart()) === submittedCart) {
           clearCart();
           setCart([]);
@@ -190,7 +197,7 @@ export function CheckoutForm({ mode }: { mode: CheckoutMode }) {
       <div className="checkout-main">
         <div className="checkout-steps"><span className="checkout-step"><i>1</i> CARRITO</span><span className="checkout-step active"><i>2</i> ENTREGA Y PAGO</span><span className="checkout-step"><i>3</i> CONFIRMACIÓN</span></div>
         <p className="checkout-auth-note">Usa datos ficticios para la entrega. No se enviará el pedido ni se realizará ningún cargo.</p>
-        {mode === "supabase" && <p className="checkout-auth-note">Para finalizar el pedido, inicia sesión con tu cuenta. <Link href="/acceso">Iniciar sesión o crear cuenta</Link></p>}
+        {mode === "supabase" && <p className="checkout-auth-note">Para finalizar el pedido, inicia sesión con tu cuenta. <Link href="/acceso?next=%2Fcheckout">Iniciar sesión o crear cuenta</Link></p>}
         {mode === "unavailable" && <p className="checkout-error" role="status">La finalización de pedidos no está disponible en este momento.</p>}
         <section className="form-section"><h2>¿A quién enviamos el pedido?</h2><div className="form-grid"><div className="field"><label htmlFor="name">Nombre y apellidos</label><input id="name" name="name" autoComplete="name" required defaultValue="Alex García" /></div><div className="field"><label htmlFor="email">Correo electrónico</label><input id="email" name="email" type="email" autoComplete="email" required defaultValue="alex.garcia@demo.nodria.test" /></div><div className="field"><label htmlFor="phone">Teléfono</label><input id="phone" name="phone" type="tel" autoComplete="tel" defaultValue="600 000 000" /></div><div className="field field--wide"><label htmlFor="address">Dirección de entrega y facturación</label><input id="address" name="address" autoComplete="street-address" required defaultValue="Calle de la Innovación, 12" /></div><div className="field"><label htmlFor="postalCode">Código postal</label><input id="postalCode" name="postalCode" autoComplete="postal-code" inputMode="numeric" required defaultValue="28013" pattern="[0-9]{5}" title="Introduce un código postal de cinco cifras" /></div><div className="field"><label htmlFor="city">Municipio</label><input id="city" name="city" autoComplete="address-level2" required defaultValue="Madrid" /></div><div className="field"><label htmlFor="province">Provincia</label><input id="province" name="province" autoComplete="address-level1" required defaultValue="Madrid" /></div></div></section>
         <section className="form-section"><h2>Método de pago</h2><p className="payment-intro">El pago de demostración NODRIA se aprobará automáticamente al confirmar el pedido.</p><div className="checkout-payments"><div className="payment-option payment-option--active"><span className="payment-option-copy"><strong>Pago de demostración</strong><small>Confirmación inmediata · sin datos bancarios</small></span><Check aria-hidden="true" size={17} /></div></div><p className="demo-payment-warning"><ShieldCheck size={13} /> Entorno académico: no se realiza ningún cargo, no introduzcas datos de tarjeta y el pedido no se enviará.</p></section>

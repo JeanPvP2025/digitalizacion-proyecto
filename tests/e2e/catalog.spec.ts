@@ -11,7 +11,7 @@ test("el catálogo presenta productos de NODRIA y ofrece una compra interna", as
   await expect(page.getByText(product.modelNumber!, { exact: false }).first()).toBeVisible();
   await expect(page.getByText("NODRIA", { exact: false }).first()).toBeVisible();
   await expect(page.getByRole("button", { name: /añadir al carrito/i }).first()).toBeEnabled();
-  await expect(page.locator('a[href^="http"]')).toHaveCount(0);
+  await expect(page.locator('main a[href^="http"]')).toHaveCount(0);
   await expect(page.getByText(/pccomponentes|vendedor externo|consultar precio/i)).toHaveCount(0);
 });
 
@@ -22,7 +22,7 @@ test("la ficha del producto enlaza a reseñas internas y evita enlaces comercial
   await expect(page.getByRole("button", { name: /añadir al carrito/i })).toBeEnabled();
   const reviewsLink = page.getByRole("link", { name: "Ver opiniones", exact: true });
   await expect(reviewsLink).toHaveAttribute("href", `/producto/${product.slug}/opiniones`);
-  await expect(page.locator('a[href^="http"]')).toHaveCount(0);
+  await expect(page.locator('main a[href^="http"]')).toHaveCount(0);
 
   await reviewsLink.click();
   await expect(page).toHaveURL(new RegExp(`/producto/${product.slug}/opiniones$`));

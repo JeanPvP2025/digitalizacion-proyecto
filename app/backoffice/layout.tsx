@@ -33,7 +33,21 @@ async function BackofficeGate({ children }: { children: ReactNode }) {
     return <AccessMessage title="No tienes acceso al portal de equipo.">El portal requiere un rol de personal asignado mediante una vía administrativa confiable.</AccessMessage>;
   }
 
-  return <>{roles.includes("catalog_manager") && <nav className={styles.catalogNav} aria-label="Herramientas de catálogo"><Link className="button button--dark" href="/backoffice/catalog">Gestión de catálogo</Link></nav>}{dataMode === "local-demo" && <div className="staff-demo-data-notice" role="status">Los pedidos del centro de operaciones son datos ficticios de esta demostración.</div>}{children}</>;
+    const hasNavItems = roles.includes("catalog_manager") || roles.includes("support_agent") || roles.includes("super_admin");
+  return (
+    <>
+      {hasNavItems && (
+        <nav className={styles.catalogNav} aria-label="Herramientas de equipo">
+          {roles.includes("catalog_manager") && <Link className="button button--dark" href="/backoffice/catalog">Gestión de catálogo</Link>}
+          {(roles.includes("support_agent") || roles.includes("super_admin")) && (
+            <Link className="button button--dark" href="/soporte/agente">Bandeja de soporte</Link>
+          )}
+        </nav>
+      )}
+      {dataMode === "local-demo" && <div className="staff-demo-data-notice" role="status">Los pedidos del centro de operaciones son datos ficticios de esta demostración.</div>}
+      {children}
+    </>
+  );
 }
 
 function AccessMessage({ title, children }: { title: string; children: ReactNode }) {

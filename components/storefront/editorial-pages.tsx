@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { formatPrice } from "@/lib/catalog";
 import { notFound } from "next/navigation";
 import { getCatalogData } from "@/lib/catalog-repository";
 import {
@@ -77,7 +78,7 @@ export async function EditorialArticlePage({ collection, slug }: { collection: E
             <p role="status">El catálogo no está disponible ahora. El contenido editorial sigue visible; vuelve a intentarlo más tarde para consultar las fichas.</p>
           ) : (
             <>
-              {commerce.products.length > 0 && <ul>{commerce.products.map((product) => <li key={product.id}><Link href={`/producto/${encodeURIComponent(product.slug)}`}>{product.name}</Link><span> · precio en la tienda NODRIA: {new Intl.NumberFormat("es-ES", { style: "currency", currency: "EUR" }).format(product.price)}</span></li>)}</ul>}
+              {commerce.products.length > 0 && <ul>{commerce.products.map((product) => <li key={product.id}><Link href={`/producto/${encodeURIComponent(product.slug)}`}>{product.name}</Link><span> · precio en la tienda NODRIA: {formatPrice(product.price)}</span></li>)}</ul>}
               {commerce.categories.length > 0 && <p>{commerce.categories.map((category, index) => <span key={category.id}>{index > 0 && " · "}<Link href={`/catalogo?categoria=${encodeURIComponent(category.slug)}`}>{category.name}</Link></span>)}</p>}
               {!commerce.products.length && !commerce.categories.length && <p>No hay fichas relacionadas publicadas en el catálogo activo.</p>}
             </>

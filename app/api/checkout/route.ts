@@ -335,24 +335,66 @@ async function createDemoOrder(checkout: DemoRequestWithRequest) {
     return NextResponse.json({ error: "Has realizado demasiados intentos de demostración. Espera un minuto y vuelve a probar." }, { status: 429 });
   }
 
-  const consolidated = consolidateCheckoutItems(checkout.data.items);
-  const orderItems: DemoOrderRecord["items"] = [];
   const builderComponents = getVerifiedReferenceBuilderCatalog().components;
+  const variantToProduct = new Map<string, string>(builderComponents.map((c) => [c.variantId, c.productId]));
+  let consolidated: ReturnType<typeof consolidateCheckoutItems>;
+  try {
+    consolidated = consolidateCheckoutItems(checkout.data.items, 10, variantToProduct);
+  } catch (error) {
+    if (error instanceof CheckoutCartError) {
+      return NextResponse.json({ error: error.message }, { status: 400 });
+    }
+    throw error;
+  }
+
+  const orderItems: DemoOrderRecord["items"] = [];
+  const totalQuantityByProduct = new Map<string, number>();
+
   for (const item of consolidated) {
     if ("variantId" in item) {
       const component = builderComponents.find((candidate) => candidate.variantId === item.variantId);
       if (!component) return NextResponse.json({ error: "Una pieza del montaje ya no está disponible." }, { status: 409 });
-      if (item.quantity > 12) return NextResponse.json({ error: `${component.name} supera la disponibilidad de demostración.` }, { status: 409 });
-      orderItems.push({ productId: component.productId, name: component.name, sku: component.sku, quantity: item.quantity,
-        unitPrice: component.priceEur, lineTotal: money(component.priceEur * item.quantity), source: "pc_builder" });
+      const current = totalQuantityByProduct.get(component.productId) ?? 0;
+      const next = current + item.quantity;
+      if (next > 10) return NextResponse.json({ error: `No se pueden pedir más de 10 unidades del mismo artículo (${component.name}).` }, { status: 400 });
+      totalQuantityByProduct.set(component.productId, next);
+      orderItems.push({
+        productId: component.productId,
+        name: component.name,
+        sku: component.sku,
+        quantity: item.quantity,
+        unitPrice: component.priceEur,
+        lineTotal: money(component.priceEur * item.quantity),
+        source: "pc_builder",
+      });
       continue;
     }
     if (!("productId" in item)) continue;
     const { productId, quantity } = item;
-    const product = demoProducts.find((item) => item.id === productId);
+    const product = demoProducts.find((p) => p.id === productId);
     if (!product) return NextResponse.json({ error: "Uno de los productos del carrito ya no está disponible." }, { status: 409 });
-    if (quantity > product.stock) return NextResponse.json({ error: `${product.name} no tiene stock suficiente. Disponibles: ${product.stock}.` }, { status: 409 });
-    orderItems.push({ productId, name: product.name, sku: product.sku, quantity, unitPrice: product.price, lineTotal: money(product.price * quantity), source: "catalogue" });
+    const current = totalQuantityByProduct.get(productId) ?? 0;
+    const next = current + quantity;
+    if (next > 10) return NextResponse.json({ error: `No se pueden pedir más de 10 unidades del mismo artículo (${product.name}).` }, { status: 400 });
+    totalQuantityByProduct.set(productId, next);
+    orderItems.push({
+      productId,
+      name: product.name,
+      sku: product.sku,
+      quantity,
+      unitPrice: product.price,
+      lineTotal: money(product.price * quantity),
+      source: "catalogue",
+    });
+  }
+
+  for (const [productId, aggregateQty] of totalQuantityByProduct.entries()) {
+    const product = demoProducts.find((p) => p.id === productId);
+    const stockLimit = product ? product.stock : 12;
+    if (aggregateQty > stockLimit) {
+      const name = product?.name ?? "Artículo";
+      return NextResponse.json({ error: `${name} no tiene stock suficiente. Disponibles: ${stockLimit}. Solicitadas: ${aggregateQty}.` }, { status: 409 });
+    }
   }
 
   const subtotal = money(orderItems.reduce((sum, item) => sum + item.lineTotal, 0));

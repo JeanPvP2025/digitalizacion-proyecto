@@ -10,6 +10,7 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 export const metadata: Metadata = {
   title: "Espacio de empresa · NODRIA",
   description: "Gestiona tu organización, miembros y propuestas de compra para empresas.",
+  robots: { index: false, follow: false },
 };
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;

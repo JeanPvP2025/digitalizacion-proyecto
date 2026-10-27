@@ -53,3 +53,37 @@ test("rejects products with no variant or multiple indistinguishable variants", 
     (error) => error instanceof CheckoutCartError && error.code === "ambiguous_variant",
   );
 });
+
+
+test("consolidates matching product lines across catalogue and variant mapping", () => {
+  const variantToProduct = new Map([["var_flux1", "pr_fluxbook14"]]);
+  assert.deepEqual(
+    consolidateCheckoutItems(
+      [
+        { productId: "pr_fluxbook14", quantity: 3 },
+        { variantId: "var_flux1", quantity: 2 },
+      ],
+      10,
+      variantToProduct,
+    ),
+    [
+      { productId: "pr_fluxbook14", quantity: 5 },
+    ],
+  );
+});
+
+test("rejects combined quantity across catalogue and builder variant exceeding limit", () => {
+  const variantToProduct = new Map([["var_flux1", "pr_fluxbook14"]]);
+  assert.throws(
+    () =>
+      consolidateCheckoutItems(
+        [
+          { productId: "pr_fluxbook14", quantity: 6 },
+          { variantId: "var_flux1", quantity: 6 },
+        ],
+        10,
+        variantToProduct,
+      ),
+    (error) => error instanceof CheckoutCartError && error.code === "quantity_limit",
+  );
+});
