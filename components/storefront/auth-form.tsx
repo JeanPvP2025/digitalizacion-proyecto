@@ -88,15 +88,10 @@ export function AuthForm({ demoMode, redirectTo, preserveRequestedDestination, i
         });
         if (authError) throw authError;
 
-        if (result.user && Array.isArray(result.user.identities) && result.user.identities.length === 0) {
-          setError("Ya existe una cuenta con este correo electrónico. Por favor, inicia sesión.");
-          return;
-        }
-
         if (result.session) {
           router.replace(getSafeRedirectPath(redirectTo));
         } else if (result.user) {
-          setMessage("Cuenta registrada correctamente. Si tu acceso requiere confirmación de correo electrónico, comprueba tu bandeja de entrada para verificar tu cuenta antes de iniciar sesión.");
+          setMessage("Si este correo no estaba registrado, recibirás un mensaje de confirmación para activar tu cuenta. Si ya tenías cuenta, puedes iniciar sesión o recuperar tu contraseña.");
         } else {
           setError("No se pudo activar la cuenta automáticamente. Contacta con la administración para habilitar el acceso.");
         }

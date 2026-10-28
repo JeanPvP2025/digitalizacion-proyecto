@@ -11,6 +11,7 @@ import type {
   PcBuilderCategory,
   PcBuilderComponent,
   PsuFixture,
+  StorageFixture,
 } from "./types";
 
 export const pcBuilderCategories: readonly PcBuilderCategory[] = [
@@ -116,6 +117,9 @@ export function checkBuildCompatibility(
   const cooler = byCategory(selectedComponents, "cooler") as
     | CoolerFixture
     | undefined;
+  const storage = byCategory(selectedComponents, "storage") as
+    | StorageFixture
+    | undefined;
 
   if (cpu && motherboard) {
     if (cpu.socket && motherboard.socket && cpu.socket !== motherboard.socket) {
@@ -181,6 +185,34 @@ export function checkBuildCompatibility(
       issues.push({ code: "cooler-socket-mismatch", severity: "error", message: `La refrigeración seleccionada no declara compatibilidad con el socket ${cpu.socket}.` });
     } else if (!cpu.socket || !cooler.supportedSockets) {
       issues.push({ code: "cooler-socket-unverified", severity: "warning", message: "La ficha de la refrigeración o del procesador no permite verificar el socket." });
+    }
+  }
+
+  if (motherboard && storage) {
+    if (storage.interface) {
+      if (motherboard.storageInterfaces && !motherboard.storageInterfaces.includes(storage.interface)) {
+        issues.push({
+          code: "storage-interface-mismatch",
+          severity: "error",
+          message: `La placa base no declara compatibilidad con la interfaz ${storage.interface} del almacenamiento.`,
+        });
+      }
+    } else {
+      issues.push({
+        code: "storage-interface-unverified",
+        severity: "warning",
+        message: "El almacenamiento seleccionado no publica su interfaz de conexión en la ficha consultada.",
+      });
+    }
+  }
+
+  for (const component of selectedComponents) {
+    if (component.stock !== undefined && component.stock <= 0) {
+      issues.push({
+        code: `out-of-stock-${component.category}`,
+        severity: "error",
+        message: `La pieza seleccionada para ${displayCategory[component.category]} (${component.name}) está agotada.`,
+      });
     }
   }
 

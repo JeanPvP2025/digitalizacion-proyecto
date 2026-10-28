@@ -4,6 +4,7 @@ import { join } from "node:path";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 import { demoProducts } from "@/lib/catalog";
 import { getVerifiedReferenceBuilderCatalog } from "@/lib/pc-builder/reference-catalog";
+import { DEMO_SESSION_COOKIE, verifyDemoSession } from "@/lib/server/demo-session";
 
 type CheckoutRoute = typeof import("../../app/api/checkout/route");
 type DemoOrders = typeof import("../../lib/server/demo-orders");
@@ -172,5 +173,63 @@ describe("demo checkout route", () => {
     expect(response.status).toBe(201);
     const body = await response.json();
     expect(body.orderStatus).toBe("confirmed");
+  });
+
+  it("sets a cryptographically signed HttpOnly demo session cookie and clears insecure cookies", async () => {
+    const response = await post(orderBody([{ productId: demoProducts[0]!.id, quantity: 1 }]));
+    expect(response.status).toBe(201);
+
+    const setCookieHeaders = response.headers.getSetCookie();
+    const sessionCookieHeader = setCookieHeaders.find((header) => header.startsWith(`${DEMO_SESSION_COOKIE}=`));
+    expect(sessionCookieHeader).toBeDefined();
+    expect(sessionCookieHeader).toContain("HttpOnly");
+    expect(sessionCookieHeader?.toLowerCase()).toContain("samesite=lax");
+
+    const tokenMatch = sessionCookieHeader!.match(new RegExp(`${DEMO_SESSION_COOKIE}=([^;]+)`));
+    expect(tokenMatch).not.toBeNull();
+    const token = tokenMatch![1];
+    const verified = verifyDemoSession(token);
+    expect(verified).not.toBeNull();
+    expect(verified!.orderIds.length).toBeGreaterThan(0);
+
+    // Verifies insecure cookies are deleted / expired
+    const expiredEmail = setCookieHeaders.find((h) => h.includes("nodria_demo_email="));
+    expect(expiredEmail).toBeDefined();
+    expect(expiredEmail).toMatch(/Expires=Thu, 01 Jan 1970|Max-Age=0/i);
+  });
+
+  it("handles concurrent checkout requests with the same idempotency key safely", async () => {
+    const key = crypto.randomUUID();
+    const payload = orderBody([{ productId: demoProducts[0]!.id, quantity: 1 }], { idempotencyKey: key });
+
+    // Simulate 5 concurrent requests fired in parallel
+    const responses = await Promise.all([
+      post(payload),
+      post(payload),
+      post(payload),
+      post(payload),
+      post(payload),
+    ]);
+
+    const statuses = responses.map((r) => r.status);
+    expect(statuses).toContain(201); // At least one creates it
+    expect(statuses.every((s) => s === 201 || s === 200)).toBe(true);
+
+    const orderNumbers = await Promise.all(responses.map(async (r) => (await r.json()).orderNumber));
+    const uniqueNumbers = new Set(orderNumbers);
+    expect(uniqueNumbers.size).toBe(1); // All return the exact same order
+  });
+
+  it("handles concurrent checkout requests with different idempotency keys safely", async () => {
+    const beforeCount = await demoOrders.getDemoOrderCount();
+    const requests = Array.from({ length: 3 }, () =>
+      post(orderBody([{ productId: demoProducts[0]!.id, quantity: 1 }])),
+    );
+
+    const responses = await Promise.all(requests);
+    expect(responses.every((r) => r.status === 201)).toBe(true);
+
+    const afterCount = await demoOrders.getDemoOrderCount();
+    expect(afterCount).toBe(beforeCount + 3);
   });
 });

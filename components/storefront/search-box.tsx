@@ -331,6 +331,7 @@ export function SearchBox({
       <input
         ref={inputRef}
         id={searchId}
+        suppressHydrationWarning
         aria-activedescendant={activeIndex >= 0 ? listboxId + "-option-" + activeIndex : undefined}
         aria-autocomplete="list"
         aria-busy={isLoading}

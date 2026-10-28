@@ -247,7 +247,8 @@ export function PcBuilder({ catalog }: { catalog: PcBuilderCatalog }) {
 
   const buildComplete = requiredPcBuilderCategories.every((category) => selectedComponents.some((component) => component.category === category));
   const hasCompatibilityErrors = result.issues.some((issue) => issue.severity === "error");
-  const canAddToCart = buildComplete && !hasCompatibilityErrors && selectedComponents.length > 0;
+  const hasOutOfStockComponents = selectedComponents.some((component) => component.stock !== undefined && component.stock <= 0);
+  const canAddToCart = buildComplete && !hasCompatibilityErrors && !hasOutOfStockComponents && selectedComponents.length > 0;
 
   function addBuildToCart() {
     if (!canAddToCart) return;
@@ -349,28 +350,38 @@ export function PcBuilder({ catalog }: { catalog: PcBuilderCatalog }) {
                 ) : (
                   <fieldset className={styles.options}>
                     <legend className="sr-only">Elige una referencia de {categoryTitle[activeCategory]}</legend>
-                    {currentOptions.map((component) => (
-                      <label className={styles.optionCard + (selectedVariantId === component.variantId ? " " + styles.optionSelected : "")} key={component.variantId}>
-                        <input
-                          type="radio"
-                          name={"pc-builder-" + activeCategory}
-                          value={component.variantId}
-                          checked={selectedVariantId === component.variantId}
-                          onChange={() => select(activeCategory, component.variantId)}
-                        />
-                        {component.imageUrl && <Image className={styles.optionImage} src={component.imageUrl} alt={component.name} width={72} height={72} unoptimized />}
-                        <span className={styles.optionContent}>
-                          <span className={styles.optionTopline}>
-                            <span className={styles.optionName}>{component.name}</span>
-                            <strong>{formatter.format(component.priceEur)}</strong>
+                    {currentOptions.map((component) => {
+                      const isOutOfStock = component.stock !== undefined && component.stock <= 0;
+                      return (
+                        <label
+                          className={styles.optionCard + (selectedVariantId === component.variantId ? " " + styles.optionSelected : "") + (isOutOfStock ? " " + styles.optionOutOfStock : "")}
+                          key={component.variantId}
+                        >
+                          <input
+                            type="radio"
+                            name={"pc-builder-" + activeCategory}
+                            value={component.variantId}
+                            checked={selectedVariantId === component.variantId}
+                            onChange={() => select(activeCategory, component.variantId)}
+                            disabled={isOutOfStock}
+                          />
+                          {component.imageUrl && <Image className={styles.optionImage} src={component.imageUrl} alt={component.name} width={72} height={72} unoptimized />}
+                          <span className={styles.optionContent}>
+                            <span className={styles.optionTopline}>
+                              <span className={styles.optionName}>
+                                {component.name}
+                                {isOutOfStock && <span className={styles.outOfStockBadge}>Agotado</span>}
+                              </span>
+                              <strong>{formatter.format(component.priceEur)}</strong>
+                            </span>
+                            {component.variantTitle !== "Estándar" && <span className={styles.variantTitle}>{component.variantTitle}</span>}
+                            <span className={styles.optionSpecs}>{componentSpecs(component)}</span>
+                            <span className={styles.optionBrand}>{component.manufacturer}{component.modelNumber ? " · Modelo " + component.modelNumber : ""}</span>
                           </span>
-                          {component.variantTitle !== "Estándar" && <span className={styles.variantTitle}>{component.variantTitle}</span>}
-                          <span className={styles.optionSpecs}>{componentSpecs(component)}</span>
-                          <span className={styles.optionBrand}>{component.manufacturer}{component.modelNumber ? " · Modelo " + component.modelNumber : ""}</span>
-                        </span>
-                        <span className={styles.optionCheck} aria-hidden="true"><Check size={14} /></span>
-                      </label>
-                    ))}
+                          <span className={styles.optionCheck} aria-hidden="true"><Check size={14} /></span>
+                        </label>
+                      );
+                    })}
                   </fieldset>
                 )}
 

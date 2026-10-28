@@ -47,6 +47,7 @@ export function getVerifiedReferenceBuilderCatalog() {
       nodria_store: {
         mode: "academic_demo",
         model_number: product.modelNumber,
+        stock: (product as unknown as { stock?: number }).stock ?? 12,
       },
     },
     current_price: product.priceEur,

@@ -27,6 +27,7 @@ type PcComponentBase<Category extends PcBuilderCategory> = {
   variantTitle?: string;
   modelNumber?: string;
   imageUrl?: string;
+  stock?: number;
 };
 
 export type CpuFixture = PcComponentBase<"cpu"> & {
@@ -42,6 +43,7 @@ export type MotherboardFixture = PcComponentBase<"motherboard"> & {
   memoryGeneration?: MemoryGeneration;
   maxMemoryGb?: number;
   estimatedPowerW?: number;
+  storageInterfaces?: readonly string[];
 };
 
 export type MemoryFixture = PcComponentBase<"memory"> & {

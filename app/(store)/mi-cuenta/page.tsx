@@ -5,6 +5,7 @@ import { cookies } from "next/headers";
 import { Suspense } from "react";
 import { ArrowRight, Box, Heart, LifeBuoy, LogOut, Settings2, UserRound } from "lucide-react";
 import { getDemoOrderRecords } from "@/lib/server/demo-orders";
+import { DEMO_SESSION_COOKIE, verifyDemoSession } from "@/lib/server/demo-session";
 import {
   getOrganizationMembershipsForUser,
   getProfileForUser,
@@ -84,21 +85,29 @@ async function AccountContent({ searchParams }: { searchParams: SearchParams }) 
 
     isDemo = false;
   } else {
+    let authorizedOrderIds: string[] = [];
     try {
       const cookieStore = await cookies();
-      const demoEmailCookie = cookieStore.get("nodria_demo_email")?.value;
-      const demoNameCookie = cookieStore.get("nodria_demo_name")?.value;
-      if (demoEmailCookie) email = decodeURIComponent(demoEmailCookie);
-      if (demoNameCookie) name = decodeURIComponent(demoNameCookie);
+      const sessionToken = cookieStore.get(DEMO_SESSION_COOKIE)?.value;
+      const verifiedSession = verifyDemoSession(sessionToken);
+      if (verifiedSession) {
+        authorizedOrderIds = verifiedSession.orderIds;
+        if (verifiedSession.customerName) {
+          name = verifiedSession.customerName;
+        }
+      }
     } catch {
       // fallback to default demo persona if cookie resolution fails
     }
 
     const allOrders = await getDemoOrderRecords();
+    const authorizedSet = new Set(authorizedOrderIds);
     orders = allOrders
       .filter((order) => {
-        const orderEmail = order.customer.email.toLowerCase();
-        return orderEmail === email.toLowerCase() || orderEmail === "alex.garcia@demo.nodria.test";
+        // Only return orders placed within this authorized demo session OR baseline demo persona orders
+        const isSessionAuthorized = authorizedSet.has(order.id);
+        const isBaselineDemoOrder = order.customer.email.toLowerCase() === "alex.garcia@demo.nodria.test";
+        return isSessionAuthorized || isBaselineDemoOrder;
       })
       .map((order) => ({ id: order.id, number: order.orderNumber, status: order.status, createdAt: order.createdAt, total: order.total }));
   }

@@ -6,6 +6,7 @@ import { getCheckoutMode } from "@/lib/commerce/mode";
 import { demoProducts } from "@/lib/catalog";
 import { consumeRateLimit } from "@/lib/server/rate-limit";
 import { DemoOrderIdempotencyConflict, persistDemoOrder, type DemoOrderRecord } from "@/lib/server/demo-orders";
+import { DEMO_SESSION_COOKIE, signDemoSession, verifyDemoSession } from "@/lib/server/demo-session";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { getVerifiedReferenceBuilderCatalog } from "@/lib/pc-builder/reference-catalog";
 import {
@@ -428,7 +429,7 @@ async function createDemoOrder(checkout: DemoRequestWithRequest) {
 
   try {
     const saved = await persistDemoOrder(record);
-    const response = {
+    const responseBody = {
       mode: "demo" as const,
       orderNumber: saved.orderNumber,
       idempotencyKey: checkout.data.idempotencyKey,
@@ -436,7 +437,38 @@ async function createDemoOrder(checkout: DemoRequestWithRequest) {
       orderStatus: demoOrderStatusSchema.parse(saved.status),
       message: "Pedido confirmado. El pago de demostración se ha aprobado automáticamente; no se ha realizado ningún cargo ni envío real.",
     };
-    return NextResponse.json(response, { status: saved.id === record.id ? 201 : 200 });
+    const response = NextResponse.json(responseBody, { status: saved.id === record.id ? 201 : 200 });
+
+    try {
+      const rawCookies = checkout.request.headers.get("cookie") ?? "";
+      const cookieMap = new Map(rawCookies.split(";").map((c) => {
+        const [k, ...v] = c.trim().split("=");
+        return [k, v.join("=")];
+      }));
+      const existingToken = cookieMap.get(DEMO_SESSION_COOKIE);
+      const verified = verifyDemoSession(existingToken);
+      const existingIds = verified?.orderIds ?? [];
+      const updatedIds = Array.from(new Set([...existingIds, saved.id])).slice(-50);
+      const signedToken = signDemoSession({
+        orderIds: updatedIds,
+        customerName: checkout.data.customer.name,
+        createdAt: Date.now(),
+      });
+
+      response.cookies.set(DEMO_SESSION_COOKIE, signedToken, {
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/",
+        maxAge: 86400 * 30,
+        secure: process.env.NODE_ENV === "production",
+      });
+      response.cookies.delete("nodria_demo_email");
+      response.cookies.delete("nodria_demo_name");
+    } catch (sessionError) {
+      console.error("Failed to set demo session cookie", sessionError);
+    }
+
+    return response;
   } catch (error) {
     if (error instanceof DemoOrderIdempotencyConflict) {
       return NextResponse.json({ error: "Esta referencia de compra ya se usó con otros artículos o datos de entrega. Inicia otra compra." }, { status: 409 });

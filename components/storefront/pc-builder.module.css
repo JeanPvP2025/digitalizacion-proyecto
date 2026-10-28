@@ -112,6 +112,26 @@
 }
 .optionCard:hover { border-color: #9eb18f; background: #fcfdfb; }
 .optionSelected { border-color: #58754b; background: #f5f8f1; box-shadow: inset 0 0 0 1px #58754b; }
+.optionOutOfStock {
+  opacity: 0.55;
+  cursor: not-allowed;
+  background: #fafafa;
+}
+.optionOutOfStock:hover {
+  border-color: #dce4da;
+  background: #fafafa;
+}
+.outOfStockBadge {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 1px 6px;
+  color: #c53030;
+  background: #fff5f5;
+  border: 1px solid #feb2b2;
+  font: 600 10px var(--font-mono);
+  border-radius: 3px;
+  vertical-align: middle;
+}
 .optionCard input {
   width: 18px;
   height: 18px;

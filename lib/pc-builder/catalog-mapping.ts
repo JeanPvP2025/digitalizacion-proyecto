@@ -43,6 +43,7 @@ export type PcBuilderVariantRow = {
   current_price: number | string;
   currency: string;
   is_active: boolean;
+  stock?: number;
 };
 
 export type PcBuilderCatalogRows = {
@@ -108,6 +109,7 @@ function parseVariantComponent(
   const store = root && isRecord(root.nodria_store) ? root.nodria_store : null;
   if (store?.mode !== "academic_demo") return null;
 
+  const rawStock = typeof store?.stock === "number" ? store.stock : (typeof variant.stock === "number" ? variant.stock : undefined);
   const base = {
     id: variant.id,
     variantId: variant.id,
@@ -121,6 +123,7 @@ function parseVariantComponent(
     manufacturer: product.brand,
     priceEur: Number(variant.current_price),
     description: product.summary,
+    ...(typeof rawStock === "number" ? { stock: rawStock } : {}),
   };
 
   switch (builder.category) {
@@ -133,6 +136,7 @@ function parseVariantComponent(
     }
     case "motherboard": {
       const socket = nonEmptyString(builder.socket) ? builder.socket.trim().replace(/^AMD\s+/i, "") : undefined;
+      const storageInterfaces = stringArray(builder.storage_interfaces) ? builder.storage_interfaces : undefined;
       if ((builder.socket !== undefined && !socket) || (builder.form_factor !== undefined && !isFormFactor(builder.form_factor)) ||
           (builder.memory_generation !== undefined && !isMemoryGeneration(builder.memory_generation)) ||
           (builder.max_memory_gb !== undefined && !positiveNumber(builder.max_memory_gb)) ||
@@ -141,6 +145,7 @@ function parseVariantComponent(
         ...(isFormFactor(builder.form_factor) ? { formFactor: builder.form_factor } : {}),
         ...(isMemoryGeneration(builder.memory_generation) ? { memoryGeneration: builder.memory_generation } : {}),
         ...(positiveNumber(builder.max_memory_gb) ? { maxMemoryGb: builder.max_memory_gb } : {}),
+        ...(storageInterfaces ? { storageInterfaces } : {}),
         ...(positiveNumber(builder.estimated_power_w) ? { estimatedPowerW: builder.estimated_power_w } : {}) } satisfies MotherboardFixture;
     }
     case "memory": {

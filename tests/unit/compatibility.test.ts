@@ -68,4 +68,55 @@ describe("checkBuildCompatibility", () => {
     expect(result.warnings.map((issue) => issue.code)).toContain("psu-headroom-below-guideline");
     expect(pcBuilderCategories).toHaveLength(8);
   });
+
+  it("detects storage interface mismatch between motherboard and storage drive", () => {
+    const partsWithStorageRules: PcBuilderComponent[] = [
+      ...testParts,
+      {
+        id: "test-board-sata-only",
+        category: "motherboard",
+        name: "Legacy Motherboard",
+        manufacturer: "Test",
+        priceEur: 100,
+        description: "Test",
+        socket: "AM5",
+        formFactor: "ATX",
+        memoryGeneration: "DDR5",
+        storageInterfaces: ["SATA"],
+      },
+    ];
+
+    const result = checkBuildCompatibility({
+      cpu: "test-cpu-am5",
+      motherboard: "test-board-sata-only",
+      memory: "test-ram-ddr5",
+      case: "test-case-atx",
+      psu: "test-psu-650",
+      storage: "test-storage",
+    }, partsWithStorageRules);
+
+    expect(result.status).toBe("incompatible");
+    expect(result.errors.map((e) => e.code)).toContain("storage-interface-mismatch");
+  });
+
+  it("detects out-of-stock components and marks build incompatible", () => {
+    const partsWithStock: PcBuilderComponent[] = [
+      ...testParts.filter((p) => p.id !== "test-cpu-am5"),
+      {
+        ...testParts.find((p) => p.id === "test-cpu-am5")!,
+        stock: 0,
+      },
+    ];
+
+    const result = checkBuildCompatibility({
+      cpu: "test-cpu-am5",
+      motherboard: "test-board-am5",
+      memory: "test-ram-ddr5",
+      case: "test-case-atx",
+      psu: "test-psu-650",
+    }, partsWithStock);
+
+    expect(result.status).toBe("incompatible");
+    expect(result.errors.map((e) => e.code)).toContain("out-of-stock-cpu");
+  });
 });

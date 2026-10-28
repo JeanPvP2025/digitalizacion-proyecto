@@ -142,14 +142,7 @@ export function CheckoutForm({ mode }: { mode: CheckoutMode }) {
       idempotencyRef.current = null;
       if ((checkoutResult.mode === "supabase" && checkoutResult.orderStatus !== "pending_payment") ||
           (checkoutResult.mode === "demo" && (checkoutResult.paymentStatus === "approved" || checkoutResult.paymentStatus === "processing"))) {
-        if (checkoutResult.mode === "demo") {
-          try {
-            document.cookie = `nodria_demo_email=${encodeURIComponent(customer.email)}; path=/; max-age=86400; SameSite=Lax`;
-            document.cookie = `nodria_demo_name=${encodeURIComponent(customer.name)}; path=/; max-age=86400; SameSite=Lax`;
-          } catch {
-            // ignore cookie errors in environments where document is restricted
-          }
-        }
+
         if (cartFingerprint(readCart()) === submittedCart) {
           clearCart();
           setCart([]);
