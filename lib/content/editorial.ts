@@ -29,7 +29,7 @@ export const editorialCollections = {
   blog: {
     title: "Ideas para decidir mejor",
     label: "Blog",
-    description: "Comparativas y criterios para pensar una compra tecnológica. El contenido es académico y no incluye pruebas de rendimiento ni ofertas de NODRIA.",
+    description: "Comparativas y criterios para pensar una compra tecnológica. El contenido es orientativo y no incluye pruebas de rendimiento ni ofertas de NODRIA.",
   },
   guias: {
     title: "Una buena decisión empieza aquí",
@@ -91,11 +91,11 @@ export const editorialArticles: readonly EditorialArticle[] = [
   {
     collection: "guias", slug: "preparar-configuracion-pc",
     title: "Prepara tu configuración de PC antes de añadir piezas",
-    description: "Ordena requisitos y revisiones de compatibilidad para explorar el configurador académico sin tratar sus reglas como una certificación técnica.",
+    description: "Ordena requisitos y revisiones de compatibilidad para explorar el configurador de hardware sin tratar sus reglas como una certificación técnica.",
     category: "Componentes", author: "Redacción NODRIA · equipo ficticio",
     publishedAt: "2026-10-03", updatedAt: "2026-10-08",
     takeaway: "Una configuración requiere revisar el conjunto y sus variantes; una comprobación parcial no certifica un montaje real.",
-    productSlugs: ["amd-ryzen-5-9600-3-8-5-2ghz-17wc6", "intenso-premium-ssd-1tb-m-2-nvme-pcie-3-0-1xihy"], categorySlugs: ["componentes", "almacenamiento"],
+    productSlugs: ["ssd-kingston-nv3-1tb-m-2-2230-pcie-4-0-nvme-6000mb-s-3d-nand-gaming-0ete5", "samsung-990-pro-1tb-disco-ssd-7450mb-s-nvme-pcie-4-0-m-2-gen4-1vopo"], categorySlugs: ["digitalizacion-industria-conectada"],
     related: ["portatil-o-sobremesa", "elegir-monitor-escritorio"],
     sections: [
       { id: "objetivo", title: "1. Define el objetivo y lo que ya tienes", paragraphs: [
@@ -143,7 +143,7 @@ export const editorialArticles: readonly EditorialArticle[] = [
     category: "Conectividad", author: "Redacción NODRIA · equipo ficticio",
     publishedAt: "2026-10-05", updatedAt: "2026-10-08",
     takeaway: "Describe el problema y las condiciones de uso antes de asumir que un nuevo dispositivo lo resolverá.",
-    productSlugs: [], categorySlugs: [],
+    productSlugs: ["ubiquiti-dream-machine-special-edition-udm-se", "mikrotik-routerboard-rb5009ug-s-in"], categorySlugs: ["equipos-sistemas-telecomunicaciones"],
     related: ["renovar-equipos-oficina", "elegir-portatil-trabajo-estudio"],
     sections: [
       { id: "mapa", title: "Empieza por un mapa y un síntoma concreto", paragraphs: [
@@ -163,11 +163,11 @@ export const editorialArticles: readonly EditorialArticle[] = [
   {
     collection: "blog", slug: "renovar-equipos-oficina",
     title: "Renovar equipos de oficina sin perder el contexto",
-    description: "Organiza perfiles de uso, periféricos y validaciones pendientes antes de preparar una solicitud B2B ficticia.",
+    description: "Organiza perfiles de uso, periféricos y validaciones pendientes antes de preparar una solicitud B2B corporativa.",
     category: "Empresas", author: "Redacción NODRIA · equipo ficticio",
     publishedAt: "2026-10-06", updatedAt: "2026-10-08",
     takeaway: "Una solicitud útil describe puestos y restricciones; una lista de unidades por sí sola deja demasiadas decisiones abiertas.",
-    productSlugs: [], categorySlugs: [],
+    productSlugs: ["cisco-catalyst-1000-48-puertos-gigabit-poe-plus", "grandstream-ucm6302-centralita-ip-pbx"], categorySlugs: ["telefonia-comunicaciones", "equipos-sistemas-telecomunicaciones"],
     related: ["elegir-monitor-escritorio", "planificar-red-hogar"],
     sections: [
       { id: "perfiles", title: "Agrupa puestos por tareas verificables", paragraphs: [
@@ -179,8 +179,8 @@ export const editorialArticles: readonly EditorialArticle[] = [
         "Prepara también la transición: qué archivos deben conservarse, quién verificará las copias y cómo se comprobará el acceso a las aplicaciones. Define una revisión de aceptación que corresponda a tus tareas y decide quién puede aprobarla. Este artículo ofrece una plantilla de planificación; no estima tiempos de despliegue ni garantiza continuidad operativa.",
       ], checklist: ["Perfiles de uso, número de puestos y ubicación.", "Aplicaciones, permisos y restricciones confirmados.", "Accesorios existentes y conexiones pendientes de validar.", "Responsables de transición y criterios de aceptación."] },
       { id: "solicitud", title: "Convierte la lista en una solicitud clara", paragraphs: [
-        "Resume objetivo, grupos de puestos y preguntas pendientes antes de explorar el formulario de empresas. Utiliza cantidades y contactos de ejemplo en NODRIA: todas las organizaciones, propuestas, pedidos y pagos son ficticios. El portal permite recorrer un proceso académico y no contrata suministro, instalación ni asesoramiento para una empresa real.",
-        "El catálogo actual reúne componentes, pero no equipos empresariales completos, monitores o redes. No hay recomendaciones para una aplicación concreta ni pruebas de un puesto como conjunto. Consulta las fichas de cada fabricante y valida tus requisitos antes de crear una solicitud.",
+        "Resume objetivo, grupos de puestos y preguntas pendientes antes de explorar el formulario de empresas. Utiliza cantidades y contactos profesionales en NODRIA: todas las organizaciones, propuestas, pedidos y pagos son simulados para demostración operativa. El portal permite recorrer un proceso comercial y de presupuestación corporativa.",
+        "El catálogo reúne equipamiento de telecomunicaciones, redes, telefonía IP y digitalización. Consulta las fichas de cada fabricante y valida tus requisitos antes de crear una solicitud.",
       ] },
     ],
   },

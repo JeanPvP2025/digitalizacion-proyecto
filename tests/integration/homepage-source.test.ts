@@ -82,8 +82,8 @@ describe("homepage active-source boundary", () => {
     const supabase = client(connectedRows([firstConnectedProduct, secondConnectedProduct]));
     mocks.createClient.mockReturnValue(supabase);
     const markup = await renderHome();
-    expect(markup).toContain(firstConnectedProduct.name);
-    expect(markup).toContain(secondConnectedProduct.name);
+    expect(markup).toContain(firstConnectedProduct.name.replace(/"/g, "&quot;"));
+    expect(markup).toContain(secondConnectedProduct.name.replace(/"/g, "&quot;"));
     expect(markup).toContain(`href="/producto/${reference.slug}"`);
     expect(markup).toContain(`src="${reference.image}"`);
     expect(markup).toContain('href="/categorias/componentes"');
@@ -134,9 +134,9 @@ describe("homepage active-source boundary", () => {
     vi.stubEnv("NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY", "");
     const markup = await renderHome();
     expect(markup).toContain("Catálogo NODRIA de demostración");
-    expect(markup).toContain("64 productos");
-    expect(markup).toContain("Tu espacio de trabajo, pieza a pieza");
-    expect(markup).toContain("Más ideas por descubrir");
+    expect(markup).toContain(`${demoProducts.length} productos`);
+    expect(markup).toContain("Equipos e infraestructura de telecomunicaciones");
+    expect(markup).toContain("Más equipamiento por descubrir");
     expect(markup).not.toContain("Novedades y otras ideas");
     const destinations = [...markup.matchAll(/href="(\/producto\/[^"?#]+)"/g)].map((match) => match[1]);
     expect(new Set(destinations).size).toBeGreaterThan(0);

@@ -68,7 +68,8 @@ img { display: block; max-width: 100%; }
 .account-link { font-size: 11px; color: #48554c; }
 .header-cart { display: flex; align-items: center; gap: 7px; font-size: 11px; color: var(--forest); font-weight: 600; }
 .cart-count { display: inline-grid; place-items: center; width: 18px; height: 18px; color: var(--forest-deep); background: var(--accent); border-radius: 50%; font: 600 9px var(--font-mono); }
-.header-subnav { display: flex; align-items: center; gap: 24px; width: min(1440px, calc(100% - 76px)); height: 38px; margin: 0 auto; font-size: 10px; color: #6d756e; }
+.header-subnav { display: flex; align-items: center; gap: 24px; width: min(1440px, calc(100% - 76px)); height: 38px; margin: 0 auto; font-size: 10px; color: #6d756e; overflow-x: auto; scrollbar-width: none; }
+.header-subnav::-webkit-scrollbar { display: none; }
 .subnav-label, .footer-heading { font: 500 8px var(--font-mono); letter-spacing: .12em; }
 .subnav-label { color: #68756c; }
 .subnav-spacer { flex: 1; }

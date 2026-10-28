@@ -87,7 +87,7 @@ describe("catalog search ranking", () => {
   it("reports totals before clamping the public result limit", () => {
     expect(searchCatalogProducts(enriched, "nival", 1)).toMatchObject({ total: 2, results: [expect.any(Object)], recovery: null });
     expect(searchCatalogProducts(demoProducts, "Kingston", -1).results).toHaveLength(1);
-    expect(searchCatalogProducts(demoProducts, "AMD", Number.NaN).results).toHaveLength(5);
+    expect(searchCatalogProducts(demoProducts, "AMD", Number.NaN).results).toHaveLength(2);
   });
 
   it("returns partial alternatives and real category URLs, while keeping total zero", () => {

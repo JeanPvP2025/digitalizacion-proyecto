@@ -5,7 +5,10 @@ import type { CatalogParams } from "@/components/storefront/catalog/discovery";
 import { getCatalogData } from "@/lib/catalog-repository";
 
 export const dynamic = "force-dynamic";
-export const metadata: Metadata = { title: "Catálogo de componentes", description: "Explora componentes de PC, modelos, fotografías y precios en la tienda NODRIA." };
+export const metadata: Metadata = {
+  title: "Catálogo de Telecomunicaciones y Redes",
+  description: "Explora infraestructuras de red, cableado estructurado, fibra óptica, conmutación, domótica profesional, telefonía IP y digitalización industrial en NODRIA.",
+};
 
 async function CatalogResults({ searchParams }: { searchParams: Promise<CatalogParams> }) {
   const [rawParams, data] = await Promise.all([searchParams, getCatalogData()]);
@@ -13,5 +16,9 @@ async function CatalogResults({ searchParams }: { searchParams: Promise<CatalogP
 }
 
 export default function CatalogPage({ searchParams }: { searchParams: Promise<CatalogParams> }) {
-  return <Suspense fallback={<main className="page-wrap catalog-page"><p className="eyebrow">NODRIA · CATÁLOGO</p><div className="empty-state" role="status">Cargando catálogo…</div></main>}><CatalogResults searchParams={searchParams} /></Suspense>;
+  return (
+    <Suspense fallback={<main className="page-wrap catalog-page"><p className="eyebrow">NODRIA · CATÁLOGO TÉCNICO</p><div className="empty-state" role="status">Cargando catálogo…</div></main>}>
+      <CatalogResults searchParams={searchParams} />
+    </Suspense>
+  );
 }

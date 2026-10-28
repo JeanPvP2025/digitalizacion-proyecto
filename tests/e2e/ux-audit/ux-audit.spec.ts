@@ -1,19 +1,19 @@
 import { expect, test } from "@playwright/test";
 import { demoProducts } from "../../../lib/catalog";
-import referenceCatalog from "../../../lib/catalog-data/verified-reference-products.json";
+// reference catalog retired from public store
 
-const reference = referenceCatalog.products[0]!;
+const reference = demoProducts.find((item) => item.slug === "ssd-kingston-nv3-1tb-m-2-2230-pcie-4-0-nvme-6000mb-s-3d-nand-gaming-0ete5")!;
 
 const primaryRoutes = [
   "/",
   "/catalogo",
   "/catalogo?q=nvme",
   "/categorias",
-  "/categorias/componentes",
+  "/categorias/infraestructuras-telecomunicaciones",
   "/marcas",
-  "/marcas/amd",
+  "/marcas/televes",
   "/campanas",
-  "/campanas/puesto-de-trabajo",
+  "/campanas/conectividad",
   `/producto/${reference.slug}`,
   `/producto/${reference.slug}/opiniones`,
   "/carrito",
@@ -152,9 +152,9 @@ test("skip link, search shortcut, and suggestions work with the keyboard", async
   await page.keyboard.press("Control+k");
   const search = page.locator('.header-search input[type="search"]');
   await expect(search).toBeFocused();
-  const searchResponse = await page.request.get(`/api/search?q=${encodeURIComponent(reference.modelNumber)}`);
+  const searchResponse = await page.request.get(`/api/search?q=${encodeURIComponent(reference.modelNumber!)}`);
   expect(searchResponse.status()).toBe(200);
-  await search.fill(reference.modelNumber);
+  await search.fill(reference.modelNumber!);
   const option = page.getByRole("option", { name: new RegExp(reference.name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i") });
   await expect(option).toBeVisible({ timeout: 30_000 });
   await page.keyboard.press("ArrowDown");

@@ -5,19 +5,113 @@ export function groupSpecifications(specifications: readonly ProductSpecificatio
   const groups = new Map<string, ProductSpecification[]>();
   for (const spec of specifications) {
     const label = spec.label.toLocaleLowerCase("es");
-    const group = /garant|caja|incluid|contenido/.test(label) ? "Garantía y contenido declarado" : /conex|puerto|interfaz|socket|compat|estándar|formato/.test(label) ? "Conexiones y compatibilidad" : /pantalla|panel|resolución|frecuencia|color/.test(label) ? "Imagen y pantalla" : /procesador|memoria|capacidad|almacenamiento|lectura|velocidad|gráfica|potencia/.test(label) ? "Rendimiento y capacidad" : "Otros detalles";
+    const group = /garant|caja|incluid|contenido|accesorios/.test(label)
+      ? "Garantía y contenido"
+      : /puerto|conex|interfaz|socket|compat|estándar|formato|ranura|conector/.test(label)
+      ? "Puertos y conectividad"
+      : /pantalla|panel|resolución|frecuencia|display/.test(label)
+      ? "Pantalla y visualización"
+      : /aliment|tensi|potencia|consumo|bater|poe|batería/.test(label)
+      ? "Alimentación y energía"
+      : /velocidad|tasa|rendimiento|ancho de banda|frecuencia|cpu|procesador|memoria|capacidad|lectura|escritura/.test(label)
+      ? "Rendimiento y capacidad"
+      : /temperatura|protección|ip|humedad|resistencia|dimension|peso|material/.test(label)
+      ? "Construcción y condiciones ambientales"
+      : "Otras especificaciones";
     groups.set(group, [...(groups.get(group) ?? []), spec]);
   }
   return [...groups].map(([title, items]) => ({ title, items }));
 }
 
 const guides: Partial<Record<ProductCategory, { title: string; checks: string[] }>> = {
-  Ordenadores: { title: "Elegir un equipo para tu trabajo", checks: ["Compara procesador, memoria y almacenamiento con los requisitos de tus aplicaciones.", "Revisa las conexiones publicadas antes de elegir pantalla o periféricos. La categoría no acredita compatibilidad.", "Si una ampliación no figura en las especificaciones, solicita confirmación antes de elegir componentes."] },
-  Componentes: { title: "Comprobar las piezas antes del montaje", checks: ["Comprueba socket, generación de memoria, formato y espacio de la caja cuando estén declarados.", "Valida el conjunto en el configurador; una coincidencia de socket no certifica por sí sola todo el equipo.", "No asumas que se incluyen disipador, cables o adaptadores si la ficha no los enumera."] },
-  Monitores: { title: "Preparar tu espacio de pantalla", checks: ["Compara resolución, tamaño y frecuencia con tu uso previsto.", "Revisa las conexiones de ambos dispositivos y el cable necesario. Un puerto USB-C no confirma todas sus funciones.", "Comprueba que tu equipo admite la resolución y frecuencia elegidas antes de comprar."] },
-  Almacenamiento: { title: "Revisar una ampliación de almacenamiento", checks: ["Comprueba interfaz y formato de la unidad con la documentación de tu equipo.", "Compara capacidad y velocidad declaradas; no deduzcas el rendimiento de una combinación no probada.", "No asumas que se incluye una carcasa o adaptador si no aparece en el contenido de caja."] },
-  Redes: { title: "Elegir conectividad para tu espacio", checks: ["Revisa el estándar y los puertos declarados junto con los dispositivos que conectarás.", "La velocidad y cobertura indicadas son datos de la ficha comercial; no garantizan el resultado en tu instalación.", "Comprueba la configuración requerida por tu proveedor antes de sustituir un equipo de red."] },
-  Telefonía: { title: "Elegir un dispositivo y sus accesorios", checks: ["Compara pantalla, memoria y almacenamiento según las aplicaciones que uses.", "No deduzcas compatibilidad con lápices, teclados o cargadores a partir del nombre del producto.", "Revisa conexiones y contenido de caja declarado antes de añadir accesorios."] },
+  "Infraestructuras de Telecomunicaciones": {
+    title: "Planificación de armarios rack y cableado estructurado",
+    checks: [
+      "Calcula las unidades de altura (U) y la profundidad útil considerando radios de curvatura y espacio para pasahilos.",
+      "Verifica la categoría requerida (Cat.6A o Cat.7) y la clasificación europea de reacción al fuego CPR (mínimo Dca/LSZH).",
+      "Asegura la continuidad de la toma de tierra en paneles de parcheo apantallados y distribuidores de fibra óptica.",
+    ],
+  },
+  "Equipos y Sistemas de Telecomunicaciones": {
+    title: "Selección de conmutación, enrutamiento y fibra óptica",
+    checks: [
+      "Calcula el presupuesto PoE total (W) sumando los consumos máximos de puntos de acceso, telefonía y cámaras.",
+      "Comprueba la longitud de onda y el tipo de fibra (1310 nm monomodo vs 850 nm multimodo) al elegir transceptores SFP+.",
+      "Revisa la capacidad de conmutación sin bloqueos y el soporte de enrutamiento estático o dinámico entre VLAN.",
+    ],
+  },
+  "Domótica y Hogar Digital": {
+    title: "Diseño de instalaciones domóticas y hogar digital",
+    checks: [
+      "Prioriza pasarelas multiprotocolo compatibles con estándares abiertos (Zigbee 3.0, Matter y Thread).",
+      "Comprueba la intensidad máxima por circuito en relés de carril DIN y la necesidad de neutro en micromódulos empotrables.",
+      "Instala los sensores de presencia por ondas milimétricas (mmWave) alejados de fuentes de vibración o ventiladores directos.",
+    ],
+  },
+  "Telefonía y Comunicaciones": {
+    title: "Implantación de telefonía IP y comunicaciones móviles",
+    checks: [
+      "Dimensiona la concurrencia de llamadas (aprox. 100 kbps por llamada simultánea utilizando códec G.711 sin compresión).",
+      "Verifica la compatibilidad de paso de fax (protocolo T.38) y el suministro de tensión de línea en gateways analógicos.",
+      "Comprueba la cobertura de los operadores locales e instala antenas directivas exteriores MIMO para enlaces celulares 4G/5G.",
+    ],
+  },
+  "Digitalización e Industria Conectada": {
+    title: "Integración de sensórica Modbus, Edge Computing y NAS",
+    checks: [
+      "Comprueba el soporte de buses de campo industriales (Modbus RTU/TCP, OPC UA y MQTT) y el aislamiento galvánico de puertos serie.",
+      "Verifica el rango de temperatura admisible (-20°C a +60°C) y la alimentación continua (9-30V CC) para montaje en armario eléctrico.",
+      "Configura volúmenes RAID tolerantes a fallos (RAID 5/6) y caché SSD NVMe en servidores NAS para garantizar alta disponibilidad.",
+    ],
+  },
+  Ordenadores: {
+    title: "Elegir un equipo para tu trabajo",
+    checks: [
+      "Compara procesador, memoria y almacenamiento con los requisitos de tus aplicaciones.",
+      "Revisa las conexiones publicadas antes de elegir pantalla o periféricos.",
+      "Si una ampliación no figura en las especificaciones, solicita confirmación técnica.",
+    ],
+  },
+  Componentes: {
+    title: "Comprobar las piezas antes del montaje",
+    checks: [
+      "Comprueba socket, generación de memoria, formato y espacio de la caja cuando estén declarados.",
+      "Valida el conjunto en el configurador; una coincidencia de socket no certifica por sí sola todo el equipo.",
+      "No asumas que se incluyen disipador, cables o adaptadores si la ficha no los enumera.",
+    ],
+  },
+  Monitores: {
+    title: "Preparar tu espacio de pantalla",
+    checks: [
+      "Compara resolución, tamaño y frecuencia con tu uso previsto.",
+      "Revisa las conexiones de ambos dispositivos y el cable necesario.",
+      "Comprueba que tu equipo admite la resolución y frecuencia elegidas antes de comprar.",
+    ],
+  },
+  Almacenamiento: {
+    title: "Revisar una ampliación de almacenamiento",
+    checks: [
+      "Comprueba interfaz y formato de la unidad con la documentación de tu equipo.",
+      "Compara capacidad y velocidad declaradas; no deduzcas el rendimiento de una combinación no probada.",
+      "No asumas que se incluye una carcasa o adaptador si no aparece en el contenido de caja.",
+    ],
+  },
+  Redes: {
+    title: "Elegir conectividad para tu espacio",
+    checks: [
+      "Revisa el estándar y los puertos declarados junto con los dispositivos que conectarás.",
+      "La velocidad y cobertura indicadas son datos de la ficha comercial.",
+      "Comprueba la configuración requerida por tu proveedor antes de sustituir un equipo de red.",
+    ],
+  },
+  Telefonía: {
+    title: "Elegir un dispositivo y sus accesorios",
+    checks: [
+      "Compara pantalla, memoria y almacenamiento según las aplicaciones que uses.",
+      "No deduzcas compatibilidad con lápices, teclados o cargadores a partir del nombre del producto.",
+      "Revisa conexiones y contenido de caja declarado antes de añadir accesorios.",
+    ],
+  },
 };
 
 export function getProductEditorial(category: ProductCategory) {

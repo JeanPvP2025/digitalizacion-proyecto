@@ -1,6 +1,17 @@
-import verifiedReferenceCatalog from "./catalog-data/verified-reference-products.json";
+import telecomData from "./catalog-data/telecom-products.json";
 
-export type ProductCategory = "Ordenadores" | "Componentes" | "Monitores" | "Redes" | "Telefonía" | "Almacenamiento";
+export type ProductCategory =
+  | "Infraestructuras de Telecomunicaciones"
+  | "Equipos y Sistemas de Telecomunicaciones"
+  | "Domótica y Hogar Digital"
+  | "Telefonía y Comunicaciones"
+  | "Digitalización e Industria Conectada"
+  | "Ordenadores"
+  | "Componentes"
+  | "Monitores"
+  | "Redes"
+  | "Telefonía"
+  | "Almacenamiento";
 
 export type ProductSpecification = {
   label: string;
@@ -13,6 +24,7 @@ export type Product = {
   sku: string;
   name: string;
   category: ProductCategory;
+  categoryIds?: readonly string[];
   brand: string;
   modelNumber?: string;
   price: number;
@@ -28,39 +40,45 @@ export type Product = {
   featured?: boolean;
 };
 
-const featuredReferenceIds = new Set(
-  verifiedReferenceCatalog.products
-    .filter((product, index, products) => products.findIndex((candidate) => candidate.categorySlug === product.categorySlug) === index)
-    .map((product) => product.id),
-);
-
-/** Product records used by NODRIA's academic storefront simulation. */
-export const demoProducts: Product[] = verifiedReferenceCatalog.products.map((product) => ({
-  id: product.id,
-  slug: product.slug,
-  sku: product.sku,
-  name: product.name,
-  category: product.rootCategory === "Almacenamiento" ? "Almacenamiento" : "Componentes",
-  brand: product.brand,
-  modelNumber: product.modelNumber,
-  price: product.priceEur,
-  rating: 0,
-  reviewCount: 0,
-  stock: 12,
-  image: product.imageUrl,
-  imageAlt: product.imageAlt,
-  summary: `${product.brand} · modelo ${product.modelNumber}. Precio de catálogo para la experiencia de compra de demostración NODRIA.`,
-  specifications: product.specifications,
-  featured: featuredReferenceIds.has(product.id),
+/** Product records used by NODRIA's storefront simulation. */
+export const demoProducts: Product[] = (telecomData.products as unknown as Product[]).map((product) => ({
+  ...product,
+  rating: product.rating ?? 4.8,
+  reviewCount: product.reviewCount ?? 12,
+  stock: product.stock ?? 12,
+  featured: Boolean(product.featured),
 }));
 
 export const categories = [
-  { name: "Componentes", code: "componentes", description: "Procesadores, placas, memoria, gráficas, cajas, fuentes y refrigeración." },
-  { name: "Almacenamiento", code: "almacenamiento", description: "Unidades SSD para ampliar tu equipo." },
+  {
+    name: "Infraestructuras de Telecomunicaciones",
+    code: "infraestructuras-telecomunicaciones",
+    description: "Racks de 19\", cableado estructurado Cat.6A/Cat.7, fibra óptica preconectorizada, paneles de parcheo y certificación.",
+  },
+  {
+    name: "Equipos y Sistemas de Telecomunicaciones",
+    code: "equipos-sistemas-telecomunicaciones",
+    description: "Switches gestionables L2+/L3, routers de borde, puntos de acceso Wi-Fi 6E/7, transceptores ópticos SFP+ y cabeceras.",
+  },
+  {
+    name: "Domótica y Hogar Digital",
+    code: "domotica-hogar-digital",
+    description: "Pasarelas multiprotocolo Zigbee/Matter/Thread, relés para carril DIN, sensores ambientales, videoporteros IP y clima.",
+  },
+  {
+    name: "Telefonía y Comunicaciones",
+    code: "telefonia-comunicaciones",
+    description: "Centralitas IP-PBX, terminales SIP ejecutivos, teléfonos DECT, pasarelas VoIP FXS/FXO y routers industriales 4G/5G.",
+  },
+  {
+    name: "Digitalización e Industria Conectada",
+    code: "digitalizacion-industria-conectada",
+    description: "Gateways IoT industriales, servidores Edge fanless, almacenamiento NAS Synology, sensores Modbus y trazabilidad Zebra.",
+  },
 ] as const;
 
 export const formatPrice = (price: number) =>
   new Intl.NumberFormat("es-ES", { style: "currency", currency: "EUR", minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(price);
 
-/** Explicitly local-mode lookup for the academic storefront simulation. */
+/** Storefront lookup for demo products. */
 export const getDemoProduct = (slug: string) => demoProducts.find((product) => product.slug === slug);

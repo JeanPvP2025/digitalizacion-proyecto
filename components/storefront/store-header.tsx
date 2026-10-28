@@ -12,21 +12,21 @@ export function StoreHeader() {
       <a className="skip-link" href="#main-content">Saltar al contenido principal</a>
       <div className="announcement-bar" id="page-top">
         <span className="announcement-dot" />
-        <span>Conocimiento técnico. Atención humana.</span>
+        <span>Conocimiento técnico. Atención especializada en telecomunicaciones.</span>
         <Link href="/empresas">Descubre NODRIA Empresas <ArrowUpRight size={13} /></Link>
       </div>
       {demoMode && (
         <div className="demo-ribbon" role="status">
-          <span>ENTORNO DE DEMOSTRACIÓN</span>
-          <span>Los pagos son ficticios. No introduzcas datos bancarios.</span>
+          <span>ENTORNO DE DEMOSTRACIÓN TÉCNICA</span>
+          <span>Los pagos son simulados. No introduzcas datos bancarios reales.</span>
         </div>
       )}
       <header className="site-header">
         <div className="header-main">
           <BrandMark />
           <nav aria-label="Navegación principal" className="primary-nav">
-            <Link href="/catalogo">Tienda</Link>
-            <Link href="/catalogo?categoria=componentes">Componentes</Link>
+            <Link href="/catalogo">Catálogo</Link>
+            <Link href="/categorias">Categorías</Link>
             <Link href="/configurador">PC Builder <span className="nav-new">PRO</span></Link>
             <Link href="/empresas">Empresas</Link>
           </nav>
@@ -39,11 +39,13 @@ export function StoreHeader() {
         </div>
         <div className="header-subnav">
           <span className="subnav-label">EXPLORA</span>
-          <Link className="mobile-nav-link" href="/catalogo">Tienda</Link>
-          <Link href="/catalogo?categoria=componentes">Componentes</Link>
-          <Link href="/catalogo?categoria=almacenamiento">Almacenamiento</Link>
-          <Link href="/configurador">PC Builder</Link>
-          <Link href="/categorias">Categorías</Link>
+          <Link className="mobile-nav-link" href="/catalogo">Catálogo</Link>
+          <Link href="/catalogo?categoria=infraestructuras-telecomunicaciones">Infraestructuras</Link>
+          <Link href="/catalogo?categoria=equipos-sistemas-telecomunicaciones">Equipos y Redes</Link>
+          <Link href="/catalogo?categoria=domotica-hogar-digital">Hogar Digital</Link>
+          <Link href="/catalogo?categoria=telefonia-comunicaciones">Telefonía</Link>
+          <Link href="/catalogo?categoria=digitalizacion-industria-conectada">Industria 4.0</Link>
+          <Link className="mobile-nav-link" href="/configurador">PC Builder</Link>
           <Link href="/marcas">Marcas</Link>
           <Link className="mobile-nav-link" href="/empresas">Empresas</Link>
           <Link className="mobile-nav-link" href="/mi-cuenta">Mi espacio</Link>

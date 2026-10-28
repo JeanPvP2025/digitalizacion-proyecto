@@ -147,11 +147,12 @@ describe("demo checkout route", () => {
   });
 
   it("rejects combining catalogue and PC builder lines for the same product when exceeding max limit", async () => {
-    const builderComp = getVerifiedReferenceBuilderCatalog().components.find((c) => c.productId === demoProducts[0]!.id)!;
+    const targetProduct = demoProducts.find((p) => getVerifiedReferenceBuilderCatalog().components.some((c) => c.productId === p.id))!;
+    const builderComp = getVerifiedReferenceBuilderCatalog().components.find((c) => c.productId === targetProduct.id)!;
     const response = await post({
       ...orderBody([]),
       items: [
-        { productId: demoProducts[0]!.id, quantity: 6 },
+        { productId: targetProduct.id, quantity: 6 },
         { variantId: builderComp.variantId, quantity: 6 },
       ],
     });
@@ -161,11 +162,12 @@ describe("demo checkout route", () => {
   });
 
   it("consolidates catalogue and PC builder lines within limits and creates approved demo order", async () => {
-    const builderComp = getVerifiedReferenceBuilderCatalog().components.find((c) => c.productId === demoProducts[0]!.id)!;
+    const targetProduct = demoProducts.find((p) => getVerifiedReferenceBuilderCatalog().components.some((c) => c.productId === p.id))!;
+    const builderComp = getVerifiedReferenceBuilderCatalog().components.find((c) => c.productId === targetProduct.id)!;
     const response = await post({
       ...orderBody([]),
       items: [
-        { productId: demoProducts[0]!.id, quantity: 2 },
+        { productId: targetProduct.id, quantity: 2 },
         { variantId: builderComp.variantId, quantity: 3 },
       ],
     });

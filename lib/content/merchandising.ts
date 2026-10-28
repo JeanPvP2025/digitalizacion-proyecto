@@ -20,7 +20,17 @@ export type HomepageMerchandising = {
 };
 
 const byName = new Intl.Collator("es", { sensitivity: "base", numeric: true });
-const workspaceCategories = ["Ordenadores", "Monitores", "Redes", "Almacenamiento"];
+const workspaceCategories = [
+  "Equipos y Sistemas de Telecomunicaciones",
+  "Infraestructuras de Telecomunicaciones",
+  "Domótica y Hogar Digital",
+  "Telefonía y Comunicaciones",
+  "Digitalización e Industria Conectada",
+  "Ordenadores",
+  "Monitores",
+  "Redes",
+  "Almacenamiento",
+];
 const isNovelty = (product: Product) => /\b(nuevo|nueva|novedad|new)\b/i.test(product.badge ?? "");
 
 export const productHref = (product: Product) => `/producto/${encodeURIComponent(product.slug)}`;
@@ -81,9 +91,9 @@ export function getHomepageMerchandising(data: CatalogData): HomepageMerchandisi
     }
   }
   const campaign: HomepageCampaign | null = campaignProducts.length ? {
-    title: "Tu espacio de trabajo, pieza a pieza.",
-    description: "Compara componentes y SSD disponibles en NODRIA. Revisa las especificaciones antes de montar tu equipo.",
-    href: "/campanas/puesto-de-trabajo",
+    title: "Equipos e infraestructura de telecomunicaciones.",
+    description: "Conmutación empresarial L2/L3, fibra óptica preconectorizada, domótica profesional y telefonía IP con stock verificado en NODRIA.",
+    href: "/campanas/conectividad",
     products: campaignProducts,
   } : null;
 

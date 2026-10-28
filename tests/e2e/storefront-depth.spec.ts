@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
-import referenceCatalog from "../../lib/catalog-data/verified-reference-products.json";
+import { demoProducts } from "../../lib/catalog";
 
-const reference = referenceCatalog.products[0]!;
+const reference = demoProducts.find((item) => item.slug === "ssd-kingston-nv3-1tb-m-2-2230-pcie-4-0-nvme-6000mb-s-3d-nand-gaming-0ete5")!;
 
 test.beforeEach(async ({ page }) => {
   await page.route("https://**/*", (route) => route.abort());
@@ -14,7 +14,7 @@ test("editorial guides and articles lead to real product and category routes", a
   await expect(page).toHaveURL(/\/guias\/preparar-configuracion-pc$/);
   await expect(page.getByRole("heading", { name: "Prepara tu configuración de PC antes de añadir piezas." })).toBeVisible();
   await expect(page.getByRole("link", { name: reference.name }).first()).toHaveAttribute("href", `/producto/${reference.slug}`);
-  await expect(page.locator("main article").getByRole("link", { name: "Componentes" })).toHaveAttribute("href", /\/catalogo\?categoria=componentes/);
+  await expect(page.locator("main article").getByRole("link", { name: "Digitalización e Industria Conectada" })).toHaveAttribute("href", /\/catalogo\?categoria=digitalizacion-industria-conectada/);
 
   await page.goto("/blog");
   await expect(page.getByRole("heading", { name: "Ideas para decidir mejor." })).toBeVisible();

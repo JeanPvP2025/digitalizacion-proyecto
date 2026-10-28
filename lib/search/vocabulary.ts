@@ -5,8 +5,8 @@ const groups = [
   ["sobremesa", "desktop", "desktops"],
   ["monitor", "monitores", "monitors", "display", "displays"],
   ["redes", "network", "networking"],
-  ["telefonia", "phone", "phones", "telefono", "telefonos", "smartphone", "smartphones"],
-  ["almacenamiento", "storage"],
+  ["telefonia", "phone", "phones", "telefono", "telefonos", "smartphone", "smartphones", "voip", "sip"],
+  ["almacenamiento", "storage", "nas"],
   ["componentes", "components", "componente", "component"],
   ["procesador", "procesadores", "processor", "processors", "cpu"],
   ["grafica", "graficas", "graphics", "gpu"],
@@ -15,13 +15,28 @@ const groups = [
   ["fuente", "psu"],
   ["caja", "chasis", "case"],
   ["refrigeracion", "cooling", "cooler"],
-  ["inalambrico", "inalambrica", "wireless"],
+  ["inalambrico", "inalambrica", "wireless", "wifi"],
   ["pantalla", "screen"],
   ["resolucion", "resolution"],
   ["frecuencia", "refresh"],
   ["conexiones", "puertos", "ports", "conectividad", "connectivity"],
   ["nucleos", "cores"],
   ["pulgadas", "inch", "inches"],
+  ["fibra", "fiber", "optica", "monomodo", "multimodo", "ftth", "os2"],
+  ["router", "routers", "enrutador", "enrutadores"],
+  ["switch", "switches", "conmutador", "conmutadores"],
+  ["poe", "poe+", "poe++"],
+  ["sfp", "sfp+", "transceptor", "transceiver"],
+  ["rack", "racks", "armario", "mural", "gabinete", "bastidor"],
+  ["parcheo", "patch", "patchpanel"],
+  ["cable", "cableado", "latiguillo", "bobina", "cat6", "cat6a", "cat7"],
+  ["domotica", "smart", "iot"],
+  ["zigbee", "matter", "thread", "knx", "zwave"],
+  ["rele", "reles", "actuador", "actuadores"],
+  ["sensor", "sensores", "sonda", "presencia", "mmwave", "tvoc"],
+  ["centralita", "pbx", "ip-pbx"],
+  ["modbus", "rs485", "rs232", "scada", "plc", "opcua"],
+  ["servidor", "server", "edge"],
 ] as const;
 
 const concepts = new Map<string, string>();
@@ -40,6 +55,11 @@ export function searchTokens(value: string): string[] {
     .replace(/\b(?:tarjeta grafica|graphics card|video card)\b/g, "gpu")
     .replace(/\b(?:placa base|placa madre)\b/g, "motherboard")
     .replace(/\b(?:fuente de alimentacion|power supply)\b/g, "psu")
+    .replace(/\b(?:fibra optica|optical fiber)\b/g, "fibra")
+    .replace(/\b(?:parcheo|patch panel)\b/g, "parcheo")
+    .replace(/\b(?:cableado estructurado)\b/g, "cable")
+    .replace(/\b(?:hogar digital|smart home)\b/g, "domotica")
+    .replace(/\b(?:centralita telefonica|centralita ip)\b/g, "centralita")
     .replace(/\bwi[\s-]?fi\b/g, "wifi")
     .replace(/\busb[\s-]?c\b/g, "usbc")
     .replace(/\b(wifi|rtx|gtx|rx)(?=\d)/g, "$1 ")

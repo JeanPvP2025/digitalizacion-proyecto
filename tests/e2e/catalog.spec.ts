@@ -19,7 +19,7 @@ test("la ficha del producto enlaza a reseñas internas y evita enlaces comercial
   await page.goto(`/producto/${product.slug}`);
 
   await expect(page.getByRole("heading", { name: `${product.name}.` })).toBeVisible();
-  await expect(page.getByRole("button", { name: /añadir al carrito/i })).toBeEnabled();
+  await expect(page.getByRole("button", { name: /añadir al carrito/i }).first()).toBeEnabled();
   const reviewsLink = page.getByRole("link", { name: "Ver opiniones", exact: true });
   await expect(reviewsLink).toHaveAttribute("href", `/producto/${product.slug}/opiniones`);
   await expect(page.locator('main a[href^="http"]')).toHaveCount(0);
@@ -31,7 +31,7 @@ test("la ficha del producto enlaza a reseñas internas y evita enlaces comercial
 
 test("añadir desde una ficha actualiza el carrito y conduce al checkout de NODRIA", async ({ page }) => {
   await page.goto(`/producto/${product.slug}`);
-  await page.getByRole("button", { name: /añadir al carrito/i }).click();
+  await page.getByRole("button", { name: /añadir al carrito/i }).first().click();
 
   await page.goto("/carrito");
   await expect(page.getByRole("heading", { name: product.name })).toBeVisible();

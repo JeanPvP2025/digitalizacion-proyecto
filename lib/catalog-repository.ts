@@ -1,7 +1,8 @@
 import "server-only";
 
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
-import { demoProducts, categories as demoCategories } from "@/lib/catalog";
+import { demoProducts } from "@/lib/catalog";
+import telecomData from "@/lib/catalog-data/telecom-products.json";
 import { getServerDataMode } from "@/lib/server/data-mode";
 import { getSupabaseCredentials } from "@/lib/supabase/config";
 import { CATALOG_READ_ERROR, catalogDataFromSupabase, type CatalogData, type CatalogRows, type CatalogCategory } from "@/lib/catalog-mapping";
@@ -9,14 +10,24 @@ import { CATALOG_READ_ERROR, catalogDataFromSupabase, type CatalogData, type Cat
 export { CATALOG_READ_ERROR, catalogDataFromSupabase, mapCatalogRows } from "@/lib/catalog-mapping";
 export type { CatalogCategory, CatalogData, CatalogProduct, CatalogRows } from "@/lib/catalog-mapping";
 
-const demoCategoryData: CatalogCategory[] = demoCategories.map((category, index) => ({
-  id: category.code,
-  slug: category.code,
-  name: category.name,
-  description: category.description,
-  sortOrder: (index + 1) * 10,
-  parentId: null,
-}));
+const demoCategoryData: CatalogCategory[] = telecomData.categories.flatMap((cat) => [
+  {
+    id: cat.id,
+    slug: cat.slug,
+    name: cat.name,
+    description: cat.description,
+    sortOrder: cat.sortOrder,
+    parentId: null,
+  },
+  ...cat.subcategories.map((sub) => ({
+    id: sub.id,
+    slug: sub.slug,
+    name: sub.name,
+    description: sub.description,
+    sortOrder: sub.sortOrder,
+    parentId: cat.id,
+  })),
+]);
 
 async function readPublishedCatalog(client: SupabaseClient): Promise<CatalogRows> {
   const productResult = await client
@@ -81,7 +92,7 @@ export async function getCatalogData(): Promise<CatalogData> {
 }
 
 export function getCatalogSourceNotice(source: CatalogData["source"]): string | null {
-  if (source === "demo") return "Catálogo NODRIA de demostración: modelos, precios y disponibilidad para recorrer la tienda sin cargos ni envíos reales.";
+  if (source === "demo") return "Catálogo NODRIA de demostración: modelos, precios y disponibilidad técnica para recorrer la tienda con simulación integrada.";
   if (source === "supabase") return "Tienda NODRIA conectada. El catálogo y la disponibilidad se validan antes de registrar cada pedido; los pagos son simulados.";
   return null;
 }

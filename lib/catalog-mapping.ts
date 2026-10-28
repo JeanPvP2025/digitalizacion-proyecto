@@ -76,7 +76,19 @@ export type CatalogData =
   | { source: "error"; products: []; categories: []; message: string };
 
 export const CATALOG_READ_ERROR = "No se pudo cargar el catálogo. Inténtalo de nuevo más tarde.";
-const productCategories = new Set<ProductCategory>(["Ordenadores", "Componentes", "Monitores", "Redes", "Telefonía", "Almacenamiento"]);
+const productCategories = new Set<ProductCategory>([
+  "Infraestructuras de Telecomunicaciones",
+  "Equipos y Sistemas de Telecomunicaciones",
+  "Domótica y Hogar Digital",
+  "Telefonía y Comunicaciones",
+  "Digitalización e Industria Conectada",
+  "Ordenadores",
+  "Componentes",
+  "Monitores",
+  "Redes",
+  "Telefonía",
+  "Almacenamiento",
+]);
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
