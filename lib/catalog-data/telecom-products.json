@@ -258,23 +258,44 @@
       "sku": "NDR-TEL-INF-001",
       "name": "Rack Mural 19\" 9U Profundidad 600mm Puerta de Cristal",
       "category": "Infraestructuras de Telecomunicaciones",
-      "categoryIds": ["infraestructuras-telecomunicaciones", "racks-armarios"],
+      "categoryIds": [
+        "infraestructuras-telecomunicaciones",
+        "racks-armarios"
+      ],
       "brand": "Legrand",
       "modelNumber": "446209",
       "price": 189.5,
       "stock": 14,
       "rating": 4.8,
       "reviewCount": 16,
-      "image": "https://img.pccomponentes.com/articles/32/324884/184-rack-mural-19-9u-600mm.jpg",
+      "image": "/images/products/tel-inf-001.svg",
       "imageAlt": "Rack mural de 19 pulgadas 9U Legrand con puerta de cristal templado",
       "summary": "Legrand · modelo 446209. Armario mural de 19 pulgadas para salas técnicas e instalaciones de cableado estructurado secundario.",
       "specifications": [
-        { "label": "Factor de forma", "value": "Rack 19\" 9U mural" },
-        { "label": "Dimensiones exteriores", "value": "500 x 600 x 600 mm (Al x An x Pr)" },
-        { "label": "Capacidad de carga", "value": "60 kg de carga estática" },
-        { "label": "Puerta frontal", "value": "Cristal de seguridad templado reversible con cerradura" },
-        { "label": "Grado de protección", "value": "IP20 según norma IEC 60529" },
-        { "label": "Entrada de cables", "value": "Aperturas precortadas en techo y base con cepillo pasacables" }
+        {
+          "label": "Factor de forma",
+          "value": "Rack 19\" 9U mural"
+        },
+        {
+          "label": "Dimensiones exteriores",
+          "value": "500 x 600 x 600 mm (Al x An x Pr)"
+        },
+        {
+          "label": "Capacidad de carga",
+          "value": "60 kg de carga estática"
+        },
+        {
+          "label": "Puerta frontal",
+          "value": "Cristal de seguridad templado reversible con cerradura"
+        },
+        {
+          "label": "Grado de protección",
+          "value": "IP20 según norma IEC 60529"
+        },
+        {
+          "label": "Entrada de cables",
+          "value": "Aperturas precortadas en techo y base con cepillo pasacables"
+        }
       ],
       "featured": false
     },
@@ -284,23 +305,44 @@
       "sku": "NDR-TEL-INF-002",
       "name": "Armario Rack de Suelo 19\" 42U 800x1000mm con Guías de Gestión",
       "category": "Infraestructuras de Telecomunicaciones",
-      "categoryIds": ["infraestructuras-telecomunicaciones", "racks-armarios"],
+      "categoryIds": [
+        "infraestructuras-telecomunicaciones",
+        "racks-armarios"
+      ],
       "brand": "Schneider Electric",
       "modelNumber": "NSYVD24U84P",
-      "price": 849.0,
+      "price": 849,
       "stock": 8,
       "rating": 4.9,
       "reviewCount": 9,
-      "image": "https://img.pccomponentes.com/articles/28/289124/142-rack-suelo-42u-800x1000.jpg",
+      "image": "/images/products/tel-inf-002.svg",
       "imageAlt": "Armario rack de suelo 42U 800x1000mm Schneider Electric para centro de datos",
       "summary": "Schneider Electric · modelo NSYVD24U84P. Bastidor de alta capacidad para distribución troncal y centros de procesamiento de datos.",
       "specifications": [
-        { "label": "Capacidad", "value": "42U estándar 19 pulgadas" },
-        { "label": "Dimensiones", "value": "2055 x 800 x 1000 mm" },
-        { "label": "Carga admisible", "value": "1000 kg estática / 750 kg dinámica" },
-        { "label": "Ventilación", "value": "Puertas delantera y trasera microperforadas al 78%" },
-        { "label": "Estructura", "value": "Acero laminado en frío SPCC de 2,0 mm reforzado" },
-        { "label": "Accesorios incluidos", "value": "2 organizadores verticales laterales y kit de toma de tierra" }
+        {
+          "label": "Capacidad",
+          "value": "42U estándar 19 pulgadas"
+        },
+        {
+          "label": "Dimensiones",
+          "value": "2055 x 800 x 1000 mm"
+        },
+        {
+          "label": "Carga admisible",
+          "value": "1000 kg estática / 750 kg dinámica"
+        },
+        {
+          "label": "Ventilación",
+          "value": "Puertas delantera y trasera microperforadas al 78%"
+        },
+        {
+          "label": "Estructura",
+          "value": "Acero laminado en frío SPCC de 2,0 mm reforzado"
+        },
+        {
+          "label": "Accesorios incluidos",
+          "value": "2 organizadores verticales laterales y kit de toma de tierra"
+        }
       ],
       "featured": true
     },
@@ -310,23 +352,44 @@
       "sku": "NDR-TEL-INF-003",
       "name": "Bobina Cable de Red U/FTP Cat.6A LSZH 500m 500MHz Libre de Halógenos",
       "category": "Infraestructuras de Telecomunicaciones",
-      "categoryIds": ["infraestructuras-telecomunicaciones", "cableado-estructurado"],
+      "categoryIds": [
+        "infraestructuras-telecomunicaciones",
+        "cableado-estructurado"
+      ],
       "brand": "Televes",
       "modelNumber": "219901",
-      "price": 265.0,
+      "price": 265,
       "stock": 22,
       "rating": 4.9,
       "reviewCount": 31,
-      "image": "https://img.pccomponentes.com/articles/17/178492/123-televes-cable-cat6a-500m.jpg",
+      "image": "/images/products/tel-inf-003.svg",
       "imageAlt": "Bobina de cable de red U/FTP Cat.6A LSZH de 500 metros Televes",
       "summary": "Televes · modelo 219901. Conductor de cobre puro de 23 AWG para enlaces 10 Gigabit Ethernet con clasificación europea CPR Dca.",
       "specifications": [
-        { "label": "Categoría", "value": "Cat.6A (Clase EA)" },
-        { "label": "Apantallamiento", "value": "U/FTP (par a par con lámina de aluminio)" },
-        { "label": "Longitud", "value": "500 metros en bobina de madera" },
-        { "label": "Frecuencia de trabajo", "value": "Hasta 500 MHz" },
-        { "label": "Cubierta", "value": "LSZH (Baja emisión de humos, libre de halógenos)" },
-        { "label": "Clase CPR", "value": "Dca-s2,d2,a1 según EN 50575" }
+        {
+          "label": "Categoría",
+          "value": "Cat.6A (Clase EA)"
+        },
+        {
+          "label": "Apantallamiento",
+          "value": "U/FTP (par a par con lámina de aluminio)"
+        },
+        {
+          "label": "Longitud",
+          "value": "500 metros en bobina de madera"
+        },
+        {
+          "label": "Frecuencia de trabajo",
+          "value": "Hasta 500 MHz"
+        },
+        {
+          "label": "Cubierta",
+          "value": "LSZH (Baja emisión de humos, libre de halógenos)"
+        },
+        {
+          "label": "Clase CPR",
+          "value": "Dca-s2,d2,a1 según EN 50575"
+        }
       ],
       "featured": false
     },
@@ -336,23 +399,44 @@
       "sku": "NDR-TEL-INF-004",
       "name": "Bobina Cable de Red S/FTP Cat.7 PIMF 1000MHz 305m Apantallado",
       "category": "Infraestructuras de Telecomunicaciones",
-      "categoryIds": ["infraestructuras-telecomunicaciones", "cableado-estructurado"],
+      "categoryIds": [
+        "infraestructuras-telecomunicaciones",
+        "cableado-estructurado"
+      ],
       "brand": "Televes",
       "modelNumber": "219910",
-      "price": 215.0,
+      "price": 215,
       "stock": 18,
       "rating": 4.7,
       "reviewCount": 19,
-      "image": "https://img.pccomponentes.com/articles/21/214589/115-televes-cat7-sftp-305m.jpg",
+      "image": "/images/products/tel-inf-004.svg",
       "imageAlt": "Bobina de cable de par trenzado Cat.7 S/FTP Televes 305m",
       "summary": "Televes · modelo 219910. Doble blindaje para instalaciones con alta inmunidad a perturbaciones electromagnéticas y entornos industriales.",
       "specifications": [
-        { "label": "Categoría de transmisión", "value": "Cat.7 (Clase F)" },
-        { "label": "Estructura de blindaje", "value": "S/FTP (Malla global de cobre estañado + pares PIMF)" },
-        { "label": "Frecuencia de corte", "value": "1000 MHz garantizados" },
-        { "label": "Calibre del conductor", "value": "Cobre sólido 23 AWG (0,57 mm)" },
-        { "label": "Presentación", "value": "Carrete dispensador de 305 metros" },
-        { "label": "Velocidad nominal", "value": "10 Gbps a 100 metros / 40 Gbps a distancias cortas" }
+        {
+          "label": "Categoría de transmisión",
+          "value": "Cat.7 (Clase F)"
+        },
+        {
+          "label": "Estructura de blindaje",
+          "value": "S/FTP (Malla global de cobre estañado + pares PIMF)"
+        },
+        {
+          "label": "Frecuencia de corte",
+          "value": "1000 MHz garantizados"
+        },
+        {
+          "label": "Calibre del conductor",
+          "value": "Cobre sólido 23 AWG (0,57 mm)"
+        },
+        {
+          "label": "Presentación",
+          "value": "Carrete dispensador de 305 metros"
+        },
+        {
+          "label": "Velocidad nominal",
+          "value": "10 Gbps a 100 metros / 40 Gbps a distancias cortas"
+        }
       ],
       "featured": false
     },
@@ -362,23 +446,44 @@
       "sku": "NDR-TEL-INF-005",
       "name": "Manguera Fibra Óptica Preconectorizada Monomodo OS2 12 Fibras LC-LC 50m",
       "category": "Infraestructuras de Telecomunicaciones",
-      "categoryIds": ["infraestructuras-telecomunicaciones", "fibra-optica"],
+      "categoryIds": [
+        "infraestructuras-telecomunicaciones",
+        "fibra-optica"
+      ],
       "brand": "Legrand",
       "modelNumber": "032585",
       "price": 142.9,
       "stock": 16,
       "rating": 4.8,
       "reviewCount": 12,
-      "image": "https://img.pccomponentes.com/articles/24/249102/165-fibra-os2-12-fibras-50m.jpg",
+      "image": "/images/products/tel-inf-005.svg",
       "imageAlt": "Manguera troncal de fibra óptica monomodo OS2 12 fibras preconectorizada Legrand",
       "summary": "Legrand · modelo 032585. Enlace troncal preconectorizado con funda de tracción de protección para despliegue rápido entre repartidores.",
       "specifications": [
-        { "label": "Tipo de fibra", "value": "Monomodo OS2 9/125 µm (G.657.A2 inmune a curvaturas)" },
-        { "label": "Número de fibras", "value": "12 fibras ópticas en tubo central con gel antihumedad" },
-        { "label": "Conectores terminales", "value": "12x LC/UPC dúplex con férula cerámica de circonio" },
-        { "label": "Pérdida de inserción", "value": "Menor a 0,20 dB por conector verificado individualmente" },
-        { "label": "Resistencia mecánica", "value": "Cubierta armada dieléctrica antiroedores con tracción máx. 800 N" },
-        { "label": "Longitud de tendido", "value": "50 metros útiles" }
+        {
+          "label": "Tipo de fibra",
+          "value": "Monomodo OS2 9/125 µm (G.657.A2 inmune a curvaturas)"
+        },
+        {
+          "label": "Número de fibras",
+          "value": "12 fibras ópticas en tubo central con gel antihumedad"
+        },
+        {
+          "label": "Conectores terminales",
+          "value": "12x LC/UPC dúplex con férula cerámica de circonio"
+        },
+        {
+          "label": "Pérdida de inserción",
+          "value": "Menor a 0,20 dB por conector verificado individualmente"
+        },
+        {
+          "label": "Resistencia mecánica",
+          "value": "Cubierta armada dieléctrica antiroedores con tracción máx. 800 N"
+        },
+        {
+          "label": "Longitud de tendido",
+          "value": "50 metros útiles"
+        }
       ],
       "featured": false
     },
@@ -388,23 +493,44 @@
       "sku": "NDR-TEL-INF-006",
       "name": "Bandeja Distribuidora de Fibra Óptica 19\" 1U 24 Puertos SC/APC con Pigtails",
       "category": "Infraestructuras de Telecomunicaciones",
-      "categoryIds": ["infraestructuras-telecomunicaciones", "fibra-optica"],
+      "categoryIds": [
+        "infraestructuras-telecomunicaciones",
+        "fibra-optica"
+      ],
       "brand": "Televes",
       "modelNumber": "233003",
-      "price": 118.0,
+      "price": 118,
       "stock": 19,
       "rating": 4.9,
       "reviewCount": 23,
-      "image": "https://img.pccomponentes.com/articles/26/264190/134-bandeja-fibra-24-sc-apc.jpg",
+      "image": "/images/products/tel-inf-006.svg",
       "imageAlt": "Bandeja telescópica de fibra óptica 19 pulgadas 24 puertos SC/APC Televes",
       "summary": "Televes · modelo 233003. Panel repartidor óptico telescópico con organizador de fusiones y pigtails monomodo montados de fábrica.",
       "specifications": [
-        { "label": "Formato de montaje", "value": "Rack 19 pulgadas 1U telescópica con guías deslizantes" },
-        { "label": "Capacidad de conexión", "value": "24 adaptadores ópticos simples SC/APC con obturador" },
-        { "label": "Accesorios incluidos", "value": "24 pigtails monomodo G.657.A2 y 2 casetes de empalme para 24 fusiones" },
-        { "label": "Entrada posterior", "value": "4 prensaestopas PG13.5 / PG16 para amarre de mangueras" },
-        { "label": "Material de fabricación", "value": "Chapa de acero galvanizado con recubrimiento epoxi negro" },
-        { "label": "Dimensiones", "value": "483 x 240 x 44 mm" }
+        {
+          "label": "Formato de montaje",
+          "value": "Rack 19 pulgadas 1U telescópica con guías deslizantes"
+        },
+        {
+          "label": "Capacidad de conexión",
+          "value": "24 adaptadores ópticos simples SC/APC con obturador"
+        },
+        {
+          "label": "Accesorios incluidos",
+          "value": "24 pigtails monomodo G.657.A2 y 2 casetes de empalme para 24 fusiones"
+        },
+        {
+          "label": "Entrada posterior",
+          "value": "4 prensaestopas PG13.5 / PG16 para amarre de mangueras"
+        },
+        {
+          "label": "Material de fabricación",
+          "value": "Chapa de acero galvanizado con recubrimiento epoxi negro"
+        },
+        {
+          "label": "Dimensiones",
+          "value": "483 x 240 x 44 mm"
+        }
       ],
       "featured": false
     },
@@ -414,23 +540,44 @@
       "sku": "NDR-TEL-INF-007",
       "name": "Panel de Parcheo 19\" 24 Puertos Cat.6A FTP 1U con Guía Trasera",
       "category": "Infraestructuras de Telecomunicaciones",
-      "categoryIds": ["infraestructuras-telecomunicaciones", "paneles-parcheo"],
+      "categoryIds": [
+        "infraestructuras-telecomunicaciones",
+        "paneles-parcheo"
+      ],
       "brand": "Schneider Electric",
       "modelNumber": "VDIB17726B12",
       "price": 82.5,
       "stock": 25,
       "rating": 4.8,
       "reviewCount": 35,
-      "image": "https://img.pccomponentes.com/articles/19/194301/178-patch-panel-24-cat6a.jpg",
+      "image": "/images/products/tel-inf-007.svg",
       "imageAlt": "Panel de parcheo 24 puertos Cat.6A FTP 1U Schneider Electric con barra trasera",
       "summary": "Schneider Electric · modelo VDIB17726B12. Panel de terminación metálico con tomas Keystone blindadas y barra de alivio de tensión mecánica.",
       "specifications": [
-        { "label": "Puertos RJ45", "value": "24 puertos con contactos bañados en oro de 50 µm" },
-        { "label": "Rendimiento", "value": "Componente certificado Cat.6A hasta 10 Gbit/s" },
-        { "label": "Blindaje", "value": "Carcasa de zamak con puesta a tierra automática centralizada" },
-        { "label": "Sistema de crimpado", "value": "Conexión rápida sin herramientas tipo Keystone Toolless" },
-        { "label": "Gestión de cables", "value": "Bandeja trasera integrada con abrazaderas de fijación" },
-        { "label": "Etiquetado", "value": "Campos identificadores transparentes numerados de 1 a 24" }
+        {
+          "label": "Puertos RJ45",
+          "value": "24 puertos con contactos bañados en oro de 50 µm"
+        },
+        {
+          "label": "Rendimiento",
+          "value": "Componente certificado Cat.6A hasta 10 Gbit/s"
+        },
+        {
+          "label": "Blindaje",
+          "value": "Carcasa de zamak con puesta a tierra automática centralizada"
+        },
+        {
+          "label": "Sistema de crimpado",
+          "value": "Conexión rápida sin herramientas tipo Keystone Toolless"
+        },
+        {
+          "label": "Gestión de cables",
+          "value": "Bandeja trasera integrada con abrazaderas de fijación"
+        },
+        {
+          "label": "Etiquetado",
+          "value": "Campos identificadores transparentes numerados de 1 a 24"
+        }
       ],
       "featured": false
     },
@@ -440,49 +587,91 @@
       "sku": "NDR-TEL-INF-008",
       "name": "Organizador de Cables Horizontal 19\" 1U con Tapa Frontal y 5 Anillas",
       "category": "Infraestructuras de Telecomunicaciones",
-      "categoryIds": ["infraestructuras-telecomunicaciones", "paneles-parcheo"],
+      "categoryIds": [
+        "infraestructuras-telecomunicaciones",
+        "paneles-parcheo"
+      ],
       "brand": "Legrand",
       "modelNumber": "646520",
       "price": 24.9,
       "stock": 35,
       "rating": 4.6,
       "reviewCount": 42,
-      "image": "https://img.pccomponentes.com/articles/22/227189/109-organizador-cables-1u.jpg",
+      "image": "/images/products/tel-inf-008.svg",
       "imageAlt": "Guía horizontal pasahilos de 19 pulgadas 1U Legrand con tapa",
       "summary": "Legrand · modelo 646520. Accesorio de ordenación de latiguillos en armarios rack de comunicaciones con paso ranurado trasero.",
       "specifications": [
-        { "label": "Factor de forma", "value": "Estándar 19 pulgadas 1U de altura" },
-        { "label": "Anillas pasacables", "value": "5 anillas de polímero técnico redondeadas para proteger el radio de curvatura" },
-        { "label": "Tapa delantera", "value": "Tapa desmontable a presión abatible arriba y abajo" },
-        { "label": "Orificios posteriores", "value": "Ranuras protegidas con rebordes no cortantes para paso de mazo" },
-        { "label": "Material", "value": "Chasis metálico pintado en negro grafito RAL 9005" },
-        { "label": "Fijación", "value": "Incluye 4 tuercas enjauladas y tornillos M6" }
+        {
+          "label": "Factor de forma",
+          "value": "Estándar 19 pulgadas 1U de altura"
+        },
+        {
+          "label": "Anillas pasacables",
+          "value": "5 anillas de polímero técnico redondeadas para proteger el radio de curvatura"
+        },
+        {
+          "label": "Tapa delantera",
+          "value": "Tapa desmontable a presión abatible arriba y abajo"
+        },
+        {
+          "label": "Orificios posteriores",
+          "value": "Ranuras protegidas con rebordes no cortantes para paso de mazo"
+        },
+        {
+          "label": "Material",
+          "value": "Chasis metálico pintado en negro grafito RAL 9005"
+        },
+        {
+          "label": "Fijación",
+          "value": "Incluye 4 tuercas enjauladas y tornillos M6"
+        }
       ],
       "featured": false
     },
     {
       "id": "tel-inf-009",
-      "slug": "certificador-redes-cobre-cat6a-cat8-fluke-dsx-602-intl",
+      "slug": "certificador-redes-cobre-cat6a-fluke-dsx-602-intl",
       "sku": "NDR-TEL-INF-009",
-      "name": "Certificador de Redes de Cobre Cat.6A/Cat.8 Fluke DSX-602 INTL",
+      "name": "Certificador de Redes de Cobre Cat.6A Fluke DSX-602 INTL",
       "category": "Infraestructuras de Telecomunicaciones",
-      "categoryIds": ["infraestructuras-telecomunicaciones", "herramientas-certificacion"],
+      "categoryIds": [
+        "infraestructuras-telecomunicaciones",
+        "herramientas-certificacion"
+      ],
       "brand": "Fluke Networks",
       "modelNumber": "DSX-602-INTL",
-      "price": 1450.0,
+      "price": 1450,
       "stock": 8,
-      "rating": 5.0,
+      "rating": 5,
       "reviewCount": 7,
-      "image": "https://img.pccomponentes.com/articles/31/319456/156-fluke-dsx-602-certificador.jpg",
-      "imageAlt": "Certificador de cableado estructurado Fluke Networks DSX-602 INTL",
-      "summary": "Fluke Networks · modelo DSX-602-INTL. Equipo de certificación profesional para la comprobación y homologación de enlaces Clase EA / Cat.6A.",
+      "image": "/images/products/tel-inf-009.svg",
+      "imageAlt": "Certificador de cableado estructurado Fluke Networks DSX-602 INTL Cat.6A",
+      "summary": "Fluke Networks · modelo DSX-602-INTL. Equipo de certificación profesional para la comprobación y homologación de enlaces Clase EA / Cat.6A hasta 500 MHz.",
       "specifications": [
-        { "label": "Rango de frecuencia", "value": "Hasta 500 MHz con adaptadores de canal y enlace permanente" },
-        { "label": "Velocidad de test", "value": "Autotest Cat.6A en 10 segundos con diagnóstico completo" },
-        { "label": "Mediciones clave", "value": "Mapa de hilos, longitud, retardo, NEXT, PS-NEXT, Return Loss y ACR-F" },
-        { "label": "Interfaz de usuario", "value": "Pantalla táctil LCD capacitiva con interfaz de gestión ProjX" },
-        { "label": "Plataforma de informes", "value": "Compatible con software de gestión LinkWare para generación de actas" },
-        { "label": "Alimentación", "value": "Batería de iones de litio recargable con autonomía de 8 horas de trabajo" }
+        {
+          "label": "Rango de frecuencia",
+          "value": "Hasta 500 MHz con adaptadores de canal y enlace permanente"
+        },
+        {
+          "label": "Velocidad de test",
+          "value": "Autotest Cat.6A en 10 segundos con diagnóstico completo"
+        },
+        {
+          "label": "Mediciones clave",
+          "value": "Mapa de hilos, longitud, retardo, NEXT, PS-NEXT, Return Loss y ACR-F"
+        },
+        {
+          "label": "Interfaz de usuario",
+          "value": "Pantalla táctil LCD capacitiva con interfaz de gestión ProjX"
+        },
+        {
+          "label": "Plataforma de informes",
+          "value": "Compatible con software de gestión LinkWare para generación de actas"
+        },
+        {
+          "label": "Alimentación",
+          "value": "Batería de iones de litio recargable con autonomía de 8 horas de trabajo"
+        }
       ],
       "featured": false
     },
@@ -492,23 +681,44 @@
       "sku": "NDR-TEL-INF-010",
       "name": "Fusionadora de Fibra Óptica por Alineación de Núcleo 6 Motores",
       "category": "Infraestructuras de Telecomunicaciones",
-      "categoryIds": ["infraestructuras-telecomunicaciones", "herramientas-certificacion"],
+      "categoryIds": [
+        "infraestructuras-telecomunicaciones",
+        "herramientas-certificacion"
+      ],
       "brand": "Televes",
       "modelNumber": "232103",
-      "price": 1290.0,
+      "price": 1290,
       "stock": 9,
       "rating": 4.9,
       "reviewCount": 11,
-      "image": "https://img.pccomponentes.com/articles/33/338910/188-televes-fusionadora-fibra.jpg",
+      "image": "/images/products/tel-inf-010.svg",
       "imageAlt": "Empalmadora por fusión de fibra óptica Televes alineación por núcleo 6 motores",
       "summary": "Televes · modelo 232103. Equipo de empalme por arco voltaico con detección automática de tipo de fibra y horno de retracción ultrarrápido.",
       "specifications": [
-        { "label": "Sistema de alineación", "value": "Alineación precisa por núcleo con 6 micromotores independientes" },
-        { "label": "Tipos de fibra", "value": "SM (G.652/G.657), MM (G.651), DS (G.653) y NZDS (G.655)" },
-        { "label": "Pérdida típica de empalme", "value": "0,02 dB en fibra monomodo (SM) y 0,01 dB en multimodo (MM)" },
-        { "label": "Tiempo de ciclo", "value": "Fusión en 6 segundos y horneado de canutillo termorretráctil en 15 segundos" },
-        { "label": "Pantalla integrada", "value": "Monitor táctil LCD de 5\" con aumento de 380X en ejes X/Y" },
-        { "label": "Capacidad de batería", "value": "Batería de 5200 mAh para más de 300 ciclos completos de fusión" }
+        {
+          "label": "Sistema de alineación",
+          "value": "Alineación precisa por núcleo con 6 micromotores independientes"
+        },
+        {
+          "label": "Tipos de fibra",
+          "value": "SM (G.652/G.657), MM (G.651), DS (G.653) y NZDS (G.655)"
+        },
+        {
+          "label": "Pérdida típica de empalme",
+          "value": "0,02 dB en fibra monomodo (SM) y 0,01 dB en multimodo (MM)"
+        },
+        {
+          "label": "Tiempo de ciclo",
+          "value": "Fusión en 6 segundos y horneado de canutillo termorretráctil en 15 segundos"
+        },
+        {
+          "label": "Pantalla integrada",
+          "value": "Monitor táctil LCD de 5\" con aumento de 380X en ejes X/Y"
+        },
+        {
+          "label": "Capacidad de batería",
+          "value": "Batería de 5200 mAh para más de 300 ciclos completos de fusión"
+        }
       ],
       "featured": false
     },
@@ -516,25 +726,46 @@
       "id": "tel-eqt-011",
       "slug": "switch-gestionable-l3-24-puertos-gigabit-poe-2-sfp-10g-unifi-pro-ubiquiti",
       "sku": "NDR-TEL-EQT-011",
-      "name": "Switch Gestionable L3 24 Puertos Gigabit PoE+ y 2 SFP+ 10G UniFi Pro",
+      "name": "Switch Gestionable L3 24 Puertos Gigabit PoE+/PoE++ y 2 SFP+ 10G UniFi Pro",
       "category": "Equipos y Sistemas de Telecomunicaciones",
-      "categoryIds": ["equipos-sistemas-telecomunicaciones", "switches-gestionables"],
+      "categoryIds": [
+        "equipos-sistemas-telecomunicaciones",
+        "switches-gestionables"
+      ],
       "brand": "Ubiquiti",
       "modelNumber": "USW-Pro-24-POE",
-      "price": 689.0,
+      "price": 689,
       "stock": 15,
       "rating": 4.9,
       "reviewCount": 38,
-      "image": "https://img.pccomponentes.com/articles/29/296541/143-ubiquiti-unifi-pro-24-poe.jpg",
-      "imageAlt": "Switch gestionable capa 3 Ubiquiti UniFi Pro 24 PoE con enlaces 10G SFP+",
-      "summary": "Ubiquiti · modelo USW-Pro-24-POE. Conmutador empresarial de capa 3 con 400W de entrega PoE y conectividad óptica 10 Gigabit.",
+      "image": "/images/products/tel-eqt-011.svg",
+      "imageAlt": "Switch gestionable capa 3 Ubiquiti UniFi Pro 24 PoE+/PoE++ con enlaces 10G SFP+",
+      "summary": "Ubiquiti · modelo USW-Pro-24-POE. Conmutador empresarial de capa 3 con 16 puertos PoE+, 8 puertos PoE++, 400W de entrega total y 2 enlaces 10G SFP+.",
       "specifications": [
-        { "label": "Configuración de puertos", "value": "16x GbE PoE+ (30W), 8x GbE PoE++ (60W) y 2x SFP+ 10 Gbps" },
-        { "label": "Presupuesto PoE total", "value": "400 W con monitorización y reinicio individual por puerto" },
-        { "label": "Capacidad de conmutación", "value": "88 Gbps / Tasa de reenvío de 65,472 Mpps" },
-        { "label": "Funcionalidades L3", "value": "Enrutamiento inter-VLAN, rutas estáticas y servidor DHCP relay" },
-        { "label": "Pantalla táctil LCM", "value": "Display a color de 1,3\" con visualización de estado y realidad aumentada" },
-        { "label": "Alimentación redundante", "value": "Entrada continua SmartPower USP-RPS de respaldo" }
+        {
+          "label": "Configuración de puertos",
+          "value": "16x GbE PoE+ (30W), 8x GbE PoE++ (60W) y 2x SFP+ 10 Gbps"
+        },
+        {
+          "label": "Presupuesto PoE total",
+          "value": "400 W con monitorización y reinicio individual por puerto"
+        },
+        {
+          "label": "Capacidad de conmutación",
+          "value": "88 Gbps / Tasa de reenvío de 65,472 Mpps"
+        },
+        {
+          "label": "Funcionalidades L3",
+          "value": "Enrutamiento inter-VLAN, rutas estáticas y servidor DHCP relay"
+        },
+        {
+          "label": "Pantalla táctil LCM",
+          "value": "Display a color de 1,3\" con visualización de estado y realidad aumentada"
+        },
+        {
+          "label": "Alimentación redundante",
+          "value": "Entrada continua SmartPower USP-RPS de respaldo"
+        }
       ],
       "featured": true
     },
@@ -544,23 +775,44 @@
       "sku": "NDR-TEL-EQT-012",
       "name": "Switch Gestionable 48 Puertos Gigabit PoE+ y 4 SFP+ Cisco Catalyst 1000",
       "category": "Equipos y Sistemas de Telecomunicaciones",
-      "categoryIds": ["equipos-sistemas-telecomunicaciones", "switches-gestionables"],
+      "categoryIds": [
+        "equipos-sistemas-telecomunicaciones",
+        "switches-gestionables"
+      ],
       "brand": "Cisco",
       "modelNumber": "C1000-48P-4X-L",
-      "price": 1150.0,
+      "price": 1150,
       "stock": 9,
       "rating": 4.9,
       "reviewCount": 14,
-      "image": "https://img.pccomponentes.com/articles/30/301245/167-cisco-catalyst-1000-48p.jpg",
+      "image": "/images/products/tel-eqt-012.svg",
       "imageAlt": "Switch empresarial Cisco Catalyst 1000 48 puertos PoE+ y 4 SFP+",
       "summary": "Cisco · modelo C1000-48P-4X-L. Rendimiento fiable y seguro bajo Cisco IOS para infraestructura corporativa de alta densidad.",
       "specifications": [
-        { "label": "Puertos de red", "value": "48x 10/100/1000BASE-T RJ45 PoE+ 802.3at" },
-        { "label": "Puertos de subida uplink", "value": "4x 10G SFP+ ópticos fijos de alta velocidad" },
-        { "label": "Capacidad PoE disponible", "value": "370 W" },
-        { "label": "Seguridad de acceso", "value": "Autenticación 802.1X, Private VLAN, Port Security y protección BPDU" },
-        { "label": "Gestión y control", "value": "Línea de comandos CLI Cisco IOS, interfaz Web intuitiva y gestión por Bluetooth" },
-        { "label": "Rendimiento de conmutación", "value": "176 Gbps sin bloqueos" }
+        {
+          "label": "Puertos de red",
+          "value": "48x 10/100/1000BASE-T RJ45 PoE+ 802.3at"
+        },
+        {
+          "label": "Puertos de subida uplink",
+          "value": "4x 10G SFP+ ópticos fijos de alta velocidad"
+        },
+        {
+          "label": "Capacidad PoE disponible",
+          "value": "370 W"
+        },
+        {
+          "label": "Seguridad de acceso",
+          "value": "Autenticación 802.1X, Private VLAN, Port Security y protección BPDU"
+        },
+        {
+          "label": "Gestión y control",
+          "value": "Línea de comandos CLI Cisco IOS, interfaz Web intuitiva y gestión por Bluetooth"
+        },
+        {
+          "label": "Rendimiento de conmutación",
+          "value": "176 Gbps sin bloqueos"
+        }
       ],
       "featured": false
     },
@@ -570,23 +822,44 @@
       "sku": "NDR-TEL-EQT-013",
       "name": "Router de Agregación de Borde y Firewall UniFi Dream Machine SE",
       "category": "Equipos y Sistemas de Telecomunicaciones",
-      "categoryIds": ["equipos-sistemas-telecomunicaciones", "routers-borde"],
+      "categoryIds": [
+        "equipos-sistemas-telecomunicaciones",
+        "routers-borde"
+      ],
       "brand": "Ubiquiti",
       "modelNumber": "UDM-SE",
-      "price": 519.0,
+      "price": 519,
       "stock": 12,
       "rating": 4.9,
       "reviewCount": 47,
-      "image": "https://img.pccomponentes.com/articles/32/321876/155-ubiquiti-udm-se-pro.jpg",
+      "image": "/images/products/tel-eqt-013.svg",
       "imageAlt": "Router de borde y servidor de aplicaciones UniFi Dream Machine Special Edition",
       "summary": "Ubiquiti · modelo UDM-SE. Pasarela de seguridad integral para empresas con puerto WAN 2.5 GbE, conmutador PoE de 8 puertos y motor IDS/IPS.",
       "specifications": [
-        { "label": "Conectividad WAN", "value": "1x 2.5GbE RJ45 + 1x 10G SFP+ con balanceo de carga y failover" },
-        { "label": "Conectividad LAN", "value": "8x GbE RJ45 (6x PoE 802.3af, 2x PoE+ 802.3at) + 1x 10G SFP+" },
-        { "label": "Rendimiento IPS/IDS", "value": "3,5 Gbps de inspección profunda de amenazas sin estrangulamiento" },
-        { "label": "Almacenamiento interno", "value": "SSD de 128 GB integrado + bahía SATA para disco duro de 3,5\"" },
-        { "label": "Ecosistema software", "value": "Controlador UniFi Network, Protect (CCTV), Access y Talk preinstalados" },
-        { "label": "Formato de montaje", "value": "Chasis metálico para rack 19\" de 1U con pantalla táctil integrada" }
+        {
+          "label": "Conectividad WAN",
+          "value": "1x 2.5GbE RJ45 + 1x 10G SFP+ con balanceo de carga y failover"
+        },
+        {
+          "label": "Conectividad LAN",
+          "value": "8x GbE RJ45 (6x PoE 802.3af, 2x PoE+ 802.3at) + 1x 10G SFP+"
+        },
+        {
+          "label": "Rendimiento IPS/IDS",
+          "value": "3,5 Gbps de inspección profunda de amenazas sin estrangulamiento"
+        },
+        {
+          "label": "Almacenamiento interno",
+          "value": "SSD de 128 GB integrado + bahía SATA para disco duro de 3,5\""
+        },
+        {
+          "label": "Ecosistema software",
+          "value": "Controlador UniFi Network, Protect (CCTV), Access y Talk preinstalados"
+        },
+        {
+          "label": "Formato de montaje",
+          "value": "Chasis metálico para rack 19\" de 1U con pantalla táctil integrada"
+        }
       ],
       "featured": false
     },
@@ -596,23 +869,44 @@
       "sku": "NDR-TEL-EQT-014",
       "name": "Router de Borde Multi-WAN Gigabit RouterBOARD RB5009UG+S+IN",
       "category": "Equipos y Sistemas de Telecomunicaciones",
-      "categoryIds": ["equipos-sistemas-telecomunicaciones", "routers-borde"],
+      "categoryIds": [
+        "equipos-sistemas-telecomunicaciones",
+        "routers-borde"
+      ],
       "brand": "MikroTik",
       "modelNumber": "RB5009UG+S+IN",
-      "price": 219.0,
+      "price": 219,
       "stock": 20,
       "rating": 4.8,
       "reviewCount": 29,
-      "image": "https://img.pccomponentes.com/articles/31/312098/129-mikrotik-rb5009ug-sin.jpg",
+      "image": "/images/products/tel-eqt-014.svg",
       "imageAlt": "Router de alta densidad MikroTik RB5009UG+S+IN con RouterOS",
       "summary": "MikroTik · modelo RB5009UG+S+IN. Router ultra compacto para proveedores y empresas con puerto 2.5G, puerto 10G SFP+ y potente procesador ARM.",
       "specifications": [
-        { "label": "Arquitectura CPU", "value": "Marvell Armada 88F7040 Quad-Core a 1,4 GHz" },
-        { "label": "Puertos físicos", "value": "7x 1 GbE RJ45, 1x 2.5 GbE RJ45 y 1x 10G SFP+" },
-        { "label": "Memoria de sistema", "value": "1 GB RAM DDR4 + 1 GB memoria Flash NAND" },
-        { "label": "Sistema operativo", "value": "RouterOS v7 con licencia nivel 5 completa (BGP, OSPF, WireGuard)" },
-        { "label": "Opciones de energía", "value": "Triple redundancia: PoE-In (802.3af/at), conector Jack DC y regleta de bornas" },
-        { "label": "Refrigeración", "value": "Disipación pasiva silenciosa mediante chasis de fundición de aluminio" }
+        {
+          "label": "Arquitectura CPU",
+          "value": "Marvell Armada 88F7040 Quad-Core a 1,4 GHz"
+        },
+        {
+          "label": "Puertos físicos",
+          "value": "7x 1 GbE RJ45, 1x 2.5 GbE RJ45 y 1x 10G SFP+"
+        },
+        {
+          "label": "Memoria de sistema",
+          "value": "1 GB RAM DDR4 + 1 GB memoria Flash NAND"
+        },
+        {
+          "label": "Sistema operativo",
+          "value": "RouterOS v7 con licencia nivel 5 completa (BGP, OSPF, WireGuard)"
+        },
+        {
+          "label": "Opciones de energía",
+          "value": "Triple redundancia: PoE-In (802.3af/at), conector Jack DC y regleta de bornas"
+        },
+        {
+          "label": "Refrigeración",
+          "value": "Disipación pasiva silenciosa mediante chasis de fundición de aluminio"
+        }
       ],
       "featured": false
     },
@@ -622,23 +916,44 @@
       "sku": "NDR-TEL-EQT-015",
       "name": "Punto de Acceso Wi-Fi 7 Tri-Banda Empresarial UniFi U7 Pro",
       "category": "Equipos y Sistemas de Telecomunicaciones",
-      "categoryIds": ["equipos-sistemas-telecomunicaciones", "puntos-acceso-wifi"],
+      "categoryIds": [
+        "equipos-sistemas-telecomunicaciones",
+        "puntos-acceso-wifi"
+      ],
       "brand": "Ubiquiti",
       "modelNumber": "U7-Pro",
-      "price": 198.0,
+      "price": 198,
       "stock": 24,
       "rating": 4.9,
       "reviewCount": 33,
-      "image": "https://img.pccomponentes.com/articles/35/354129/189-ubiquiti-u7-pro-wifi7.jpg",
+      "image": "/images/products/tel-eqt-015.svg",
       "imageAlt": "Punto de acceso inalámbrico Wi-Fi 7 UniFi U7 Pro Ubiquiti",
       "summary": "Ubiquiti · modelo U7-Pro. Conectividad inalámbrica de próxima generación en la banda de 6 GHz con ancho de canal de 320 MHz y uplink 2.5G.",
       "specifications": [
-        { "label": "Estándar inalámbrico", "value": "Wi-Fi 7 (802.11be) tri-banda simultánea" },
-        { "label": "Bandas de operación", "value": "6 GHz (2x2 MIMO), 5 GHz (2x2 MIMO) y 2,4 GHz (2x2 MIMO)" },
-        { "label": "Tasa máxima teórica", "value": "Hasta 5765 Mbps (6 GHz) + 2882 Mbps (5 GHz) + 688 Mbps (2,4 GHz)" },
-        { "label": "Puerto de conexión", "value": "1x 2.5 Gigabit Ethernet con alimentación PoE+ 802.3at" },
-        { "label": "Capacidad de usuarios", "value": "Más de 300 clientes concurrentes en entornos de alta densidad" },
-        { "label": "Gestión de red", "value": "Soporte multi-SSID, aislamiento de clientes y portal cautivo de invitados" }
+        {
+          "label": "Estándar inalámbrico",
+          "value": "Wi-Fi 7 (802.11be) tri-banda simultánea"
+        },
+        {
+          "label": "Bandas de operación",
+          "value": "6 GHz (2x2 MIMO), 5 GHz (2x2 MIMO) y 2,4 GHz (2x2 MIMO)"
+        },
+        {
+          "label": "Tasa máxima teórica",
+          "value": "Hasta 5765 Mbps (6 GHz) + 2882 Mbps (5 GHz) + 688 Mbps (2,4 GHz)"
+        },
+        {
+          "label": "Puerto de conexión",
+          "value": "1x 2.5 Gigabit Ethernet con alimentación PoE+ 802.3at"
+        },
+        {
+          "label": "Capacidad de usuarios",
+          "value": "Más de 300 clientes concurrentes en entornos de alta densidad"
+        },
+        {
+          "label": "Gestión de red",
+          "value": "Soporte multi-SSID, aislamiento de clientes y portal cautivo de invitados"
+        }
       ],
       "featured": false
     },
@@ -648,23 +963,44 @@
       "sku": "NDR-TEL-EQT-016",
       "name": "Punto de Acceso Wi-Fi 6 AX3000 de Techo para Alta Densidad cAP AX",
       "category": "Equipos y Sistemas de Telecomunicaciones",
-      "categoryIds": ["equipos-sistemas-telecomunicaciones", "puntos-acceso-wifi"],
+      "categoryIds": [
+        "equipos-sistemas-telecomunicaciones",
+        "puntos-acceso-wifi"
+      ],
       "brand": "MikroTik",
       "modelNumber": "cAPGi-5HaxD2HaxD",
-      "price": 139.0,
+      "price": 139,
       "stock": 18,
       "rating": 4.7,
       "reviewCount": 17,
-      "image": "https://img.pccomponentes.com/articles/33/331287/112-mikrotik-cap-ax-wifi6.jpg",
+      "image": "/images/products/tel-eqt-016.svg",
       "imageAlt": "Punto de acceso de techo MikroTik cAP ax Wi-Fi 6",
       "summary": "MikroTik · modelo cAPGi-5HaxD2HaxD. Solución de techo para oficinas con soporte CAPsMAN centralizado y puerto PoE-Out secundario.",
       "specifications": [
-        { "label": "Protocolo Wi-Fi", "value": "Wi-Fi 6 (802.11ax) doble banda con modulación OFDMA" },
-        { "label": "Velocidades de enlace", "value": "574 Mbps en 2,4 GHz y 2402 Mbps en 5 GHz" },
-        { "label": "Puertos cableados", "value": "2x Gigabit Ethernet con PoE-In (PoE 802.3af/at) y PoE-Out pasivo" },
-        { "label": "Potencia de cómputo", "value": "Procesador Quad-Core IPQ-6010 a 1,8 GHz y 1 GB de memoria RAM" },
-        { "label": "Control centralizado", "value": "Compatible con CAPsMAN v2 para itinerancia rápida 802.11k/v/r" },
-        { "label": "Diseño", "value": "Factor de forma circular estético de montaje en techo con antenas omnidireccionales" }
+        {
+          "label": "Protocolo Wi-Fi",
+          "value": "Wi-Fi 6 (802.11ax) doble banda con modulación OFDMA"
+        },
+        {
+          "label": "Velocidades de enlace",
+          "value": "574 Mbps en 2,4 GHz y 2402 Mbps en 5 GHz"
+        },
+        {
+          "label": "Puertos cableados",
+          "value": "2x Gigabit Ethernet con PoE-In (PoE 802.3af/at) y PoE-Out pasivo"
+        },
+        {
+          "label": "Potencia de cómputo",
+          "value": "Procesador Quad-Core IPQ-6010 a 1,8 GHz y 1 GB de memoria RAM"
+        },
+        {
+          "label": "Control centralizado",
+          "value": "Compatible con CAPsMAN v2 para itinerancia rápida 802.11k/v/r"
+        },
+        {
+          "label": "Diseño",
+          "value": "Factor de forma circular estético de montaje en techo con antenas omnidireccionales"
+        }
       ],
       "featured": false
     },
@@ -674,23 +1010,44 @@
       "sku": "NDR-TEL-EQT-017",
       "name": "Transceptor Óptico SFP+ 10G LR Monomodo 1310nm 10km DDM",
       "category": "Equipos y Sistemas de Telecomunicaciones",
-      "categoryIds": ["equipos-sistemas-telecomunicaciones", "transceptores-opticos"],
+      "categoryIds": [
+        "equipos-sistemas-telecomunicaciones",
+        "transceptores-opticos"
+      ],
       "brand": "Ubiquiti",
       "modelNumber": "UACC-OM-SM-10G-D-2",
-      "price": 68.0,
+      "price": 68,
       "stock": 25,
       "rating": 4.8,
       "reviewCount": 21,
-      "image": "https://img.pccomponentes.com/articles/27/276510/144-ubiquiti-sfp-10g-lr.jpg",
+      "image": "/images/products/tel-eqt-017.svg",
       "imageAlt": "Módulo transceptor óptico SFP+ 10G LR monomodo Ubiquiti",
       "summary": "Ubiquiti · modelo UACC-OM-SM-10G-D-2. Transceptor óptico de largo alcance para interconexión de conmutadores mediante fibra monomodo.",
       "specifications": [
-        { "label": "Formato de interfaz", "value": "SFP+ (Small Form-factor Pluggable Plus) a 10 Gbps" },
-        { "label": "Medio físico", "value": "Fibra óptica monomodo (SMF) 9/125 µm" },
-        { "label": "Longitud de onda", "value": "1310 nm con transmisor láser DFB" },
-        { "label": "Distancia máxima", "value": "10 kilómetros sobre fibra OS1/OS2" },
-        { "label": "Conector", "value": "Dúplex LC con acoplamiento seguro" },
-        { "label": "Telemetría óptica", "value": "Monitorización de diagnóstico digital (DDM) de potencia y temperatura" }
+        {
+          "label": "Formato de interfaz",
+          "value": "SFP+ (Small Form-factor Pluggable Plus) a 10 Gbps"
+        },
+        {
+          "label": "Medio físico",
+          "value": "Fibra óptica monomodo (SMF) 9/125 µm"
+        },
+        {
+          "label": "Longitud de onda",
+          "value": "1310 nm con transmisor láser DFB"
+        },
+        {
+          "label": "Distancia máxima",
+          "value": "10 kilómetros sobre fibra OS1/OS2"
+        },
+        {
+          "label": "Conector",
+          "value": "Dúplex LC con acoplamiento seguro"
+        },
+        {
+          "label": "Telemetría óptica",
+          "value": "Monitorización de diagnóstico digital (DDM) de potencia y temperatura"
+        }
       ],
       "featured": false
     },
@@ -700,23 +1057,44 @@
       "sku": "NDR-TEL-EQT-018",
       "name": "Módulo Transceptor SFP+ 10GBASE-T RJ45 Cobre hasta 30m",
       "category": "Equipos y Sistemas de Telecomunicaciones",
-      "categoryIds": ["equipos-sistemas-telecomunicaciones", "transceptores-opticos"],
+      "categoryIds": [
+        "equipos-sistemas-telecomunicaciones",
+        "transceptores-opticos"
+      ],
       "brand": "MikroTik",
       "modelNumber": "S+RJ10",
       "price": 59.9,
       "stock": 22,
       "rating": 4.7,
       "reviewCount": 27,
-      "image": "https://img.pccomponentes.com/articles/23/238914/177-mikrotik-s-rj10-sfp-cobre.jpg",
+      "image": "/images/products/tel-eqt-018.svg",
       "imageAlt": "Módulo transceptor RJ45 de cobre 10G SFP+ MikroTik S+RJ10",
       "summary": "MikroTik · modelo S+RJ10. Permite conectar latiguillos de cobre RJ45 Cat.6A en ranuras ópticas SFP+ a velocidades multi-gigabit.",
       "specifications": [
-        { "label": "Velocidades soportadas", "value": "Autonegociación 10M, 100M, 1G, 2.5G, 5G y 10G" },
-        { "label": "Conector", "value": "RJ45 hembra estándar blindado" },
-        { "label": "Alcance máximo", "value": "Hasta 30 metros a 10 Gbps sobre cable Cat.6A/Cat.7" },
-        { "label": "Consumo de energía", "value": "2,7 W máx. con gestión térmica activa" },
-        { "label": "Compatibilidad", "value": "Compatible con estándar MSA SFF-8431 en cualquier puerto SFP+" },
-        { "label": "Rango de temperatura", "value": "0°C a +70°C con sensor DDM reportado por software" }
+        {
+          "label": "Velocidades soportadas",
+          "value": "Autonegociación 10M, 100M, 1G, 2.5G, 5G y 10G"
+        },
+        {
+          "label": "Conector",
+          "value": "RJ45 hembra estándar blindado"
+        },
+        {
+          "label": "Alcance máximo",
+          "value": "Hasta 30 metros a 10 Gbps sobre cable Cat.6A/Cat.7"
+        },
+        {
+          "label": "Consumo de energía",
+          "value": "2,7 W máx. con gestión térmica activa"
+        },
+        {
+          "label": "Compatibilidad",
+          "value": "Compatible con estándar MSA SFF-8431 en cualquier puerto SFP+"
+        },
+        {
+          "label": "Rango de temperatura",
+          "value": "0°C a +70°C con sensor DDM reportado por software"
+        }
       ],
       "featured": false
     },
@@ -726,23 +1104,44 @@
       "sku": "NDR-TEL-EQT-019",
       "name": "Central Amplificadora Programable de Cabecera Avant X Pro UHF/VHF/FM",
       "category": "Equipos y Sistemas de Telecomunicaciones",
-      "categoryIds": ["equipos-sistemas-telecomunicaciones", "cabeceras-rf-tv"],
+      "categoryIds": [
+        "equipos-sistemas-telecomunicaciones",
+        "cabeceras-rf-tv"
+      ],
       "brand": "Televes",
       "modelNumber": "532121",
-      "price": 295.0,
+      "price": 295,
       "stock": 14,
       "rating": 4.9,
       "reviewCount": 18,
-      "image": "https://img.pccomponentes.com/articles/25/258901/192-televes-avant-x-pro.jpg",
+      "image": "/images/products/tel-eqt-019.svg",
       "imageAlt": "Central programable de amplificación de cabecera Avant X Pro Televes",
       "summary": "Televes · modelo 532121. Cabecera digital de amplificación para edificios de viviendas y comunidades con filtrado automático 5G LTE700.",
       "specifications": [
-        { "label": "Entradas de señal", "value": "4x UHF/VHF configurables, 1x FM y 1x entrada auxiliar de banda" },
-        { "label": "Filtrado digital", "value": "32 filtros digitales programables de alta selectividad (>35 dB a 1 MHz)" },
-        { "label": "Ajuste de ganancia", "value": "Ecualización automática en tiempo real con control automático de ganancia (CAG)" },
-        { "label": "Nivel de salida máximo", "value": "122 dBµV en UHF con distorsión reducida" },
-        { "label": "Rechazo de interferencias", "value": "Filtro automático de rechazo LTE700 (segundo dividendo digital)" },
-        { "label": "Programación", "value": "Autoprogramación con botón único o app móvil ASuite mediante USB-OTG" }
+        {
+          "label": "Entradas de señal",
+          "value": "4x UHF/VHF configurables, 1x FM y 1x entrada auxiliar de banda"
+        },
+        {
+          "label": "Filtrado digital",
+          "value": "32 filtros digitales programables de alta selectividad (>35 dB a 1 MHz)"
+        },
+        {
+          "label": "Ajuste de ganancia",
+          "value": "Ecualización automática en tiempo real con control automático de ganancia (CAG)"
+        },
+        {
+          "label": "Nivel de salida máximo",
+          "value": "122 dBµV en UHF con distorsión reducida"
+        },
+        {
+          "label": "Rechazo de interferencias",
+          "value": "Filtro automático de rechazo LTE700 (segundo dividendo digital)"
+        },
+        {
+          "label": "Programación",
+          "value": "Autoprogramación con botón único o app móvil ASuite mediante USB-OTG"
+        }
       ],
       "featured": false
     },
@@ -752,23 +1151,44 @@
       "sku": "NDR-TEL-EQT-020",
       "name": "Transmodulador Óptico de Cabecera DVB-S2 a DVB-T/C con Ranura CI",
       "category": "Equipos y Sistemas de Telecomunicaciones",
-      "categoryIds": ["equipos-sistemas-telecomunicaciones", "cabeceras-rf-tv"],
+      "categoryIds": [
+        "equipos-sistemas-telecomunicaciones",
+        "cabeceras-rf-tv"
+      ],
       "brand": "Televes",
       "modelNumber": "565101",
-      "price": 479.0,
+      "price": 479,
       "stock": 10,
       "rating": 4.8,
       "reviewCount": 8,
-      "image": "https://img.pccomponentes.com/articles/29/291034/163-televes-transmodulador-sat-tdt.jpg",
+      "image": "/images/products/tel-eqt-020.svg",
       "imageAlt": "Transmodulador satélite a TDT Televes T.0X con ranura Common Interface",
       "summary": "Televes · modelo 565101. Módulo de cabecera profesional para convertir canales de satélite a multiplex TDT distribuidos sobre cable coaxial.",
       "specifications": [
-        { "label": "Señal de entrada", "value": "Satélite DVB-S / DVB-S2 (QPSK / 8PSK) con alimentación LNB" },
-        { "label": "Señal de modulación", "value": "Salida COFDM (DVB-T) o QAM (DVB-C) seleccionable" },
-        { "label": "Desencriptación", "value": "Ranura Common Interface (CI) para módulos CAM condicionales" },
-        { "label": "Edición de transporte", "value": "Remultiplexación de servicios, regeneración de tablas PSI/SI y filtrado PID" },
-        { "label": "Gestión remota", "value": "Servidor web integrado para monitorización IP y control por Ethernet" },
-        { "label": "Formato mecánico", "value": "Módulo para bastidor T.0X con blindaje metálico de alta densidad" }
+        {
+          "label": "Señal de entrada",
+          "value": "Satélite DVB-S / DVB-S2 (QPSK / 8PSK) con alimentación LNB"
+        },
+        {
+          "label": "Señal de modulación",
+          "value": "Salida COFDM (DVB-T) o QAM (DVB-C) seleccionable"
+        },
+        {
+          "label": "Desencriptación",
+          "value": "Ranura Common Interface (CI) para módulos CAM condicionales"
+        },
+        {
+          "label": "Edición de transporte",
+          "value": "Remultiplexación de servicios, regeneración de tablas PSI/SI y filtrado PID"
+        },
+        {
+          "label": "Gestión remota",
+          "value": "Servidor web integrado para monitorización IP y control por Ethernet"
+        },
+        {
+          "label": "Formato mecánico",
+          "value": "Módulo para bastidor T.0X con blindaje metálico de alta densidad"
+        }
       ],
       "featured": false
     },
@@ -778,49 +1198,91 @@
       "sku": "NDR-TEL-DOM-021",
       "name": "Hub Domótico Multiprotocolo Zigbee 3.0, Matter y Thread Aqara Hub M3",
       "category": "Domótica y Hogar Digital",
-      "categoryIds": ["domotica-hogar-digital", "pasarelas-controladores"],
+      "categoryIds": [
+        "domotica-hogar-digital",
+        "pasarelas-controladores"
+      ],
       "brand": "Aqara",
       "modelNumber": "HM-G01E",
       "price": 129.99,
       "stock": 20,
       "rating": 4.9,
       "reviewCount": 41,
-      "image": "https://img.pccomponentes.com/articles/36/364501/145-aqara-hub-m3-matter.jpg",
+      "image": "/images/products/tel-dom-021.svg",
       "imageAlt": "Controlador domótico central Aqara Hub M3 con Matter y Thread",
       "summary": "Aqara · modelo HM-G01E. Pasarela central de automatización con compatibilidad total con Apple Home, Google Home y ejecución de escenas en local.",
       "specifications": [
-        { "label": "Protocolos de comunicación", "value": "Matter Controller, Thread Border Router, Zigbee 3.0, Bluetooth 5.1 e IR" },
-        { "label": "Alimentación eléctrica", "value": "PoE (802.3af) por cable de red o puerto USB-C (5V 2A)" },
-        { "label": "Conectividad de red", "value": "Puerto Ethernet RJ45 10/100 Mbps y Wi-Fi doble banda 2,4/5 GHz" },
-        { "label": "Emisor infrarrojos", "value": "Transmisor IR omnidireccional 360° para climatizadores y equipos AV" },
-        { "label": "Sirena incorporada", "value": "Altavoz acústico de 95 dB para alarmas de intrusión o avisos acústicos" },
-        { "label": "Seguridad y privacidad", "value": "Almacenamiento y procesamiento de automatizaciones de forma local y cifrada" }
+        {
+          "label": "Protocolos de comunicación",
+          "value": "Matter Controller, Thread Border Router, Zigbee 3.0, Bluetooth 5.1 e IR"
+        },
+        {
+          "label": "Alimentación eléctrica",
+          "value": "PoE (802.3af) por cable de red o puerto USB-C (5V 2A)"
+        },
+        {
+          "label": "Conectividad de red",
+          "value": "Puerto Ethernet RJ45 10/100 Mbps y Wi-Fi doble banda 2,4/5 GHz"
+        },
+        {
+          "label": "Emisor infrarrojos",
+          "value": "Transmisor IR omnidireccional 360° para climatizadores y equipos AV"
+        },
+        {
+          "label": "Sirena incorporada",
+          "value": "Altavoz acústico de 95 dB para alarmas de intrusión o avisos acústicos"
+        },
+        {
+          "label": "Seguridad y privacidad",
+          "value": "Almacenamiento y procesamiento de automatizaciones de forma local y cifrada"
+        }
       ],
       "featured": true
     },
     {
       "id": "tel-dom-022",
-      "slug": "controlador-domotico-z-wave-plus-zigbee-home-center-3-lite-fibaro",
+      "slug": "controlador-domotico-z-wave-plus-home-center-3-lite-fibaro",
       "sku": "NDR-TEL-DOM-022",
-      "name": "Controlador Domótico Z-Wave Plus y Zigbee Home Center 3 Lite",
+      "name": "Controlador Domótico Z-Wave Plus Home Center 3 Lite",
       "category": "Domótica y Hogar Digital",
-      "categoryIds": ["domotica-hogar-digital", "pasarelas-controladores"],
+      "categoryIds": [
+        "domotica-hogar-digital",
+        "pasarelas-controladores"
+      ],
       "brand": "Fibaro",
       "modelNumber": "FGHC3L-001",
-      "price": 139.0,
+      "price": 139,
       "stock": 15,
       "rating": 4.7,
       "reviewCount": 15,
-      "image": "https://img.pccomponentes.com/articles/28/284102/168-fibaro-home-center-3-lite.jpg",
+      "image": "/images/products/tel-dom-022.svg",
       "imageAlt": "Pasarela domótica Fibaro Home Center 3 Lite Z-Wave Plus",
-      "summary": "Fibaro · modelo FGHC3L-001. Sistema de control para instalaciones residenciales con potente motor de escenas programables en bloques y lenguaje LUA.",
+      "summary": "Fibaro · modelo FGHC3L-001. Sistema de control Z-Wave Plus Serie 700 para instalaciones residenciales con escenas programables en bloques y lenguaje LUA.",
       "specifications": [
-        { "label": "Tecnología de radio", "value": "Z-Wave Plus Serie 700 de largo alcance y bajo consumo" },
-        { "label": "Capacidad del sistema", "value": "Soporta hasta 40 dispositivos domóticos Z-Wave y 20 escenas simultáneas" },
-        { "label": "Hardware interno", "value": "Procesador Cortex A7 monocore a 900 MHz con 512 MB de memoria RAM" },
-        { "label": "Almacenamiento de sistema", "value": "4 GB de memoria eMMC Flash" },
-        { "label": "Nivel de seguridad", "value": "Cifrado Z-Wave S2 Security autenticado con curva elíptica" },
-        { "label": "Conexión a red", "value": "Wi-Fi integrado 802.11 b/g/n a 2,4 GHz" }
+        {
+          "label": "Tecnología de radio",
+          "value": "Z-Wave Plus Serie 700 de largo alcance y bajo consumo"
+        },
+        {
+          "label": "Capacidad del sistema",
+          "value": "Soporta hasta 40 dispositivos domóticos Z-Wave y 20 escenas simultáneas"
+        },
+        {
+          "label": "Hardware interno",
+          "value": "Procesador Cortex A7 monocore a 900 MHz con 512 MB de memoria RAM"
+        },
+        {
+          "label": "Almacenamiento de sistema",
+          "value": "4 GB de memoria eMMC Flash"
+        },
+        {
+          "label": "Nivel de seguridad",
+          "value": "Cifrado Z-Wave S2 Security autenticado con curva elíptica"
+        },
+        {
+          "label": "Conexión a red",
+          "value": "Wi-Fi integrado 802.11 b/g/n a 2,4 GHz"
+        }
       ],
       "featured": false
     },
@@ -830,49 +1292,91 @@
       "sku": "NDR-TEL-DOM-023",
       "name": "Relé Inteligente 4 Canales para Carril DIN con Medición de Potencia Shelly Pro 4PM",
       "category": "Domótica y Hogar Digital",
-      "categoryIds": ["domotica-hogar-digital", "reles-actuadores"],
+      "categoryIds": [
+        "domotica-hogar-digital",
+        "reles-actuadores"
+      ],
       "brand": "Shelly",
       "modelNumber": "SHELLY-PRO-4PM",
       "price": 89.9,
       "stock": 25,
       "rating": 4.9,
       "reviewCount": 39,
-      "image": "https://img.pccomponentes.com/articles/30/305612/121-shelly-pro-4pm-carril-din.jpg",
+      "image": "/images/products/tel-dom-023.svg",
       "imageAlt": "Relé inteligente para cuadro eléctrico carril DIN Shelly Pro 4PM con pantalla",
       "summary": "Shelly · modelo SHELLY-PRO-4PM. Actuador profesional de 4 circuitos independientes de 16 A con pantalla a color y telemetría de energía.",
       "specifications": [
-        { "label": "Canales de salida", "value": "4 salidas independientes de relé de 16 A cada una (total equipo 40 A)" },
-        { "label": "Medición de energía", "value": "Vatímetro digital integrado en cada uno de los 4 canales con historial" },
-        { "label": "Conectividad triple", "value": "Puerto Ethernet LAN RJ45, Wi-Fi 2,4 GHz y Bluetooth BLE" },
-        { "label": "Pantalla frontal", "value": "Display a color de 1,8\" con botones de control manual para cuadro" },
-        { "label": "Montaje industrial", "value": "Formato para carril DIN estándar de 3 módulos (EN 50022)" },
-        { "label": "Protocolos abiertos", "value": "Compatible nativamente con MQTT, WebSocket, REST API y Home Assistant" }
+        {
+          "label": "Canales de salida",
+          "value": "4 salidas independientes de relé de 16 A cada una (total equipo 40 A)"
+        },
+        {
+          "label": "Medición de energía",
+          "value": "Vatímetro digital integrado en cada uno de los 4 canales con historial"
+        },
+        {
+          "label": "Conectividad triple",
+          "value": "Puerto Ethernet LAN RJ45, Wi-Fi 2,4 GHz y Bluetooth BLE"
+        },
+        {
+          "label": "Pantalla frontal",
+          "value": "Display a color de 1,8\" con botones de control manual para cuadro"
+        },
+        {
+          "label": "Montaje industrial",
+          "value": "Formato para carril DIN estándar de 3 módulos (EN 50022)"
+        },
+        {
+          "label": "Protocolos abiertos",
+          "value": "Compatible nativamente con MQTT, WebSocket, REST API y Home Assistant"
+        }
       ],
       "featured": false
     },
     {
       "id": "tel-dom-024",
-      "slug": "micromodulo-interruptor-empotrable-zigbee-medicion-shelly-1pm-gen3",
+      "slug": "micromodulo-interruptor-empotrable-wifi-medicion-shelly-1pm-gen3",
       "sku": "NDR-TEL-DOM-024",
-      "name": "Micromódulo Interruptor Empotrable Zigbee 3.0 con Medición Shelly 1PM Gen3",
+      "name": "Micromódulo Interruptor Empotrable Wi-Fi con Medición de Potencia Shelly 1PM Gen3",
       "category": "Domótica y Hogar Digital",
-      "categoryIds": ["domotica-hogar-digital", "reles-actuadores"],
+      "categoryIds": [
+        "domotica-hogar-digital",
+        "reles-actuadores"
+      ],
       "brand": "Shelly",
       "modelNumber": "SHELLY-1PM-G3",
       "price": 22.9,
       "stock": 30,
       "rating": 4.8,
       "reviewCount": 54,
-      "image": "https://img.pccomponentes.com/articles/34/348910/109-shelly-1pm-gen3.jpg",
-      "imageAlt": "Micromódulo empotrable para caja de mecanismo Shelly 1PM Gen3",
-      "summary": "Shelly · modelo SHELLY-1PM-G3. Relé compacto para instalar tras interruptores y enchufes convencionales sin modificar la estética.",
+      "image": "/images/products/tel-dom-024.svg",
+      "imageAlt": "Micromódulo empotrable para caja de mecanismo Shelly 1PM Gen3 Wi-Fi",
+      "summary": "Shelly · modelo SHELLY-1PM-G3. Relé compacto Wi-Fi y Bluetooth para instalar tras interruptores y enchufes con telemetría de energía y soporte Matter.",
       "specifications": [
-        { "label": "Carga eléctrica máxima", "value": "16 A a 230 V CA / 30 V CC" },
-        { "label": "Medición de consumo", "value": "Telemetría de potencia instantánea (W) y acumulada (kWh)" },
-        { "label": "Dimensiones físicas", "value": "37 x 42 x 16 mm (apto para cajas de mecanismo universales)" },
-        { "label": "Procesador", "value": "ESP-Shelly-C38F con 8 MB de memoria Flash" },
-        { "label": "Protecciones de seguridad", "value": "Sensor interno de sobretemperatura, sobrecarga y sobretensión" },
-        { "label": "Soporte de protocolos", "value": "Wi-Fi, Bluetooth y soporte para actualización de firmware a Matter" }
+        {
+          "label": "Carga eléctrica máxima",
+          "value": "16 A a 230 V CA / 30 V CC"
+        },
+        {
+          "label": "Medición de consumo",
+          "value": "Telemetría de potencia instantánea (W) y acumulada (kWh)"
+        },
+        {
+          "label": "Dimensiones físicas",
+          "value": "37 x 42 x 16 mm (apto para cajas de mecanismo universales)"
+        },
+        {
+          "label": "Procesador",
+          "value": "ESP-Shelly-C38F con 8 MB de memoria Flash"
+        },
+        {
+          "label": "Protecciones de seguridad",
+          "value": "Sensor interno de sobretemperatura, sobrecarga y sobretensión"
+        },
+        {
+          "label": "Soporte de protocolos",
+          "value": "Wi-Fi, Bluetooth y soporte para actualización de firmware a Matter"
+        }
       ],
       "featured": false
     },
@@ -882,23 +1386,44 @@
       "sku": "NDR-TEL-DOM-025",
       "name": "Sensor de Presencia Humana por Radar Milimétrico mmWave FP2 Aqara",
       "category": "Domótica y Hogar Digital",
-      "categoryIds": ["domotica-hogar-digital", "sensores-ambientales"],
+      "categoryIds": [
+        "domotica-hogar-digital",
+        "sensores-ambientales"
+      ],
       "brand": "Aqara",
       "modelNumber": "PS-S02D",
       "price": 82.99,
       "stock": 18,
       "rating": 4.9,
       "reviewCount": 26,
-      "image": "https://img.pccomponentes.com/articles/33/339412/134-aqara-fp2-presencia-radar.jpg",
+      "image": "/images/products/tel-dom-025.svg",
       "imageAlt": "Sensor de presencia por radar milimétrico Aqara Presence Sensor FP2",
       "summary": "Aqara · modelo PS-S02D. Detección continua de personas incluso en reposo absoluto mediante radar de ondas milimétricas de 60 GHz.",
       "specifications": [
-        { "label": "Tecnología de radar", "value": "Ondas milimétricas mmWave a 60 GHz de ultra alta precisión" },
-        { "label": "Capacidad multi-persona", "value": "Seguimiento simultáneo de la posición de hasta 5 personas" },
-        { "label": "Zonificación espacial", "value": "Mapeo de la habitación subdividido en hasta 30 zonas de automatización independientes" },
-        { "label": "Sensor lumínico", "value": "Fotómetro de lux integrado para condicionar el encendido de luces" },
-        { "label": "Detección de caídas", "value": "Modo de supervisión de personas mayores configurable en techo" },
-        { "label": "Conexión", "value": "Wi-Fi 2,4 GHz sin necesidad de concentrador Zigbee" }
+        {
+          "label": "Tecnología de radar",
+          "value": "Ondas milimétricas mmWave a 60 GHz de ultra alta precisión"
+        },
+        {
+          "label": "Capacidad multi-persona",
+          "value": "Seguimiento simultáneo de la posición de hasta 5 personas"
+        },
+        {
+          "label": "Zonificación espacial",
+          "value": "Mapeo de la habitación subdividido en hasta 30 zonas de automatización independientes"
+        },
+        {
+          "label": "Sensor lumínico",
+          "value": "Fotómetro de lux integrado para condicionar el encendido de luces"
+        },
+        {
+          "label": "Detección de caídas",
+          "value": "Modo de supervisión de personas mayores configurable en techo"
+        },
+        {
+          "label": "Conexión",
+          "value": "Wi-Fi 2,4 GHz sin necesidad de concentrador Zigbee"
+        }
       ],
       "featured": false
     },
@@ -908,23 +1433,44 @@
       "sku": "NDR-TEL-DOM-026",
       "name": "Sensor Ambiental de Calidad de Aire Temperatura y Humedad TVOC Zigbee",
       "category": "Domótica y Hogar Digital",
-      "categoryIds": ["domotica-hogar-digital", "sensores-ambientales"],
+      "categoryIds": [
+        "domotica-hogar-digital",
+        "sensores-ambientales"
+      ],
       "brand": "Aqara",
       "modelNumber": "AAQS-S01",
       "price": 44.9,
       "stock": 22,
       "rating": 4.7,
       "reviewCount": 18,
-      "image": "https://img.pccomponentes.com/articles/27/279154/156-aqara-sensor-tvoc-zigbee.jpg",
+      "image": "/images/products/tel-dom-026.svg",
       "imageAlt": "Monitor de calidad de aire y temperatura Aqara TVOC con pantalla E-Ink",
       "summary": "Aqara · modelo AAQS-S01. Pantalla de tinta electrónica para monitorizar contaminantes volátiles, confort térmico y humedad ambiental.",
       "specifications": [
-        { "label": "Parámetros registrados", "value": "Compuestos Orgánicos Volátiles (TVOC), temperatura (°C) y humedad relativa (%)" },
-        { "label": "Tecnología de pantalla", "value": "Tinta electrónica E-Ink de 2,13\" con visualización permanente sin fatiga" },
-        { "label": "Protocolo de red", "value": "Zigbee 3.0 con vinculación a controladores domóticos" },
-        { "label": "Autonomía de baterías", "value": "Más de 12 meses de funcionamiento con 2 pilas de botón CR2450" },
-        { "label": "Algoritmo de compensación", "value": "Calibración térmica automática contra desvíos estacionales" },
-        { "label": "Fijación", "value": "Soporte magnético autoadhesivo para pared o sobremesa" }
+        {
+          "label": "Parámetros registrados",
+          "value": "Compuestos Orgánicos Volátiles (TVOC), temperatura (°C) y humedad relativa (%)"
+        },
+        {
+          "label": "Tecnología de pantalla",
+          "value": "Tinta electrónica E-Ink de 2,13\" con visualización permanente sin fatiga"
+        },
+        {
+          "label": "Protocolo de red",
+          "value": "Zigbee 3.0 con vinculación a controladores domóticos"
+        },
+        {
+          "label": "Autonomía de baterías",
+          "value": "Más de 12 meses de funcionamiento con 2 pilas de botón CR2450"
+        },
+        {
+          "label": "Algoritmo de compensación",
+          "value": "Calibración térmica automática contra desvíos estacionales"
+        },
+        {
+          "label": "Fijación",
+          "value": "Soporte magnético autoadhesivo para pared o sobremesa"
+        }
       ],
       "featured": false
     },
@@ -934,49 +1480,91 @@
       "sku": "NDR-TEL-DOM-027",
       "name": "Videoportero IP PoE con Cámara 2K y Lector NFC UniFi G4 Doorbell Pro PoE",
       "category": "Domótica y Hogar Digital",
-      "categoryIds": ["domotica-hogar-digital", "videoporteros-control-acceso"],
+      "categoryIds": [
+        "domotica-hogar-digital",
+        "videoporteros-control-acceso"
+      ],
       "brand": "Ubiquiti",
       "modelNumber": "UVC-G4-Doorbell-Pro-PoE",
-      "price": 379.0,
+      "price": 379,
       "stock": 11,
       "rating": 4.9,
       "reviewCount": 22,
-      "image": "https://img.pccomponentes.com/articles/32/328901/179-ubiquiti-g4-doorbell-pro-poe.jpg",
+      "image": "/images/products/tel-dom-027.svg",
       "imageAlt": "Videoportero IP PoE UniFi G4 Doorbell Pro Ubiquiti con doble cámara",
       "summary": "Ubiquiti · modelo UVC-G4-Doorbell-Pro-PoE. Intercomunicador IP de seguridad con doble cámara, lector de tarjetas y pantalla programable.",
       "specifications": [
-        { "label": "Cámara principal", "value": "Sensor de 5 MP con resolución 2K (2688 x 1520) a 30 fps con visión nocturna IR" },
-        { "label": "Cámara de paquetes", "value": "Segunda cámara orientada hacia abajo a 1080p para recepción de paquetería" },
-        { "label": "Alimentación y datos", "value": "PoE estándar (802.3af) por cable de red RJ45 sin transformadores externos" },
-        { "label": "Control de accesos", "value": "Lector NFC integrado para llaveros y tarjetas de entrada autorizada" },
-        { "label": "Audio bidireccional", "value": "Micrófono con cancelación de eco ambiental y altavoz de alta fidelidad" },
-        { "label": "Resistencia a la intemperie", "value": "Grado IPX4 para funcionamiento exterior en rango de -30°C a +40°C" }
+        {
+          "label": "Cámara principal",
+          "value": "Sensor de 5 MP con resolución 2K (2688 x 1520) a 30 fps con visión nocturna IR"
+        },
+        {
+          "label": "Cámara de paquetes",
+          "value": "Segunda cámara orientada hacia abajo a 1080p para recepción de paquetería"
+        },
+        {
+          "label": "Alimentación y datos",
+          "value": "PoE estándar (802.3af) por cable de red RJ45 sin transformadores externos"
+        },
+        {
+          "label": "Control de accesos",
+          "value": "Lector NFC integrado para llaveros y tarjetas de entrada autorizada"
+        },
+        {
+          "label": "Audio bidireccional",
+          "value": "Micrófono con cancelación de eco ambiental y altavoz de alta fidelidad"
+        },
+        {
+          "label": "Resistencia a la intemperie",
+          "value": "Grado IPX4 para funcionamiento exterior en rango de -30°C a +40°C"
+        }
       ],
       "featured": false
     },
     {
       "id": "tel-dom-028",
-      "slug": "cerradura-electronica-inteligente-zigbee-teclado-tactil-aqara-u200",
+      "slug": "cerradura-electronica-inteligente-matter-thread-teclado-aqara-u200",
       "sku": "NDR-TEL-DOM-028",
-      "name": "Cerradura Electrónica Inteligente Zigbee con Teclado Táctil y Biometría Aqara U200",
+      "name": "Cerradura Electrónica Inteligente Matter sobre Thread con Teclado Táctil y Biometría Aqara U200",
       "category": "Domótica y Hogar Digital",
-      "categoryIds": ["domotica-hogar-digital", "videoporteros-control-acceso"],
+      "categoryIds": [
+        "domotica-hogar-digital",
+        "videoporteros-control-acceso"
+      ],
       "brand": "Aqara",
       "modelNumber": "EL-D02D",
       "price": 269.99,
       "stock": 13,
       "rating": 4.8,
       "reviewCount": 16,
-      "image": "https://img.pccomponentes.com/articles/35/359124/188-aqara-u200-smart-lock.jpg",
-      "imageAlt": "Cerradura inteligente motorizada Aqara U200 con teclado exterior y huella",
-      "summary": "Aqara · modelo EL-D02D. Cerradura motorizada sobre bombín europeo compatible con Matter sobre Thread y apertura por Apple Home Key.",
+      "image": "/images/products/tel-dom-028.svg",
+      "imageAlt": "Cerradura inteligente motorizada Aqara U200 Matter sobre Thread con teclado exterior y huella",
+      "summary": "Aqara · modelo EL-D02D. Cerradura motorizada sobre bombín europeo compatible con Matter sobre Thread, Apple Home Key y teclado exterior con huella.",
       "specifications": [
-        { "label": "Métodos de desbloqueo", "value": "Huella dactilar, código PIN, tarjeta NFC, Apple Home Key y llave mecánica" },
-        { "label": "Estándar de enlace", "value": "Matter sobre Thread y Bluetooth 5.1 Low Energy" },
-        { "label": "Instalación", "value": "Montaje interior sin perforar la puerta sobre cilindros europeos existentes" },
-        { "label": "Teclado exterior", "value": "Teclado retroiluminado con protección IPX5 y batería recargable" },
-        { "label": "Seguridad criptográfica", "value": "Cifrado bancario AES-128 con almacenamiento local de datos biométricos" },
-        { "label": "Autonomía", "value": "Hasta 6 meses por carga completa con aviso de batería baja" }
+        {
+          "label": "Métodos de desbloqueo",
+          "value": "Huella dactilar, código PIN, tarjeta NFC, Apple Home Key y llave mecánica"
+        },
+        {
+          "label": "Estándar de enlace",
+          "value": "Matter sobre Thread y Bluetooth 5.1 Low Energy"
+        },
+        {
+          "label": "Instalación",
+          "value": "Montaje interior sin perforar la puerta sobre cilindros europeos existentes"
+        },
+        {
+          "label": "Teclado exterior",
+          "value": "Teclado retroiluminado con protección IPX5 y batería recargable"
+        },
+        {
+          "label": "Seguridad criptográfica",
+          "value": "Cifrado bancario AES-128 con almacenamiento local de datos biométricos"
+        },
+        {
+          "label": "Autonomía",
+          "value": "Hasta 6 meses por carga completa con aviso de batería baja"
+        }
       ],
       "featured": false
     },
@@ -986,23 +1574,44 @@
       "sku": "NDR-TEL-DOM-029",
       "name": "Termostato Inteligente Modulante OpenTherm y Relé para Caldera/Bomba de Calor",
       "category": "Domótica y Hogar Digital",
-      "categoryIds": ["domotica-hogar-digital", "climatizacion-inteligente"],
+      "categoryIds": [
+        "domotica-hogar-digital",
+        "climatizacion-inteligente"
+      ],
       "brand": "Schneider Electric",
       "modelNumber": "CCTFR6700",
-      "price": 179.0,
+      "price": 179,
       "stock": 16,
       "rating": 4.8,
       "reviewCount": 20,
-      "image": "https://img.pccomponentes.com/articles/29/298412/165-schneider-termostato-wiser.jpg",
+      "image": "/images/products/tel-dom-029.svg",
       "imageAlt": "Termostato de pared modulante OpenTherm Schneider Electric Wiser",
       "summary": "Schneider Electric · modelo CCTFR6700. Control eficiente de calefacción y aerotermia mediante regulación continua y algoritmos predictivos.",
       "specifications": [
-        { "label": "Protocolo de caldera", "value": "Comunicación digital modulante OpenTherm y contacto seco libre de potencial" },
-        { "label": "Compatibilidad térmica", "value": "Calderas de condensación a gas, bombas de calor y suelo radiante" },
-        { "label": "Conectividad de radio", "value": "Zigbee 3.0 / Wiser con alcance de hasta 30 metros en vivienda" },
-        { "label": "Pantalla de control", "value": "Display capacitivo retroiluminado con activación por proximidad" },
-        { "label": "Eficiencia energética", "value": "Algoritmo de compensación climática según inercia térmica del edificio" },
-        { "label": "Programación", "value": "Gestión semanal por tramos horarios y modo ausencia con geovalla" }
+        {
+          "label": "Protocolo de caldera",
+          "value": "Comunicación digital modulante OpenTherm y contacto seco libre de potencial"
+        },
+        {
+          "label": "Compatibilidad térmica",
+          "value": "Calderas de condensación a gas, bombas de calor y suelo radiante"
+        },
+        {
+          "label": "Conectividad de radio",
+          "value": "Zigbee 3.0 / Wiser con alcance de hasta 30 metros en vivienda"
+        },
+        {
+          "label": "Pantalla de control",
+          "value": "Display capacitivo retroiluminado con activación por proximidad"
+        },
+        {
+          "label": "Eficiencia energética",
+          "value": "Algoritmo de compensación climática según inercia térmica del edificio"
+        },
+        {
+          "label": "Programación",
+          "value": "Gestión semanal por tramos horarios y modo ausencia con geovalla"
+        }
       ],
       "featured": false
     },
@@ -1010,25 +1619,46 @@
       "id": "tel-dom-030",
       "slug": "cabezal-termostatico-inteligente-radiador-wifi-shelly-trv",
       "sku": "NDR-TEL-DOM-030",
-      "name": "Cabezal Termostático Inteligente para Radiador Zigbee con Pantalla LED Shelly TRV",
+      "name": "Cabezal Termostático Inteligente para Radiador Wi-Fi con Pantalla LED Shelly TRV",
       "category": "Domótica y Hogar Digital",
-      "categoryIds": ["domotica-hogar-digital", "climatizacion-inteligente"],
+      "categoryIds": [
+        "domotica-hogar-digital",
+        "climatizacion-inteligente"
+      ],
       "brand": "Shelly",
       "modelNumber": "SHELLY-TRV",
       "price": 69.9,
       "stock": 26,
       "rating": 4.7,
       "reviewCount": 37,
-      "image": "https://img.pccomponentes.com/articles/31/314562/119-shelly-trv-valvula-termostatica.jpg",
-      "imageAlt": "Válvula termostática electrónica para radiador Shelly TRV con batería recargable",
-      "summary": "Shelly · modelo SHELLY-TRV. Regulación individual de temperatura estancia por estancia con batería recargable y conexión Wi-Fi directa.",
+      "image": "/images/products/tel-dom-030.svg",
+      "imageAlt": "Válvula termostática electrónica para radiador Shelly TRV Wi-Fi con batería recargable",
+      "summary": "Shelly · modelo SHELLY-TRV. Regulación individual de temperatura estancia por estancia con batería recargable Panasonic de 6500 mAh y conexión Wi-Fi directa.",
       "specifications": [
-        { "label": "Conectividad", "value": "Wi-Fi 802.11 b/g/n directo sin necesidad de pasarela intermedia" },
-        { "label": "Batería integrada", "value": "Acumulador de litio Panasonic de 6500 mAh con hasta 2 años de autonomía" },
-        { "label": "Control de caudal", "value": "Motor paso a paso ultrasilencioso con algoritmo de modulación PID" },
-        { "label": "Funciones inteligentes", "value": "Detección automática de ventana abierta y protección anticalcárea periódica" },
-        { "label": "Pantalla", "value": "Segmentos LED de brillo regulable para visualización de consigna" },
-        { "label": "Compatibilidad de válvulas", "value": "Incluye adaptadores para M30x1.5, Danfoss RA, RAV y RAVL" }
+        {
+          "label": "Conectividad",
+          "value": "Wi-Fi 802.11 b/g/n directo sin necesidad de pasarela intermedia"
+        },
+        {
+          "label": "Batería integrada",
+          "value": "Acumulador de litio Panasonic de 6500 mAh con hasta 2 años de autonomía"
+        },
+        {
+          "label": "Control de caudal",
+          "value": "Motor paso a paso ultrasilencioso con algoritmo de modulación PID"
+        },
+        {
+          "label": "Funciones inteligentes",
+          "value": "Detección automática de ventana abierta y protección anticalcárea periódica"
+        },
+        {
+          "label": "Pantalla",
+          "value": "Segmentos LED de brillo regulable para visualización de consigna"
+        },
+        {
+          "label": "Compatibilidad de válvulas",
+          "value": "Incluye adaptadores para M30x1.5, Danfoss RA, RAV y RAVL"
+        }
       ],
       "featured": false
     },
@@ -1038,23 +1668,44 @@
       "sku": "NDR-TEL-TEL-031",
       "name": "Centralita Telefónica IP-PBX Grandstream UCM6302 hasta 1000 Usuarios y 150 Llamadas",
       "category": "Telefonía y Comunicaciones",
-      "categoryIds": ["telefonia-comunicaciones", "centralitas-ip-pbx"],
+      "categoryIds": [
+        "telefonia-comunicaciones",
+        "centralitas-ip-pbx"
+      ],
       "brand": "Grandstream",
       "modelNumber": "UCM6302",
-      "price": 429.0,
+      "price": 429,
       "stock": 11,
       "rating": 4.9,
       "reviewCount": 19,
-      "image": "https://img.pccomponentes.com/articles/28/281904/162-grandstream-ucm6302.jpg",
+      "image": "/images/products/tel-tel-031.svg",
       "imageAlt": "Centralita telefónica IP PBX Grandstream UCM6302 para empresas",
       "summary": "Grandstream · modelo UCM6302. Plataforma de comunicaciones unificadas con aprovisionamiento automático y servidor de conferencias.",
       "specifications": [
-        { "label": "Capacidad de extensiones", "value": "Hasta 1000 usuarios SIP registrados" },
-        { "label": "Llamadas simultáneas", "value": "Hasta 150 llamadas de voz concurrentes (100 con códec SRTP cifrado)" },
-        { "label": "Puertos telefónicos físicos", "value": "2x puertos FXO para líneas analógicas PSTN y 2x puertos FXS para extensiones" },
-        { "label": "Conectividad de red", "value": "3x Gigabit Ethernet RJ45 con soporte PoE+ y función router NAT" },
-        { "label": "Salas de conferencia", "value": "Hasta 3 salas de videoconferencia y 150 participantes en audio" },
-        { "label": "Seguridad de llamada", "value": "Arranque seguro, cifrado SRTP, TLS y HTTPS con gestión en nube GDMS" }
+        {
+          "label": "Capacidad de extensiones",
+          "value": "Hasta 1000 usuarios SIP registrados"
+        },
+        {
+          "label": "Llamadas simultáneas",
+          "value": "Hasta 150 llamadas de voz concurrentes (100 con códec SRTP cifrado)"
+        },
+        {
+          "label": "Puertos telefónicos físicos",
+          "value": "2x puertos FXO para líneas analógicas PSTN y 2x puertos FXS para extensiones"
+        },
+        {
+          "label": "Conectividad de red",
+          "value": "3x Gigabit Ethernet RJ45 con soporte PoE+ y función router NAT"
+        },
+        {
+          "label": "Salas de conferencia",
+          "value": "Hasta 3 salas de videoconferencia y 150 participantes en audio"
+        },
+        {
+          "label": "Seguridad de llamada",
+          "value": "Arranque seguro, cifrado SRTP, TLS y HTTPS con gestión en nube GDMS"
+        }
       ],
       "featured": true
     },
@@ -1064,23 +1715,44 @@
       "sku": "NDR-TEL-TEL-032",
       "name": "Centralita Telefónica IP Compacta Grandstream UCM6204 con 4 Puertos FXO",
       "category": "Telefonía y Comunicaciones",
-      "categoryIds": ["telefonia-comunicaciones", "centralitas-ip-pbx"],
+      "categoryIds": [
+        "telefonia-comunicaciones",
+        "centralitas-ip-pbx"
+      ],
       "brand": "Grandstream",
       "modelNumber": "UCM6204",
-      "price": 349.0,
+      "price": 349,
       "stock": 13,
       "rating": 4.8,
       "reviewCount": 24,
-      "image": "https://img.pccomponentes.com/articles/26/261890/138-grandstream-ucm6204.jpg",
+      "image": "/images/products/tel-tel-032.svg",
       "imageAlt": "Centralita telefónica VoIP Grandstream UCM6204 con 4 puertos analógicos FXO",
       "summary": "Grandstream · modelo UCM6204. Servidor IP PBX para pequeñas y medianas empresas con operadora automática multinivel y buzón de voz a email.",
       "specifications": [
-        { "label": "Usuarios de telefonía", "value": "Hasta 500 extensiones SIP configurables" },
-        { "label": "Capacidad de llamadas", "value": "Hasta 45 llamadas simultáneas" },
-        { "label": "Líneas de enlace", "value": "4 puertos analógicos FXO para conexión de líneas de la compañía telefónica" },
-        { "label": "Puertos de red", "value": "Doble puerto Gigabit Ethernet con PoE integrado" },
-        { "label": "Grabación de llamadas", "value": "Servidor de grabación integrado con volcado a memoria USB o SD" },
-        { "label": "Códecs soportados", "value": "Opus, G.711 (a-law/u-law), G.722, G.726, G.729A/B e iLBC" }
+        {
+          "label": "Usuarios de telefonía",
+          "value": "Hasta 500 extensiones SIP configurables"
+        },
+        {
+          "label": "Capacidad de llamadas",
+          "value": "Hasta 45 llamadas simultáneas"
+        },
+        {
+          "label": "Líneas de enlace",
+          "value": "4 puertos analógicos FXO para conexión de líneas de la compañía telefónica"
+        },
+        {
+          "label": "Puertos de red",
+          "value": "Doble puerto Gigabit Ethernet con PoE integrado"
+        },
+        {
+          "label": "Grabación de llamadas",
+          "value": "Servidor de grabación integrado con volcado a memoria USB o SD"
+        },
+        {
+          "label": "Códecs soportados",
+          "value": "Opus, G.711 (a-law/u-law), G.722, G.726, G.729A/B e iLBC"
+        }
       ],
       "featured": false
     },
@@ -1090,23 +1762,44 @@
       "sku": "NDR-TEL-TEL-033",
       "name": "Teléfono IP Ejecutivo Yealink SIP-T54W con Pantalla Color 4.3\" y Wi-Fi/Bluetooth",
       "category": "Telefonía y Comunicaciones",
-      "categoryIds": ["telefonia-comunicaciones", "telefonos-ip-dect"],
+      "categoryIds": [
+        "telefonia-comunicaciones",
+        "telefonos-ip-dect"
+      ],
       "brand": "Yealink",
       "modelNumber": "SIP-T54W",
       "price": 169.5,
       "stock": 22,
       "rating": 4.9,
       "reviewCount": 45,
-      "image": "https://img.pccomponentes.com/articles/25/259102/145-yealink-sip-t54w.jpg",
+      "image": "/images/products/tel-tel-033.svg",
       "imageAlt": "Teléfono de sobremesa IP ejecutivo Yealink SIP-T54W con pantalla a color regulable",
       "summary": "Yealink · modelo SIP-T54W. Terminal corporativo con pantalla a color ajustable, sonido de alta definición y conectividad Wi-Fi integrada.",
       "specifications": [
-        { "label": "Pantalla", "value": "Panel LCD a color de 4,3\" con resolución 480x272 y ángulo de inclinación ajustable" },
-        { "label": "Cuentas VoIP", "value": "Hasta 16 cuentas SIP configurables simultáneamente" },
-        { "label": "Conexión inalámbrica", "value": "Wi-Fi doble banda 2,4/5 GHz (802.11ac) y Bluetooth 4.2 integrado" },
-        { "label": "Puertos de red", "value": "2x Gigabit Ethernet 10/100/1000 con soporte de alimentación PoE 802.3af" },
-        { "label": "Calidad acústica", "value": "Audio Optima HD con tecnología Yealink Noise Proof de cancelación de ruido" },
-        { "label": "Ampliaciones", "value": "Puerto USB 2.0 para grabación en memoria o dongle DECT secundario" }
+        {
+          "label": "Pantalla",
+          "value": "Panel LCD a color de 4,3\" con resolución 480x272 y ángulo de inclinación ajustable"
+        },
+        {
+          "label": "Cuentas VoIP",
+          "value": "Hasta 16 cuentas SIP configurables simultáneamente"
+        },
+        {
+          "label": "Conexión inalámbrica",
+          "value": "Wi-Fi doble banda 2,4/5 GHz (802.11ac) y Bluetooth 4.2 integrado"
+        },
+        {
+          "label": "Puertos de red",
+          "value": "2x Gigabit Ethernet 10/100/1000 con soporte de alimentación PoE 802.3af"
+        },
+        {
+          "label": "Calidad acústica",
+          "value": "Audio Optima HD con tecnología Yealink Noise Proof de cancelación de ruido"
+        },
+        {
+          "label": "Ampliaciones",
+          "value": "Puerto USB 2.0 para grabación en memoria o dongle DECT secundario"
+        }
       ],
       "featured": false
     },
@@ -1116,23 +1809,44 @@
       "sku": "NDR-TEL-TEL-034",
       "name": "Sistema Telefónico Inalámbrico DECT IP Yealink W73P Base + Terminal",
       "category": "Telefonía y Comunicaciones",
-      "categoryIds": ["telefonia-comunicaciones", "telefonos-ip-dect"],
+      "categoryIds": [
+        "telefonia-comunicaciones",
+        "telefonos-ip-dect"
+      ],
       "brand": "Yealink",
       "modelNumber": "W73P",
-      "price": 119.0,
+      "price": 119,
       "stock": 24,
       "rating": 4.8,
       "reviewCount": 31,
-      "image": "https://img.pccomponentes.com/articles/27/274198/123-yealink-w73p-dect-ip.jpg",
+      "image": "/images/products/tel-tel-034.svg",
       "imageAlt": "Teléfono inalámbrico DECT IP Yealink W73P con estación base",
       "summary": "Yealink · modelo W73P. Movilidad profesional en almacenes y oficinas con hasta 35 horas de conversación y cobertura ampliada.",
       "specifications": [
-        { "label": "Capacidad del sistema", "value": "Base compatible con hasta 10 terminales DECT y 10 cuentas SIP" },
-        { "label": "Llamadas simultáneas", "value": "Hasta 20 llamadas de voz concurrentes en la misma estación base" },
-        { "label": "Alcance de cobertura", "value": "Hasta 50 metros en interiores y hasta 300 metros en espacios abiertos" },
-        { "label": "Batería del terminal", "value": "Autonomía de 35 horas de conversación y hasta 400 horas en reposo" },
-        { "label": "Pantalla del terminal", "value": "Display a color TFT de 1,8\" con interfaz gráfica intuitiva" },
-        { "label": "Alimentación de la base", "value": "Alimentación por Ethernet PoE (802.3af) o fuente de alimentación incluida" }
+        {
+          "label": "Capacidad del sistema",
+          "value": "Base compatible con hasta 10 terminales DECT y 10 cuentas SIP"
+        },
+        {
+          "label": "Llamadas simultáneas",
+          "value": "Hasta 20 llamadas de voz concurrentes en la misma estación base"
+        },
+        {
+          "label": "Alcance de cobertura",
+          "value": "Hasta 50 metros en interiores y hasta 300 metros en espacios abiertos"
+        },
+        {
+          "label": "Batería del terminal",
+          "value": "Autonomía de 35 horas de conversación y hasta 400 horas en reposo"
+        },
+        {
+          "label": "Pantalla del terminal",
+          "value": "Display a color TFT de 1,8\" con interfaz gráfica intuitiva"
+        },
+        {
+          "label": "Alimentación de la base",
+          "value": "Alimentación por Ethernet PoE (802.3af) o fuente de alimentación incluida"
+        }
       ],
       "featured": false
     },
@@ -1142,23 +1856,44 @@
       "sku": "NDR-TEL-TEL-035",
       "name": "Pasarela VoIP FXS 16 Puertos Grandstream GXW4216 para Extensiones Analógicas",
       "category": "Telefonía y Comunicaciones",
-      "categoryIds": ["telefonia-comunicaciones", "gateways-voip"],
+      "categoryIds": [
+        "telefonia-comunicaciones",
+        "gateways-voip"
+      ],
       "brand": "Grandstream",
       "modelNumber": "GXW4216",
-      "price": 269.0,
+      "price": 269,
       "stock": 14,
       "rating": 4.8,
       "reviewCount": 13,
-      "image": "https://img.pccomponentes.com/articles/23/231908/176-grandstream-gxw4216.jpg",
+      "image": "/images/products/tel-tel-035.svg",
       "imageAlt": "Gateway pasarela VoIP Grandstream GXW4216 de 16 puertos analógicos FXS",
       "summary": "Grandstream · modelo GXW4216. Integración de teléfonos analógicos, timbres de planta y faxes convencionales en redes telefónicas IP corporativas.",
       "specifications": [
-        { "label": "Interfaces analógicas", "value": "16x puertos FXS RJ11 estándar y conector Telco de 50 pines" },
-        { "label": "Conexión a red", "value": "Puerto Gigabit Ethernet 10/100/1000 Mbps con soporte QoS" },
-        { "label": "Soporte de Fax", "value": "Paso de fax sobre IP mediante protocolo T.38 con detección automática" },
-        { "label": "Pantalla gráfica", "value": "Display LCD frontal de 128x32 píxeles para configuración rápida de red" },
-        { "label": "Seguridad de señalización", "value": "Protocolos seguros TLS y SRTP para prevención de escuchas no autorizadas" },
-        { "label": "Montaje en bastidor", "value": "Chasis metálico para montaje en armario rack 19\" de 1U" }
+        {
+          "label": "Interfaces analógicas",
+          "value": "16x puertos FXS RJ11 estándar y conector Telco de 50 pines"
+        },
+        {
+          "label": "Conexión a red",
+          "value": "Puerto Gigabit Ethernet 10/100/1000 Mbps con soporte QoS"
+        },
+        {
+          "label": "Soporte de Fax",
+          "value": "Paso de fax sobre IP mediante protocolo T.38 con detección automática"
+        },
+        {
+          "label": "Pantalla gráfica",
+          "value": "Display LCD frontal de 128x32 píxeles para configuración rápida de red"
+        },
+        {
+          "label": "Seguridad de señalización",
+          "value": "Protocolos seguros TLS y SRTP para prevención de escuchas no autorizadas"
+        },
+        {
+          "label": "Montaje en bastidor",
+          "value": "Chasis metálico para montaje en armario rack 19\" de 1U"
+        }
       ],
       "featured": false
     },
@@ -1168,49 +1903,91 @@
       "sku": "NDR-TEL-TEL-036",
       "name": "Gateway VoIP Digital ISDN BRI 2 Puertos Patton SmartNode SN4120",
       "category": "Telefonía y Comunicaciones",
-      "categoryIds": ["telefonia-comunicaciones", "gateways-voip"],
+      "categoryIds": [
+        "telefonia-comunicaciones",
+        "gateways-voip"
+      ],
       "brand": "Patton",
       "modelNumber": "SN4120/2BIS4V",
-      "price": 389.0,
+      "price": 389,
       "stock": 9,
       "rating": 4.9,
       "reviewCount": 8,
-      "image": "https://img.pccomponentes.com/articles/24/248102/155-patton-smartnode-4120.jpg",
+      "image": "/images/products/tel-tel-036.svg",
       "imageAlt": "Pasarela VoIP RDSI ISDN BRI Patton SmartNode 4120",
       "summary": "Patton · modelo SN4120/2BIS4V. Conversión fiable de líneas digitales RDSI/ISDN a enlaces SIP troncales con cancelación de eco de nivel operador.",
       "specifications": [
-        { "label": "Puertos digitales", "value": "2x puertos ISDN BRI (RDSI) conmutables por software en modo TE o NT" },
-        { "label": "Canales de voz", "value": "4 llamadas de voz simultáneas sobre protocolo SIP" },
-        { "label": "Cancelación de eco", "value": "G.168 de 128 ms con generación de ruido de confort (CNG) y detección de voz (VAD)" },
-        { "label": "Compatibilidad de centralitas", "value": "Interoperabilidad certificada con Asterisk, 3CX, FreePBX y Microsoft Teams" },
-        { "label": "Enrutamiento flexible", "value": "Tablas de enrutamiento basadas en origen, destino, prefijo y hora del día" },
-        { "label": "Fabricación industrial", "value": "Chasis robusto metálico suizo con fuente de alimentación interna 230V" }
+        {
+          "label": "Puertos digitales",
+          "value": "2x puertos ISDN BRI (RDSI) conmutables por software en modo TE o NT"
+        },
+        {
+          "label": "Canales de voz",
+          "value": "4 llamadas de voz simultáneas sobre protocolo SIP"
+        },
+        {
+          "label": "Cancelación de eco",
+          "value": "G.168 de 128 ms con generación de ruido de confort (CNG) y detección de voz (VAD)"
+        },
+        {
+          "label": "Compatibilidad de centralitas",
+          "value": "Interoperabilidad certificada con Asterisk, 3CX, FreePBX y Microsoft Teams"
+        },
+        {
+          "label": "Enrutamiento flexible",
+          "value": "Tablas de enrutamiento basadas en origen, destino, prefijo y hora del día"
+        },
+        {
+          "label": "Fabricación industrial",
+          "value": "Chasis robusto metálico suizo con fuente de alimentación interna 230V"
+        }
       ],
       "featured": false
     },
     {
       "id": "tel-tel-037",
-      "slug": "router-celular-industrial-4g-lte-dual-sim-teltonika-rut241",
+      "slug": "router-celular-industrial-4g-lte-cat-4-teltonika-rut241",
       "sku": "NDR-TEL-TEL-037",
-      "name": "Router Celular Industrial 4G LTE Cat 4 Dual SIM Teltonika RUT241",
+      "name": "Router Celular Industrial 4G LTE Cat 4 Teltonika RUT241",
       "category": "Telefonía y Comunicaciones",
-      "categoryIds": ["telefonia-comunicaciones", "routers-celulares-4g-5g"],
+      "categoryIds": [
+        "telefonia-comunicaciones",
+        "routers-celulares-4g-5g"
+      ],
       "brand": "Teltonika",
       "modelNumber": "RUT241",
-      "price": 139.0,
+      "price": 139,
       "stock": 28,
       "rating": 4.8,
       "reviewCount": 51,
-      "image": "https://img.pccomponentes.com/articles/31/318902/112-teltonika-rut241-4g.jpg",
-      "imageAlt": "Router industrial 4G LTE Teltonika RUT241 para aplicaciones M2M y telemetría",
-      "summary": "Teltonika · modelo RUT241. Conectividad celular robusta para cuadros eléctricos, máquinas de vending y enlaces de respaldo en comercios.",
+      "image": "/images/products/tel-tel-037.svg",
+      "imageAlt": "Router celular industrial 4G LTE Teltonika RUT241 con ranura SIM y Wi-Fi",
+      "summary": "Teltonika · modelo RUT241. Router 4G LTE Cat 4 compacto con 2 puertos Ethernet, Wi-Fi 802.11b/g/n, túneles VPN y rango térmico extendido de -40°C a +75°C.",
       "specifications": [
-        { "label": "Módem celular", "value": "4G LTE Cat 4 (hasta 150 Mbps bajada / 50 Mbps subida) con fallback a 3G/2G" },
-        { "label": "Puertos Ethernet", "value": "2x 10/100 Mbps RJ45 (1x LAN, 1x WAN conmutables)" },
-        { "label": "Red inalámbrica", "value": "Punto de acceso Wi-Fi 802.11b/g/n a 2,4 GHz para configuración y clientes locales" },
-        { "label": "Túneles VPN seguros", "value": "OpenVPN, WireGuard, IPsec, GRE, ZeroTier y soporte Teltonika RMS" },
-        { "label": "Rango de temperatura", "value": "Temperatura de trabajo extrema de -40°C a +75°C" },
-        { "label": "Tensión de alimentación", "value": "Entrada continua de 9 a 30 V CC con bloque de bornes industrial" }
+        {
+          "label": "Módem celular",
+          "value": "4G LTE Cat 4 (hasta 150 Mbps bajada / 50 Mbps subida) con fallback a 3G/2G"
+        },
+        {
+          "label": "Puertos Ethernet",
+          "value": "2x 10/100 Mbps RJ45 (1x LAN, 1x WAN conmutables)"
+        },
+        {
+          "label": "Red inalámbrica",
+          "value": "Punto de acceso Wi-Fi 802.11b/g/n a 2,4 GHz para configuración y clientes locales"
+        },
+        {
+          "label": "Túneles VPN seguros",
+          "value": "OpenVPN, WireGuard, IPsec, GRE, ZeroTier y soporte Teltonika RMS"
+        },
+        {
+          "label": "Rango de temperatura",
+          "value": "Temperatura de trabajo extrema de -40°C a +75°C"
+        },
+        {
+          "label": "Tensión de alimentación",
+          "value": "Entrada continua de 9 a 30 V CC con bloque de bornes industrial"
+        }
       ],
       "featured": false
     },
@@ -1220,49 +1997,91 @@
       "sku": "NDR-TEL-TEL-038",
       "name": "Router Celular Industrial 5G y Wi-Fi 6 Dual SIM Teltonika RUTX50",
       "category": "Telefonía y Comunicaciones",
-      "categoryIds": ["telefonia-comunicaciones", "routers-celulares-4g-5g"],
+      "categoryIds": [
+        "telefonia-comunicaciones",
+        "routers-celulares-4g-5g"
+      ],
       "brand": "Teltonika",
       "modelNumber": "RUTX50",
-      "price": 529.0,
+      "price": 529,
       "stock": 12,
       "rating": 4.9,
       "reviewCount": 16,
-      "image": "https://img.pccomponentes.com/articles/34/341209/166-teltonika-rutx50-5g.jpg",
+      "image": "/images/products/tel-tel-038.svg",
       "imageAlt": "Router 5G industrial Teltonika RUTX50 con Wi-Fi 6 y doble SIM",
       "summary": "Teltonika · modelo RUTX50. Pasarela celular 5G de ultra baja latencia con velocidades multi-gigabit y conmutación automática por doble SIM.",
       "specifications": [
-        { "label": "Velocidades 5G", "value": "5G Sub-6 GHz SA/NSA con rendimiento móvil de hasta 3,3 Gbps" },
-        { "label": "Interfaces cableadas", "value": "5x puertos Gigabit Ethernet 10/100/1000 Mbps" },
-        { "label": "Wi-Fi corporativo", "value": "Wi-Fi 6 (802.11ax) doble banda Wave-2 con MU-MIMO hasta 1775 Mbps" },
-        { "label": "Doble SIM", "value": "2 ranuras SIM con conmutación automática por cobertura, itinerancia o límite de datos" },
-        { "label": "Conectores de antena", "value": "4x SMA para 5G/4G, 2x RP-SMA para Wi-Fi y 1x SMA para posicionamiento GNSS" },
-        { "label": "Carcasa", "value": "Chasis integral de aluminio anodizado con anclaje para carril DIN" }
+        {
+          "label": "Velocidades 5G",
+          "value": "5G Sub-6 GHz SA/NSA con rendimiento móvil de hasta 3,3 Gbps"
+        },
+        {
+          "label": "Interfaces cableadas",
+          "value": "5x puertos Gigabit Ethernet 10/100/1000 Mbps"
+        },
+        {
+          "label": "Wi-Fi corporativo",
+          "value": "Wi-Fi 6 (802.11ax) doble banda Wave-2 con MU-MIMO hasta 1775 Mbps"
+        },
+        {
+          "label": "Doble SIM",
+          "value": "2 ranuras SIM con conmutación automática por cobertura, itinerancia o límite de datos"
+        },
+        {
+          "label": "Conectores de antena",
+          "value": "4x SMA para 5G/4G, 2x RP-SMA para Wi-Fi y 1x SMA para posicionamiento GNSS"
+        },
+        {
+          "label": "Carcasa",
+          "value": "Chasis integral de aluminio anodizado con anclaje para carril DIN"
+        }
       ],
       "featured": false
     },
     {
       "id": "tel-tel-039",
-      "slug": "antena-exterior-omnidireccional-4g-5g-mimo-6dbi-teltonika",
+      "slug": "antena-exterior-omnidireccional-4g-5g-mimo-teltonika-pr1kmo40",
       "sku": "NDR-TEL-TEL-039",
-      "name": "Antena Exterior Omnidireccional 4G/5G MIMO 698-3800 MHz 6 dBi",
+      "name": "Antena Exterior Omnidireccional 4G/5G MIMO 698-3800 MHz 6 dBi Teltonika PR1KMO40",
       "category": "Telefonía y Comunicaciones",
-      "categoryIds": ["telefonia-comunicaciones", "antenas-comunicaciones"],
+      "categoryIds": [
+        "telefonia-comunicaciones",
+        "antenas-comunicaciones"
+      ],
       "brand": "Teltonika",
-      "modelNumber": "PR1US440",
-      "price": 75.0,
+      "modelNumber": "PR1KMO40",
+      "price": 75,
       "stock": 20,
       "rating": 4.7,
       "reviewCount": 23,
-      "image": "https://img.pccomponentes.com/articles/29/293410/144-teltonika-antena-5g-mimo.jpg",
-      "imageAlt": "Antena exterior omnidireccional 5G MIMO Teltonika con cable de 3m",
-      "summary": "Teltonika · modelo PR1US440. Antena estanca de polarización cruzada para maximizar la recepción de señal móvil en routers industriales.",
+      "image": "/images/products/tel-tel-039.svg",
+      "imageAlt": "Antena exterior omnidireccional 4G/5G MIMO Teltonika PR1KMO40 con soporte para mástil",
+      "summary": "Teltonika · modelo PR1KMO40. Antena exterior estanqueidad IP66 para mástil o pared con cobertura multi-banda 4G/5G, 2x2 MIMO y 2 tiradas de cable coaxial SMA.",
       "specifications": [
-        { "label": "Bandas de frecuencia", "value": "698-960 MHz, 1710-2700 MHz y 3400-3800 MHz (todas las bandas 4G/5G)" },
-        { "label": "Ganancia de señal", "value": "Hasta 6 dBi de ganancia con patrón omnidireccional 360°" },
-        { "label": "Configuración de radio", "value": "2x2 MIMO integrada en un único radomo compacto" },
-        { "label": "Cables coaxiales", "value": "2 tiradas de 3 metros de cable de baja pérdida RG58 con conectores SMA macho" },
-        { "label": "Sellado y resistencia", "value": "Grado IP66 estanco resistente a la intemperie y radiación UV continuada" },
-        { "label": "Montaje mecánico", "value": "Soporte de acero inoxidable para fijación en mástil o fachada incluido" }
+        {
+          "label": "Bandas de frecuencia",
+          "value": "698-960 MHz, 1710-2700 MHz y 3400-3800 MHz (todas las bandas 4G/5G)"
+        },
+        {
+          "label": "Ganancia de señal",
+          "value": "Hasta 6 dBi de ganancia con patrón omnidireccional 360°"
+        },
+        {
+          "label": "Configuración de radio",
+          "value": "2x2 MIMO integrada en un único radomo compacto"
+        },
+        {
+          "label": "Cables coaxiales",
+          "value": "2 tiradas de 3 metros de cable de baja pérdida RG58 con conectores SMA macho"
+        },
+        {
+          "label": "Sellado y resistencia",
+          "value": "Grado IP66 estanco resistente a la intemperie y radiación UV continuada"
+        },
+        {
+          "label": "Montaje mecánico",
+          "value": "Soporte de acero inoxidable para fijación en mástil o fachada incluido"
+        }
       ],
       "featured": false
     },
@@ -1272,23 +2091,44 @@
       "sku": "NDR-TEL-TEL-040",
       "name": "Amplificador de Señal Móvil 4G/5G Multibanda para Interiores StellaHome",
       "category": "Telefonía y Comunicaciones",
-      "categoryIds": ["telefonia-comunicaciones", "antenas-comunicaciones"],
+      "categoryIds": [
+        "telefonia-comunicaciones",
+        "antenas-comunicaciones"
+      ],
       "brand": "Televes",
       "modelNumber": "403001",
-      "price": 499.0,
+      "price": 499,
       "stock": 8,
       "rating": 4.9,
       "reviewCount": 10,
-      "image": "https://img.pccomponentes.com/articles/26/269103/182-televes-amplificador-4g-5g.jpg",
+      "image": "/images/products/tel-tel-040.svg",
       "imageAlt": "Kit amplificador repetidor de telefonía móvil 4G y 5G Televes StellaHome",
       "summary": "Televes · modelo 403001. Sistema repetidor homologado para eliminar zonas sin cobertura celular en sótanos, naves y oficinas aisladas.",
       "specifications": [
-        { "label": "Bandas amplificadas", "value": "800 MHz (B20), 900 MHz (B8), 1800 MHz (B3), 2100 MHz (B1) y 2600 MHz (B7)" },
-        { "label": "Superficie de cobertura", "value": "Hasta 1000 m² en interiores sin obstáculos" },
-        { "label": "Ganancia y control", "value": "60 dB de ganancia con control automático de ganancia (AGC) inteligente" },
-        { "label": "Certificación legal", "value": "Homologado conforme a la Directiva Europea RED 2014/53/UE para no interferir antenas base" },
-        { "label": "Componentes del kit", "value": "Antena exterior directiva, antena interior panel y cable coaxial LMR240" },
-        { "label": "Indicadores de estado", "value": "Barras LED indicadoras de nivel de señal y advertencia de retroalimentación" }
+        {
+          "label": "Bandas amplificadas",
+          "value": "800 MHz (B20), 900 MHz (B8), 1800 MHz (B3), 2100 MHz (B1) y 2600 MHz (B7)"
+        },
+        {
+          "label": "Superficie de cobertura",
+          "value": "Hasta 1000 m² en interiores sin obstáculos"
+        },
+        {
+          "label": "Ganancia y control",
+          "value": "60 dB de ganancia con control automático de ganancia (AGC) inteligente"
+        },
+        {
+          "label": "Certificación legal",
+          "value": "Homologado conforme a la Directiva Europea RED 2014/53/UE para no interferir antenas base"
+        },
+        {
+          "label": "Componentes del kit",
+          "value": "Antena exterior directiva, antena interior panel y cable coaxial LMR240"
+        },
+        {
+          "label": "Indicadores de estado",
+          "value": "Barras LED indicadoras de nivel de señal y advertencia de retroalimentación"
+        }
       ],
       "featured": false
     },
@@ -1298,23 +2138,44 @@
       "sku": "NDR-TEL-DIG-041",
       "name": "Gateway IoT Industrial Edge Advantech UNO-2271G-V2 con Modbus y MQTT",
       "category": "Digitalización e Industria Conectada",
-      "categoryIds": ["digitalizacion-industria-conectada", "gateways-iot-industriales"],
+      "categoryIds": [
+        "digitalizacion-industria-conectada",
+        "gateways-iot-industriales"
+      ],
       "brand": "Advantech",
       "modelNumber": "UNO-2271G-V2",
-      "price": 489.0,
+      "price": 489,
       "stock": 10,
       "rating": 4.9,
       "reviewCount": 15,
-      "image": "https://img.pccomponentes.com/articles/32/329012/177-advantech-uno-2271g-gateway.jpg",
+      "image": "/images/products/tel-dig-041.svg",
       "imageAlt": "Pasarela IoT industrial Advantech UNO-2271G-V2 fanless para carril DIN",
       "summary": "Advantech · modelo UNO-2271G-V2. Pasarela compacta sin ventilador para digitalización de líneas productivas, captura OPC UA y telemetría MQTT.",
       "specifications": [
-        { "label": "Unidad de proceso", "value": "Intel Celeron N5105 Quad-Core hasta 2,9 GHz" },
-        { "label": "Memoria y disco", "value": "8 GB DDR4 integrada y 64 GB de almacenamiento eMMC industrial" },
-        { "label": "Puertos de red", "value": "2x Gigabit Ethernet RJ45 independientes Intel i210" },
-        { "label": "Puertos serie de campo", "value": "1x puerto RS-232/422/485 con aislamiento galvánico de 2,5 kV" },
-        { "label": "Plataforma IoT", "value": "Software EdgeLink preinstalado con más de 200 controladores de autómatas PLC" },
-        { "label": "Rango térmico de operación", "value": "-20°C a +60°C en régimen continuo industrial 24/7" }
+        {
+          "label": "Unidad de proceso",
+          "value": "Intel Celeron N5105 Quad-Core hasta 2,9 GHz"
+        },
+        {
+          "label": "Memoria y disco",
+          "value": "8 GB DDR4 integrada y 64 GB de almacenamiento eMMC industrial"
+        },
+        {
+          "label": "Puertos de red",
+          "value": "2x Gigabit Ethernet RJ45 independientes Intel i210"
+        },
+        {
+          "label": "Puertos serie de campo",
+          "value": "1x puerto RS-232/422/485 con aislamiento galvánico de 2,5 kV"
+        },
+        {
+          "label": "Plataforma IoT",
+          "value": "Software EdgeLink preinstalado con más de 200 controladores de autómatas PLC"
+        },
+        {
+          "label": "Rango térmico de operación",
+          "value": "-20°C a +60°C en régimen continuo industrial 24/7"
+        }
       ],
       "featured": true
     },
@@ -1324,23 +2185,44 @@
       "sku": "NDR-TEL-DIG-042",
       "name": "Módulo de E/S Remotas Modbus TCP Ethernet Phoenix Contact Axioline Smart Elements",
       "category": "Digitalización e Industria Conectada",
-      "categoryIds": ["digitalizacion-industria-conectada", "gateways-iot-industriales"],
+      "categoryIds": [
+        "digitalizacion-industria-conectada",
+        "gateways-iot-industriales"
+      ],
       "brand": "Phoenix Contact",
       "modelNumber": "AXL-SE-SC-A",
-      "price": 215.0,
+      "price": 215,
       "stock": 18,
       "rating": 4.8,
       "reviewCount": 12,
-      "image": "https://img.pccomponentes.com/articles/27/271890/132-phoenix-contact-modbus-tcp.jpg",
+      "image": "/images/products/tel-dig-042.svg",
       "imageAlt": "Cabecera de periferia descentralizada Phoenix Contact Axioline Smart Elements Modbus TCP",
       "summary": "Phoenix Contact · modelo AXL-SE-SC-A. Estación de adquisición distribuida para lectura de sensores de fábrica mediante bus industrial Ethernet.",
       "specifications": [
-        { "label": "Protocolo de red", "value": "Modbus/TCP y PROFINET seleccionable con conmutador integrado de 2 puertos" },
-        { "label": "Entradas/Salidas", "value": "16 entradas digitales a 24 V CC y 8 salidas digitales a transistor (0,5 A)" },
-        { "label": "Tecnología de conexión", "value": "Conexión por resorte Push-in directa sin herramientas" },
-        { "label": "Aislamiento eléctrico", "value": "Aislamiento galvánico de 500 V entre electrónica de control y bus de campo" },
-        { "label": "Tiempo de respuesta", "value": "Actualización de bus ultrarrápida menor a 1 milisegundo" },
-        { "label": "Montaje", "value": "Instalación en carril DIN simétrico de 35 mm (EN 60715)" }
+        {
+          "label": "Protocolo de red",
+          "value": "Modbus/TCP y PROFINET seleccionable con conmutador integrado de 2 puertos"
+        },
+        {
+          "label": "Entradas/Salidas",
+          "value": "16 entradas digitales a 24 V CC y 8 salidas digitales a transistor (0,5 A)"
+        },
+        {
+          "label": "Tecnología de conexión",
+          "value": "Conexión por resorte Push-in directa sin herramientas"
+        },
+        {
+          "label": "Aislamiento eléctrico",
+          "value": "Aislamiento galvánico de 500 V entre electrónica de control y bus de campo"
+        },
+        {
+          "label": "Tiempo de respuesta",
+          "value": "Actualización de bus ultrarrápida menor a 1 milisegundo"
+        },
+        {
+          "label": "Montaje",
+          "value": "Instalación en carril DIN simétrico de 35 mm (EN 60715)"
+        }
       ],
       "featured": false
     },
@@ -1350,23 +2232,44 @@
       "sku": "NDR-TEL-DIG-043",
       "name": "Servidor Edge Fanless Industrial Advantech ARK-1220L para Inferencia IA",
       "category": "Digitalización e Industria Conectada",
-      "categoryIds": ["digitalizacion-industria-conectada", "servidores-edge-computacion"],
+      "categoryIds": [
+        "digitalizacion-industria-conectada",
+        "servidores-edge-computacion"
+      ],
       "brand": "Advantech",
       "modelNumber": "ARK-1220L-S6A1E",
-      "price": 699.0,
+      "price": 699,
       "stock": 8,
       "rating": 4.9,
       "reviewCount": 11,
-      "image": "https://img.pccomponentes.com/articles/31/314092/188-advantech-ark-1220l-edge.jpg",
+      "image": "/images/products/tel-dig-043.svg",
       "imageAlt": "Computador embebido para Edge Computing Advantech ARK-1220L",
       "summary": "Advantech · modelo ARK-1220L-S6A1E. Nodo de computación en borde para visión artificial, gemelos digitales y procesamiento local de datos.",
       "specifications": [
-        { "label": "Procesador industrial", "value": "Intel Atom x6413E Quad-Core a 1,5 GHz (Turbo 3,0 GHz)" },
-        { "label": "Capacidad de memoria", "value": "16 GB DDR4-3200 SODIMM (ampliable hasta 32 GB)" },
-        { "label": "Almacenamiento masivo", "value": "SSD M.2 2280 NVMe de 256 GB precargado con Linux embebido" },
-        { "label": "Conexiones de red", "value": "2x puertos 2.5 Gigabit Ethernet RJ45 Intel i225-IT" },
-        { "label": "Ampliación de aceleración", "value": "Ranura Mini PCIe para módulos NPU de aceleración neuronal (Hailo-8 / Google Coral)" },
-        { "label": "Robustez mecánica", "value": "Resistencia a vibraciones de 3 Grms y choques de 30G según IEC 60068" }
+        {
+          "label": "Procesador industrial",
+          "value": "Intel Atom x6413E Quad-Core a 1,5 GHz (Turbo 3,0 GHz)"
+        },
+        {
+          "label": "Capacidad de memoria",
+          "value": "16 GB DDR4-3200 SODIMM (ampliable hasta 32 GB)"
+        },
+        {
+          "label": "Almacenamiento masivo",
+          "value": "SSD M.2 2280 NVMe de 256 GB precargado con Linux embebido"
+        },
+        {
+          "label": "Conexiones de red",
+          "value": "2x puertos 2.5 Gigabit Ethernet RJ45 Intel i225-IT"
+        },
+        {
+          "label": "Ampliación de aceleración",
+          "value": "Ranura Mini PCIe para módulos NPU de aceleración neuronal (Hailo-8 / Google Coral)"
+        },
+        {
+          "label": "Robustez mecánica",
+          "value": "Resistencia a vibraciones de 3 Grms y choques de 30G según IEC 60068"
+        }
       ],
       "featured": false
     },
@@ -1376,23 +2279,44 @@
       "sku": "NDR-TEL-DIG-044",
       "name": "Micro Servidor Edge Fanless con Doble 2.5GbE y 4 Puertos Serie Moxa V2201",
       "category": "Digitalización e Industria Conectada",
-      "categoryIds": ["digitalizacion-industria-conectada", "servidores-edge-computacion"],
+      "categoryIds": [
+        "digitalizacion-industria-conectada",
+        "servidores-edge-computacion"
+      ],
       "brand": "Moxa",
       "modelNumber": "V2201-E4-W-T",
-      "price": 579.0,
+      "price": 579,
       "stock": 11,
       "rating": 4.8,
       "reviewCount": 14,
-      "image": "https://img.pccomponentes.com/articles/29/290124/156-moxa-v2201-edge-server.jpg",
+      "image": "/images/products/tel-dig-044.svg",
       "imageAlt": "Servidor industrial para subestaciones y borde Moxa V2201",
       "summary": "Moxa · modelo V2201-E4-W-T. Controlador de comunicaciones críticas con certificación para transporte e infraestructura energética.",
       "specifications": [
-        { "label": "CPU", "value": "Intel Atom E3845 Quad-Core a 1,91 GHz" },
-        { "label": "Memoria RAM", "value": "8 GB DDR3L con zócalo mSATA para almacenamiento en estado sólido" },
-        { "label": "Puertos serie industriales", "value": "4x RS-232/422/485 por DB9 macho con aislamiento óptico de 2 kV" },
-        { "label": "Puertos LAN", "value": "2x 2.5GbE Ethernet con conectores apantallados magnéticos" },
-        { "label": "Certificación normativa", "value": "Homologado para entornos ferroviarios EN 50121-4 e inmunidad industrial severa" },
-        { "label": "Rango de trabajo", "value": "Rango térmico extendido de -40°C a +70°C sin ventilador" }
+        {
+          "label": "CPU",
+          "value": "Intel Atom E3845 Quad-Core a 1,91 GHz"
+        },
+        {
+          "label": "Memoria RAM",
+          "value": "8 GB DDR3L con zócalo mSATA para almacenamiento en estado sólido"
+        },
+        {
+          "label": "Puertos serie industriales",
+          "value": "4x RS-232/422/485 por DB9 macho con aislamiento óptico de 2 kV"
+        },
+        {
+          "label": "Puertos LAN",
+          "value": "2x 2.5GbE Ethernet con conectores apantallados magnéticos"
+        },
+        {
+          "label": "Certificación normativa",
+          "value": "Homologado para entornos ferroviarios EN 50121-4 e inmunidad industrial severa"
+        },
+        {
+          "label": "Rango de trabajo",
+          "value": "Rango térmico extendido de -40°C a +70°C sin ventilador"
+        }
       ],
       "featured": false
     },
@@ -1402,23 +2326,44 @@
       "sku": "NDR-TEL-DIG-045",
       "name": "Servidor de Almacenamiento en Red NAS 4 Bahías Synology DiskStation DS923+",
       "category": "Digitalización e Industria Conectada",
-      "categoryIds": ["digitalizacion-industria-conectada", "almacenamiento-nas-servidores"],
+      "categoryIds": [
+        "digitalizacion-industria-conectada",
+        "almacenamiento-nas-servidores"
+      ],
       "brand": "Synology",
       "modelNumber": "DS923+",
-      "price": 629.0,
+      "price": 629,
       "stock": 14,
       "rating": 4.9,
       "reviewCount": 62,
-      "image": "https://img.pccomponentes.com/articles/33/332190/165-synology-ds923-plus-nas.jpg",
+      "image": "/images/products/tel-dig-045.svg",
       "imageAlt": "Servidor NAS Synology DiskStation DS923+ de 4 bahías con soporte 10GbE",
       "summary": "Synology · modelo DS923+. Centro de almacenamiento seguro para copias empresariales, contenedores Docker y centralización de datos de fábrica.",
       "specifications": [
-        { "label": "Procesador", "value": "AMD Ryzen R1600 Dual-Core (4 hilos) con frecuencia turbo hasta 3,1 GHz" },
-        { "label": "Memoria de sistema", "value": "4 GB DDR4 ECC protegida contra corrupción (ampliable hasta 32 GB ECC)" },
-        { "label": "Bahías de disco", "value": "4 bahías intercambiables en caliente para SATA 3.5\"/2.5\" (hasta 9 con unidad DX517)" },
-        { "label": "Aceleración NVMe", "value": "2 ranuras M.2 2280 NVMe integradas para caché o volumen SSD rápido" },
-        { "label": "Interfaces de red", "value": "2 puertos 1GbE RJ45 con agregación LACP + ranura de expansión para módulo 10GbE" },
-        { "label": "Sistema de archivos", "value": "Btrfs con instantáneas periódicas programadas y reparación automática de ficheros" }
+        {
+          "label": "Procesador",
+          "value": "AMD Ryzen R1600 Dual-Core (4 hilos) con frecuencia turbo hasta 3,1 GHz"
+        },
+        {
+          "label": "Memoria de sistema",
+          "value": "4 GB DDR4 ECC protegida contra corrupción (ampliable hasta 32 GB ECC)"
+        },
+        {
+          "label": "Bahías de disco",
+          "value": "4 bahías intercambiables en caliente para SATA 3.5\"/2.5\" (hasta 9 con unidad DX517)"
+        },
+        {
+          "label": "Aceleración NVMe",
+          "value": "2 ranuras M.2 2280 NVMe integradas para caché o volumen SSD rápido"
+        },
+        {
+          "label": "Interfaces de red",
+          "value": "2 puertos 1GbE RJ45 con agregación LACP + ranura de expansión para módulo 10GbE"
+        },
+        {
+          "label": "Sistema de archivos",
+          "value": "Btrfs con instantáneas periódicas programadas y reparación automática de ficheros"
+        }
       ],
       "featured": false
     },
@@ -1428,23 +2373,44 @@
       "sku": "NDR-TEL-DIG-046",
       "name": "Servidor de Almacenamiento NAS en Rack 19\" 1U 4 Bahías Synology RackStation RS822+",
       "category": "Digitalización e Industria Conectada",
-      "categoryIds": ["digitalizacion-industria-conectada", "almacenamiento-nas-servidores"],
+      "categoryIds": [
+        "digitalizacion-industria-conectada",
+        "almacenamiento-nas-servidores"
+      ],
       "brand": "Synology",
       "modelNumber": "RS822+",
-      "price": 989.0,
+      "price": 989,
       "stock": 9,
       "rating": 4.9,
       "reviewCount": 15,
-      "image": "https://img.pccomponentes.com/articles/31/319024/189-synology-rs822-plus-rack.jpg",
+      "image": "/images/products/tel-dig-046.svg",
       "imageAlt": "Almacenamiento en rack 1U Synology RackStation RS822+ para empresas",
       "summary": "Synology · modelo RS822+. Servidor NAS para montaje en armario rack de profundidad reducida con 4 interfaces de red integradas.",
       "specifications": [
-        { "label": "Factor de forma", "value": "Montaje en bastidor rack 19\" de 1U y profundidad compacta de 30 cm" },
-        { "label": "Procesador", "value": "AMD Ryzen V1500B Quad-Core a 2,2 GHz con motor de cifrado AES-NI" },
-        { "label": "Memoria RAM", "value": "8 GB DDR4 ECC preinstalados (ampliable hasta 32 GB)" },
-        { "label": "Capacidad de unidades", "value": "4 bahías SATA frontales con llave de seguridad" },
-        { "label": "Puertos de comunicaciones", "value": "4x Gigabit Ethernet RJ45 compatibles con failover y balanceo de tráfico" },
-        { "label": "Ampliación PCIe", "value": "Ranura PCIe Gen3 x8 para tarjetas de red 10GbE/25GbE o tarjetas M.2 dobles" }
+        {
+          "label": "Factor de forma",
+          "value": "Montaje en bastidor rack 19\" de 1U y profundidad compacta de 30 cm"
+        },
+        {
+          "label": "Procesador",
+          "value": "AMD Ryzen V1500B Quad-Core a 2,2 GHz con motor de cifrado AES-NI"
+        },
+        {
+          "label": "Memoria RAM",
+          "value": "8 GB DDR4 ECC preinstalados (ampliable hasta 32 GB)"
+        },
+        {
+          "label": "Capacidad de unidades",
+          "value": "4 bahías SATA frontales con llave de seguridad"
+        },
+        {
+          "label": "Puertos de comunicaciones",
+          "value": "4x Gigabit Ethernet RJ45 compatibles con failover y balanceo de tráfico"
+        },
+        {
+          "label": "Ampliación PCIe",
+          "value": "Ranura PCIe Gen3 x8 para tarjetas de red 10GbE/25GbE o tarjetas M.2 dobles"
+        }
       ],
       "featured": false
     },
@@ -1454,23 +2420,44 @@
       "sku": "REF-SNV3SM31T0-0ETE5",
       "name": "SSD Kingston NV3 1TB M.2 2230 PCIe 4.0 NVMe 6000MB/s 3D NAND Gaming",
       "category": "Digitalización e Industria Conectada",
-      "categoryIds": ["digitalizacion-industria-conectada", "almacenamiento-nas-servidores"],
+      "categoryIds": [
+        "digitalizacion-industria-conectada",
+        "almacenamiento-nas-servidores"
+      ],
       "brand": "Kingston",
       "modelNumber": "SNV3SM3/1T0",
       "price": 269.73,
       "stock": 25,
       "rating": 4.8,
       "reviewCount": 48,
-      "image": "https://img.pccomponentes.com/articles/1093/10932024/1572-ssd-kingston-nv3-1tb-m2-2230-pcie-40-nvme-6000mb-s-3d-nand-gaming.jpg",
+      "image": "/images/products/ref-storage-snv3sm3-1t0.svg",
       "imageAlt": "SSD Kingston NV3 1TB M.2 2230 PCIe 4.0 NVMe 6000MB/s 3D NAND Gaming",
       "summary": "Kingston · modelo SNV3SM3/1T0. Unidad de estado sólido M.2 PCIe 4.0 para aceleración de lectura de bases de datos y servidores NAS.",
       "specifications": [
-        { "label": "Capacidad", "value": "1 TB de almacenamiento 3D NAND" },
-        { "label": "Interfaz", "value": "PCI Express 4.0 x4 (NVMe 2.0)" },
-        { "label": "Formato", "value": "M.2 2230 compatible con servidores compactos y bastidores" },
-        { "label": "Lectura secuencial", "value": "Hasta 6000 MB/s" },
-        { "label": "Escritura secuencial", "value": "Hasta 4000 MB/s" },
-        { "label": "Resistencia TBW", "value": "320 TBW de durabilidad garantizada" }
+        {
+          "label": "Capacidad",
+          "value": "1 TB de almacenamiento 3D NAND"
+        },
+        {
+          "label": "Interfaz",
+          "value": "PCI Express 4.0 x4 (NVMe 2.0)"
+        },
+        {
+          "label": "Formato",
+          "value": "M.2 2230 compatible con servidores compactos y bastidores"
+        },
+        {
+          "label": "Lectura secuencial",
+          "value": "Hasta 6000 MB/s"
+        },
+        {
+          "label": "Escritura secuencial",
+          "value": "Hasta 4000 MB/s"
+        },
+        {
+          "label": "Resistencia TBW",
+          "value": "320 TBW de durabilidad garantizada"
+        }
       ],
       "featured": false
     },
@@ -1480,23 +2467,44 @@
       "sku": "REF-MZV9P1T0BW-1VOPO",
       "name": "Samsung 990 Pro 1TB Disco SSD 7450MB/S NVMe PCIe 4.0 M.2 Gen4",
       "category": "Digitalización e Industria Conectada",
-      "categoryIds": ["digitalizacion-industria-conectada", "almacenamiento-nas-servidores"],
+      "categoryIds": [
+        "digitalizacion-industria-conectada",
+        "almacenamiento-nas-servidores"
+      ],
       "brand": "Samsung",
       "modelNumber": "MZ-V9P1T0BW",
       "price": 218.99,
       "stock": 20,
       "rating": 4.9,
       "reviewCount": 65,
-      "image": "https://img.pccomponentes.com/articles/1064/10648533/1721-samsung-990-pro-1tb-ssd-pcie-40-nvme-m2.jpg",
+      "image": "/images/products/ref-storage-mz-v9p1t0bw.svg",
       "imageAlt": "Samsung 990 Pro 1TB Disco SSD 7450MB/S NVMe PCIe 4.0 M.2 Gen4",
       "summary": "Samsung · modelo MZ-V9P1T0BW. Rendimiento máximo en lectura y escritura para caché de almacenamiento en red corporativo y servidores Edge.",
       "specifications": [
-        { "label": "Capacidad", "value": "1000 GB (1 TB)" },
-        { "label": "Interfaz", "value": "PCIe Gen 4.0 x4, NVMe 2.0" },
-        { "label": "Formato", "value": "M.2 2280 estándar" },
-        { "label": "Lectura secuencial", "value": "Hasta 7450 MB/s" },
-        { "label": "Escritura secuencial", "value": "Hasta 6900 MB/s" },
-        { "label": "Controlador térmico", "value": "Controlador con revestimiento de níquel para estabilidad térmica continua" }
+        {
+          "label": "Capacidad",
+          "value": "1000 GB (1 TB)"
+        },
+        {
+          "label": "Interfaz",
+          "value": "PCIe Gen 4.0 x4, NVMe 2.0"
+        },
+        {
+          "label": "Formato",
+          "value": "M.2 2280 estándar"
+        },
+        {
+          "label": "Lectura secuencial",
+          "value": "Hasta 7450 MB/s"
+        },
+        {
+          "label": "Escritura secuencial",
+          "value": "Hasta 6900 MB/s"
+        },
+        {
+          "label": "Controlador térmico",
+          "value": "Controlador con revestimiento de níquel para estabilidad térmica continua"
+        }
       ],
       "featured": false
     },
@@ -1506,23 +2514,44 @@
       "sku": "NDR-TEL-DIG-047",
       "name": "Sensor Industrial de Temperatura y Humedad Modbus RTU RS-485 IP65",
       "category": "Digitalización e Industria Conectada",
-      "categoryIds": ["digitalizacion-industria-conectada", "sensores-industriales-modbus"],
+      "categoryIds": [
+        "digitalizacion-industria-conectada",
+        "sensores-industriales-modbus"
+      ],
       "brand": "Schneider Electric",
       "modelNumber": "METSETH01",
       "price": 79.5,
       "stock": 25,
       "rating": 4.8,
       "reviewCount": 18,
-      "image": "https://img.pccomponentes.com/articles/25/254190/122-schneider-sensor-modbus-rs485.jpg",
+      "image": "/images/products/tel-dig-047.svg",
       "imageAlt": "Sonda de temperatura y humedad ambiental industrial Schneider Electric Modbus RS-485",
       "summary": "Schneider Electric · modelo METSETH01. Transmisor con bus serie RS-485 para supervisión ambiental de CPD, salas eléctricas y silos de producción.",
       "specifications": [
-        { "label": "Protocolo de bus", "value": "Modbus RTU sobre par trenzado RS-485 half-duplex" },
-        { "label": "Rango de temperatura", "value": "-40°C a +85°C con precisión calibrada de ±0,3°C" },
-        { "label": "Rango de humedad", "value": "0% a 100% de humedad relativa (HR) con precisión de ±2%" },
-        { "label": "Protección ambiental", "value": "Carcasa estanca IP65 con filtro sinterizado de acero inoxidable" },
-        { "label": "Alimentación eléctrica", "value": "9 a 30 V CC con protección contra inversión de polaridad" },
-        { "label": "Direccionamiento", "value": "Dirección de esclavo 1-247 configurable por microinterruptores o software" }
+        {
+          "label": "Protocolo de bus",
+          "value": "Modbus RTU sobre par trenzado RS-485 half-duplex"
+        },
+        {
+          "label": "Rango de temperatura",
+          "value": "-40°C a +85°C con precisión calibrada de ±0,3°C"
+        },
+        {
+          "label": "Rango de humedad",
+          "value": "0% a 100% de humedad relativa (HR) con precisión de ±2%"
+        },
+        {
+          "label": "Protección ambiental",
+          "value": "Carcasa estanca IP65 con filtro sinterizado de acero inoxidable"
+        },
+        {
+          "label": "Alimentación eléctrica",
+          "value": "9 a 30 V CC con protección contra inversión de polaridad"
+        },
+        {
+          "label": "Direccionamiento",
+          "value": "Dirección de esclavo 1-247 configurable por microinterruptores o software"
+        }
       ],
       "featured": false
     },
@@ -1532,23 +2561,44 @@
       "sku": "NDR-TEL-DIG-048",
       "name": "Transmisor de Presión Industrial 4-20mA y Modbus RTU 0-10 Bar Acero Inoxidable",
       "category": "Digitalización e Industria Conectada",
-      "categoryIds": ["digitalizacion-industria-conectada", "sensores-industriales-modbus"],
+      "categoryIds": [
+        "digitalizacion-industria-conectada",
+        "sensores-industriales-modbus"
+      ],
       "brand": "Schneider Electric",
       "modelNumber": "XMLP010BC71F",
-      "price": 115.0,
+      "price": 115,
       "stock": 20,
       "rating": 4.9,
       "reviewCount": 14,
-      "image": "https://img.pccomponentes.com/articles/26/268102/145-schneider-transmisor-presion.jpg",
+      "image": "/images/products/tel-dig-048.svg",
       "imageAlt": "Transmisor de presión hidráulica y neumática en acero inoxidable Schneider Electric",
       "summary": "Schneider Electric · modelo XMLP010BC71F. Sensor de presión relativa para circuitos de refrigeración, aire comprimido y fluidos industriales.",
       "specifications": [
-        { "label": "Rango de medida", "value": "0 a 10 bar de presión relativa (sobrepresión admisible 30 bar)" },
-        { "label": "Salida de señal", "value": "Bucle de corriente analógico 4-20 mA a 2 hilos + lectura digital" },
-        { "label": "Conexión a tubería", "value": "Rosca macho G 1/4A según norma DIN 3852-E" },
-        { "label": "Materiales en contacto", "value": "Cuerpo y diafragma en acero inoxidable AISI 316L libre de elastómeros" },
-        { "label": "Conector eléctrico", "value": "Conector industrial métrico M12 de 4 polos con estanqueidad IP67" },
-        { "label": "Precisión global", "value": "Error máximo inferior a ±0,5% del fondo de escala (incluyendo linealidad e histéresis)" }
+        {
+          "label": "Rango de medida",
+          "value": "0 a 10 bar de presión relativa (sobrepresión admisible 30 bar)"
+        },
+        {
+          "label": "Salida de señal",
+          "value": "Bucle de corriente analógico 4-20 mA a 2 hilos + lectura digital"
+        },
+        {
+          "label": "Conexión a tubería",
+          "value": "Rosca macho G 1/4A según norma DIN 3852-E"
+        },
+        {
+          "label": "Materiales en contacto",
+          "value": "Cuerpo y diafragma en acero inoxidable AISI 316L libre de elastómeros"
+        },
+        {
+          "label": "Conector eléctrico",
+          "value": "Conector industrial métrico M12 de 4 polos con estanqueidad IP67"
+        },
+        {
+          "label": "Precisión global",
+          "value": "Error máximo inferior a ±0,5% del fondo de escala (incluyendo linealidad e histéresis)"
+        }
       ],
       "featured": false
     },
@@ -1558,23 +2608,44 @@
       "sku": "NDR-TEL-DIG-049",
       "name": "Terminal Portátil PDA Móvil Industrial con Lector 2D Zebra TC22",
       "category": "Digitalización e Industria Conectada",
-      "categoryIds": ["digitalizacion-industria-conectada", "captura-datos-trazabilidad"],
+      "categoryIds": [
+        "digitalizacion-industria-conectada",
+        "captura-datos-trazabilidad"
+      ],
       "brand": "Zebra",
       "modelNumber": "TC220K-01B112-A6",
-      "price": 549.0,
+      "price": 549,
       "stock": 15,
       "rating": 4.9,
       "reviewCount": 27,
-      "image": "https://img.pccomponentes.com/articles/35/351890/177-zebra-tc22-terminal-lectura.jpg",
+      "image": "/images/products/tel-dig-049.svg",
       "imageAlt": "Terminal de captura de datos y lector de códigos 2D Zebra TC22",
       "summary": "Zebra · modelo TC220K-01B112-A6. Terminal móvil ergonómico para gestión de almacenes, control de inventario y trazabilidad logística en planta.",
       "specifications": [
-        { "label": "Motor de escaneo", "value": "Lector imager SE4710 para códigos 1D y 2D (QR, DataMatrix) de lectura instantánea" },
-        { "label": "Pantalla táctil", "value": "Panel FHD+ de 6,0\" ultrabrillante operable con guantes o bajo lluvia" },
-        { "label": "Conectividad avanzada", "value": "Wi-Fi 6E (802.11ax), Bluetooth 5.2 y NFC integrado para emparejamiento rápido" },
-        { "label": "Procesador y memoria", "value": "Qualcomm Snapdragon 5430 Octa-Core a 2,1 GHz con 6 GB de RAM y 64 GB Flash" },
-        { "label": "Sistema operativo", "value": "Android 13 actualizable con suite de seguridad Zebra Mobility DNA" },
-        { "label": "Resistencia a caídas", "value": "Soporta caídas desde 1,5 metros sobre hormigón y sellado estanco IP68 / IP65" }
+        {
+          "label": "Motor de escaneo",
+          "value": "Lector imager SE4710 para códigos 1D y 2D (QR, DataMatrix) de lectura instantánea"
+        },
+        {
+          "label": "Pantalla táctil",
+          "value": "Panel FHD+ de 6,0\" ultrabrillante operable con guantes o bajo lluvia"
+        },
+        {
+          "label": "Conectividad avanzada",
+          "value": "Wi-Fi 6E (802.11ax), Bluetooth 5.2 y NFC integrado para emparejamiento rápido"
+        },
+        {
+          "label": "Procesador y memoria",
+          "value": "Qualcomm Snapdragon 5430 Octa-Core a 2,1 GHz con 6 GB de RAM y 64 GB Flash"
+        },
+        {
+          "label": "Sistema operativo",
+          "value": "Android 13 actualizable con suite de seguridad Zebra Mobility DNA"
+        },
+        {
+          "label": "Resistencia a caídas",
+          "value": "Soporta caídas desde 1,5 metros sobre hormigón y sellado estanco IP68 / IP65"
+        }
       ],
       "featured": false
     },
@@ -1584,23 +2655,44 @@
       "sku": "NDR-TEL-DIG-050",
       "name": "Impresora Industrial de Etiquetas y Códigos de Barras Térmica Zebra ZT231",
       "category": "Digitalización e Industria Conectada",
-      "categoryIds": ["digitalizacion-industria-conectada", "captura-datos-trazabilidad"],
+      "categoryIds": [
+        "digitalizacion-industria-conectada",
+        "captura-datos-trazabilidad"
+      ],
       "brand": "Zebra",
       "modelNumber": "ZT23142-T0E000FZ",
-      "price": 729.0,
+      "price": 729,
       "stock": 10,
       "rating": 4.8,
       "reviewCount": 21,
-      "image": "https://img.pccomponentes.com/articles/32/324190/168-zebra-zt231-impresora-etiquetas.jpg",
+      "image": "/images/products/tel-dig-050.svg",
       "imageAlt": "Impresora de etiquetas térmica industrial Zebra ZT231",
       "summary": "Zebra · modelo ZT23142-T0E000FZ. Impresora robusta con chasis metálico para etiquetado de palés, embalajes logísticos y trazabilidad.",
       "specifications": [
-        { "label": "Método de impresión", "value": "Transferencia térmica por ribbon y térmica directa sobre papel continuo" },
-        { "label": "Resolución de cabezal", "value": "203 dpi (8 puntos/mm) para textos nítidos y códigos legibles" },
-        { "label": "Velocidad de avance", "value": "Hasta 305 mm por segundo (12 pulgadas por segundo)" },
-        { "label": "Anchura máxima de etiqueta", "value": "104 mm con ajuste milimétrico de sensor de marca negra y hueco" },
-        { "label": "Pantalla de operador", "value": "Pantalla táctil a color de 4,3\" con asistentes interactivos de calibración" },
-        { "label": "Comunicaciones integradas", "value": "Ethernet 10/100, USB 2.0, USB Host para escáner y puerto serie RS-232" }
+        {
+          "label": "Método de impresión",
+          "value": "Transferencia térmica por ribbon y térmica directa sobre papel continuo"
+        },
+        {
+          "label": "Resolución de cabezal",
+          "value": "203 dpi (8 puntos/mm) para textos nítidos y códigos legibles"
+        },
+        {
+          "label": "Velocidad de avance",
+          "value": "Hasta 305 mm por segundo (12 pulgadas por segundo)"
+        },
+        {
+          "label": "Anchura máxima de etiqueta",
+          "value": "104 mm con ajuste milimétrico de sensor de marca negra y hueco"
+        },
+        {
+          "label": "Pantalla de operador",
+          "value": "Pantalla táctil a color de 4,3\" con asistentes interactivos de calibración"
+        },
+        {
+          "label": "Comunicaciones integradas",
+          "value": "Ethernet 10/100, USB 2.0, USB Host para escáner y puerto serie RS-232"
+        }
       ],
       "featured": false
     }

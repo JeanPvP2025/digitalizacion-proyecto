@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" width="800" height="800">
+  <defs>
+    <linearGradient id="bg-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0a120e" />
+      <stop offset="50%" stop-color="#101d16" />
+      <stop offset="100%" stop-color="#070c09" />
+    </linearGradient>
+    <radialGradient id="center-glow" cx="50%" cy="45%" r="45%">
+      <stop offset="0%" stop-color="#234c34" stop-opacity="0.45" />
+      <stop offset="70%" stop-color="#101e16" stop-opacity="0.1" />
+      <stop offset="100%" stop-color="#0a120e" stop-opacity="0" />
+    </radialGradient>
+    <pattern id="tech-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1d3829" stroke-width="1" stroke-opacity="0.35" />
+    </pattern>
+  </defs>
+
+  <!-- Background Layer -->
+  <rect width="800" height="800" fill="url(#bg-grad)" />
+  <rect width="800" height="800" fill="url(#center-glow)" />
+  <rect width="800" height="800" fill="url(#tech-grid)" />
+
+  <!-- Outer Frame & Corner Precision Markers -->
+  <rect x="24" y="24" width="752" height="752" rx="16" fill="none" stroke="#1f3d2b" stroke-width="1.5" stroke-opacity="0.7" />
+  <line x1="24" y1="50" x2="50" y2="24" stroke="#38e07b" stroke-width="2" />
+  <line x1="776" y1="50" x2="750" y2="24" stroke="#38e07b" stroke-width="2" />
+  <line x1="24" y1="750" x2="50" y2="776" stroke="#38e07b" stroke-width="2" />
+  <line x1="776" y1="750" x2="750" y2="776" stroke="#38e07b" stroke-width="2" />
+
+  <!-- Header: NODRIA Quality Assurance Badge -->
+  <g transform="translate(48, 48)">
+    <rect x="0" y="0" width="310" height="32" rx="6" fill="#13261b" stroke="#2e5c3e" stroke-width="1.5" />
+    <circle cx="16" cy="16" r="5" fill="#38e07b" />
+    <text x="32" y="21" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="11" font-weight="700" fill="#a8e6be" letter-spacing="1.2">NODRIA · CATÁLOGO TÉCNICO</text>
+
+    <!-- Category Pill -->
+    <rect x="325" y="0" width="375" height="32" rx="6" fill="#101e16" stroke="#254a32" stroke-width="1" />
+    <text x="340" y="20" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="10.5" font-weight="600" fill="#75b58c" letter-spacing="0.8">DIGITALIZACIÓN E INDUSTRIA CONECTADA</text>
+  </g>
+
+  <!-- Central Technical Graphic Schematic -->
+  <g id="product-schematic">
+    
+      <g stroke="#38e07b" stroke-width="2" fill="none" opacity="0.9">
+        <rect x="220" y="240" width="360" height="280" rx="14" fill="#14261c" stroke="#2bd673" stroke-width="4" />
+        <!-- Heavy cooling fins -->
+        
+          <line x1="255" y1="210" x2="255" y2="240" stroke="#254b35" stroke-width="6" stroke-linecap="round" />
+        
+          <line x1="281" y1="210" x2="281" y2="240" stroke="#254b35" stroke-width="6" stroke-linecap="round" />
+        
+          <line x1="307" y1="210" x2="307" y2="240" stroke="#254b35" stroke-width="6" stroke-linecap="round" />
+        
+          <line x1="333" y1="210" x2="333" y2="240" stroke="#254b35" stroke-width="6" stroke-linecap="round" />
+        
+          <line x1="359" y1="210" x2="359" y2="240" stroke="#254b35" stroke-width="6" stroke-linecap="round" />
+        
+          <line x1="385" y1="210" x2="385" y2="240" stroke="#254b35" stroke-width="6" stroke-linecap="round" />
+        
+          <line x1="411" y1="210" x2="411" y2="240" stroke="#254b35" stroke-width="6" stroke-linecap="round" />
+        
+          <line x1="437" y1="210" x2="437" y2="240" stroke="#254b35" stroke-width="6" stroke-linecap="round" />
+        
+          <line x1="463" y1="210" x2="463" y2="240" stroke="#254b35" stroke-width="6" stroke-linecap="round" />
+        
+          <line x1="489" y1="210" x2="489" y2="240" stroke="#254b35" stroke-width="6" stroke-linecap="round" />
+        
+          <line x1="515" y1="210" x2="515" y2="240" stroke="#254b35" stroke-width="6" stroke-linecap="round" />
+        
+          <line x1="541" y1="210" x2="541" y2="240" stroke="#254b35" stroke-width="6" stroke-linecap="round" />
+        
+        <!-- Industrial DB9 Serial Ports -->
+        <rect x="260" y="280" width="60" height="40" rx="4" fill="#1b3827" stroke="#38e07b" />
+        <rect x="340" y="280" width="60" height="40" rx="4" fill="#1b3827" stroke="#38e07b" />
+        <!-- Dual 2.5GbE Ethernet -->
+        <rect x="430" y="280" width="40" height="40" rx="4" fill="#0d1812" stroke="#2bd673" />
+        <rect x="485" y="280" width="40" height="40" rx="4" fill="#0d1812" stroke="#2bd673" />
+        <!-- Digital I/O terminal strip -->
+        
+          <rect x="260" y="420" width="22" height="40" rx="3" fill="#1a3626" stroke="#38e07b" />
+          <circle cx="271" cy="440" r="3" fill="#38e07b" />
+        
+          <rect x="292" y="420" width="22" height="40" rx="3" fill="#1a3626" stroke="#38e07b" />
+          <circle cx="303" cy="440" r="3" fill="#38e07b" />
+        
+          <rect x="324" y="420" width="22" height="40" rx="3" fill="#1a3626" stroke="#38e07b" />
+          <circle cx="335" cy="440" r="3" fill="#38e07b" />
+        
+          <rect x="356" y="420" width="22" height="40" rx="3" fill="#1a3626" stroke="#38e07b" />
+          <circle cx="367" cy="440" r="3" fill="#38e07b" />
+        
+          <rect x="388" y="420" width="22" height="40" rx="3" fill="#1a3626" stroke="#38e07b" />
+          <circle cx="399" cy="440" r="3" fill="#38e07b" />
+        
+          <rect x="420" y="420" width="22" height="40" rx="3" fill="#1a3626" stroke="#38e07b" />
+          <circle cx="431" cy="440" r="3" fill="#38e07b" />
+        
+          <rect x="452" y="420" width="22" height="40" rx="3" fill="#1a3626" stroke="#38e07b" />
+          <circle cx="463" cy="440" r="3" fill="#38e07b" />
+        
+          <rect x="484" y="420" width="22" height="40" rx="3" fill="#1a3626" stroke="#38e07b" />
+          <circle cx="495" cy="440" r="3" fill="#38e07b" />
+        
+      </g>
+  </g>
+
+  <!-- Product Identification Area -->
+  <g transform="translate(48, 650)">
+    <!-- Brand Tag -->
+    <rect x="0" y="0" width="130" height="24" rx="4" fill="#1b3626" stroke="#38e07b" stroke-width="1.2" />
+    <text x="65" y="16" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="11" font-weight="800" fill="#38e07b" letter-spacing="1.5" text-anchor="middle">ADVANTECH</text>
+
+    <!-- Model Monospace Badge -->
+    <rect x="142" y="0" width="180" height="24" rx="4" fill="#0e1b13" stroke="#264c33" stroke-width="1" />
+    <text x="152" y="16" font-family="'SF Mono', Consolas, Monaco, monospace" font-size="11" font-weight="600" fill="#7ce49f">MPN: ARK-1220L-S6A1E</text>
+
+    <!-- Commercial Name -->
+    <text x="0" y="52" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="20" font-weight="700" fill="#ecf5ef" letter-spacing="-0.3">
+      Servidor Edge Fanless Industrial Advantech ARK-1220L par…
+    </text>
+
+    <!-- Technical Specification Stamp -->
+    <text x="0" y="78" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="12" font-weight="500" fill="#7da68b">
+      ESPECIFICACIÓN ORIGINAL DEL FABRICANTE · HOMOLOGACIÓN TÉCNICA NODRIA
+    </text>
+  </g>
+</svg>

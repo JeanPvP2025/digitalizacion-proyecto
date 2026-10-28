@@ -117,6 +117,9 @@ function publishedReviewAggregates(reviews: PublishedReviewRow[] = []) {
 
 function isExactProductPhoto(url: string | null): url is string {
   if (!url) return false;
+  if (url.startsWith("/images/products/") || url.startsWith("/images/")) {
+    return /\.(svg|webp|png|jpg|jpeg)$/i.test(url);
+  }
   try {
     const parsed = new URL(url);
     const productImageHost = parsed.hostname === "img.pccomponentes.com" || parsed.hostname === "thumb.pccomponentes.com";

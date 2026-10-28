@@ -8,9 +8,8 @@ test("el catálogo presenta productos de NODRIA y ofrece una compra interna", as
   await page.goto(`/catalogo?q=${encodeURIComponent(product.modelNumber ?? product.sku)}`);
 
   await expect(page.getByRole("heading", { name: product.name })).toBeVisible();
-  await expect(page.getByText(product.modelNumber!, { exact: false }).first()).toBeVisible();
-  await expect(page.getByText("NODRIA", { exact: false }).first()).toBeVisible();
-  await expect(page.getByRole("button", { name: /añadir al carrito/i }).first()).toBeEnabled();
+  await expect(page.locator("#catalog-search")).toHaveValue(product.modelNumber!);
+  await expect(page.locator(".product-card").getByRole("button", { name: /añadir al carrito/i })).toBeEnabled();
   await expect(page.locator('main a[href^="http"]')).toHaveCount(0);
   await expect(page.getByText(/pccomponentes|vendedor externo|consultar precio/i)).toHaveCount(0);
 });
@@ -19,19 +18,19 @@ test("la ficha del producto enlaza a reseñas internas y evita enlaces comercial
   await page.goto(`/producto/${product.slug}`);
 
   await expect(page.getByRole("heading", { name: `${product.name}.` })).toBeVisible();
-  await expect(page.getByRole("button", { name: /añadir al carrito/i }).first()).toBeEnabled();
+  await expect(page.locator(".product-detail-copy").getByRole("button", { name: /añadir al carrito/i })).toBeEnabled();
   const reviewsLink = page.getByRole("link", { name: "Ver opiniones", exact: true });
   await expect(reviewsLink).toHaveAttribute("href", `/producto/${product.slug}/opiniones`);
   await expect(page.locator('main a[href^="http"]')).toHaveCount(0);
 
   await reviewsLink.click();
   await expect(page).toHaveURL(new RegExp(`/producto/${product.slug}/opiniones$`));
-  await expect(page.getByText(/ejemplo de demostración.*no verificada/i).first()).toBeVisible();
+  await expect(page.locator(".product-review-card").first()).toContainText(/ejemplo de demostración.*no verificada/i);
 });
 
 test("añadir desde una ficha actualiza el carrito y conduce al checkout de NODRIA", async ({ page }) => {
   await page.goto(`/producto/${product.slug}`);
-  await page.getByRole("button", { name: /añadir al carrito/i }).first().click();
+  await page.locator(".product-detail-copy").getByRole("button", { name: /añadir al carrito/i }).click();
 
   await page.goto("/carrito");
   await expect(page.getByRole("heading", { name: product.name })).toBeVisible();

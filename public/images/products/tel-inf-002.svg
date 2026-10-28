@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" width="800" height="800">
+  <defs>
+    <linearGradient id="bg-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0a120e" />
+      <stop offset="50%" stop-color="#101d16" />
+      <stop offset="100%" stop-color="#070c09" />
+    </linearGradient>
+    <radialGradient id="center-glow" cx="50%" cy="45%" r="45%">
+      <stop offset="0%" stop-color="#234c34" stop-opacity="0.45" />
+      <stop offset="70%" stop-color="#101e16" stop-opacity="0.1" />
+      <stop offset="100%" stop-color="#0a120e" stop-opacity="0" />
+    </radialGradient>
+    <pattern id="tech-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1d3829" stroke-width="1" stroke-opacity="0.35" />
+    </pattern>
+  </defs>
+
+  <!-- Background Layer -->
+  <rect width="800" height="800" fill="url(#bg-grad)" />
+  <rect width="800" height="800" fill="url(#center-glow)" />
+  <rect width="800" height="800" fill="url(#tech-grid)" />
+
+  <!-- Outer Frame & Corner Precision Markers -->
+  <rect x="24" y="24" width="752" height="752" rx="16" fill="none" stroke="#1f3d2b" stroke-width="1.5" stroke-opacity="0.7" />
+  <line x1="24" y1="50" x2="50" y2="24" stroke="#38e07b" stroke-width="2" />
+  <line x1="776" y1="50" x2="750" y2="24" stroke="#38e07b" stroke-width="2" />
+  <line x1="24" y1="750" x2="50" y2="776" stroke="#38e07b" stroke-width="2" />
+  <line x1="776" y1="750" x2="750" y2="776" stroke="#38e07b" stroke-width="2" />
+
+  <!-- Header: NODRIA Quality Assurance Badge -->
+  <g transform="translate(48, 48)">
+    <rect x="0" y="0" width="310" height="32" rx="6" fill="#13261b" stroke="#2e5c3e" stroke-width="1.5" />
+    <circle cx="16" cy="16" r="5" fill="#38e07b" />
+    <text x="32" y="21" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="11" font-weight="700" fill="#a8e6be" letter-spacing="1.2">NODRIA · CATÁLOGO TÉCNICO</text>
+
+    <!-- Category Pill -->
+    <rect x="325" y="0" width="375" height="32" rx="6" fill="#101e16" stroke="#254a32" stroke-width="1" />
+    <text x="340" y="20" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="10.5" font-weight="600" fill="#75b58c" letter-spacing="0.8">INFRAESTRUCTURAS DE TELECOMUNICACIONES</text>
+  </g>
+
+  <!-- Central Technical Graphic Schematic -->
+  <g id="product-schematic">
+    
+      <g stroke="#38e07b" stroke-width="2" fill="none" opacity="0.9">
+        <rect x="260" y="160" width="280" height="440" rx="12" stroke="#2bd673" stroke-width="3" fill="#13231a" />
+        <line x1="300" y1="160" x2="300" y2="600" stroke="#2e543e" stroke-dasharray="6,4" />
+        <line x1="500" y1="160" x2="500" y2="600" stroke="#2e543e" stroke-dasharray="6,4" />
+        <!-- Rack Units -->
+        <rect x="310" y="200" width="180" height="34" rx="4" fill="#1a3325" stroke="#38e07b" />
+        <circle cx="325" cy="217" r="3" fill="#38e07b" />
+        <circle cx="337" cy="217" r="3" fill="#38e07b" />
+        <line x1="360" y1="217" x2="470" y2="217" stroke="#2bd673" stroke-width="2" />
+        <rect x="310" y="250" width="180" height="34" rx="4" fill="#1a3325" stroke="#38e07b" />
+        <circle cx="325" cy="267" r="3" fill="#38e07b" />
+        <rect x="310" y="300" width="180" height="70" rx="4" fill="#162c20" stroke="#2bd673" />
+        <line x1="320" y1="335" x2="480" y2="335" stroke="#2e543e" />
+        <rect x="310" y="390" width="180" height="34" rx="4" fill="#1a3325" stroke="#38e07b" />
+        <rect x="310" y="440" width="180" height="34" rx="4" fill="#1a3325" stroke="#38e07b" />
+        <rect x="310" y="490" width="180" height="80" rx="4" fill="#162c20" stroke="#2bd673" />
+        <!-- Front Door Handle -->
+        <rect x="515" y="340" width="12" height="60" rx="4" fill="#38e07b" />
+      </g>
+  </g>
+
+  <!-- Product Identification Area -->
+  <g transform="translate(48, 650)">
+    <!-- Brand Tag -->
+    <rect x="0" y="0" width="130" height="24" rx="4" fill="#1b3626" stroke="#38e07b" stroke-width="1.2" />
+    <text x="65" y="16" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="11" font-weight="800" fill="#38e07b" letter-spacing="1.5" text-anchor="middle">SCHNEIDER ELECTRIC</text>
+
+    <!-- Model Monospace Badge -->
+    <rect x="142" y="0" width="180" height="24" rx="4" fill="#0e1b13" stroke="#264c33" stroke-width="1" />
+    <text x="152" y="16" font-family="'SF Mono', Consolas, Monaco, monospace" font-size="11" font-weight="600" fill="#7ce49f">MPN: NSYVD24U84P</text>
+
+    <!-- Commercial Name -->
+    <text x="0" y="52" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="20" font-weight="700" fill="#ecf5ef" letter-spacing="-0.3">
+      Armario Rack de Suelo 19&quot; 42U 800x1000mm con Guías …
+    </text>
+
+    <!-- Technical Specification Stamp -->
+    <text x="0" y="78" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="12" font-weight="500" fill="#7da68b">
+      ESPECIFICACIÓN ORIGINAL DEL FABRICANTE · HOMOLOGACIÓN TÉCNICA NODRIA
+    </text>
+  </g>
+</svg>

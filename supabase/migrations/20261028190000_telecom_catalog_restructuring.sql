@@ -392,7 +392,7 @@ begin
   ) values (
     'tel-inf-001', 'rack-mural-19-9u-profundidad-600mm-puerta-cristal-legrand', 'NDR-TEL-INF-001', 'Rack Mural 19" 9U Profundidad 600mm Puerta de Cristal', 'Legrand',
     'Legrand · modelo 446209. Armario mural de 19 pulgadas para salas técnicas e instalaciones de cableado estructurado secundario.', 'Legrand · modelo 446209. Armario mural de 19 pulgadas para salas técnicas e instalaciones de cableado estructurado secundario.',
-    'https://img.pccomponentes.com/articles/32/324884/184-rack-mural-19-9u-600mm.jpg', 'Rack mural de 19 pulgadas 9U Legrand con puerta de cristal templado', null,
+    '/images/products/tel-inf-001.svg', 'Rack mural de 19 pulgadas 9U Legrand con puerta de cristal templado', null,
     4.8, 16, false, true, now()
   )
   on conflict (id) do update set
@@ -428,16 +428,18 @@ begin
         'mode', 'academic_demo',
         'model_number', '446209',
         'brand', 'Legrand',
-        'inventory_seeded', true
+        'sku', 'NDR-TEL-INF-001'
       )
     ),
     189.50, null, 'EUR', 0.21, true
   )
-  on conflict (sku) do update set
+  on conflict (id) do update set
     product_id = excluded.product_id,
+    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
+    compare_at_price = excluded.compare_at_price,
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
@@ -500,7 +502,7 @@ begin
   ) values (
     'tel-inf-002', 'armario-rack-suelo-19-42u-800x1000mm-schneider-electric', 'NDR-TEL-INF-002', 'Armario Rack de Suelo 19" 42U 800x1000mm con Guías de Gestión', 'Schneider Electric',
     'Schneider Electric · modelo NSYVD24U84P. Bastidor de alta capacidad para distribución troncal y centros de procesamiento de datos.', 'Schneider Electric · modelo NSYVD24U84P. Bastidor de alta capacidad para distribución troncal y centros de procesamiento de datos.',
-    'https://img.pccomponentes.com/articles/28/289124/142-rack-suelo-42u-800x1000.jpg', 'Armario rack de suelo 42U 800x1000mm Schneider Electric para centro de datos', null,
+    '/images/products/tel-inf-002.svg', 'Armario rack de suelo 42U 800x1000mm Schneider Electric para centro de datos', null,
     4.9, 9, true, true, now()
   )
   on conflict (id) do update set
@@ -536,16 +538,18 @@ begin
         'mode', 'academic_demo',
         'model_number', 'NSYVD24U84P',
         'brand', 'Schneider Electric',
-        'inventory_seeded', true
+        'sku', 'NDR-TEL-INF-002'
       )
     ),
     849.00, null, 'EUR', 0.21, true
   )
-  on conflict (sku) do update set
+  on conflict (id) do update set
     product_id = excluded.product_id,
+    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
+    compare_at_price = excluded.compare_at_price,
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
@@ -608,7 +612,7 @@ begin
   ) values (
     'tel-inf-003', 'bobina-cable-red-u-ftp-cat6a-lszh-500m-televes', 'NDR-TEL-INF-003', 'Bobina Cable de Red U/FTP Cat.6A LSZH 500m 500MHz Libre de Halógenos', 'Televes',
     'Televes · modelo 219901. Conductor de cobre puro de 23 AWG para enlaces 10 Gigabit Ethernet con clasificación europea CPR Dca.', 'Televes · modelo 219901. Conductor de cobre puro de 23 AWG para enlaces 10 Gigabit Ethernet con clasificación europea CPR Dca.',
-    'https://img.pccomponentes.com/articles/17/178492/123-televes-cable-cat6a-500m.jpg', 'Bobina de cable de red U/FTP Cat.6A LSZH de 500 metros Televes', null,
+    '/images/products/tel-inf-003.svg', 'Bobina de cable de red U/FTP Cat.6A LSZH de 500 metros Televes', null,
     4.9, 31, false, true, now()
   )
   on conflict (id) do update set
@@ -644,16 +648,18 @@ begin
         'mode', 'academic_demo',
         'model_number', '219901',
         'brand', 'Televes',
-        'inventory_seeded', true
+        'sku', 'NDR-TEL-INF-003'
       )
     ),
     265.00, null, 'EUR', 0.21, true
   )
-  on conflict (sku) do update set
+  on conflict (id) do update set
     product_id = excluded.product_id,
+    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
+    compare_at_price = excluded.compare_at_price,
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
@@ -716,7 +722,7 @@ begin
   ) values (
     'tel-inf-004', 'bobina-cable-red-s-ftp-cat7-pimf-1000mhz-305m-televes', 'NDR-TEL-INF-004', 'Bobina Cable de Red S/FTP Cat.7 PIMF 1000MHz 305m Apantallado', 'Televes',
     'Televes · modelo 219910. Doble blindaje para instalaciones con alta inmunidad a perturbaciones electromagnéticas y entornos industriales.', 'Televes · modelo 219910. Doble blindaje para instalaciones con alta inmunidad a perturbaciones electromagnéticas y entornos industriales.',
-    'https://img.pccomponentes.com/articles/21/214589/115-televes-cat7-sftp-305m.jpg', 'Bobina de cable de par trenzado Cat.7 S/FTP Televes 305m', null,
+    '/images/products/tel-inf-004.svg', 'Bobina de cable de par trenzado Cat.7 S/FTP Televes 305m', null,
     4.7, 19, false, true, now()
   )
   on conflict (id) do update set
@@ -752,16 +758,18 @@ begin
         'mode', 'academic_demo',
         'model_number', '219910',
         'brand', 'Televes',
-        'inventory_seeded', true
+        'sku', 'NDR-TEL-INF-004'
       )
     ),
     215.00, null, 'EUR', 0.21, true
   )
-  on conflict (sku) do update set
+  on conflict (id) do update set
     product_id = excluded.product_id,
+    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
+    compare_at_price = excluded.compare_at_price,
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
@@ -824,7 +832,7 @@ begin
   ) values (
     'tel-inf-005', 'manguera-fibra-optica-preconectorizada-monomodo-os2-12-fibras-lc-50m-legrand', 'NDR-TEL-INF-005', 'Manguera Fibra Óptica Preconectorizada Monomodo OS2 12 Fibras LC-LC 50m', 'Legrand',
     'Legrand · modelo 032585. Enlace troncal preconectorizado con funda de tracción de protección para despliegue rápido entre repartidores.', 'Legrand · modelo 032585. Enlace troncal preconectorizado con funda de tracción de protección para despliegue rápido entre repartidores.',
-    'https://img.pccomponentes.com/articles/24/249102/165-fibra-os2-12-fibras-50m.jpg', 'Manguera troncal de fibra óptica monomodo OS2 12 fibras preconectorizada Legrand', null,
+    '/images/products/tel-inf-005.svg', 'Manguera troncal de fibra óptica monomodo OS2 12 fibras preconectorizada Legrand', null,
     4.8, 12, false, true, now()
   )
   on conflict (id) do update set
@@ -860,16 +868,18 @@ begin
         'mode', 'academic_demo',
         'model_number', '032585',
         'brand', 'Legrand',
-        'inventory_seeded', true
+        'sku', 'NDR-TEL-INF-005'
       )
     ),
     142.90, null, 'EUR', 0.21, true
   )
-  on conflict (sku) do update set
+  on conflict (id) do update set
     product_id = excluded.product_id,
+    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
+    compare_at_price = excluded.compare_at_price,
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
@@ -932,7 +942,7 @@ begin
   ) values (
     'tel-inf-006', 'bandeja-distribuidora-fibra-optica-19-1u-24-puertos-sc-apc-televes', 'NDR-TEL-INF-006', 'Bandeja Distribuidora de Fibra Óptica 19" 1U 24 Puertos SC/APC con Pigtails', 'Televes',
     'Televes · modelo 233003. Panel repartidor óptico telescópico con organizador de fusiones y pigtails monomodo montados de fábrica.', 'Televes · modelo 233003. Panel repartidor óptico telescópico con organizador de fusiones y pigtails monomodo montados de fábrica.',
-    'https://img.pccomponentes.com/articles/26/264190/134-bandeja-fibra-24-sc-apc.jpg', 'Bandeja telescópica de fibra óptica 19 pulgadas 24 puertos SC/APC Televes', null,
+    '/images/products/tel-inf-006.svg', 'Bandeja telescópica de fibra óptica 19 pulgadas 24 puertos SC/APC Televes', null,
     4.9, 23, false, true, now()
   )
   on conflict (id) do update set
@@ -968,16 +978,18 @@ begin
         'mode', 'academic_demo',
         'model_number', '233003',
         'brand', 'Televes',
-        'inventory_seeded', true
+        'sku', 'NDR-TEL-INF-006'
       )
     ),
     118.00, null, 'EUR', 0.21, true
   )
-  on conflict (sku) do update set
+  on conflict (id) do update set
     product_id = excluded.product_id,
+    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
+    compare_at_price = excluded.compare_at_price,
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
@@ -1040,7 +1052,7 @@ begin
   ) values (
     'tel-inf-007', 'panel-parcheo-19-24-puertos-cat6a-ftp-1u-schneider-electric', 'NDR-TEL-INF-007', 'Panel de Parcheo 19" 24 Puertos Cat.6A FTP 1U con Guía Trasera', 'Schneider Electric',
     'Schneider Electric · modelo VDIB17726B12. Panel de terminación metálico con tomas Keystone blindadas y barra de alivio de tensión mecánica.', 'Schneider Electric · modelo VDIB17726B12. Panel de terminación metálico con tomas Keystone blindadas y barra de alivio de tensión mecánica.',
-    'https://img.pccomponentes.com/articles/19/194301/178-patch-panel-24-cat6a.jpg', 'Panel de parcheo 24 puertos Cat.6A FTP 1U Schneider Electric con barra trasera', null,
+    '/images/products/tel-inf-007.svg', 'Panel de parcheo 24 puertos Cat.6A FTP 1U Schneider Electric con barra trasera', null,
     4.8, 35, false, true, now()
   )
   on conflict (id) do update set
@@ -1076,16 +1088,18 @@ begin
         'mode', 'academic_demo',
         'model_number', 'VDIB17726B12',
         'brand', 'Schneider Electric',
-        'inventory_seeded', true
+        'sku', 'NDR-TEL-INF-007'
       )
     ),
     82.50, null, 'EUR', 0.21, true
   )
-  on conflict (sku) do update set
+  on conflict (id) do update set
     product_id = excluded.product_id,
+    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
+    compare_at_price = excluded.compare_at_price,
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
@@ -1148,7 +1162,7 @@ begin
   ) values (
     'tel-inf-008', 'organizador-cables-horizontal-19-1u-legrand', 'NDR-TEL-INF-008', 'Organizador de Cables Horizontal 19" 1U con Tapa Frontal y 5 Anillas', 'Legrand',
     'Legrand · modelo 646520. Accesorio de ordenación de latiguillos en armarios rack de comunicaciones con paso ranurado trasero.', 'Legrand · modelo 646520. Accesorio de ordenación de latiguillos en armarios rack de comunicaciones con paso ranurado trasero.',
-    'https://img.pccomponentes.com/articles/22/227189/109-organizador-cables-1u.jpg', 'Guía horizontal pasahilos de 19 pulgadas 1U Legrand con tapa', null,
+    '/images/products/tel-inf-008.svg', 'Guía horizontal pasahilos de 19 pulgadas 1U Legrand con tapa', null,
     4.6, 42, false, true, now()
   )
   on conflict (id) do update set
@@ -1184,16 +1198,18 @@ begin
         'mode', 'academic_demo',
         'model_number', '646520',
         'brand', 'Legrand',
-        'inventory_seeded', true
+        'sku', 'NDR-TEL-INF-008'
       )
     ),
     24.90, null, 'EUR', 0.21, true
   )
-  on conflict (sku) do update set
+  on conflict (id) do update set
     product_id = excluded.product_id,
+    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
+    compare_at_price = excluded.compare_at_price,
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
@@ -1249,14 +1265,14 @@ begin
     value = excluded.value,
     sort_order = excluded.sort_order;
 
-  -- Product: NDR-TEL-INF-009 (Certificador de Redes de Cobre Cat.6A/Cat.8 Fluke DSX-602 INTL)
+  -- Product: NDR-TEL-INF-009 (Certificador de Redes de Cobre Cat.6A Fluke DSX-602 INTL)
   insert into public.products (
     id, slug, sku, name, brand, summary, description, image_url, image_alt, badge,
     rating_average, rating_count, is_featured, is_published, published_at
   ) values (
-    'tel-inf-009', 'certificador-redes-cobre-cat6a-cat8-fluke-dsx-602-intl', 'NDR-TEL-INF-009', 'Certificador de Redes de Cobre Cat.6A/Cat.8 Fluke DSX-602 INTL', 'Fluke Networks',
-    'Fluke Networks · modelo DSX-602-INTL. Equipo de certificación profesional para la comprobación y homologación de enlaces Clase EA / Cat.6A.', 'Fluke Networks · modelo DSX-602-INTL. Equipo de certificación profesional para la comprobación y homologación de enlaces Clase EA / Cat.6A.',
-    'https://img.pccomponentes.com/articles/31/319456/156-fluke-dsx-602-certificador.jpg', 'Certificador de cableado estructurado Fluke Networks DSX-602 INTL', null,
+    'tel-inf-009', 'certificador-redes-cobre-cat6a-fluke-dsx-602-intl', 'NDR-TEL-INF-009', 'Certificador de Redes de Cobre Cat.6A Fluke DSX-602 INTL', 'Fluke Networks',
+    'Fluke Networks · modelo DSX-602-INTL. Equipo de certificación profesional para la comprobación y homologación de enlaces Clase EA / Cat.6A hasta 500 MHz.', 'Fluke Networks · modelo DSX-602-INTL. Equipo de certificación profesional para la comprobación y homologación de enlaces Clase EA / Cat.6A hasta 500 MHz.',
+    '/images/products/tel-inf-009.svg', 'Certificador de cableado estructurado Fluke Networks DSX-602 INTL Cat.6A', null,
     5, 7, false, true, now()
   )
   on conflict (id) do update set
@@ -1292,16 +1308,18 @@ begin
         'mode', 'academic_demo',
         'model_number', 'DSX-602-INTL',
         'brand', 'Fluke Networks',
-        'inventory_seeded', true
+        'sku', 'NDR-TEL-INF-009'
       )
     ),
     1450.00, null, 'EUR', 0.21, true
   )
-  on conflict (sku) do update set
+  on conflict (id) do update set
     product_id = excluded.product_id,
+    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
+    compare_at_price = excluded.compare_at_price,
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
@@ -1364,7 +1382,7 @@ begin
   ) values (
     'tel-inf-010', 'fusionadora-fibra-optica-alineacion-nucleo-6-motores-televes', 'NDR-TEL-INF-010', 'Fusionadora de Fibra Óptica por Alineación de Núcleo 6 Motores', 'Televes',
     'Televes · modelo 232103. Equipo de empalme por arco voltaico con detección automática de tipo de fibra y horno de retracción ultrarrápido.', 'Televes · modelo 232103. Equipo de empalme por arco voltaico con detección automática de tipo de fibra y horno de retracción ultrarrápido.',
-    'https://img.pccomponentes.com/articles/33/338910/188-televes-fusionadora-fibra.jpg', 'Empalmadora por fusión de fibra óptica Televes alineación por núcleo 6 motores', null,
+    '/images/products/tel-inf-010.svg', 'Empalmadora por fusión de fibra óptica Televes alineación por núcleo 6 motores', null,
     4.9, 11, false, true, now()
   )
   on conflict (id) do update set
@@ -1400,16 +1418,18 @@ begin
         'mode', 'academic_demo',
         'model_number', '232103',
         'brand', 'Televes',
-        'inventory_seeded', true
+        'sku', 'NDR-TEL-INF-010'
       )
     ),
     1290.00, null, 'EUR', 0.21, true
   )
-  on conflict (sku) do update set
+  on conflict (id) do update set
     product_id = excluded.product_id,
+    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
+    compare_at_price = excluded.compare_at_price,
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
@@ -1465,14 +1485,14 @@ begin
     value = excluded.value,
     sort_order = excluded.sort_order;
 
-  -- Product: NDR-TEL-EQT-011 (Switch Gestionable L3 24 Puertos Gigabit PoE+ y 2 SFP+ 10G UniFi Pro)
+  -- Product: NDR-TEL-EQT-011 (Switch Gestionable L3 24 Puertos Gigabit PoE+/PoE++ y 2 SFP+ 10G UniFi Pro)
   insert into public.products (
     id, slug, sku, name, brand, summary, description, image_url, image_alt, badge,
     rating_average, rating_count, is_featured, is_published, published_at
   ) values (
-    'tel-eqt-011', 'switch-gestionable-l3-24-puertos-gigabit-poe-2-sfp-10g-unifi-pro-ubiquiti', 'NDR-TEL-EQT-011', 'Switch Gestionable L3 24 Puertos Gigabit PoE+ y 2 SFP+ 10G UniFi Pro', 'Ubiquiti',
-    'Ubiquiti · modelo USW-Pro-24-POE. Conmutador empresarial de capa 3 con 400W de entrega PoE y conectividad óptica 10 Gigabit.', 'Ubiquiti · modelo USW-Pro-24-POE. Conmutador empresarial de capa 3 con 400W de entrega PoE y conectividad óptica 10 Gigabit.',
-    'https://img.pccomponentes.com/articles/29/296541/143-ubiquiti-unifi-pro-24-poe.jpg', 'Switch gestionable capa 3 Ubiquiti UniFi Pro 24 PoE con enlaces 10G SFP+', null,
+    'tel-eqt-011', 'switch-gestionable-l3-24-puertos-gigabit-poe-2-sfp-10g-unifi-pro-ubiquiti', 'NDR-TEL-EQT-011', 'Switch Gestionable L3 24 Puertos Gigabit PoE+/PoE++ y 2 SFP+ 10G UniFi Pro', 'Ubiquiti',
+    'Ubiquiti · modelo USW-Pro-24-POE. Conmutador empresarial de capa 3 con 16 puertos PoE+, 8 puertos PoE++, 400W de entrega total y 2 enlaces 10G SFP+.', 'Ubiquiti · modelo USW-Pro-24-POE. Conmutador empresarial de capa 3 con 16 puertos PoE+, 8 puertos PoE++, 400W de entrega total y 2 enlaces 10G SFP+.',
+    '/images/products/tel-eqt-011.svg', 'Switch gestionable capa 3 Ubiquiti UniFi Pro 24 PoE+/PoE++ con enlaces 10G SFP+', null,
     4.9, 38, true, true, now()
   )
   on conflict (id) do update set
@@ -1508,16 +1528,18 @@ begin
         'mode', 'academic_demo',
         'model_number', 'USW-Pro-24-POE',
         'brand', 'Ubiquiti',
-        'inventory_seeded', true
+        'sku', 'NDR-TEL-EQT-011'
       )
     ),
     689.00, null, 'EUR', 0.21, true
   )
-  on conflict (sku) do update set
+  on conflict (id) do update set
     product_id = excluded.product_id,
+    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
+    compare_at_price = excluded.compare_at_price,
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
@@ -1580,7 +1602,7 @@ begin
   ) values (
     'tel-eqt-012', 'switch-gestionable-48-puertos-gigabit-poe-4-sfp-cisco-catalyst-1000', 'NDR-TEL-EQT-012', 'Switch Gestionable 48 Puertos Gigabit PoE+ y 4 SFP+ Cisco Catalyst 1000', 'Cisco',
     'Cisco · modelo C1000-48P-4X-L. Rendimiento fiable y seguro bajo Cisco IOS para infraestructura corporativa de alta densidad.', 'Cisco · modelo C1000-48P-4X-L. Rendimiento fiable y seguro bajo Cisco IOS para infraestructura corporativa de alta densidad.',
-    'https://img.pccomponentes.com/articles/30/301245/167-cisco-catalyst-1000-48p.jpg', 'Switch empresarial Cisco Catalyst 1000 48 puertos PoE+ y 4 SFP+', null,
+    '/images/products/tel-eqt-012.svg', 'Switch empresarial Cisco Catalyst 1000 48 puertos PoE+ y 4 SFP+', null,
     4.9, 14, false, true, now()
   )
   on conflict (id) do update set
@@ -1616,16 +1638,18 @@ begin
         'mode', 'academic_demo',
         'model_number', 'C1000-48P-4X-L',
         'brand', 'Cisco',
-        'inventory_seeded', true
+        'sku', 'NDR-TEL-EQT-012'
       )
     ),
     1150.00, null, 'EUR', 0.21, true
   )
-  on conflict (sku) do update set
+  on conflict (id) do update set
     product_id = excluded.product_id,
+    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
+    compare_at_price = excluded.compare_at_price,
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
@@ -1688,7 +1712,7 @@ begin
   ) values (
     'tel-eqt-013', 'router-agregacion-borde-firewall-unifi-dream-machine-se-ubiquiti', 'NDR-TEL-EQT-013', 'Router de Agregación de Borde y Firewall UniFi Dream Machine SE', 'Ubiquiti',
     'Ubiquiti · modelo UDM-SE. Pasarela de seguridad integral para empresas con puerto WAN 2.5 GbE, conmutador PoE de 8 puertos y motor IDS/IPS.', 'Ubiquiti · modelo UDM-SE. Pasarela de seguridad integral para empresas con puerto WAN 2.5 GbE, conmutador PoE de 8 puertos y motor IDS/IPS.',
-    'https://img.pccomponentes.com/articles/32/321876/155-ubiquiti-udm-se-pro.jpg', 'Router de borde y servidor de aplicaciones UniFi Dream Machine Special Edition', null,
+    '/images/products/tel-eqt-013.svg', 'Router de borde y servidor de aplicaciones UniFi Dream Machine Special Edition', null,
     4.9, 47, false, true, now()
   )
   on conflict (id) do update set
@@ -1724,16 +1748,18 @@ begin
         'mode', 'academic_demo',
         'model_number', 'UDM-SE',
         'brand', 'Ubiquiti',
-        'inventory_seeded', true
+        'sku', 'NDR-TEL-EQT-013'
       )
     ),
     519.00, null, 'EUR', 0.21, true
   )
-  on conflict (sku) do update set
+  on conflict (id) do update set
     product_id = excluded.product_id,
+    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
+    compare_at_price = excluded.compare_at_price,
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
@@ -1796,7 +1822,7 @@ begin
   ) values (
     'tel-eqt-014', 'router-borde-multi-wan-gigabit-routerboard-rb5009ug-s-in-mikrotik', 'NDR-TEL-EQT-014', 'Router de Borde Multi-WAN Gigabit RouterBOARD RB5009UG+S+IN', 'MikroTik',
     'MikroTik · modelo RB5009UG+S+IN. Router ultra compacto para proveedores y empresas con puerto 2.5G, puerto 10G SFP+ y potente procesador ARM.', 'MikroTik · modelo RB5009UG+S+IN. Router ultra compacto para proveedores y empresas con puerto 2.5G, puerto 10G SFP+ y potente procesador ARM.',
-    'https://img.pccomponentes.com/articles/31/312098/129-mikrotik-rb5009ug-sin.jpg', 'Router de alta densidad MikroTik RB5009UG+S+IN con RouterOS', null,
+    '/images/products/tel-eqt-014.svg', 'Router de alta densidad MikroTik RB5009UG+S+IN con RouterOS', null,
     4.8, 29, false, true, now()
   )
   on conflict (id) do update set
@@ -1832,16 +1858,18 @@ begin
         'mode', 'academic_demo',
         'model_number', 'RB5009UG+S+IN',
         'brand', 'MikroTik',
-        'inventory_seeded', true
+        'sku', 'NDR-TEL-EQT-014'
       )
     ),
     219.00, null, 'EUR', 0.21, true
   )
-  on conflict (sku) do update set
+  on conflict (id) do update set
     product_id = excluded.product_id,
+    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
+    compare_at_price = excluded.compare_at_price,
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
@@ -1904,7 +1932,7 @@ begin
   ) values (
     'tel-eqt-015', 'punto-acceso-wifi-7-tri-banda-empresarial-unifi-u7-pro-ubiquiti', 'NDR-TEL-EQT-015', 'Punto de Acceso Wi-Fi 7 Tri-Banda Empresarial UniFi U7 Pro', 'Ubiquiti',
     'Ubiquiti · modelo U7-Pro. Conectividad inalámbrica de próxima generación en la banda de 6 GHz con ancho de canal de 320 MHz y uplink 2.5G.', 'Ubiquiti · modelo U7-Pro. Conectividad inalámbrica de próxima generación en la banda de 6 GHz con ancho de canal de 320 MHz y uplink 2.5G.',
-    'https://img.pccomponentes.com/articles/35/354129/189-ubiquiti-u7-pro-wifi7.jpg', 'Punto de acceso inalámbrico Wi-Fi 7 UniFi U7 Pro Ubiquiti', null,
+    '/images/products/tel-eqt-015.svg', 'Punto de acceso inalámbrico Wi-Fi 7 UniFi U7 Pro Ubiquiti', null,
     4.9, 33, false, true, now()
   )
   on conflict (id) do update set
@@ -1940,16 +1968,18 @@ begin
         'mode', 'academic_demo',
         'model_number', 'U7-Pro',
         'brand', 'Ubiquiti',
-        'inventory_seeded', true
+        'sku', 'NDR-TEL-EQT-015'
       )
     ),
     198.00, null, 'EUR', 0.21, true
   )
-  on conflict (sku) do update set
+  on conflict (id) do update set
     product_id = excluded.product_id,
+    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
+    compare_at_price = excluded.compare_at_price,
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
@@ -2012,7 +2042,7 @@ begin
   ) values (
     'tel-eqt-016', 'punto-acceso-wifi-6-ax3000-techo-alta-densidad-cap-ax-mikrotik', 'NDR-TEL-EQT-016', 'Punto de Acceso Wi-Fi 6 AX3000 de Techo para Alta Densidad cAP AX', 'MikroTik',
     'MikroTik · modelo cAPGi-5HaxD2HaxD. Solución de techo para oficinas con soporte CAPsMAN centralizado y puerto PoE-Out secundario.', 'MikroTik · modelo cAPGi-5HaxD2HaxD. Solución de techo para oficinas con soporte CAPsMAN centralizado y puerto PoE-Out secundario.',
-    'https://img.pccomponentes.com/articles/33/331287/112-mikrotik-cap-ax-wifi6.jpg', 'Punto de acceso de techo MikroTik cAP ax Wi-Fi 6', null,
+    '/images/products/tel-eqt-016.svg', 'Punto de acceso de techo MikroTik cAP ax Wi-Fi 6', null,
     4.7, 17, false, true, now()
   )
   on conflict (id) do update set
@@ -2048,16 +2078,18 @@ begin
         'mode', 'academic_demo',
         'model_number', 'cAPGi-5HaxD2HaxD',
         'brand', 'MikroTik',
-        'inventory_seeded', true
+        'sku', 'NDR-TEL-EQT-016'
       )
     ),
     139.00, null, 'EUR', 0.21, true
   )
-  on conflict (sku) do update set
+  on conflict (id) do update set
     product_id = excluded.product_id,
+    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
+    compare_at_price = excluded.compare_at_price,
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
@@ -2120,7 +2152,7 @@ begin
   ) values (
     'tel-eqt-017', 'transceptor-optico-sfp-10g-lr-monomodo-1310nm-10km-ubiquiti', 'NDR-TEL-EQT-017', 'Transceptor Óptico SFP+ 10G LR Monomodo 1310nm 10km DDM', 'Ubiquiti',
     'Ubiquiti · modelo UACC-OM-SM-10G-D-2. Transceptor óptico de largo alcance para interconexión de conmutadores mediante fibra monomodo.', 'Ubiquiti · modelo UACC-OM-SM-10G-D-2. Transceptor óptico de largo alcance para interconexión de conmutadores mediante fibra monomodo.',
-    'https://img.pccomponentes.com/articles/27/276510/144-ubiquiti-sfp-10g-lr.jpg', 'Módulo transceptor óptico SFP+ 10G LR monomodo Ubiquiti', null,
+    '/images/products/tel-eqt-017.svg', 'Módulo transceptor óptico SFP+ 10G LR monomodo Ubiquiti', null,
     4.8, 21, false, true, now()
   )
   on conflict (id) do update set
@@ -2156,16 +2188,18 @@ begin
         'mode', 'academic_demo',
         'model_number', 'UACC-OM-SM-10G-D-2',
         'brand', 'Ubiquiti',
-        'inventory_seeded', true
+        'sku', 'NDR-TEL-EQT-017'
       )
     ),
     68.00, null, 'EUR', 0.21, true
   )
-  on conflict (sku) do update set
+  on conflict (id) do update set
     product_id = excluded.product_id,
+    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
+    compare_at_price = excluded.compare_at_price,
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
@@ -2228,7 +2262,7 @@ begin
   ) values (
     'tel-eqt-018', 'modulo-transceptor-sfp-10gbase-t-rj45-cobre-mikrotik', 'NDR-TEL-EQT-018', 'Módulo Transceptor SFP+ 10GBASE-T RJ45 Cobre hasta 30m', 'MikroTik',
     'MikroTik · modelo S+RJ10. Permite conectar latiguillos de cobre RJ45 Cat.6A en ranuras ópticas SFP+ a velocidades multi-gigabit.', 'MikroTik · modelo S+RJ10. Permite conectar latiguillos de cobre RJ45 Cat.6A en ranuras ópticas SFP+ a velocidades multi-gigabit.',
-    'https://img.pccomponentes.com/articles/23/238914/177-mikrotik-s-rj10-sfp-cobre.jpg', 'Módulo transceptor RJ45 de cobre 10G SFP+ MikroTik S+RJ10', null,
+    '/images/products/tel-eqt-018.svg', 'Módulo transceptor RJ45 de cobre 10G SFP+ MikroTik S+RJ10', null,
     4.7, 27, false, true, now()
   )
   on conflict (id) do update set
@@ -2264,16 +2298,18 @@ begin
         'mode', 'academic_demo',
         'model_number', 'S+RJ10',
         'brand', 'MikroTik',
-        'inventory_seeded', true
+        'sku', 'NDR-TEL-EQT-018'
       )
     ),
     59.90, null, 'EUR', 0.21, true
   )
-  on conflict (sku) do update set
+  on conflict (id) do update set
     product_id = excluded.product_id,
+    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
+    compare_at_price = excluded.compare_at_price,
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
@@ -2336,7 +2372,7 @@ begin
   ) values (
     'tel-eqt-019', 'central-amplificadora-programable-cabecera-avant-x-pro-televes', 'NDR-TEL-EQT-019', 'Central Amplificadora Programable de Cabecera Avant X Pro UHF/VHF/FM', 'Televes',
     'Televes · modelo 532121. Cabecera digital de amplificación para edificios de viviendas y comunidades con filtrado automático 5G LTE700.', 'Televes · modelo 532121. Cabecera digital de amplificación para edificios de viviendas y comunidades con filtrado automático 5G LTE700.',
-    'https://img.pccomponentes.com/articles/25/258901/192-televes-avant-x-pro.jpg', 'Central programable de amplificación de cabecera Avant X Pro Televes', null,
+    '/images/products/tel-eqt-019.svg', 'Central programable de amplificación de cabecera Avant X Pro Televes', null,
     4.9, 18, false, true, now()
   )
   on conflict (id) do update set
@@ -2372,16 +2408,18 @@ begin
         'mode', 'academic_demo',
         'model_number', '532121',
         'brand', 'Televes',
-        'inventory_seeded', true
+        'sku', 'NDR-TEL-EQT-019'
       )
     ),
     295.00, null, 'EUR', 0.21, true
   )
-  on conflict (sku) do update set
+  on conflict (id) do update set
     product_id = excluded.product_id,
+    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
+    compare_at_price = excluded.compare_at_price,
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
@@ -2444,7 +2482,7 @@ begin
   ) values (
     'tel-eqt-020', 'transmodulador-optico-cabecera-dvb-s2-a-dvb-t-televes', 'NDR-TEL-EQT-020', 'Transmodulador Óptico de Cabecera DVB-S2 a DVB-T/C con Ranura CI', 'Televes',
     'Televes · modelo 565101. Módulo de cabecera profesional para convertir canales de satélite a multiplex TDT distribuidos sobre cable coaxial.', 'Televes · modelo 565101. Módulo de cabecera profesional para convertir canales de satélite a multiplex TDT distribuidos sobre cable coaxial.',
-    'https://img.pccomponentes.com/articles/29/291034/163-televes-transmodulador-sat-tdt.jpg', 'Transmodulador satélite a TDT Televes T.0X con ranura Common Interface', null,
+    '/images/products/tel-eqt-020.svg', 'Transmodulador satélite a TDT Televes T.0X con ranura Common Interface', null,
     4.8, 8, false, true, now()
   )
   on conflict (id) do update set
@@ -2480,16 +2518,18 @@ begin
         'mode', 'academic_demo',
         'model_number', '565101',
         'brand', 'Televes',
-        'inventory_seeded', true
+        'sku', 'NDR-TEL-EQT-020'
       )
     ),
     479.00, null, 'EUR', 0.21, true
   )
-  on conflict (sku) do update set
+  on conflict (id) do update set
     product_id = excluded.product_id,
+    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
+    compare_at_price = excluded.compare_at_price,
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
@@ -2552,7 +2592,7 @@ begin
   ) values (
     'tel-dom-021', 'hub-domotico-multiprotocolo-zigbee-matter-thread-aqara-m3', 'NDR-TEL-DOM-021', 'Hub Domótico Multiprotocolo Zigbee 3.0, Matter y Thread Aqara Hub M3', 'Aqara',
     'Aqara · modelo HM-G01E. Pasarela central de automatización con compatibilidad total con Apple Home, Google Home y ejecución de escenas en local.', 'Aqara · modelo HM-G01E. Pasarela central de automatización con compatibilidad total con Apple Home, Google Home y ejecución de escenas en local.',
-    'https://img.pccomponentes.com/articles/36/364501/145-aqara-hub-m3-matter.jpg', 'Controlador domótico central Aqara Hub M3 con Matter y Thread', null,
+    '/images/products/tel-dom-021.svg', 'Controlador domótico central Aqara Hub M3 con Matter y Thread', null,
     4.9, 41, true, true, now()
   )
   on conflict (id) do update set
@@ -2588,16 +2628,18 @@ begin
         'mode', 'academic_demo',
         'model_number', 'HM-G01E',
         'brand', 'Aqara',
-        'inventory_seeded', true
+        'sku', 'NDR-TEL-DOM-021'
       )
     ),
     129.99, null, 'EUR', 0.21, true
   )
-  on conflict (sku) do update set
+  on conflict (id) do update set
     product_id = excluded.product_id,
+    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
+    compare_at_price = excluded.compare_at_price,
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
@@ -2653,14 +2695,14 @@ begin
     value = excluded.value,
     sort_order = excluded.sort_order;
 
-  -- Product: NDR-TEL-DOM-022 (Controlador Domótico Z-Wave Plus y Zigbee Home Center 3 Lite)
+  -- Product: NDR-TEL-DOM-022 (Controlador Domótico Z-Wave Plus Home Center 3 Lite)
   insert into public.products (
     id, slug, sku, name, brand, summary, description, image_url, image_alt, badge,
     rating_average, rating_count, is_featured, is_published, published_at
   ) values (
-    'tel-dom-022', 'controlador-domotico-z-wave-plus-zigbee-home-center-3-lite-fibaro', 'NDR-TEL-DOM-022', 'Controlador Domótico Z-Wave Plus y Zigbee Home Center 3 Lite', 'Fibaro',
-    'Fibaro · modelo FGHC3L-001. Sistema de control para instalaciones residenciales con potente motor de escenas programables en bloques y lenguaje LUA.', 'Fibaro · modelo FGHC3L-001. Sistema de control para instalaciones residenciales con potente motor de escenas programables en bloques y lenguaje LUA.',
-    'https://img.pccomponentes.com/articles/28/284102/168-fibaro-home-center-3-lite.jpg', 'Pasarela domótica Fibaro Home Center 3 Lite Z-Wave Plus', null,
+    'tel-dom-022', 'controlador-domotico-z-wave-plus-home-center-3-lite-fibaro', 'NDR-TEL-DOM-022', 'Controlador Domótico Z-Wave Plus Home Center 3 Lite', 'Fibaro',
+    'Fibaro · modelo FGHC3L-001. Sistema de control Z-Wave Plus Serie 700 para instalaciones residenciales con escenas programables en bloques y lenguaje LUA.', 'Fibaro · modelo FGHC3L-001. Sistema de control Z-Wave Plus Serie 700 para instalaciones residenciales con escenas programables en bloques y lenguaje LUA.',
+    '/images/products/tel-dom-022.svg', 'Pasarela domótica Fibaro Home Center 3 Lite Z-Wave Plus', null,
     4.7, 15, false, true, now()
   )
   on conflict (id) do update set
@@ -2696,16 +2738,18 @@ begin
         'mode', 'academic_demo',
         'model_number', 'FGHC3L-001',
         'brand', 'Fibaro',
-        'inventory_seeded', true
+        'sku', 'NDR-TEL-DOM-022'
       )
     ),
     139.00, null, 'EUR', 0.21, true
   )
-  on conflict (sku) do update set
+  on conflict (id) do update set
     product_id = excluded.product_id,
+    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
+    compare_at_price = excluded.compare_at_price,
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
@@ -2768,7 +2812,7 @@ begin
   ) values (
     'tel-dom-023', 'rele-inteligente-4-canales-carril-din-medicion-shelly-pro-4pm', 'NDR-TEL-DOM-023', 'Relé Inteligente 4 Canales para Carril DIN con Medición de Potencia Shelly Pro 4PM', 'Shelly',
     'Shelly · modelo SHELLY-PRO-4PM. Actuador profesional de 4 circuitos independientes de 16 A con pantalla a color y telemetría de energía.', 'Shelly · modelo SHELLY-PRO-4PM. Actuador profesional de 4 circuitos independientes de 16 A con pantalla a color y telemetría de energía.',
-    'https://img.pccomponentes.com/articles/30/305612/121-shelly-pro-4pm-carril-din.jpg', 'Relé inteligente para cuadro eléctrico carril DIN Shelly Pro 4PM con pantalla', null,
+    '/images/products/tel-dom-023.svg', 'Relé inteligente para cuadro eléctrico carril DIN Shelly Pro 4PM con pantalla', null,
     4.9, 39, false, true, now()
   )
   on conflict (id) do update set
@@ -2804,16 +2848,18 @@ begin
         'mode', 'academic_demo',
         'model_number', 'SHELLY-PRO-4PM',
         'brand', 'Shelly',
-        'inventory_seeded', true
+        'sku', 'NDR-TEL-DOM-023'
       )
     ),
     89.90, null, 'EUR', 0.21, true
   )
-  on conflict (sku) do update set
+  on conflict (id) do update set
     product_id = excluded.product_id,
+    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
+    compare_at_price = excluded.compare_at_price,
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
@@ -2869,14 +2915,14 @@ begin
     value = excluded.value,
     sort_order = excluded.sort_order;
 
-  -- Product: NDR-TEL-DOM-024 (Micromódulo Interruptor Empotrable Zigbee 3.0 con Medición Shelly 1PM Gen3)
+  -- Product: NDR-TEL-DOM-024 (Micromódulo Interruptor Empotrable Wi-Fi con Medición de Potencia Shelly 1PM Gen3)
   insert into public.products (
     id, slug, sku, name, brand, summary, description, image_url, image_alt, badge,
     rating_average, rating_count, is_featured, is_published, published_at
   ) values (
-    'tel-dom-024', 'micromodulo-interruptor-empotrable-zigbee-medicion-shelly-1pm-gen3', 'NDR-TEL-DOM-024', 'Micromódulo Interruptor Empotrable Zigbee 3.0 con Medición Shelly 1PM Gen3', 'Shelly',
-    'Shelly · modelo SHELLY-1PM-G3. Relé compacto para instalar tras interruptores y enchufes convencionales sin modificar la estética.', 'Shelly · modelo SHELLY-1PM-G3. Relé compacto para instalar tras interruptores y enchufes convencionales sin modificar la estética.',
-    'https://img.pccomponentes.com/articles/34/348910/109-shelly-1pm-gen3.jpg', 'Micromódulo empotrable para caja de mecanismo Shelly 1PM Gen3', null,
+    'tel-dom-024', 'micromodulo-interruptor-empotrable-wifi-medicion-shelly-1pm-gen3', 'NDR-TEL-DOM-024', 'Micromódulo Interruptor Empotrable Wi-Fi con Medición de Potencia Shelly 1PM Gen3', 'Shelly',
+    'Shelly · modelo SHELLY-1PM-G3. Relé compacto Wi-Fi y Bluetooth para instalar tras interruptores y enchufes con telemetría de energía y soporte Matter.', 'Shelly · modelo SHELLY-1PM-G3. Relé compacto Wi-Fi y Bluetooth para instalar tras interruptores y enchufes con telemetría de energía y soporte Matter.',
+    '/images/products/tel-dom-024.svg', 'Micromódulo empotrable para caja de mecanismo Shelly 1PM Gen3 Wi-Fi', null,
     4.8, 54, false, true, now()
   )
   on conflict (id) do update set
@@ -2912,16 +2958,18 @@ begin
         'mode', 'academic_demo',
         'model_number', 'SHELLY-1PM-G3',
         'brand', 'Shelly',
-        'inventory_seeded', true
+        'sku', 'NDR-TEL-DOM-024'
       )
     ),
     22.90, null, 'EUR', 0.21, true
   )
-  on conflict (sku) do update set
+  on conflict (id) do update set
     product_id = excluded.product_id,
+    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
+    compare_at_price = excluded.compare_at_price,
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
@@ -2984,7 +3032,7 @@ begin
   ) values (
     'tel-dom-025', 'sensor-presencia-humana-radar-milimetrico-mmwave-fp2-aqara', 'NDR-TEL-DOM-025', 'Sensor de Presencia Humana por Radar Milimétrico mmWave FP2 Aqara', 'Aqara',
     'Aqara · modelo PS-S02D. Detección continua de personas incluso en reposo absoluto mediante radar de ondas milimétricas de 60 GHz.', 'Aqara · modelo PS-S02D. Detección continua de personas incluso en reposo absoluto mediante radar de ondas milimétricas de 60 GHz.',
-    'https://img.pccomponentes.com/articles/33/339412/134-aqara-fp2-presencia-radar.jpg', 'Sensor de presencia por radar milimétrico Aqara Presence Sensor FP2', null,
+    '/images/products/tel-dom-025.svg', 'Sensor de presencia por radar milimétrico Aqara Presence Sensor FP2', null,
     4.9, 26, false, true, now()
   )
   on conflict (id) do update set
@@ -3020,16 +3068,18 @@ begin
         'mode', 'academic_demo',
         'model_number', 'PS-S02D',
         'brand', 'Aqara',
-        'inventory_seeded', true
+        'sku', 'NDR-TEL-DOM-025'
       )
     ),
     82.99, null, 'EUR', 0.21, true
   )
-  on conflict (sku) do update set
+  on conflict (id) do update set
     product_id = excluded.product_id,
+    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
+    compare_at_price = excluded.compare_at_price,
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
@@ -3092,7 +3142,7 @@ begin
   ) values (
     'tel-dom-026', 'sensor-ambiental-calidad-aire-temperatura-humedad-tvoc-aqara', 'NDR-TEL-DOM-026', 'Sensor Ambiental de Calidad de Aire Temperatura y Humedad TVOC Zigbee', 'Aqara',
     'Aqara · modelo AAQS-S01. Pantalla de tinta electrónica para monitorizar contaminantes volátiles, confort térmico y humedad ambiental.', 'Aqara · modelo AAQS-S01. Pantalla de tinta electrónica para monitorizar contaminantes volátiles, confort térmico y humedad ambiental.',
-    'https://img.pccomponentes.com/articles/27/279154/156-aqara-sensor-tvoc-zigbee.jpg', 'Monitor de calidad de aire y temperatura Aqara TVOC con pantalla E-Ink', null,
+    '/images/products/tel-dom-026.svg', 'Monitor de calidad de aire y temperatura Aqara TVOC con pantalla E-Ink', null,
     4.7, 18, false, true, now()
   )
   on conflict (id) do update set
@@ -3128,16 +3178,18 @@ begin
         'mode', 'academic_demo',
         'model_number', 'AAQS-S01',
         'brand', 'Aqara',
-        'inventory_seeded', true
+        'sku', 'NDR-TEL-DOM-026'
       )
     ),
     44.90, null, 'EUR', 0.21, true
   )
-  on conflict (sku) do update set
+  on conflict (id) do update set
     product_id = excluded.product_id,
+    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
+    compare_at_price = excluded.compare_at_price,
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
@@ -3200,7 +3252,7 @@ begin
   ) values (
     'tel-dom-027', 'videoportero-ip-poe-camara-2k-lector-nfc-unifi-g4-doorbell-pro-ubiquiti', 'NDR-TEL-DOM-027', 'Videoportero IP PoE con Cámara 2K y Lector NFC UniFi G4 Doorbell Pro PoE', 'Ubiquiti',
     'Ubiquiti · modelo UVC-G4-Doorbell-Pro-PoE. Intercomunicador IP de seguridad con doble cámara, lector de tarjetas y pantalla programable.', 'Ubiquiti · modelo UVC-G4-Doorbell-Pro-PoE. Intercomunicador IP de seguridad con doble cámara, lector de tarjetas y pantalla programable.',
-    'https://img.pccomponentes.com/articles/32/328901/179-ubiquiti-g4-doorbell-pro-poe.jpg', 'Videoportero IP PoE UniFi G4 Doorbell Pro Ubiquiti con doble cámara', null,
+    '/images/products/tel-dom-027.svg', 'Videoportero IP PoE UniFi G4 Doorbell Pro Ubiquiti con doble cámara', null,
     4.9, 22, false, true, now()
   )
   on conflict (id) do update set
@@ -3236,16 +3288,18 @@ begin
         'mode', 'academic_demo',
         'model_number', 'UVC-G4-Doorbell-Pro-PoE',
         'brand', 'Ubiquiti',
-        'inventory_seeded', true
+        'sku', 'NDR-TEL-DOM-027'
       )
     ),
     379.00, null, 'EUR', 0.21, true
   )
-  on conflict (sku) do update set
+  on conflict (id) do update set
     product_id = excluded.product_id,
+    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
+    compare_at_price = excluded.compare_at_price,
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
@@ -3301,14 +3355,14 @@ begin
     value = excluded.value,
     sort_order = excluded.sort_order;
 
-  -- Product: NDR-TEL-DOM-028 (Cerradura Electrónica Inteligente Zigbee con Teclado Táctil y Biometría Aqara U200)
+  -- Product: NDR-TEL-DOM-028 (Cerradura Electrónica Inteligente Matter sobre Thread con Teclado Táctil y Biometría Aqara U200)
   insert into public.products (
     id, slug, sku, name, brand, summary, description, image_url, image_alt, badge,
     rating_average, rating_count, is_featured, is_published, published_at
   ) values (
-    'tel-dom-028', 'cerradura-electronica-inteligente-zigbee-teclado-tactil-aqara-u200', 'NDR-TEL-DOM-028', 'Cerradura Electrónica Inteligente Zigbee con Teclado Táctil y Biometría Aqara U200', 'Aqara',
-    'Aqara · modelo EL-D02D. Cerradura motorizada sobre bombín europeo compatible con Matter sobre Thread y apertura por Apple Home Key.', 'Aqara · modelo EL-D02D. Cerradura motorizada sobre bombín europeo compatible con Matter sobre Thread y apertura por Apple Home Key.',
-    'https://img.pccomponentes.com/articles/35/359124/188-aqara-u200-smart-lock.jpg', 'Cerradura inteligente motorizada Aqara U200 con teclado exterior y huella', null,
+    'tel-dom-028', 'cerradura-electronica-inteligente-matter-thread-teclado-aqara-u200', 'NDR-TEL-DOM-028', 'Cerradura Electrónica Inteligente Matter sobre Thread con Teclado Táctil y Biometría Aqara U200', 'Aqara',
+    'Aqara · modelo EL-D02D. Cerradura motorizada sobre bombín europeo compatible con Matter sobre Thread, Apple Home Key y teclado exterior con huella.', 'Aqara · modelo EL-D02D. Cerradura motorizada sobre bombín europeo compatible con Matter sobre Thread, Apple Home Key y teclado exterior con huella.',
+    '/images/products/tel-dom-028.svg', 'Cerradura inteligente motorizada Aqara U200 Matter sobre Thread con teclado exterior y huella', null,
     4.8, 16, false, true, now()
   )
   on conflict (id) do update set
@@ -3344,16 +3398,18 @@ begin
         'mode', 'academic_demo',
         'model_number', 'EL-D02D',
         'brand', 'Aqara',
-        'inventory_seeded', true
+        'sku', 'NDR-TEL-DOM-028'
       )
     ),
     269.99, null, 'EUR', 0.21, true
   )
-  on conflict (sku) do update set
+  on conflict (id) do update set
     product_id = excluded.product_id,
+    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
+    compare_at_price = excluded.compare_at_price,
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
@@ -3416,7 +3472,7 @@ begin
   ) values (
     'tel-dom-029', 'termostato-inteligente-modulante-opentherm-wiser-schneider-electric', 'NDR-TEL-DOM-029', 'Termostato Inteligente Modulante OpenTherm y Relé para Caldera/Bomba de Calor', 'Schneider Electric',
     'Schneider Electric · modelo CCTFR6700. Control eficiente de calefacción y aerotermia mediante regulación continua y algoritmos predictivos.', 'Schneider Electric · modelo CCTFR6700. Control eficiente de calefacción y aerotermia mediante regulación continua y algoritmos predictivos.',
-    'https://img.pccomponentes.com/articles/29/298412/165-schneider-termostato-wiser.jpg', 'Termostato de pared modulante OpenTherm Schneider Electric Wiser', null,
+    '/images/products/tel-dom-029.svg', 'Termostato de pared modulante OpenTherm Schneider Electric Wiser', null,
     4.8, 20, false, true, now()
   )
   on conflict (id) do update set
@@ -3452,16 +3508,18 @@ begin
         'mode', 'academic_demo',
         'model_number', 'CCTFR6700',
         'brand', 'Schneider Electric',
-        'inventory_seeded', true
+        'sku', 'NDR-TEL-DOM-029'
       )
     ),
     179.00, null, 'EUR', 0.21, true
   )
-  on conflict (sku) do update set
+  on conflict (id) do update set
     product_id = excluded.product_id,
+    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
+    compare_at_price = excluded.compare_at_price,
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
@@ -3517,14 +3575,14 @@ begin
     value = excluded.value,
     sort_order = excluded.sort_order;
 
-  -- Product: NDR-TEL-DOM-030 (Cabezal Termostático Inteligente para Radiador Zigbee con Pantalla LED Shelly TRV)
+  -- Product: NDR-TEL-DOM-030 (Cabezal Termostático Inteligente para Radiador Wi-Fi con Pantalla LED Shelly TRV)
   insert into public.products (
     id, slug, sku, name, brand, summary, description, image_url, image_alt, badge,
     rating_average, rating_count, is_featured, is_published, published_at
   ) values (
-    'tel-dom-030', 'cabezal-termostatico-inteligente-radiador-wifi-shelly-trv', 'NDR-TEL-DOM-030', 'Cabezal Termostático Inteligente para Radiador Zigbee con Pantalla LED Shelly TRV', 'Shelly',
-    'Shelly · modelo SHELLY-TRV. Regulación individual de temperatura estancia por estancia con batería recargable y conexión Wi-Fi directa.', 'Shelly · modelo SHELLY-TRV. Regulación individual de temperatura estancia por estancia con batería recargable y conexión Wi-Fi directa.',
-    'https://img.pccomponentes.com/articles/31/314562/119-shelly-trv-valvula-termostatica.jpg', 'Válvula termostática electrónica para radiador Shelly TRV con batería recargable', null,
+    'tel-dom-030', 'cabezal-termostatico-inteligente-radiador-wifi-shelly-trv', 'NDR-TEL-DOM-030', 'Cabezal Termostático Inteligente para Radiador Wi-Fi con Pantalla LED Shelly TRV', 'Shelly',
+    'Shelly · modelo SHELLY-TRV. Regulación individual de temperatura estancia por estancia con batería recargable Panasonic de 6500 mAh y conexión Wi-Fi directa.', 'Shelly · modelo SHELLY-TRV. Regulación individual de temperatura estancia por estancia con batería recargable Panasonic de 6500 mAh y conexión Wi-Fi directa.',
+    '/images/products/tel-dom-030.svg', 'Válvula termostática electrónica para radiador Shelly TRV Wi-Fi con batería recargable', null,
     4.7, 37, false, true, now()
   )
   on conflict (id) do update set
@@ -3560,16 +3618,18 @@ begin
         'mode', 'academic_demo',
         'model_number', 'SHELLY-TRV',
         'brand', 'Shelly',
-        'inventory_seeded', true
+        'sku', 'NDR-TEL-DOM-030'
       )
     ),
     69.90, null, 'EUR', 0.21, true
   )
-  on conflict (sku) do update set
+  on conflict (id) do update set
     product_id = excluded.product_id,
+    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
+    compare_at_price = excluded.compare_at_price,
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
@@ -3632,7 +3692,7 @@ begin
   ) values (
     'tel-tel-031', 'centralita-telefonica-ip-pbx-grandstream-ucm6302-1000-usuarios', 'NDR-TEL-TEL-031', 'Centralita Telefónica IP-PBX Grandstream UCM6302 hasta 1000 Usuarios y 150 Llamadas', 'Grandstream',
     'Grandstream · modelo UCM6302. Plataforma de comunicaciones unificadas con aprovisionamiento automático y servidor de conferencias.', 'Grandstream · modelo UCM6302. Plataforma de comunicaciones unificadas con aprovisionamiento automático y servidor de conferencias.',
-    'https://img.pccomponentes.com/articles/28/281904/162-grandstream-ucm6302.jpg', 'Centralita telefónica IP PBX Grandstream UCM6302 para empresas', null,
+    '/images/products/tel-tel-031.svg', 'Centralita telefónica IP PBX Grandstream UCM6302 para empresas', null,
     4.9, 19, true, true, now()
   )
   on conflict (id) do update set
@@ -3668,16 +3728,18 @@ begin
         'mode', 'academic_demo',
         'model_number', 'UCM6302',
         'brand', 'Grandstream',
-        'inventory_seeded', true
+        'sku', 'NDR-TEL-TEL-031'
       )
     ),
     429.00, null, 'EUR', 0.21, true
   )
-  on conflict (sku) do update set
+  on conflict (id) do update set
     product_id = excluded.product_id,
+    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
+    compare_at_price = excluded.compare_at_price,
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
@@ -3740,7 +3802,7 @@ begin
   ) values (
     'tel-tel-032', 'centralita-telefonica-ip-compacta-grandstream-ucm6204-4-fxo', 'NDR-TEL-TEL-032', 'Centralita Telefónica IP Compacta Grandstream UCM6204 con 4 Puertos FXO', 'Grandstream',
     'Grandstream · modelo UCM6204. Servidor IP PBX para pequeñas y medianas empresas con operadora automática multinivel y buzón de voz a email.', 'Grandstream · modelo UCM6204. Servidor IP PBX para pequeñas y medianas empresas con operadora automática multinivel y buzón de voz a email.',
-    'https://img.pccomponentes.com/articles/26/261890/138-grandstream-ucm6204.jpg', 'Centralita telefónica VoIP Grandstream UCM6204 con 4 puertos analógicos FXO', null,
+    '/images/products/tel-tel-032.svg', 'Centralita telefónica VoIP Grandstream UCM6204 con 4 puertos analógicos FXO', null,
     4.8, 24, false, true, now()
   )
   on conflict (id) do update set
@@ -3776,16 +3838,18 @@ begin
         'mode', 'academic_demo',
         'model_number', 'UCM6204',
         'brand', 'Grandstream',
-        'inventory_seeded', true
+        'sku', 'NDR-TEL-TEL-032'
       )
     ),
     349.00, null, 'EUR', 0.21, true
   )
-  on conflict (sku) do update set
+  on conflict (id) do update set
     product_id = excluded.product_id,
+    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
+    compare_at_price = excluded.compare_at_price,
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
@@ -3848,7 +3912,7 @@ begin
   ) values (
     'tel-tel-033', 'telefono-ip-ejecutivo-yealink-sip-t54w-pantalla-color-wifi-bluetooth', 'NDR-TEL-TEL-033', 'Teléfono IP Ejecutivo Yealink SIP-T54W con Pantalla Color 4.3" y Wi-Fi/Bluetooth', 'Yealink',
     'Yealink · modelo SIP-T54W. Terminal corporativo con pantalla a color ajustable, sonido de alta definición y conectividad Wi-Fi integrada.', 'Yealink · modelo SIP-T54W. Terminal corporativo con pantalla a color ajustable, sonido de alta definición y conectividad Wi-Fi integrada.',
-    'https://img.pccomponentes.com/articles/25/259102/145-yealink-sip-t54w.jpg', 'Teléfono de sobremesa IP ejecutivo Yealink SIP-T54W con pantalla a color regulable', null,
+    '/images/products/tel-tel-033.svg', 'Teléfono de sobremesa IP ejecutivo Yealink SIP-T54W con pantalla a color regulable', null,
     4.9, 45, false, true, now()
   )
   on conflict (id) do update set
@@ -3884,16 +3948,18 @@ begin
         'mode', 'academic_demo',
         'model_number', 'SIP-T54W',
         'brand', 'Yealink',
-        'inventory_seeded', true
+        'sku', 'NDR-TEL-TEL-033'
       )
     ),
     169.50, null, 'EUR', 0.21, true
   )
-  on conflict (sku) do update set
+  on conflict (id) do update set
     product_id = excluded.product_id,
+    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
+    compare_at_price = excluded.compare_at_price,
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
@@ -3956,7 +4022,7 @@ begin
   ) values (
     'tel-tel-034', 'sistema-telefonico-inalambrico-dect-ip-yealink-w73p-base-terminal', 'NDR-TEL-TEL-034', 'Sistema Telefónico Inalámbrico DECT IP Yealink W73P Base + Terminal', 'Yealink',
     'Yealink · modelo W73P. Movilidad profesional en almacenes y oficinas con hasta 35 horas de conversación y cobertura ampliada.', 'Yealink · modelo W73P. Movilidad profesional en almacenes y oficinas con hasta 35 horas de conversación y cobertura ampliada.',
-    'https://img.pccomponentes.com/articles/27/274198/123-yealink-w73p-dect-ip.jpg', 'Teléfono inalámbrico DECT IP Yealink W73P con estación base', null,
+    '/images/products/tel-tel-034.svg', 'Teléfono inalámbrico DECT IP Yealink W73P con estación base', null,
     4.8, 31, false, true, now()
   )
   on conflict (id) do update set
@@ -3992,16 +4058,18 @@ begin
         'mode', 'academic_demo',
         'model_number', 'W73P',
         'brand', 'Yealink',
-        'inventory_seeded', true
+        'sku', 'NDR-TEL-TEL-034'
       )
     ),
     119.00, null, 'EUR', 0.21, true
   )
-  on conflict (sku) do update set
+  on conflict (id) do update set
     product_id = excluded.product_id,
+    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
+    compare_at_price = excluded.compare_at_price,
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
@@ -4064,7 +4132,7 @@ begin
   ) values (
     'tel-tel-035', 'pasarela-voip-fxs-16-puertos-grandstream-gxw4216', 'NDR-TEL-TEL-035', 'Pasarela VoIP FXS 16 Puertos Grandstream GXW4216 para Extensiones Analógicas', 'Grandstream',
     'Grandstream · modelo GXW4216. Integración de teléfonos analógicos, timbres de planta y faxes convencionales en redes telefónicas IP corporativas.', 'Grandstream · modelo GXW4216. Integración de teléfonos analógicos, timbres de planta y faxes convencionales en redes telefónicas IP corporativas.',
-    'https://img.pccomponentes.com/articles/23/231908/176-grandstream-gxw4216.jpg', 'Gateway pasarela VoIP Grandstream GXW4216 de 16 puertos analógicos FXS', null,
+    '/images/products/tel-tel-035.svg', 'Gateway pasarela VoIP Grandstream GXW4216 de 16 puertos analógicos FXS', null,
     4.8, 13, false, true, now()
   )
   on conflict (id) do update set
@@ -4100,16 +4168,18 @@ begin
         'mode', 'academic_demo',
         'model_number', 'GXW4216',
         'brand', 'Grandstream',
-        'inventory_seeded', true
+        'sku', 'NDR-TEL-TEL-035'
       )
     ),
     269.00, null, 'EUR', 0.21, true
   )
-  on conflict (sku) do update set
+  on conflict (id) do update set
     product_id = excluded.product_id,
+    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
+    compare_at_price = excluded.compare_at_price,
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
@@ -4172,7 +4242,7 @@ begin
   ) values (
     'tel-tel-036', 'gateway-voip-digital-isdn-bri-2-puertos-patton-smartnode-4120', 'NDR-TEL-TEL-036', 'Gateway VoIP Digital ISDN BRI 2 Puertos Patton SmartNode SN4120', 'Patton',
     'Patton · modelo SN4120/2BIS4V. Conversión fiable de líneas digitales RDSI/ISDN a enlaces SIP troncales con cancelación de eco de nivel operador.', 'Patton · modelo SN4120/2BIS4V. Conversión fiable de líneas digitales RDSI/ISDN a enlaces SIP troncales con cancelación de eco de nivel operador.',
-    'https://img.pccomponentes.com/articles/24/248102/155-patton-smartnode-4120.jpg', 'Pasarela VoIP RDSI ISDN BRI Patton SmartNode 4120', null,
+    '/images/products/tel-tel-036.svg', 'Pasarela VoIP RDSI ISDN BRI Patton SmartNode 4120', null,
     4.9, 8, false, true, now()
   )
   on conflict (id) do update set
@@ -4208,16 +4278,18 @@ begin
         'mode', 'academic_demo',
         'model_number', 'SN4120/2BIS4V',
         'brand', 'Patton',
-        'inventory_seeded', true
+        'sku', 'NDR-TEL-TEL-036'
       )
     ),
     389.00, null, 'EUR', 0.21, true
   )
-  on conflict (sku) do update set
+  on conflict (id) do update set
     product_id = excluded.product_id,
+    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
+    compare_at_price = excluded.compare_at_price,
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
@@ -4273,14 +4345,14 @@ begin
     value = excluded.value,
     sort_order = excluded.sort_order;
 
-  -- Product: NDR-TEL-TEL-037 (Router Celular Industrial 4G LTE Cat 4 Dual SIM Teltonika RUT241)
+  -- Product: NDR-TEL-TEL-037 (Router Celular Industrial 4G LTE Cat 4 Teltonika RUT241)
   insert into public.products (
     id, slug, sku, name, brand, summary, description, image_url, image_alt, badge,
     rating_average, rating_count, is_featured, is_published, published_at
   ) values (
-    'tel-tel-037', 'router-celular-industrial-4g-lte-dual-sim-teltonika-rut241', 'NDR-TEL-TEL-037', 'Router Celular Industrial 4G LTE Cat 4 Dual SIM Teltonika RUT241', 'Teltonika',
-    'Teltonika · modelo RUT241. Conectividad celular robusta para cuadros eléctricos, máquinas de vending y enlaces de respaldo en comercios.', 'Teltonika · modelo RUT241. Conectividad celular robusta para cuadros eléctricos, máquinas de vending y enlaces de respaldo en comercios.',
-    'https://img.pccomponentes.com/articles/31/318902/112-teltonika-rut241-4g.jpg', 'Router industrial 4G LTE Teltonika RUT241 para aplicaciones M2M y telemetría', null,
+    'tel-tel-037', 'router-celular-industrial-4g-lte-cat-4-teltonika-rut241', 'NDR-TEL-TEL-037', 'Router Celular Industrial 4G LTE Cat 4 Teltonika RUT241', 'Teltonika',
+    'Teltonika · modelo RUT241. Router 4G LTE Cat 4 compacto con 2 puertos Ethernet, Wi-Fi 802.11b/g/n, túneles VPN y rango térmico extendido de -40°C a +75°C.', 'Teltonika · modelo RUT241. Router 4G LTE Cat 4 compacto con 2 puertos Ethernet, Wi-Fi 802.11b/g/n, túneles VPN y rango térmico extendido de -40°C a +75°C.',
+    '/images/products/tel-tel-037.svg', 'Router celular industrial 4G LTE Teltonika RUT241 con ranura SIM y Wi-Fi', null,
     4.8, 51, false, true, now()
   )
   on conflict (id) do update set
@@ -4316,16 +4388,18 @@ begin
         'mode', 'academic_demo',
         'model_number', 'RUT241',
         'brand', 'Teltonika',
-        'inventory_seeded', true
+        'sku', 'NDR-TEL-TEL-037'
       )
     ),
     139.00, null, 'EUR', 0.21, true
   )
-  on conflict (sku) do update set
+  on conflict (id) do update set
     product_id = excluded.product_id,
+    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
+    compare_at_price = excluded.compare_at_price,
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
@@ -4388,7 +4462,7 @@ begin
   ) values (
     'tel-tel-038', 'router-celular-industrial-5g-wifi6-dual-sim-teltonika-rutx50', 'NDR-TEL-TEL-038', 'Router Celular Industrial 5G y Wi-Fi 6 Dual SIM Teltonika RUTX50', 'Teltonika',
     'Teltonika · modelo RUTX50. Pasarela celular 5G de ultra baja latencia con velocidades multi-gigabit y conmutación automática por doble SIM.', 'Teltonika · modelo RUTX50. Pasarela celular 5G de ultra baja latencia con velocidades multi-gigabit y conmutación automática por doble SIM.',
-    'https://img.pccomponentes.com/articles/34/341209/166-teltonika-rutx50-5g.jpg', 'Router 5G industrial Teltonika RUTX50 con Wi-Fi 6 y doble SIM', null,
+    '/images/products/tel-tel-038.svg', 'Router 5G industrial Teltonika RUTX50 con Wi-Fi 6 y doble SIM', null,
     4.9, 16, false, true, now()
   )
   on conflict (id) do update set
@@ -4424,16 +4498,18 @@ begin
         'mode', 'academic_demo',
         'model_number', 'RUTX50',
         'brand', 'Teltonika',
-        'inventory_seeded', true
+        'sku', 'NDR-TEL-TEL-038'
       )
     ),
     529.00, null, 'EUR', 0.21, true
   )
-  on conflict (sku) do update set
+  on conflict (id) do update set
     product_id = excluded.product_id,
+    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
+    compare_at_price = excluded.compare_at_price,
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
@@ -4489,14 +4565,14 @@ begin
     value = excluded.value,
     sort_order = excluded.sort_order;
 
-  -- Product: NDR-TEL-TEL-039 (Antena Exterior Omnidireccional 4G/5G MIMO 698-3800 MHz 6 dBi)
+  -- Product: NDR-TEL-TEL-039 (Antena Exterior Omnidireccional 4G/5G MIMO 698-3800 MHz 6 dBi Teltonika PR1KMO40)
   insert into public.products (
     id, slug, sku, name, brand, summary, description, image_url, image_alt, badge,
     rating_average, rating_count, is_featured, is_published, published_at
   ) values (
-    'tel-tel-039', 'antena-exterior-omnidireccional-4g-5g-mimo-6dbi-teltonika', 'NDR-TEL-TEL-039', 'Antena Exterior Omnidireccional 4G/5G MIMO 698-3800 MHz 6 dBi', 'Teltonika',
-    'Teltonika · modelo PR1US440. Antena estanca de polarización cruzada para maximizar la recepción de señal móvil en routers industriales.', 'Teltonika · modelo PR1US440. Antena estanca de polarización cruzada para maximizar la recepción de señal móvil en routers industriales.',
-    'https://img.pccomponentes.com/articles/29/293410/144-teltonika-antena-5g-mimo.jpg', 'Antena exterior omnidireccional 5G MIMO Teltonika con cable de 3m', null,
+    'tel-tel-039', 'antena-exterior-omnidireccional-4g-5g-mimo-teltonika-pr1kmo40', 'NDR-TEL-TEL-039', 'Antena Exterior Omnidireccional 4G/5G MIMO 698-3800 MHz 6 dBi Teltonika PR1KMO40', 'Teltonika',
+    'Teltonika · modelo PR1KMO40. Antena exterior estanqueidad IP66 para mástil o pared con cobertura multi-banda 4G/5G, 2x2 MIMO y 2 tiradas de cable coaxial SMA.', 'Teltonika · modelo PR1KMO40. Antena exterior estanqueidad IP66 para mástil o pared con cobertura multi-banda 4G/5G, 2x2 MIMO y 2 tiradas de cable coaxial SMA.',
+    '/images/products/tel-tel-039.svg', 'Antena exterior omnidireccional 4G/5G MIMO Teltonika PR1KMO40 con soporte para mástil', null,
     4.7, 23, false, true, now()
   )
   on conflict (id) do update set
@@ -4530,18 +4606,20 @@ begin
     jsonb_build_object(
       'nodria_store', jsonb_build_object(
         'mode', 'academic_demo',
-        'model_number', 'PR1US440',
+        'model_number', 'PR1KMO40',
         'brand', 'Teltonika',
-        'inventory_seeded', true
+        'sku', 'NDR-TEL-TEL-039'
       )
     ),
     75.00, null, 'EUR', 0.21, true
   )
-  on conflict (sku) do update set
+  on conflict (id) do update set
     product_id = excluded.product_id,
+    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
+    compare_at_price = excluded.compare_at_price,
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
@@ -4604,7 +4682,7 @@ begin
   ) values (
     'tel-tel-040', 'amplificador-senal-movil-4g-5g-multibanda-televes', 'NDR-TEL-TEL-040', 'Amplificador de Señal Móvil 4G/5G Multibanda para Interiores StellaHome', 'Televes',
     'Televes · modelo 403001. Sistema repetidor homologado para eliminar zonas sin cobertura celular en sótanos, naves y oficinas aisladas.', 'Televes · modelo 403001. Sistema repetidor homologado para eliminar zonas sin cobertura celular en sótanos, naves y oficinas aisladas.',
-    'https://img.pccomponentes.com/articles/26/269103/182-televes-amplificador-4g-5g.jpg', 'Kit amplificador repetidor de telefonía móvil 4G y 5G Televes StellaHome', null,
+    '/images/products/tel-tel-040.svg', 'Kit amplificador repetidor de telefonía móvil 4G y 5G Televes StellaHome', null,
     4.9, 10, false, true, now()
   )
   on conflict (id) do update set
@@ -4640,16 +4718,18 @@ begin
         'mode', 'academic_demo',
         'model_number', '403001',
         'brand', 'Televes',
-        'inventory_seeded', true
+        'sku', 'NDR-TEL-TEL-040'
       )
     ),
     499.00, null, 'EUR', 0.21, true
   )
-  on conflict (sku) do update set
+  on conflict (id) do update set
     product_id = excluded.product_id,
+    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
+    compare_at_price = excluded.compare_at_price,
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
@@ -4712,7 +4792,7 @@ begin
   ) values (
     'tel-dig-041', 'gateway-iot-industrial-edge-advantech-uno-2271g-v2-modbus-mqtt', 'NDR-TEL-DIG-041', 'Gateway IoT Industrial Edge Advantech UNO-2271G-V2 con Modbus y MQTT', 'Advantech',
     'Advantech · modelo UNO-2271G-V2. Pasarela compacta sin ventilador para digitalización de líneas productivas, captura OPC UA y telemetría MQTT.', 'Advantech · modelo UNO-2271G-V2. Pasarela compacta sin ventilador para digitalización de líneas productivas, captura OPC UA y telemetría MQTT.',
-    'https://img.pccomponentes.com/articles/32/329012/177-advantech-uno-2271g-gateway.jpg', 'Pasarela IoT industrial Advantech UNO-2271G-V2 fanless para carril DIN', null,
+    '/images/products/tel-dig-041.svg', 'Pasarela IoT industrial Advantech UNO-2271G-V2 fanless para carril DIN', null,
     4.9, 15, true, true, now()
   )
   on conflict (id) do update set
@@ -4748,16 +4828,18 @@ begin
         'mode', 'academic_demo',
         'model_number', 'UNO-2271G-V2',
         'brand', 'Advantech',
-        'inventory_seeded', true
+        'sku', 'NDR-TEL-DIG-041'
       )
     ),
     489.00, null, 'EUR', 0.21, true
   )
-  on conflict (sku) do update set
+  on conflict (id) do update set
     product_id = excluded.product_id,
+    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
+    compare_at_price = excluded.compare_at_price,
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
@@ -4820,7 +4902,7 @@ begin
   ) values (
     'tel-dig-042', 'modulo-entradas-salidas-remotas-modbus-tcp-phoenix-contact', 'NDR-TEL-DIG-042', 'Módulo de E/S Remotas Modbus TCP Ethernet Phoenix Contact Axioline Smart Elements', 'Phoenix Contact',
     'Phoenix Contact · modelo AXL-SE-SC-A. Estación de adquisición distribuida para lectura de sensores de fábrica mediante bus industrial Ethernet.', 'Phoenix Contact · modelo AXL-SE-SC-A. Estación de adquisición distribuida para lectura de sensores de fábrica mediante bus industrial Ethernet.',
-    'https://img.pccomponentes.com/articles/27/271890/132-phoenix-contact-modbus-tcp.jpg', 'Cabecera de periferia descentralizada Phoenix Contact Axioline Smart Elements Modbus TCP', null,
+    '/images/products/tel-dig-042.svg', 'Cabecera de periferia descentralizada Phoenix Contact Axioline Smart Elements Modbus TCP', null,
     4.8, 12, false, true, now()
   )
   on conflict (id) do update set
@@ -4856,16 +4938,18 @@ begin
         'mode', 'academic_demo',
         'model_number', 'AXL-SE-SC-A',
         'brand', 'Phoenix Contact',
-        'inventory_seeded', true
+        'sku', 'NDR-TEL-DIG-042'
       )
     ),
     215.00, null, 'EUR', 0.21, true
   )
-  on conflict (sku) do update set
+  on conflict (id) do update set
     product_id = excluded.product_id,
+    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
+    compare_at_price = excluded.compare_at_price,
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
@@ -4928,7 +5012,7 @@ begin
   ) values (
     'tel-dig-043', 'servidor-edge-fanless-industrial-advantech-ark-1220l', 'NDR-TEL-DIG-043', 'Servidor Edge Fanless Industrial Advantech ARK-1220L para Inferencia IA', 'Advantech',
     'Advantech · modelo ARK-1220L-S6A1E. Nodo de computación en borde para visión artificial, gemelos digitales y procesamiento local de datos.', 'Advantech · modelo ARK-1220L-S6A1E. Nodo de computación en borde para visión artificial, gemelos digitales y procesamiento local de datos.',
-    'https://img.pccomponentes.com/articles/31/314092/188-advantech-ark-1220l-edge.jpg', 'Computador embebido para Edge Computing Advantech ARK-1220L', null,
+    '/images/products/tel-dig-043.svg', 'Computador embebido para Edge Computing Advantech ARK-1220L', null,
     4.9, 11, false, true, now()
   )
   on conflict (id) do update set
@@ -4964,16 +5048,18 @@ begin
         'mode', 'academic_demo',
         'model_number', 'ARK-1220L-S6A1E',
         'brand', 'Advantech',
-        'inventory_seeded', true
+        'sku', 'NDR-TEL-DIG-043'
       )
     ),
     699.00, null, 'EUR', 0.21, true
   )
-  on conflict (sku) do update set
+  on conflict (id) do update set
     product_id = excluded.product_id,
+    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
+    compare_at_price = excluded.compare_at_price,
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
@@ -5036,7 +5122,7 @@ begin
   ) values (
     'tel-dig-044', 'micro-servidor-edge-fanless-2-5gbe-puertos-serie-moxa-v2201', 'NDR-TEL-DIG-044', 'Micro Servidor Edge Fanless con Doble 2.5GbE y 4 Puertos Serie Moxa V2201', 'Moxa',
     'Moxa · modelo V2201-E4-W-T. Controlador de comunicaciones críticas con certificación para transporte e infraestructura energética.', 'Moxa · modelo V2201-E4-W-T. Controlador de comunicaciones críticas con certificación para transporte e infraestructura energética.',
-    'https://img.pccomponentes.com/articles/29/290124/156-moxa-v2201-edge-server.jpg', 'Servidor industrial para subestaciones y borde Moxa V2201', null,
+    '/images/products/tel-dig-044.svg', 'Servidor industrial para subestaciones y borde Moxa V2201', null,
     4.8, 14, false, true, now()
   )
   on conflict (id) do update set
@@ -5072,16 +5158,18 @@ begin
         'mode', 'academic_demo',
         'model_number', 'V2201-E4-W-T',
         'brand', 'Moxa',
-        'inventory_seeded', true
+        'sku', 'NDR-TEL-DIG-044'
       )
     ),
     579.00, null, 'EUR', 0.21, true
   )
-  on conflict (sku) do update set
+  on conflict (id) do update set
     product_id = excluded.product_id,
+    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
+    compare_at_price = excluded.compare_at_price,
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
@@ -5144,7 +5232,7 @@ begin
   ) values (
     'tel-dig-045', 'servidor-almacenamiento-nas-4-bahias-synology-ds923-plus', 'NDR-TEL-DIG-045', 'Servidor de Almacenamiento en Red NAS 4 Bahías Synology DiskStation DS923+', 'Synology',
     'Synology · modelo DS923+. Centro de almacenamiento seguro para copias empresariales, contenedores Docker y centralización de datos de fábrica.', 'Synology · modelo DS923+. Centro de almacenamiento seguro para copias empresariales, contenedores Docker y centralización de datos de fábrica.',
-    'https://img.pccomponentes.com/articles/33/332190/165-synology-ds923-plus-nas.jpg', 'Servidor NAS Synology DiskStation DS923+ de 4 bahías con soporte 10GbE', null,
+    '/images/products/tel-dig-045.svg', 'Servidor NAS Synology DiskStation DS923+ de 4 bahías con soporte 10GbE', null,
     4.9, 62, false, true, now()
   )
   on conflict (id) do update set
@@ -5180,16 +5268,18 @@ begin
         'mode', 'academic_demo',
         'model_number', 'DS923+',
         'brand', 'Synology',
-        'inventory_seeded', true
+        'sku', 'NDR-TEL-DIG-045'
       )
     ),
     629.00, null, 'EUR', 0.21, true
   )
-  on conflict (sku) do update set
+  on conflict (id) do update set
     product_id = excluded.product_id,
+    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
+    compare_at_price = excluded.compare_at_price,
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
@@ -5252,7 +5342,7 @@ begin
   ) values (
     'tel-dig-046', 'servidor-almacenamiento-nas-rack-19-1u-synology-rs822-plus', 'NDR-TEL-DIG-046', 'Servidor de Almacenamiento NAS en Rack 19" 1U 4 Bahías Synology RackStation RS822+', 'Synology',
     'Synology · modelo RS822+. Servidor NAS para montaje en armario rack de profundidad reducida con 4 interfaces de red integradas.', 'Synology · modelo RS822+. Servidor NAS para montaje en armario rack de profundidad reducida con 4 interfaces de red integradas.',
-    'https://img.pccomponentes.com/articles/31/319024/189-synology-rs822-plus-rack.jpg', 'Almacenamiento en rack 1U Synology RackStation RS822+ para empresas', null,
+    '/images/products/tel-dig-046.svg', 'Almacenamiento en rack 1U Synology RackStation RS822+ para empresas', null,
     4.9, 15, false, true, now()
   )
   on conflict (id) do update set
@@ -5288,16 +5378,18 @@ begin
         'mode', 'academic_demo',
         'model_number', 'RS822+',
         'brand', 'Synology',
-        'inventory_seeded', true
+        'sku', 'NDR-TEL-DIG-046'
       )
     ),
     989.00, null, 'EUR', 0.21, true
   )
-  on conflict (sku) do update set
+  on conflict (id) do update set
     product_id = excluded.product_id,
+    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
+    compare_at_price = excluded.compare_at_price,
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
@@ -5360,7 +5452,7 @@ begin
   ) values (
     'ref-storage-snv3sm3-1t0', 'ssd-kingston-nv3-1tb-m-2-2230-pcie-4-0-nvme-6000mb-s-3d-nand-gaming-0ete5', 'REF-SNV3SM31T0-0ETE5', 'SSD Kingston NV3 1TB M.2 2230 PCIe 4.0 NVMe 6000MB/s 3D NAND Gaming', 'Kingston',
     'Kingston · modelo SNV3SM3/1T0. Unidad de estado sólido M.2 PCIe 4.0 para aceleración de lectura de bases de datos y servidores NAS.', 'Kingston · modelo SNV3SM3/1T0. Unidad de estado sólido M.2 PCIe 4.0 para aceleración de lectura de bases de datos y servidores NAS.',
-    'https://img.pccomponentes.com/articles/1093/10932024/1572-ssd-kingston-nv3-1tb-m2-2230-pcie-40-nvme-6000mb-s-3d-nand-gaming.jpg', 'SSD Kingston NV3 1TB M.2 2230 PCIe 4.0 NVMe 6000MB/s 3D NAND Gaming', null,
+    '/images/products/ref-storage-snv3sm3-1t0.svg', 'SSD Kingston NV3 1TB M.2 2230 PCIe 4.0 NVMe 6000MB/s 3D NAND Gaming', null,
     4.8, 48, false, true, now()
   )
   on conflict (id) do update set
@@ -5396,16 +5488,18 @@ begin
         'mode', 'academic_demo',
         'model_number', 'SNV3SM3/1T0',
         'brand', 'Kingston',
-        'inventory_seeded', true
+        'sku', 'REF-SNV3SM31T0-0ETE5'
       )
     ),
     269.73, null, 'EUR', 0.21, true
   )
-  on conflict (sku) do update set
+  on conflict (id) do update set
     product_id = excluded.product_id,
+    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
+    compare_at_price = excluded.compare_at_price,
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
@@ -5468,7 +5562,7 @@ begin
   ) values (
     'ref-storage-mz-v9p1t0bw', 'samsung-990-pro-1tb-disco-ssd-7450mb-s-nvme-pcie-4-0-m-2-gen4-1vopo', 'REF-MZV9P1T0BW-1VOPO', 'Samsung 990 Pro 1TB Disco SSD 7450MB/S NVMe PCIe 4.0 M.2 Gen4', 'Samsung',
     'Samsung · modelo MZ-V9P1T0BW. Rendimiento máximo en lectura y escritura para caché de almacenamiento en red corporativo y servidores Edge.', 'Samsung · modelo MZ-V9P1T0BW. Rendimiento máximo en lectura y escritura para caché de almacenamiento en red corporativo y servidores Edge.',
-    'https://img.pccomponentes.com/articles/1064/10648533/1721-samsung-990-pro-1tb-ssd-pcie-40-nvme-m2.jpg', 'Samsung 990 Pro 1TB Disco SSD 7450MB/S NVMe PCIe 4.0 M.2 Gen4', null,
+    '/images/products/ref-storage-mz-v9p1t0bw.svg', 'Samsung 990 Pro 1TB Disco SSD 7450MB/S NVMe PCIe 4.0 M.2 Gen4', null,
     4.9, 65, false, true, now()
   )
   on conflict (id) do update set
@@ -5504,16 +5598,18 @@ begin
         'mode', 'academic_demo',
         'model_number', 'MZ-V9P1T0BW',
         'brand', 'Samsung',
-        'inventory_seeded', true
+        'sku', 'REF-MZV9P1T0BW-1VOPO'
       )
     ),
     218.99, null, 'EUR', 0.21, true
   )
-  on conflict (sku) do update set
+  on conflict (id) do update set
     product_id = excluded.product_id,
+    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
+    compare_at_price = excluded.compare_at_price,
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
@@ -5576,7 +5672,7 @@ begin
   ) values (
     'tel-dig-047', 'sensor-industrial-temperatura-humedad-modbus-rtu-rs485-schneider-electric', 'NDR-TEL-DIG-047', 'Sensor Industrial de Temperatura y Humedad Modbus RTU RS-485 IP65', 'Schneider Electric',
     'Schneider Electric · modelo METSETH01. Transmisor con bus serie RS-485 para supervisión ambiental de CPD, salas eléctricas y silos de producción.', 'Schneider Electric · modelo METSETH01. Transmisor con bus serie RS-485 para supervisión ambiental de CPD, salas eléctricas y silos de producción.',
-    'https://img.pccomponentes.com/articles/25/254190/122-schneider-sensor-modbus-rs485.jpg', 'Sonda de temperatura y humedad ambiental industrial Schneider Electric Modbus RS-485', null,
+    '/images/products/tel-dig-047.svg', 'Sonda de temperatura y humedad ambiental industrial Schneider Electric Modbus RS-485', null,
     4.8, 18, false, true, now()
   )
   on conflict (id) do update set
@@ -5612,16 +5708,18 @@ begin
         'mode', 'academic_demo',
         'model_number', 'METSETH01',
         'brand', 'Schneider Electric',
-        'inventory_seeded', true
+        'sku', 'NDR-TEL-DIG-047'
       )
     ),
     79.50, null, 'EUR', 0.21, true
   )
-  on conflict (sku) do update set
+  on conflict (id) do update set
     product_id = excluded.product_id,
+    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
+    compare_at_price = excluded.compare_at_price,
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
@@ -5684,7 +5782,7 @@ begin
   ) values (
     'tel-dig-048', 'transmisor-presion-industrial-4-20ma-modbus-0-10-bar-schneider-electric', 'NDR-TEL-DIG-048', 'Transmisor de Presión Industrial 4-20mA y Modbus RTU 0-10 Bar Acero Inoxidable', 'Schneider Electric',
     'Schneider Electric · modelo XMLP010BC71F. Sensor de presión relativa para circuitos de refrigeración, aire comprimido y fluidos industriales.', 'Schneider Electric · modelo XMLP010BC71F. Sensor de presión relativa para circuitos de refrigeración, aire comprimido y fluidos industriales.',
-    'https://img.pccomponentes.com/articles/26/268102/145-schneider-transmisor-presion.jpg', 'Transmisor de presión hidráulica y neumática en acero inoxidable Schneider Electric', null,
+    '/images/products/tel-dig-048.svg', 'Transmisor de presión hidráulica y neumática en acero inoxidable Schneider Electric', null,
     4.9, 14, false, true, now()
   )
   on conflict (id) do update set
@@ -5720,16 +5818,18 @@ begin
         'mode', 'academic_demo',
         'model_number', 'XMLP010BC71F',
         'brand', 'Schneider Electric',
-        'inventory_seeded', true
+        'sku', 'NDR-TEL-DIG-048'
       )
     ),
     115.00, null, 'EUR', 0.21, true
   )
-  on conflict (sku) do update set
+  on conflict (id) do update set
     product_id = excluded.product_id,
+    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
+    compare_at_price = excluded.compare_at_price,
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
@@ -5792,7 +5892,7 @@ begin
   ) values (
     'tel-dig-049', 'terminal-portatil-pda-movil-industrial-lector-2d-zebra-tc22', 'NDR-TEL-DIG-049', 'Terminal Portátil PDA Móvil Industrial con Lector 2D Zebra TC22', 'Zebra',
     'Zebra · modelo TC220K-01B112-A6. Terminal móvil ergonómico para gestión de almacenes, control de inventario y trazabilidad logística en planta.', 'Zebra · modelo TC220K-01B112-A6. Terminal móvil ergonómico para gestión de almacenes, control de inventario y trazabilidad logística en planta.',
-    'https://img.pccomponentes.com/articles/35/351890/177-zebra-tc22-terminal-lectura.jpg', 'Terminal de captura de datos y lector de códigos 2D Zebra TC22', null,
+    '/images/products/tel-dig-049.svg', 'Terminal de captura de datos y lector de códigos 2D Zebra TC22', null,
     4.9, 27, false, true, now()
   )
   on conflict (id) do update set
@@ -5828,16 +5928,18 @@ begin
         'mode', 'academic_demo',
         'model_number', 'TC220K-01B112-A6',
         'brand', 'Zebra',
-        'inventory_seeded', true
+        'sku', 'NDR-TEL-DIG-049'
       )
     ),
     549.00, null, 'EUR', 0.21, true
   )
-  on conflict (sku) do update set
+  on conflict (id) do update set
     product_id = excluded.product_id,
+    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
+    compare_at_price = excluded.compare_at_price,
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
@@ -5900,7 +6002,7 @@ begin
   ) values (
     'tel-dig-050', 'impresora-industrial-etiquetas-codigos-barras-termica-zebra-zt231', 'NDR-TEL-DIG-050', 'Impresora Industrial de Etiquetas y Códigos de Barras Térmica Zebra ZT231', 'Zebra',
     'Zebra · modelo ZT23142-T0E000FZ. Impresora robusta con chasis metálico para etiquetado de palés, embalajes logísticos y trazabilidad.', 'Zebra · modelo ZT23142-T0E000FZ. Impresora robusta con chasis metálico para etiquetado de palés, embalajes logísticos y trazabilidad.',
-    'https://img.pccomponentes.com/articles/32/324190/168-zebra-zt231-impresora-etiquetas.jpg', 'Impresora de etiquetas térmica industrial Zebra ZT231', null,
+    '/images/products/tel-dig-050.svg', 'Impresora de etiquetas térmica industrial Zebra ZT231', null,
     4.8, 21, false, true, now()
   )
   on conflict (id) do update set
@@ -5936,16 +6038,18 @@ begin
         'mode', 'academic_demo',
         'model_number', 'ZT23142-T0E000FZ',
         'brand', 'Zebra',
-        'inventory_seeded', true
+        'sku', 'NDR-TEL-DIG-050'
       )
     ),
     729.00, null, 'EUR', 0.21, true
   )
-  on conflict (sku) do update set
+  on conflict (id) do update set
     product_id = excluded.product_id,
+    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
+    compare_at_price = excluded.compare_at_price,
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
