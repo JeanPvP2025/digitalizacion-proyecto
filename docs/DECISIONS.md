@@ -355,3 +355,11 @@ Las decisiones de alcance heredadas de la misión se marcan **Confirmada**. Las 
 - **Contexto:** La migración de catálogo falló inicialmente por inserción de slugs en campos UUID de categorías (`22P02`) y colisión de unicidad en `product_variants.sku` (`23505`) debido a referencias compartidas previamente existentes.
 - **Decisión:** Asignar UUIDs v4 deterministas RFC 4122 a categorías y subcategorías. Resolver claves foráneas jerárquicas dinámicamente mediante `select c.id from public.categories c where c.slug = ...`. Para variantes, resolver conflictos mediante `on conflict (sku) do update set ... returning id into v_variant_id;` y enlazar `inventory` y `adjust_inventory` mediante `v_variant_id`. Declarar explícitamente `v_stock record;` en bucles de cursor PL/pgSQL.
 - **Consecuencias:** Las migraciones son 100% idempotentes, seguras frente a ejecuciones repetidas y compatibles tanto con esquemas nuevos como con bases de datos que ya contienen datos previos.
+
+## D-038 — Prevención de recursión infinita en políticas RLS cruzadas (42P17) mediante funciones SECURITY DEFINER
+
+- **Fecha:** 2026-10-29
+- **Estado:** Implementado en `supabase/migrations/20261029090000_pc_builder_authorized_checkout.sql` y aplicado en Supabase.
+- **Contexto:** Al consultar `/catalogo` desde Vercel con la clave anónima pública, PostgreSQL devolvía error `42P17: infinite recursion detected in policy for relation "products"`. Esto ocurría porque la política SELECT de `products` realizaba una subconsulta sobre `product_variants`, mientras que la política SELECT de `product_variants` realizaba simultáneamente una subconsulta sobre `products`.
+- **Decisión:** Encapsular las consultas de verificación cruzada (`product_has_pc_builder` y `product_is_published`) en funciones auxiliares bajo el esquema `private` con flag `SECURITY DEFINER`, `search_path = ''` y permisos explícitos de ejecución a `anon, authenticated, service_role`.
+- **Consecuencias:** Al ejecutarse con privilegios del propietario de la función, las verificaciones en PostgreSQL no disparan el motor de RLS sobre la tabla adyacente, eliminando la recursión circular de raíz y permitiendo lecturas concurrentes seguras y de alto rendimiento.

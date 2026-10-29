@@ -1,6 +1,20 @@
 # Estado del proyecto
 
-## Iteración actual: tienda propia con checkout simulado — 2026-10-13
+## Iteración actual: Catálogo de Telecomunicaciones y Storefront B2B/B2C en Producción — 2026-10-29
+
+- ✅ **Despliegue en Producción Vercel:** Commit 7c397d6 desplegado en https://nodria-academico.vercel.app/.
+- ✅ **Base de Datos Supabase Conectada:**
+  - Migración 20261028190000_telecom_catalog_schema_and_seed.sql aplicada con éxito: 5 familias técnicas, 26 subcategorías y 52 productos comerciales reales de telecomunicaciones.
+  - Migración 20261029090000_pc_builder_authorized_checkout.sql y corrección RLS aplicada con éxito (Success. No rows returned).
+  - Resuelto el error 42P17 (recursión infinita RLS) mediante funciones SECURITY DEFINER en esquema private.
+- ✅ **Verificación HTTP en Vivo:**
+  - https://nodria-academico.vercel.app/catalogo responde HTTP 200 con 52 referencias activas y disponibilidad en tiempo real.
+  - RPC remota get_public_catalog_availability() responde HTTP 200 con disponibilidad para los 52 productos.
+  - Consulta PostgREST directa a products?is_published=eq.true responde HTTP 200 con las 52 referencias de telecomunicaciones.
+- ✅ **PC Builder:** Montajes configurados conservan la capacidad de compra en checkout (attributes.pc_builder) sin invadir el catálogo general de telecomunicaciones.
+- ✅ **Gates Locales:** TypeScript estricto, ESLint, 332 tests unitarios/integración superados y build de producción validada.
+
+## Iteración previa: tienda propia con checkout simulado — 2026-10-13
 
 - ✅ La persona propietaria informó que `20261013120000_nodria_storefront_checkout.sql` terminó en Supabase SQL Editor con `Success. No rows returned`.
 - ✅ Los commits `4e30e52` (tienda) y `3cbc5f5` (documentación/gates) se publicaron en `origin/main`. El sitio de producción sirve la interfaz actualizada.

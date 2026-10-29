@@ -7,11 +7,13 @@
 - Se completó la reestructuración integral de NODRIA como tienda online profesional de telecomunicaciones, redes y sistemas electrónicos B2B/B2C, erradicando cualquier jerga académica o de prácticas escolares del storefront.
 - Se incorporaron 52 referencias comerciales reales (Legrand, Ubiquiti, Cisco, Schneider Electric, Advantech, Synology, etc.) con especificaciones técnicas completas, marcas, números de modelo reales e ilustraciones vectoriales SVG locales en `/images/products/`.
 - Se resolvieron los desacoplamientos del PC Builder: los componentes de PC se mantienen despublicados del catálogo general de telecomunicaciones (`is_published = false`), pero cuentan con autorización de compra en checkout mediante `attributes.pc_builder` tanto en modo simulación como en checkout conectado a Supabase.
-- Se corrigieron los dos errores de ejecución de migraciones en PostgreSQL:
+- Se corrigieron los errores de ejecución de migraciones y RLS en PostgreSQL:
   1. Tipos UUID en categorías y subcategorías, resolviendo las claves foráneas dinámicamente mediante `c.id` desde `public.categories`.
   2. Inserción de variantes mediante `on conflict (sku) do update set ... returning id into v_variant_id;` para evitar errores de clave duplicada en referencias previamente existentes y asegurar claves foráneas de inventario.
   3. Declaración de la variable de cursor `v_stock record;` en `private.place_order`.
-- La persona propietaria confirmó la ejecución manual en Supabase SQL Editor de ambas migraciones (`20261028190000_telecom_catalog_restructuring.sql` y `20261029090000_pc_builder_authorized_checkout.sql`), ambas con respuesta `Success. No rows returned`.
+  4. Corrección de recursión infinita RLS (`42P17`) entre `products` y `product_variants` mediante funciones `SECURITY DEFINER` (`private.product_has_pc_builder` y `private.product_is_published`).
+- La persona propietaria confirmó la ejecución manual en Supabase SQL Editor de las migraciones, respondiendo `Success. No rows returned`.
+- Se configuró la clave de entorno pública anónima en Vercel y se verificó el despliegue en vivo en producción: `https://nodria-academico.vercel.app/catalogo` responde HTTP 200 sirviendo las 52 referencias comerciales de telecomunicaciones y su disponibilidad de stock.
 
 ### Archivos principales
 
