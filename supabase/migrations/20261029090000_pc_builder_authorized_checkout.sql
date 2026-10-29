@@ -6,16 +6,53 @@
 
 begin;
 
--- 1. Update RLS policies to allow reading authorized PC builder variants and products
+-- 1. Helper functions with SECURITY DEFINER to break RLS recursion between products and product_variants
+create schema if not exists private;
+
+create or replace function private.product_has_pc_builder(p_product_id text)
+returns boolean
+language sql
+security definer
+stable
+set search_path = ''
+as $$
+  select exists (
+    select 1
+    from public.product_variants pv
+    where pv.product_id = p_product_id and (pv.attributes ? 'pc_builder')
+  );
+$$;
+
+revoke all on function private.product_has_pc_builder(text) from public, anon, authenticated;
+grant execute on function private.product_has_pc_builder(text) to anon, authenticated, service_role;
+
+create or replace function private.product_is_published(p_product_id text)
+returns boolean
+language sql
+security definer
+stable
+set search_path = ''
+as $$
+  select coalesce(
+    (select p.is_published from public.products p where p.id = p_product_id limit 1),
+    false
+  );
+$$;
+
+revoke all on function private.product_is_published(text) from public, anon, authenticated;
+grant execute on function private.product_is_published(text) to anon, authenticated, service_role;
+
+-- 2. Update RLS policies to allow reading authorized PC builder variants and products
 -- without exposing them in general catalog queries that filter by is_published = true.
 
+drop policy if exists variants_read_published on public.product_variants;
 drop policy if exists product_variants_read_published on public.product_variants;
 create policy product_variants_read_published on public.product_variants
   for select to anon, authenticated
   using (
     is_active and (
-      exists (select 1 from public.products p where p.id = product_id and p.is_published)
-      or (attributes ? 'pc_builder')
+      (attributes ? 'pc_builder')
+      or private.product_is_published(product_id)
     )
   );
 
@@ -24,10 +61,7 @@ create policy products_read_published on public.products
   for select to anon, authenticated
   using (
     is_published
-    or exists (
-      select 1 from public.product_variants pv
-      where pv.product_id = products.id and (pv.attributes ? 'pc_builder')
-    )
+    or private.product_has_pc_builder(id)
   );
 
 -- 2. Update private.place_order to accept authorized PC builder variants
