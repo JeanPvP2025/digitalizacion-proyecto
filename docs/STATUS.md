@@ -226,3 +226,15 @@ Una feature solo es ✅ cuando su contrato, autorización servidor/DB, persisten
 - ✅ Validación local: TypeScript, ESLint sobre `components/storefront/pc-builder.tsx` y `git diff --check`.
 - ⚠️ La vista previa local se comprobó en modo demo, que deliberadamente no ofrece piezas ficticias. La revisión visual de tarjetas con variantes reales requiere que el catálogo conectado esté disponible y poblado; no se modificaron migraciones ni Supabase remoto.
 - ✅ Publicado desde `e91a165` en Vercel Production; el deployment figura `success` y `https://nodria-staging.vercel.app/configurador` respondió HTTP 200 con el nuevo flujo.
+
+
+## Reestructuración de Catálogo Telecomunicaciones y PC Builder Autorizado — 2026-10-29
+
+- ✅ **Catálogo B2B/B2C de Telecomunicaciones**: Implementadas 5 categorías principales y 26 subcategorías con 52 referencias comerciales reales (Legrand, Ubiquiti, Cisco, Schneider Electric, Advantech, Synology, etc.). Cada ficha contiene modelo exacto, especificaciones industriales completas, precios de mercado vigentes e imágenes vectoriales técnicas dedicadas en formato SVG (`/images/products/*.svg`), erradicando cualquier jerga escolar del storefront público.
+- ✅ **Desacoplamiento y Compra de PC Builder**: Las variantes del configurador PC Builder permanecen despublicadas del catálogo general (`is_published = false`), pero cuentan con autorización de compra en checkout mediante el atributo `attributes.pc_builder`. RLS y la función RPC transaccional `private.place_order` permiten la adquisición y reserva de inventario tanto en simulación demo como conectada.
+- ✅ **Migraciones Aplicadas en Supabase Production**:
+  - `20261028190000_telecom_catalog_restructuring.sql`: Alta de categorías, subcategorías con UUIDs canónicos, 52 productos comerciales, variantes sincronizadas por SKU con resolución de conflictos, inventario inicial y especificaciones.
+  - `20261029090000_pc_builder_authorized_checkout.sql`: Políticas RLS actualizadas, `private.place_order` robusta con variable de cursor `v_stock` declarada, e inventario demo de componentes PC Builder.
+  - Ambas migraciones confirmadas con `Success. No rows returned` en Supabase SQL Editor.
+- ✅ **Gates de Calidad**: TypeScript (`tsc --noEmit`), ESLint (`pnpm lint`), suite de pruebas (304 tests Vitest + 28 tests Node = 332 tests superados al 100%) y compilación de producción Next.js 16.4.3 Turbopack (`pnpm build`) pasan con 0 errores.
+- ✅ **Rama**: `feat/telecom-catalog-restructuring` lista para revisión y merge controlado.

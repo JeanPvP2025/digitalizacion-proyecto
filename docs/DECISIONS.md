@@ -330,3 +330,28 @@ Las decisiones de alcance heredadas de la misión se marcan **Confirmada**. Las 
 - **Contexto:** El acceso enviaba todas las cuentas a `/mi-cuenta` y muchas fichas del catálogo compartían una misma fotografía editorial.
 - **Decisión:** Tras el inicio de sesión sin un destino interno `next` distinto de `/mi-cuenta`, seleccionar la página inicial consultando los roles persistidos de la propia cuenta: superadministración/almacén a `/backoffice`, ventas a `/backoffice/crm`, catálogo a `/backoffice/catalog`, soporte a `/soporte/agente` y cuentas de cliente a `/mi-cuenta`. Otros destinos internos seguros siguen prevaleciendo y los guards de servidor conservan la autoridad. Para el catálogo, conservar cada imagen editorial única y rotar las URLs repetidas por fotografías ilustrativas asignadas a la subcategoría.
 - **Consecuencias:** El redirect solo mejora la navegación; no concede acceso ni confía en metadatos editables. Las fotografías se marcan como ilustrativas y no como imágenes exactas del modelo. La variedad se resuelve en la capa de presentación y no requiere migración.
+
+
+## D-035 — Reestructuración integral del catálogo hacia telecomunicaciones y redes
+
+- **Fecha:** 2026-10-28
+- **Estado:** Implementado en `lib/catalog-data/telecom-products.json` y aplicado en base de datos mediante `20261028190000_telecom_catalog_restructuring.sql`.
+- **Contexto:** NODRIA requería transformarse comercialmente en un ecommerce B2B/B2C especializado en telecomunicaciones, infraestructuras de red, sistemas electrónicos, hogar digital e IoT/industria conectada, erradicando cualquier jerga académica o escolar en el storefront.
+- **Decisión:** Modelar 5 familias técnicas principales y 26 subcategorías con 52 productos comerciales reales (Legrand, Cisco, Ubiquiti, Schneider Electric, Advantech, Synology, etc.). Cada referencia cuenta con especificaciones técnicas detalladas, precios de mercado vigentes e ilustraciones vectoriales SVG locales de alta fidelidad alojadas en `/images/products/`. Retirar de la venta pública los componentes gaming antiguos sin borrar registros históricos.
+- **Consecuencias:** Experiencia de tienda profesional y coherente con el posicionamiento B2B/B2C del proyecto. El catálogo conectado y el modo de datos estático comparten el mismo esquema tipado y dataset sin divergencias.
+
+## D-036 — Desacoplamiento de componentes PC Builder y venta autorizada en checkout
+
+- **Fecha:** 2026-10-29
+- **Estado:** Implementado y aplicado en base de datos mediante `20261029090000_pc_builder_authorized_checkout.sql`.
+- **Contexto:** Los componentes del PC Builder no deben aparecer en el catálogo general de telecomunicaciones (deben permanecer despublicados con `is_published = false`), pero deben poder ser adquiridos legítimamente cuando el cliente los añade a través del configurador interactivo.
+- **Decisión:** Modificar las políticas RLS (`product_variants_read_published`, `products_read_published`) y la función transaccional `private.place_order` para autorizar variantes que cumplan `is_published = true` O que contengan el atributo `attributes ? 'pc_builder'`. Rechazar cualquier otro artículo arbitrario despublicado. Dotar de inventario inicial de demostración a las variantes autorizadas del configurador.
+- **Consecuencias:** Permite el flujo completo de compra de presupuestos PC Builder tanto en modo simulación como conectado a Supabase, manteniendo el storefront limpio y enfocado exclusivamente en telecomunicaciones.
+
+## D-037 — Idempotencia estricta y tipos UUID en migraciones de catálogo
+
+- **Fecha:** 2026-10-29
+- **Estado:** Implementado en `scripts/generate-telecom-migration.mjs` y aplicado en Supabase.
+- **Contexto:** La migración de catálogo falló inicialmente por inserción de slugs en campos UUID de categorías (`22P02`) y colisión de unicidad en `product_variants.sku` (`23505`) debido a referencias compartidas previamente existentes.
+- **Decisión:** Asignar UUIDs v4 deterministas RFC 4122 a categorías y subcategorías. Resolver claves foráneas jerárquicas dinámicamente mediante `select c.id from public.categories c where c.slug = ...`. Para variantes, resolver conflictos mediante `on conflict (sku) do update set ... returning id into v_variant_id;` y enlazar `inventory` y `adjust_inventory` mediante `v_variant_id`. Declarar explícitamente `v_stock record;` en bucles de cursor PL/pgSQL.
+- **Consecuencias:** Las migraciones son 100% idempotentes, seguras frente a ejecuciones repetidas y compatibles tanto con esquemas nuevos como con bases de datos que ya contienen datos previos.

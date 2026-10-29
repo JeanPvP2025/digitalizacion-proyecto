@@ -1,5 +1,36 @@
 # Registro de handoffs
 
+## Handoff completado — Catálogo Telecomunicaciones y PC Builder Autorizado — 2026-10-29
+
+### Trabajo realizado
+
+- Se completó la reestructuración integral de NODRIA como tienda online profesional de telecomunicaciones, redes y sistemas electrónicos B2B/B2C, erradicando cualquier jerga académica o de prácticas escolares del storefront.
+- Se incorporaron 52 referencias comerciales reales (Legrand, Ubiquiti, Cisco, Schneider Electric, Advantech, Synology, etc.) con especificaciones técnicas completas, marcas, números de modelo reales e ilustraciones vectoriales SVG locales en `/images/products/`.
+- Se resolvieron los desacoplamientos del PC Builder: los componentes de PC se mantienen despublicados del catálogo general de telecomunicaciones (`is_published = false`), pero cuentan con autorización de compra en checkout mediante `attributes.pc_builder` tanto en modo simulación como en checkout conectado a Supabase.
+- Se corrigieron los dos errores de ejecución de migraciones en PostgreSQL:
+  1. Tipos UUID en categorías y subcategorías, resolviendo las claves foráneas dinámicamente mediante `c.id` desde `public.categories`.
+  2. Inserción de variantes mediante `on conflict (sku) do update set ... returning id into v_variant_id;` para evitar errores de clave duplicada en referencias previamente existentes y asegurar claves foráneas de inventario.
+  3. Declaración de la variable de cursor `v_stock record;` en `private.place_order`.
+- La persona propietaria confirmó la ejecución manual en Supabase SQL Editor de ambas migraciones (`20261028190000_telecom_catalog_restructuring.sql` y `20261029090000_pc_builder_authorized_checkout.sql`), ambas con respuesta `Success. No rows returned`.
+
+### Archivos principales
+
+- Catálogo y datos: `lib/catalog-data/telecom-products.json`, `lib/catalog.ts`, `lib/catalog-repository.ts`, `lib/catalog-mapping.ts`.
+- Imágenes locales: `public/images/products/*.svg`.
+- Migraciones y scripts: `scripts/generate-telecom-migration.mjs`, `supabase/migrations/20261028190000_telecom_catalog_restructuring.sql`, `supabase/migrations/20261029090000_pc_builder_authorized_checkout.sql`.
+- Checkout y PC Builder: `lib/commerce/cart.ts`, `app/api/checkout/route.ts`, `components/storefront/pc-builder.tsx`.
+- Documentación: `docs/STATUS.md`, `docs/DECISIONS.md`, `docs/AGENT_HANDOFF.md`.
+
+### Verificación completada
+
+- `pnpm exec tsc --noEmit`: 0 errores de tipado.
+- `pnpm lint`: 0 errores o advertencias de ESLint.
+- `pnpm test`: 332 tests superados (304 Vitest + 28 Node nativos).
+- `pnpm build`: compilación de producción de Next.js 16.4.3 exitosa y optimizada.
+- Ambas migraciones aplicadas y confirmadas en la base de datos de producción Supabase.
+
+---
+
 ## Handoff completado — tienda propia con checkout auto-aprobado — 2026-10-13
 
 ### Trabajo realizado
