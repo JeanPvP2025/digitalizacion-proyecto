@@ -177,6 +177,24 @@ describe("demo checkout route", () => {
     expect(body.orderStatus).toBe("confirmed");
   });
 
+  it("creates approved demo order when cart contains purely PC builder components", async () => {
+    const builderComp = getVerifiedReferenceBuilderCatalog().components.find((c) => c.category === "cpu")!;
+    const response = await post({
+      ...orderBody([]),
+      items: [{ variantId: builderComp.variantId, quantity: 1 }],
+    });
+
+    expect(response.status).toBe(201);
+    const body = await response.json();
+    expect(body.orderStatus).toBe("confirmed");
+    expect(body.mode).toBe("demo");
+    const orders = await demoOrders.getDemoOrderRecords();
+    const order = orders.find((o) => o.orderNumber === body.orderNumber);
+    expect(order).not.toBeNull();
+    expect(order!.items[0].source).toBe("pc_builder");
+    expect(order!.items[0].productId).toBe(builderComp.productId);
+  });
+
   it("sets a cryptographically signed HttpOnly demo session cookie and clears insecure cookies", async () => {
     const response = await post(orderBody([{ productId: demoProducts[0]!.id, quantity: 1 }]));
     expect(response.status).toBe(201);

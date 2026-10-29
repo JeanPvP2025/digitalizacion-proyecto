@@ -16,63 +16,50 @@
     </pattern>
   </defs>
 
-  <!-- Background Layer -->
   <rect width="800" height="800" fill="url(#bg-grad)" />
   <rect width="800" height="800" fill="url(#center-glow)" />
   <rect width="800" height="800" fill="url(#tech-grid)" />
 
-  <!-- Outer Frame & Corner Precision Markers -->
   <rect x="24" y="24" width="752" height="752" rx="16" fill="none" stroke="#1f3d2b" stroke-width="1.5" stroke-opacity="0.7" />
   <line x1="24" y1="50" x2="50" y2="24" stroke="#38e07b" stroke-width="2" />
   <line x1="776" y1="50" x2="750" y2="24" stroke="#38e07b" stroke-width="2" />
   <line x1="24" y1="750" x2="50" y2="776" stroke="#38e07b" stroke-width="2" />
   <line x1="776" y1="750" x2="750" y2="776" stroke="#38e07b" stroke-width="2" />
 
-  <!-- Header: NODRIA Quality Assurance Badge -->
   <g transform="translate(48, 48)">
     <rect x="0" y="0" width="310" height="32" rx="6" fill="#13261b" stroke="#2e5c3e" stroke-width="1.5" />
     <circle cx="16" cy="16" r="5" fill="#38e07b" />
-    <text x="32" y="21" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="11" font-weight="700" fill="#a8e6be" letter-spacing="1.2">NODRIA · CATÁLOGO TÉCNICO</text>
+    <text x="32" y="21" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="11" font-weight="700" fill="#a8e6be" letter-spacing="1.2">NODRIA · ILUSTRACIÓN TÉCNICA</text>
 
-    <!-- Category Pill -->
     <rect x="325" y="0" width="375" height="32" rx="6" fill="#101e16" stroke="#254a32" stroke-width="1" />
     <text x="340" y="20" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="10.5" font-weight="600" fill="#75b58c" letter-spacing="0.8">TELEFONÍA Y COMUNICACIONES</text>
   </g>
 
-  <!-- Central Technical Graphic Schematic -->
   <g id="product-schematic">
     
       <g stroke="#38e07b" stroke-width="2.5" fill="none" opacity="0.9">
-        <!-- Radome cylinder -->
         <rect x="350" y="180" width="100" height="320" rx="40" fill="#14261c" stroke="#2bd673" stroke-width="4" />
-        <!-- Mast mount bracket -->
         <rect x="330" y="380" width="140" height="40" rx="6" fill="#1b3627" stroke="#38e07b" stroke-width="2" />
         <circle cx="345" cy="400" r="6" fill="#0d1812" stroke="#2bd673" />
         <circle cx="455" cy="400" r="6" fill="#0d1812" stroke="#2bd673" />
-        <!-- Coaxial leads -->
         <path d="M 380,500 L 380,580 Q 380,610 350,610" stroke="#38e07b" stroke-width="6" stroke-linecap="round" fill="none" />
         <path d="M 420,500 L 420,580 Q 420,610 450,610" stroke="#2bd673" stroke-width="6" stroke-linecap="round" fill="none" />
       </g>
   </g>
 
-  <!-- Product Identification Area -->
   <g transform="translate(48, 650)">
-    <!-- Brand Tag -->
     <rect x="0" y="0" width="130" height="24" rx="4" fill="#1b3626" stroke="#38e07b" stroke-width="1.2" />
     <text x="65" y="16" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="11" font-weight="800" fill="#38e07b" letter-spacing="1.5" text-anchor="middle">TELEVES</text>
 
-    <!-- Model Monospace Badge -->
     <rect x="142" y="0" width="180" height="24" rx="4" fill="#0e1b13" stroke="#264c33" stroke-width="1" />
     <text x="152" y="16" font-family="'SF Mono', Consolas, Monaco, monospace" font-size="11" font-weight="600" fill="#7ce49f">MPN: 403001</text>
 
-    <!-- Commercial Name -->
     <text x="0" y="52" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="20" font-weight="700" fill="#ecf5ef" letter-spacing="-0.3">
       Amplificador de Señal Móvil 4G/5G Multibanda para Interi…
     </text>
 
-    <!-- Technical Specification Stamp -->
     <text x="0" y="78" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="12" font-weight="500" fill="#7da68b">
-      ESPECIFICACIÓN ORIGINAL DEL FABRICANTE · HOMOLOGACIÓN TÉCNICA NODRIA
+      ESPECIFICACIÓN TÉCNICA DE REFERENCIA · ESQUEMA VECTORIAL
     </text>
   </g>
 </svg>

@@ -26,11 +26,16 @@ export function consolidateCheckoutItems(items: RequestedCheckoutItem[], maxQuan
     if (quantity > maxQuantity) {
       throw new CheckoutCartError("quantity_limit", "No se pueden pedir más de 10 unidades del mismo artículo.");
     }
-    const resolvedProductId = "productId" in item
-      ? item.productId
-      : (variantToProductMap?.get(item.variantId) ?? (existing && "productId" in existing ? existing.productId : undefined));
-    if (resolvedProductId) {
-      consolidated.set(key, { productId: resolvedProductId, quantity });
+    const hasExplicitProduct = ("productId" in item) || Boolean(existing && "productId" in existing);
+    if (hasExplicitProduct) {
+      const resolvedProductId = "productId" in item
+        ? item.productId
+        : (existing && "productId" in existing ? existing.productId : variantToProductMap?.get(item.variantId));
+      if (resolvedProductId) {
+        consolidated.set(key, { productId: resolvedProductId, quantity });
+      } else if ("variantId" in item) {
+        consolidated.set(key, { variantId: item.variantId, quantity });
+      }
     } else if ("variantId" in item) {
       consolidated.set(key, { variantId: item.variantId, quantity });
     }

@@ -421,7 +421,7 @@ for (const product of p.products) {
   <g transform="translate(48, 48)">
     <rect x="0" y="0" width="310" height="32" rx="6" fill="#13261b" stroke="#2e5c3e" stroke-width="1.5" />
     <circle cx="16" cy="16" r="5" fill="#38e07b" />
-    <text x="32" y="21" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="11" font-weight="700" fill="#a8e6be" letter-spacing="1.2">NODRIA · CATÁLOGO TÉCNICO</text>
+    <text x="32" y="21" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="11" font-weight="700" fill="#a8e6be" letter-spacing="1.2">NODRIA · ILUSTRACIÓN TÉCNICA</text>
 
     <rect x="325" y="0" width="375" height="32" rx="6" fill="#101e16" stroke="#254a32" stroke-width="1" />
     <text x="340" y="20" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="10.5" font-weight="600" fill="#75b58c" letter-spacing="0.8">${catEsc}</text>
@@ -443,7 +443,7 @@ for (const product of p.products) {
     </text>
 
     <text x="0" y="78" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="12" font-weight="500" fill="#7da68b">
-      ESPECIFICACIÓN ORIGINAL DEL FABRICANTE · HOMOLOGACIÓN TÉCNICA NODRIA
+      ESPECIFICACIÓN TÉCNICA DE REFERENCIA · ESQUEMA VECTORIAL
     </text>
   </g>
 </svg>`;

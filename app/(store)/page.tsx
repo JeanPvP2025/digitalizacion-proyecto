@@ -114,7 +114,7 @@ export default async function HomePage() {
                     sizes="(max-width: 760px) calc(100vw - 38px), (max-width: 1100px) 46vw, 42vw"
                     loading="eager"
                     fetchPriority="high"
-                    unoptimized={!demo}
+                    unoptimized
                   />
                 ) : (
                   <span className="sr-only">Imagen no disponible</span>

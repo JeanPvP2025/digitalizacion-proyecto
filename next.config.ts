@@ -3,7 +3,9 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   /* config options here */
   images: {
-    dangerouslyAllowSVG: true,
+    // Local technical SVGs are served as static vector assets with unoptimized={true}.
+    // dangerouslyAllowSVG is disabled to prevent SVG ingestion vulnerabilities.
+    dangerouslyAllowSVG: false,
     contentDispositionType: "attachment",
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
     remotePatterns: [

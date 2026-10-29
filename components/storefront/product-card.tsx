@@ -17,6 +17,7 @@ export function ProductCard({ product, index = 0 }: { product: Product; index?: 
             fill
             sizes="(max-width: 760px) 46vw, (max-width: 1100px) 36vw, 24vw"
             loading={index > 2 ? "lazy" : "eager"}
+            unoptimized
           />
           <span className="product-open"><ArrowUpRight size={16} /></span>
         </div>
