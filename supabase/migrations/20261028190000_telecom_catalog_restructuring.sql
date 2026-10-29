@@ -431,6 +431,7 @@ on conflict (code) do update set
 do $telecom_migration$
 declare
   v_warehouse_id uuid;
+  v_variant_id uuid;
   v_available integer;
 begin
   select id into v_warehouse_id from public.warehouses where code = 'NODRIA-DEMO';
@@ -485,9 +486,8 @@ begin
     ),
     189.50, null, 'EUR', 0.21, true
   )
-  on conflict (id) do update set
+  on conflict (sku) do update set
     product_id = excluded.product_id,
-    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
@@ -495,21 +495,22 @@ begin
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
-    updated_at = now();
+    updated_at = now()
+  returning id into v_variant_id;
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, 'e438de5f-f761-4631-8a66-701973245f5a'::uuid, 0, 0)
+  values (v_warehouse_id, v_variant_id, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = 'e438de5f-f761-4631-8a66-701973245f5a'::uuid;
+  where i.warehouse_id = v_warehouse_id and i.variant_id = v_variant_id;
 
   if v_available < 14 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      'e438de5f-f761-4631-8a66-701973245f5a'::uuid,
+      v_variant_id,
       14 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -594,9 +595,8 @@ begin
     ),
     849.00, null, 'EUR', 0.21, true
   )
-  on conflict (id) do update set
+  on conflict (sku) do update set
     product_id = excluded.product_id,
-    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
@@ -604,21 +604,22 @@ begin
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
-    updated_at = now();
+    updated_at = now()
+  returning id into v_variant_id;
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, '0d53ea09-49a8-434c-8a9d-528b24ed4b7d'::uuid, 0, 0)
+  values (v_warehouse_id, v_variant_id, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = '0d53ea09-49a8-434c-8a9d-528b24ed4b7d'::uuid;
+  where i.warehouse_id = v_warehouse_id and i.variant_id = v_variant_id;
 
   if v_available < 8 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      '0d53ea09-49a8-434c-8a9d-528b24ed4b7d'::uuid,
+      v_variant_id,
       8 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -703,9 +704,8 @@ begin
     ),
     265.00, null, 'EUR', 0.21, true
   )
-  on conflict (id) do update set
+  on conflict (sku) do update set
     product_id = excluded.product_id,
-    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
@@ -713,21 +713,22 @@ begin
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
-    updated_at = now();
+    updated_at = now()
+  returning id into v_variant_id;
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, '82187709-26a9-4d05-832a-6a14b4a42b6d'::uuid, 0, 0)
+  values (v_warehouse_id, v_variant_id, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = '82187709-26a9-4d05-832a-6a14b4a42b6d'::uuid;
+  where i.warehouse_id = v_warehouse_id and i.variant_id = v_variant_id;
 
   if v_available < 22 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      '82187709-26a9-4d05-832a-6a14b4a42b6d'::uuid,
+      v_variant_id,
       22 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -812,9 +813,8 @@ begin
     ),
     215.00, null, 'EUR', 0.21, true
   )
-  on conflict (id) do update set
+  on conflict (sku) do update set
     product_id = excluded.product_id,
-    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
@@ -822,21 +822,22 @@ begin
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
-    updated_at = now();
+    updated_at = now()
+  returning id into v_variant_id;
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, '0836336a-0e7b-4d9c-85ae-fa3acce9fde4'::uuid, 0, 0)
+  values (v_warehouse_id, v_variant_id, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = '0836336a-0e7b-4d9c-85ae-fa3acce9fde4'::uuid;
+  where i.warehouse_id = v_warehouse_id and i.variant_id = v_variant_id;
 
   if v_available < 18 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      '0836336a-0e7b-4d9c-85ae-fa3acce9fde4'::uuid,
+      v_variant_id,
       18 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -921,9 +922,8 @@ begin
     ),
     142.90, null, 'EUR', 0.21, true
   )
-  on conflict (id) do update set
+  on conflict (sku) do update set
     product_id = excluded.product_id,
-    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
@@ -931,21 +931,22 @@ begin
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
-    updated_at = now();
+    updated_at = now()
+  returning id into v_variant_id;
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, '186020a9-76e7-47db-82dd-3f63b8b28b7d'::uuid, 0, 0)
+  values (v_warehouse_id, v_variant_id, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = '186020a9-76e7-47db-82dd-3f63b8b28b7d'::uuid;
+  where i.warehouse_id = v_warehouse_id and i.variant_id = v_variant_id;
 
   if v_available < 16 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      '186020a9-76e7-47db-82dd-3f63b8b28b7d'::uuid,
+      v_variant_id,
       16 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -1030,9 +1031,8 @@ begin
     ),
     118.00, null, 'EUR', 0.21, true
   )
-  on conflict (id) do update set
+  on conflict (sku) do update set
     product_id = excluded.product_id,
-    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
@@ -1040,21 +1040,22 @@ begin
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
-    updated_at = now();
+    updated_at = now()
+  returning id into v_variant_id;
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, '86d6bf44-8867-4ac2-8a2d-ddbeebdd98e5'::uuid, 0, 0)
+  values (v_warehouse_id, v_variant_id, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = '86d6bf44-8867-4ac2-8a2d-ddbeebdd98e5'::uuid;
+  where i.warehouse_id = v_warehouse_id and i.variant_id = v_variant_id;
 
   if v_available < 19 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      '86d6bf44-8867-4ac2-8a2d-ddbeebdd98e5'::uuid,
+      v_variant_id,
       19 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -1139,9 +1140,8 @@ begin
     ),
     82.50, null, 'EUR', 0.21, true
   )
-  on conflict (id) do update set
+  on conflict (sku) do update set
     product_id = excluded.product_id,
-    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
@@ -1149,21 +1149,22 @@ begin
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
-    updated_at = now();
+    updated_at = now()
+  returning id into v_variant_id;
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, 'ab24113e-a593-4489-8ae3-e65823b163d2'::uuid, 0, 0)
+  values (v_warehouse_id, v_variant_id, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = 'ab24113e-a593-4489-8ae3-e65823b163d2'::uuid;
+  where i.warehouse_id = v_warehouse_id and i.variant_id = v_variant_id;
 
   if v_available < 25 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      'ab24113e-a593-4489-8ae3-e65823b163d2'::uuid,
+      v_variant_id,
       25 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -1248,9 +1249,8 @@ begin
     ),
     24.90, null, 'EUR', 0.21, true
   )
-  on conflict (id) do update set
+  on conflict (sku) do update set
     product_id = excluded.product_id,
-    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
@@ -1258,21 +1258,22 @@ begin
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
-    updated_at = now();
+    updated_at = now()
+  returning id into v_variant_id;
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, '9a147de6-e769-4667-8a2b-95c53f5159f8'::uuid, 0, 0)
+  values (v_warehouse_id, v_variant_id, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = '9a147de6-e769-4667-8a2b-95c53f5159f8'::uuid;
+  where i.warehouse_id = v_warehouse_id and i.variant_id = v_variant_id;
 
   if v_available < 35 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      '9a147de6-e769-4667-8a2b-95c53f5159f8'::uuid,
+      v_variant_id,
       35 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -1357,9 +1358,8 @@ begin
     ),
     1450.00, null, 'EUR', 0.21, true
   )
-  on conflict (id) do update set
+  on conflict (sku) do update set
     product_id = excluded.product_id,
-    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
@@ -1367,21 +1367,22 @@ begin
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
-    updated_at = now();
+    updated_at = now()
+  returning id into v_variant_id;
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, '4e7a9fbb-7620-4a03-8f43-36046fb4e5ae'::uuid, 0, 0)
+  values (v_warehouse_id, v_variant_id, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = '4e7a9fbb-7620-4a03-8f43-36046fb4e5ae'::uuid;
+  where i.warehouse_id = v_warehouse_id and i.variant_id = v_variant_id;
 
   if v_available < 8 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      '4e7a9fbb-7620-4a03-8f43-36046fb4e5ae'::uuid,
+      v_variant_id,
       8 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -1466,9 +1467,8 @@ begin
     ),
     1290.00, null, 'EUR', 0.21, true
   )
-  on conflict (id) do update set
+  on conflict (sku) do update set
     product_id = excluded.product_id,
-    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
@@ -1476,21 +1476,22 @@ begin
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
-    updated_at = now();
+    updated_at = now()
+  returning id into v_variant_id;
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, 'c8be0b5b-237f-4d11-8aa3-57938dd12046'::uuid, 0, 0)
+  values (v_warehouse_id, v_variant_id, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = 'c8be0b5b-237f-4d11-8aa3-57938dd12046'::uuid;
+  where i.warehouse_id = v_warehouse_id and i.variant_id = v_variant_id;
 
   if v_available < 9 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      'c8be0b5b-237f-4d11-8aa3-57938dd12046'::uuid,
+      v_variant_id,
       9 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -1575,9 +1576,8 @@ begin
     ),
     689.00, null, 'EUR', 0.21, true
   )
-  on conflict (id) do update set
+  on conflict (sku) do update set
     product_id = excluded.product_id,
-    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
@@ -1585,21 +1585,22 @@ begin
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
-    updated_at = now();
+    updated_at = now()
+  returning id into v_variant_id;
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, '92397db0-8f52-45ec-8f2e-6bcd44806678'::uuid, 0, 0)
+  values (v_warehouse_id, v_variant_id, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = '92397db0-8f52-45ec-8f2e-6bcd44806678'::uuid;
+  where i.warehouse_id = v_warehouse_id and i.variant_id = v_variant_id;
 
   if v_available < 15 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      '92397db0-8f52-45ec-8f2e-6bcd44806678'::uuid,
+      v_variant_id,
       15 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -1684,9 +1685,8 @@ begin
     ),
     1150.00, null, 'EUR', 0.21, true
   )
-  on conflict (id) do update set
+  on conflict (sku) do update set
     product_id = excluded.product_id,
-    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
@@ -1694,21 +1694,22 @@ begin
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
-    updated_at = now();
+    updated_at = now()
+  returning id into v_variant_id;
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, '955ada8a-eff6-4c20-85ff-ff4f14e29421'::uuid, 0, 0)
+  values (v_warehouse_id, v_variant_id, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = '955ada8a-eff6-4c20-85ff-ff4f14e29421'::uuid;
+  where i.warehouse_id = v_warehouse_id and i.variant_id = v_variant_id;
 
   if v_available < 9 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      '955ada8a-eff6-4c20-85ff-ff4f14e29421'::uuid,
+      v_variant_id,
       9 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -1793,9 +1794,8 @@ begin
     ),
     519.00, null, 'EUR', 0.21, true
   )
-  on conflict (id) do update set
+  on conflict (sku) do update set
     product_id = excluded.product_id,
-    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
@@ -1803,21 +1803,22 @@ begin
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
-    updated_at = now();
+    updated_at = now()
+  returning id into v_variant_id;
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, 'ce055f5b-9c21-45bb-82dc-abe66c462711'::uuid, 0, 0)
+  values (v_warehouse_id, v_variant_id, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = 'ce055f5b-9c21-45bb-82dc-abe66c462711'::uuid;
+  where i.warehouse_id = v_warehouse_id and i.variant_id = v_variant_id;
 
   if v_available < 12 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      'ce055f5b-9c21-45bb-82dc-abe66c462711'::uuid,
+      v_variant_id,
       12 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -1902,9 +1903,8 @@ begin
     ),
     219.00, null, 'EUR', 0.21, true
   )
-  on conflict (id) do update set
+  on conflict (sku) do update set
     product_id = excluded.product_id,
-    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
@@ -1912,21 +1912,22 @@ begin
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
-    updated_at = now();
+    updated_at = now()
+  returning id into v_variant_id;
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, '3efeb581-e2cb-47b9-8cf9-98f159c0d493'::uuid, 0, 0)
+  values (v_warehouse_id, v_variant_id, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = '3efeb581-e2cb-47b9-8cf9-98f159c0d493'::uuid;
+  where i.warehouse_id = v_warehouse_id and i.variant_id = v_variant_id;
 
   if v_available < 20 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      '3efeb581-e2cb-47b9-8cf9-98f159c0d493'::uuid,
+      v_variant_id,
       20 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -2011,9 +2012,8 @@ begin
     ),
     198.00, null, 'EUR', 0.21, true
   )
-  on conflict (id) do update set
+  on conflict (sku) do update set
     product_id = excluded.product_id,
-    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
@@ -2021,21 +2021,22 @@ begin
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
-    updated_at = now();
+    updated_at = now()
+  returning id into v_variant_id;
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, '0ae6f135-40fc-4fc7-8838-01d416da0fa4'::uuid, 0, 0)
+  values (v_warehouse_id, v_variant_id, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = '0ae6f135-40fc-4fc7-8838-01d416da0fa4'::uuid;
+  where i.warehouse_id = v_warehouse_id and i.variant_id = v_variant_id;
 
   if v_available < 24 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      '0ae6f135-40fc-4fc7-8838-01d416da0fa4'::uuid,
+      v_variant_id,
       24 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -2120,9 +2121,8 @@ begin
     ),
     139.00, null, 'EUR', 0.21, true
   )
-  on conflict (id) do update set
+  on conflict (sku) do update set
     product_id = excluded.product_id,
-    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
@@ -2130,21 +2130,22 @@ begin
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
-    updated_at = now();
+    updated_at = now()
+  returning id into v_variant_id;
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, 'd961830e-c978-4e75-8dbd-3bc34608a861'::uuid, 0, 0)
+  values (v_warehouse_id, v_variant_id, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = 'd961830e-c978-4e75-8dbd-3bc34608a861'::uuid;
+  where i.warehouse_id = v_warehouse_id and i.variant_id = v_variant_id;
 
   if v_available < 18 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      'd961830e-c978-4e75-8dbd-3bc34608a861'::uuid,
+      v_variant_id,
       18 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -2229,9 +2230,8 @@ begin
     ),
     68.00, null, 'EUR', 0.21, true
   )
-  on conflict (id) do update set
+  on conflict (sku) do update set
     product_id = excluded.product_id,
-    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
@@ -2239,21 +2239,22 @@ begin
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
-    updated_at = now();
+    updated_at = now()
+  returning id into v_variant_id;
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, 'c46ca2d5-40f5-4dec-8751-16152fb9f326'::uuid, 0, 0)
+  values (v_warehouse_id, v_variant_id, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = 'c46ca2d5-40f5-4dec-8751-16152fb9f326'::uuid;
+  where i.warehouse_id = v_warehouse_id and i.variant_id = v_variant_id;
 
   if v_available < 25 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      'c46ca2d5-40f5-4dec-8751-16152fb9f326'::uuid,
+      v_variant_id,
       25 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -2338,9 +2339,8 @@ begin
     ),
     59.90, null, 'EUR', 0.21, true
   )
-  on conflict (id) do update set
+  on conflict (sku) do update set
     product_id = excluded.product_id,
-    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
@@ -2348,21 +2348,22 @@ begin
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
-    updated_at = now();
+    updated_at = now()
+  returning id into v_variant_id;
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, '8676683e-0f5c-4038-89ca-1dedaaaa1de7'::uuid, 0, 0)
+  values (v_warehouse_id, v_variant_id, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = '8676683e-0f5c-4038-89ca-1dedaaaa1de7'::uuid;
+  where i.warehouse_id = v_warehouse_id and i.variant_id = v_variant_id;
 
   if v_available < 22 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      '8676683e-0f5c-4038-89ca-1dedaaaa1de7'::uuid,
+      v_variant_id,
       22 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -2447,9 +2448,8 @@ begin
     ),
     295.00, null, 'EUR', 0.21, true
   )
-  on conflict (id) do update set
+  on conflict (sku) do update set
     product_id = excluded.product_id,
-    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
@@ -2457,21 +2457,22 @@ begin
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
-    updated_at = now();
+    updated_at = now()
+  returning id into v_variant_id;
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, '226a690d-b19e-4197-86fc-cfb05e980d1e'::uuid, 0, 0)
+  values (v_warehouse_id, v_variant_id, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = '226a690d-b19e-4197-86fc-cfb05e980d1e'::uuid;
+  where i.warehouse_id = v_warehouse_id and i.variant_id = v_variant_id;
 
   if v_available < 14 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      '226a690d-b19e-4197-86fc-cfb05e980d1e'::uuid,
+      v_variant_id,
       14 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -2556,9 +2557,8 @@ begin
     ),
     479.00, null, 'EUR', 0.21, true
   )
-  on conflict (id) do update set
+  on conflict (sku) do update set
     product_id = excluded.product_id,
-    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
@@ -2566,21 +2566,22 @@ begin
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
-    updated_at = now();
+    updated_at = now()
+  returning id into v_variant_id;
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, '91857bc3-05a0-40fc-81f7-66212bacbbb4'::uuid, 0, 0)
+  values (v_warehouse_id, v_variant_id, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = '91857bc3-05a0-40fc-81f7-66212bacbbb4'::uuid;
+  where i.warehouse_id = v_warehouse_id and i.variant_id = v_variant_id;
 
   if v_available < 10 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      '91857bc3-05a0-40fc-81f7-66212bacbbb4'::uuid,
+      v_variant_id,
       10 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -2665,9 +2666,8 @@ begin
     ),
     129.99, null, 'EUR', 0.21, true
   )
-  on conflict (id) do update set
+  on conflict (sku) do update set
     product_id = excluded.product_id,
-    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
@@ -2675,21 +2675,22 @@ begin
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
-    updated_at = now();
+    updated_at = now()
+  returning id into v_variant_id;
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, '8e3d3800-7e48-43bb-82f1-f72f7fdf9111'::uuid, 0, 0)
+  values (v_warehouse_id, v_variant_id, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = '8e3d3800-7e48-43bb-82f1-f72f7fdf9111'::uuid;
+  where i.warehouse_id = v_warehouse_id and i.variant_id = v_variant_id;
 
   if v_available < 20 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      '8e3d3800-7e48-43bb-82f1-f72f7fdf9111'::uuid,
+      v_variant_id,
       20 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -2774,9 +2775,8 @@ begin
     ),
     139.00, null, 'EUR', 0.21, true
   )
-  on conflict (id) do update set
+  on conflict (sku) do update set
     product_id = excluded.product_id,
-    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
@@ -2784,21 +2784,22 @@ begin
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
-    updated_at = now();
+    updated_at = now()
+  returning id into v_variant_id;
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, '8b176bee-d03e-40f5-85fa-73a54713bf70'::uuid, 0, 0)
+  values (v_warehouse_id, v_variant_id, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = '8b176bee-d03e-40f5-85fa-73a54713bf70'::uuid;
+  where i.warehouse_id = v_warehouse_id and i.variant_id = v_variant_id;
 
   if v_available < 15 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      '8b176bee-d03e-40f5-85fa-73a54713bf70'::uuid,
+      v_variant_id,
       15 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -2883,9 +2884,8 @@ begin
     ),
     89.90, null, 'EUR', 0.21, true
   )
-  on conflict (id) do update set
+  on conflict (sku) do update set
     product_id = excluded.product_id,
-    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
@@ -2893,21 +2893,22 @@ begin
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
-    updated_at = now();
+    updated_at = now()
+  returning id into v_variant_id;
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, '76433e26-f2bd-4a45-87a5-e642ffda66e2'::uuid, 0, 0)
+  values (v_warehouse_id, v_variant_id, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = '76433e26-f2bd-4a45-87a5-e642ffda66e2'::uuid;
+  where i.warehouse_id = v_warehouse_id and i.variant_id = v_variant_id;
 
   if v_available < 25 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      '76433e26-f2bd-4a45-87a5-e642ffda66e2'::uuid,
+      v_variant_id,
       25 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -2992,9 +2993,8 @@ begin
     ),
     22.90, null, 'EUR', 0.21, true
   )
-  on conflict (id) do update set
+  on conflict (sku) do update set
     product_id = excluded.product_id,
-    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
@@ -3002,21 +3002,22 @@ begin
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
-    updated_at = now();
+    updated_at = now()
+  returning id into v_variant_id;
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, '66f8cc84-ec8f-4353-815a-d3d89befe143'::uuid, 0, 0)
+  values (v_warehouse_id, v_variant_id, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = '66f8cc84-ec8f-4353-815a-d3d89befe143'::uuid;
+  where i.warehouse_id = v_warehouse_id and i.variant_id = v_variant_id;
 
   if v_available < 30 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      '66f8cc84-ec8f-4353-815a-d3d89befe143'::uuid,
+      v_variant_id,
       30 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -3101,9 +3102,8 @@ begin
     ),
     82.99, null, 'EUR', 0.21, true
   )
-  on conflict (id) do update set
+  on conflict (sku) do update set
     product_id = excluded.product_id,
-    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
@@ -3111,21 +3111,22 @@ begin
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
-    updated_at = now();
+    updated_at = now()
+  returning id into v_variant_id;
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, '9e8b9f3d-0322-4a8b-88f0-0fce83ab86bc'::uuid, 0, 0)
+  values (v_warehouse_id, v_variant_id, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = '9e8b9f3d-0322-4a8b-88f0-0fce83ab86bc'::uuid;
+  where i.warehouse_id = v_warehouse_id and i.variant_id = v_variant_id;
 
   if v_available < 18 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      '9e8b9f3d-0322-4a8b-88f0-0fce83ab86bc'::uuid,
+      v_variant_id,
       18 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -3210,9 +3211,8 @@ begin
     ),
     44.90, null, 'EUR', 0.21, true
   )
-  on conflict (id) do update set
+  on conflict (sku) do update set
     product_id = excluded.product_id,
-    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
@@ -3220,21 +3220,22 @@ begin
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
-    updated_at = now();
+    updated_at = now()
+  returning id into v_variant_id;
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, 'bcc7a39b-76fa-4317-89e1-3aa30aa94ef8'::uuid, 0, 0)
+  values (v_warehouse_id, v_variant_id, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = 'bcc7a39b-76fa-4317-89e1-3aa30aa94ef8'::uuid;
+  where i.warehouse_id = v_warehouse_id and i.variant_id = v_variant_id;
 
   if v_available < 22 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      'bcc7a39b-76fa-4317-89e1-3aa30aa94ef8'::uuid,
+      v_variant_id,
       22 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -3319,9 +3320,8 @@ begin
     ),
     379.00, null, 'EUR', 0.21, true
   )
-  on conflict (id) do update set
+  on conflict (sku) do update set
     product_id = excluded.product_id,
-    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
@@ -3329,21 +3329,22 @@ begin
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
-    updated_at = now();
+    updated_at = now()
+  returning id into v_variant_id;
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, '6d1c1455-a917-473a-83f9-284d5c7713c3'::uuid, 0, 0)
+  values (v_warehouse_id, v_variant_id, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = '6d1c1455-a917-473a-83f9-284d5c7713c3'::uuid;
+  where i.warehouse_id = v_warehouse_id and i.variant_id = v_variant_id;
 
   if v_available < 11 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      '6d1c1455-a917-473a-83f9-284d5c7713c3'::uuid,
+      v_variant_id,
       11 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -3428,9 +3429,8 @@ begin
     ),
     269.99, null, 'EUR', 0.21, true
   )
-  on conflict (id) do update set
+  on conflict (sku) do update set
     product_id = excluded.product_id,
-    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
@@ -3438,21 +3438,22 @@ begin
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
-    updated_at = now();
+    updated_at = now()
+  returning id into v_variant_id;
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, '59251f70-0c94-44cf-8bc0-dd8e24b74fe0'::uuid, 0, 0)
+  values (v_warehouse_id, v_variant_id, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = '59251f70-0c94-44cf-8bc0-dd8e24b74fe0'::uuid;
+  where i.warehouse_id = v_warehouse_id and i.variant_id = v_variant_id;
 
   if v_available < 13 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      '59251f70-0c94-44cf-8bc0-dd8e24b74fe0'::uuid,
+      v_variant_id,
       13 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -3537,9 +3538,8 @@ begin
     ),
     179.00, null, 'EUR', 0.21, true
   )
-  on conflict (id) do update set
+  on conflict (sku) do update set
     product_id = excluded.product_id,
-    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
@@ -3547,21 +3547,22 @@ begin
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
-    updated_at = now();
+    updated_at = now()
+  returning id into v_variant_id;
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, 'e2c66a6a-fb68-4261-864c-a30881b5b7f0'::uuid, 0, 0)
+  values (v_warehouse_id, v_variant_id, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = 'e2c66a6a-fb68-4261-864c-a30881b5b7f0'::uuid;
+  where i.warehouse_id = v_warehouse_id and i.variant_id = v_variant_id;
 
   if v_available < 16 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      'e2c66a6a-fb68-4261-864c-a30881b5b7f0'::uuid,
+      v_variant_id,
       16 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -3646,9 +3647,8 @@ begin
     ),
     69.90, null, 'EUR', 0.21, true
   )
-  on conflict (id) do update set
+  on conflict (sku) do update set
     product_id = excluded.product_id,
-    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
@@ -3656,21 +3656,22 @@ begin
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
-    updated_at = now();
+    updated_at = now()
+  returning id into v_variant_id;
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, '2a16dd33-f09d-42a1-8a5f-0f2a0b40fc7e'::uuid, 0, 0)
+  values (v_warehouse_id, v_variant_id, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = '2a16dd33-f09d-42a1-8a5f-0f2a0b40fc7e'::uuid;
+  where i.warehouse_id = v_warehouse_id and i.variant_id = v_variant_id;
 
   if v_available < 26 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      '2a16dd33-f09d-42a1-8a5f-0f2a0b40fc7e'::uuid,
+      v_variant_id,
       26 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -3755,9 +3756,8 @@ begin
     ),
     429.00, null, 'EUR', 0.21, true
   )
-  on conflict (id) do update set
+  on conflict (sku) do update set
     product_id = excluded.product_id,
-    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
@@ -3765,21 +3765,22 @@ begin
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
-    updated_at = now();
+    updated_at = now()
+  returning id into v_variant_id;
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, '29fb5b48-c6a9-4b98-8f56-51861cc4a188'::uuid, 0, 0)
+  values (v_warehouse_id, v_variant_id, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = '29fb5b48-c6a9-4b98-8f56-51861cc4a188'::uuid;
+  where i.warehouse_id = v_warehouse_id and i.variant_id = v_variant_id;
 
   if v_available < 11 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      '29fb5b48-c6a9-4b98-8f56-51861cc4a188'::uuid,
+      v_variant_id,
       11 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -3864,9 +3865,8 @@ begin
     ),
     349.00, null, 'EUR', 0.21, true
   )
-  on conflict (id) do update set
+  on conflict (sku) do update set
     product_id = excluded.product_id,
-    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
@@ -3874,21 +3874,22 @@ begin
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
-    updated_at = now();
+    updated_at = now()
+  returning id into v_variant_id;
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, '6570cc93-fdb9-4e53-82cc-04b00657fe7d'::uuid, 0, 0)
+  values (v_warehouse_id, v_variant_id, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = '6570cc93-fdb9-4e53-82cc-04b00657fe7d'::uuid;
+  where i.warehouse_id = v_warehouse_id and i.variant_id = v_variant_id;
 
   if v_available < 13 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      '6570cc93-fdb9-4e53-82cc-04b00657fe7d'::uuid,
+      v_variant_id,
       13 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -3973,9 +3974,8 @@ begin
     ),
     169.50, null, 'EUR', 0.21, true
   )
-  on conflict (id) do update set
+  on conflict (sku) do update set
     product_id = excluded.product_id,
-    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
@@ -3983,21 +3983,22 @@ begin
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
-    updated_at = now();
+    updated_at = now()
+  returning id into v_variant_id;
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, '2c76abd1-ee4a-409b-877e-c0ce0d36f597'::uuid, 0, 0)
+  values (v_warehouse_id, v_variant_id, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = '2c76abd1-ee4a-409b-877e-c0ce0d36f597'::uuid;
+  where i.warehouse_id = v_warehouse_id and i.variant_id = v_variant_id;
 
   if v_available < 22 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      '2c76abd1-ee4a-409b-877e-c0ce0d36f597'::uuid,
+      v_variant_id,
       22 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -4082,9 +4083,8 @@ begin
     ),
     119.00, null, 'EUR', 0.21, true
   )
-  on conflict (id) do update set
+  on conflict (sku) do update set
     product_id = excluded.product_id,
-    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
@@ -4092,21 +4092,22 @@ begin
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
-    updated_at = now();
+    updated_at = now()
+  returning id into v_variant_id;
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, 'b49c51c5-e151-4fe7-8f19-6793e7e05b3e'::uuid, 0, 0)
+  values (v_warehouse_id, v_variant_id, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = 'b49c51c5-e151-4fe7-8f19-6793e7e05b3e'::uuid;
+  where i.warehouse_id = v_warehouse_id and i.variant_id = v_variant_id;
 
   if v_available < 24 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      'b49c51c5-e151-4fe7-8f19-6793e7e05b3e'::uuid,
+      v_variant_id,
       24 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -4191,9 +4192,8 @@ begin
     ),
     269.00, null, 'EUR', 0.21, true
   )
-  on conflict (id) do update set
+  on conflict (sku) do update set
     product_id = excluded.product_id,
-    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
@@ -4201,21 +4201,22 @@ begin
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
-    updated_at = now();
+    updated_at = now()
+  returning id into v_variant_id;
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, '0202a70b-b7a7-4c1c-814d-820350fe1c60'::uuid, 0, 0)
+  values (v_warehouse_id, v_variant_id, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = '0202a70b-b7a7-4c1c-814d-820350fe1c60'::uuid;
+  where i.warehouse_id = v_warehouse_id and i.variant_id = v_variant_id;
 
   if v_available < 14 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      '0202a70b-b7a7-4c1c-814d-820350fe1c60'::uuid,
+      v_variant_id,
       14 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -4300,9 +4301,8 @@ begin
     ),
     389.00, null, 'EUR', 0.21, true
   )
-  on conflict (id) do update set
+  on conflict (sku) do update set
     product_id = excluded.product_id,
-    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
@@ -4310,21 +4310,22 @@ begin
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
-    updated_at = now();
+    updated_at = now()
+  returning id into v_variant_id;
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, '9cc795ce-81bc-42f8-8672-b1c0b2ab0ce7'::uuid, 0, 0)
+  values (v_warehouse_id, v_variant_id, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = '9cc795ce-81bc-42f8-8672-b1c0b2ab0ce7'::uuid;
+  where i.warehouse_id = v_warehouse_id and i.variant_id = v_variant_id;
 
   if v_available < 9 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      '9cc795ce-81bc-42f8-8672-b1c0b2ab0ce7'::uuid,
+      v_variant_id,
       9 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -4409,9 +4410,8 @@ begin
     ),
     139.00, null, 'EUR', 0.21, true
   )
-  on conflict (id) do update set
+  on conflict (sku) do update set
     product_id = excluded.product_id,
-    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
@@ -4419,21 +4419,22 @@ begin
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
-    updated_at = now();
+    updated_at = now()
+  returning id into v_variant_id;
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, 'd1040088-67e2-469f-8acd-9a9134702645'::uuid, 0, 0)
+  values (v_warehouse_id, v_variant_id, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = 'd1040088-67e2-469f-8acd-9a9134702645'::uuid;
+  where i.warehouse_id = v_warehouse_id and i.variant_id = v_variant_id;
 
   if v_available < 28 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      'd1040088-67e2-469f-8acd-9a9134702645'::uuid,
+      v_variant_id,
       28 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -4518,9 +4519,8 @@ begin
     ),
     529.00, null, 'EUR', 0.21, true
   )
-  on conflict (id) do update set
+  on conflict (sku) do update set
     product_id = excluded.product_id,
-    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
@@ -4528,21 +4528,22 @@ begin
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
-    updated_at = now();
+    updated_at = now()
+  returning id into v_variant_id;
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, '15bca67c-9a9c-41c9-8b1b-f4fa70cfa4b2'::uuid, 0, 0)
+  values (v_warehouse_id, v_variant_id, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = '15bca67c-9a9c-41c9-8b1b-f4fa70cfa4b2'::uuid;
+  where i.warehouse_id = v_warehouse_id and i.variant_id = v_variant_id;
 
   if v_available < 12 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      '15bca67c-9a9c-41c9-8b1b-f4fa70cfa4b2'::uuid,
+      v_variant_id,
       12 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -4627,9 +4628,8 @@ begin
     ),
     75.00, null, 'EUR', 0.21, true
   )
-  on conflict (id) do update set
+  on conflict (sku) do update set
     product_id = excluded.product_id,
-    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
@@ -4637,21 +4637,22 @@ begin
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
-    updated_at = now();
+    updated_at = now()
+  returning id into v_variant_id;
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, 'f4c4c0ce-a5da-4187-8f43-d6b7cfea80ab'::uuid, 0, 0)
+  values (v_warehouse_id, v_variant_id, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = 'f4c4c0ce-a5da-4187-8f43-d6b7cfea80ab'::uuid;
+  where i.warehouse_id = v_warehouse_id and i.variant_id = v_variant_id;
 
   if v_available < 20 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      'f4c4c0ce-a5da-4187-8f43-d6b7cfea80ab'::uuid,
+      v_variant_id,
       20 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -4736,9 +4737,8 @@ begin
     ),
     499.00, null, 'EUR', 0.21, true
   )
-  on conflict (id) do update set
+  on conflict (sku) do update set
     product_id = excluded.product_id,
-    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
@@ -4746,21 +4746,22 @@ begin
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
-    updated_at = now();
+    updated_at = now()
+  returning id into v_variant_id;
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, '7e211afe-2b66-4f02-8156-4bc7f489a0c8'::uuid, 0, 0)
+  values (v_warehouse_id, v_variant_id, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = '7e211afe-2b66-4f02-8156-4bc7f489a0c8'::uuid;
+  where i.warehouse_id = v_warehouse_id and i.variant_id = v_variant_id;
 
   if v_available < 8 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      '7e211afe-2b66-4f02-8156-4bc7f489a0c8'::uuid,
+      v_variant_id,
       8 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -4845,9 +4846,8 @@ begin
     ),
     489.00, null, 'EUR', 0.21, true
   )
-  on conflict (id) do update set
+  on conflict (sku) do update set
     product_id = excluded.product_id,
-    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
@@ -4855,21 +4855,22 @@ begin
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
-    updated_at = now();
+    updated_at = now()
+  returning id into v_variant_id;
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, '402b7512-82e9-441a-8a97-72ebdbd82dbf'::uuid, 0, 0)
+  values (v_warehouse_id, v_variant_id, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = '402b7512-82e9-441a-8a97-72ebdbd82dbf'::uuid;
+  where i.warehouse_id = v_warehouse_id and i.variant_id = v_variant_id;
 
   if v_available < 10 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      '402b7512-82e9-441a-8a97-72ebdbd82dbf'::uuid,
+      v_variant_id,
       10 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -4954,9 +4955,8 @@ begin
     ),
     215.00, null, 'EUR', 0.21, true
   )
-  on conflict (id) do update set
+  on conflict (sku) do update set
     product_id = excluded.product_id,
-    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
@@ -4964,21 +4964,22 @@ begin
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
-    updated_at = now();
+    updated_at = now()
+  returning id into v_variant_id;
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, 'dd6941d9-a90a-4c4a-81e5-dd6006335398'::uuid, 0, 0)
+  values (v_warehouse_id, v_variant_id, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = 'dd6941d9-a90a-4c4a-81e5-dd6006335398'::uuid;
+  where i.warehouse_id = v_warehouse_id and i.variant_id = v_variant_id;
 
   if v_available < 18 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      'dd6941d9-a90a-4c4a-81e5-dd6006335398'::uuid,
+      v_variant_id,
       18 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -5063,9 +5064,8 @@ begin
     ),
     699.00, null, 'EUR', 0.21, true
   )
-  on conflict (id) do update set
+  on conflict (sku) do update set
     product_id = excluded.product_id,
-    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
@@ -5073,21 +5073,22 @@ begin
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
-    updated_at = now();
+    updated_at = now()
+  returning id into v_variant_id;
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, '02ace199-26e4-42e7-8a92-80c784428c87'::uuid, 0, 0)
+  values (v_warehouse_id, v_variant_id, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = '02ace199-26e4-42e7-8a92-80c784428c87'::uuid;
+  where i.warehouse_id = v_warehouse_id and i.variant_id = v_variant_id;
 
   if v_available < 8 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      '02ace199-26e4-42e7-8a92-80c784428c87'::uuid,
+      v_variant_id,
       8 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -5172,9 +5173,8 @@ begin
     ),
     579.00, null, 'EUR', 0.21, true
   )
-  on conflict (id) do update set
+  on conflict (sku) do update set
     product_id = excluded.product_id,
-    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
@@ -5182,21 +5182,22 @@ begin
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
-    updated_at = now();
+    updated_at = now()
+  returning id into v_variant_id;
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, '92654f2d-ec6d-409f-8222-263b804da89b'::uuid, 0, 0)
+  values (v_warehouse_id, v_variant_id, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = '92654f2d-ec6d-409f-8222-263b804da89b'::uuid;
+  where i.warehouse_id = v_warehouse_id and i.variant_id = v_variant_id;
 
   if v_available < 11 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      '92654f2d-ec6d-409f-8222-263b804da89b'::uuid,
+      v_variant_id,
       11 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -5281,9 +5282,8 @@ begin
     ),
     629.00, null, 'EUR', 0.21, true
   )
-  on conflict (id) do update set
+  on conflict (sku) do update set
     product_id = excluded.product_id,
-    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
@@ -5291,21 +5291,22 @@ begin
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
-    updated_at = now();
+    updated_at = now()
+  returning id into v_variant_id;
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, '2a8334d4-ebde-448b-8f69-345ee2e5f3c2'::uuid, 0, 0)
+  values (v_warehouse_id, v_variant_id, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = '2a8334d4-ebde-448b-8f69-345ee2e5f3c2'::uuid;
+  where i.warehouse_id = v_warehouse_id and i.variant_id = v_variant_id;
 
   if v_available < 14 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      '2a8334d4-ebde-448b-8f69-345ee2e5f3c2'::uuid,
+      v_variant_id,
       14 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -5390,9 +5391,8 @@ begin
     ),
     989.00, null, 'EUR', 0.21, true
   )
-  on conflict (id) do update set
+  on conflict (sku) do update set
     product_id = excluded.product_id,
-    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
@@ -5400,21 +5400,22 @@ begin
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
-    updated_at = now();
+    updated_at = now()
+  returning id into v_variant_id;
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, 'af0f219a-7cc1-4f58-8e11-4ce469057f71'::uuid, 0, 0)
+  values (v_warehouse_id, v_variant_id, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = 'af0f219a-7cc1-4f58-8e11-4ce469057f71'::uuid;
+  where i.warehouse_id = v_warehouse_id and i.variant_id = v_variant_id;
 
   if v_available < 9 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      'af0f219a-7cc1-4f58-8e11-4ce469057f71'::uuid,
+      v_variant_id,
       9 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -5488,7 +5489,7 @@ begin
   insert into public.product_variants (
     id, product_id, sku, title, attributes, current_price, compare_at_price, currency, tax_rate, is_active
   ) values (
-    '00000000-0000-4000-8000-000000000008'::uuid, 'ref-storage-snv3sm3-1t0', 'REF-SNV3SM31T0-0ETE5', 'Estándar',
+    '5f701df3-2d18-4e41-8e71-fc1555b31ffa'::uuid, 'ref-storage-snv3sm3-1t0', 'REF-SNV3SM31T0-0ETE5', 'Estándar',
     jsonb_build_object(
       'nodria_store', jsonb_build_object(
         'mode', 'academic_demo',
@@ -5499,9 +5500,8 @@ begin
     ),
     269.73, null, 'EUR', 0.21, true
   )
-  on conflict (id) do update set
+  on conflict (sku) do update set
     product_id = excluded.product_id,
-    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
@@ -5509,21 +5509,22 @@ begin
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
-    updated_at = now();
+    updated_at = now()
+  returning id into v_variant_id;
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, '00000000-0000-4000-8000-000000000008'::uuid, 0, 0)
+  values (v_warehouse_id, v_variant_id, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = '00000000-0000-4000-8000-000000000008'::uuid;
+  where i.warehouse_id = v_warehouse_id and i.variant_id = v_variant_id;
 
   if v_available < 25 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      '00000000-0000-4000-8000-000000000008'::uuid,
+      v_variant_id,
       25 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -5597,7 +5598,7 @@ begin
   insert into public.product_variants (
     id, product_id, sku, title, attributes, current_price, compare_at_price, currency, tax_rate, is_active
   ) values (
-    '00000000-0000-4000-8000-000000000009'::uuid, 'ref-storage-mz-v9p1t0bw', 'REF-MZV9P1T0BW-1VOPO', 'Estándar',
+    'f6567903-7def-48ed-864a-6706d2724acb'::uuid, 'ref-storage-mz-v9p1t0bw', 'REF-MZV9P1T0BW-1VOPO', 'Estándar',
     jsonb_build_object(
       'nodria_store', jsonb_build_object(
         'mode', 'academic_demo',
@@ -5608,9 +5609,8 @@ begin
     ),
     218.99, null, 'EUR', 0.21, true
   )
-  on conflict (id) do update set
+  on conflict (sku) do update set
     product_id = excluded.product_id,
-    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
@@ -5618,21 +5618,22 @@ begin
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
-    updated_at = now();
+    updated_at = now()
+  returning id into v_variant_id;
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, '00000000-0000-4000-8000-000000000009'::uuid, 0, 0)
+  values (v_warehouse_id, v_variant_id, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = '00000000-0000-4000-8000-000000000009'::uuid;
+  where i.warehouse_id = v_warehouse_id and i.variant_id = v_variant_id;
 
   if v_available < 20 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      '00000000-0000-4000-8000-000000000009'::uuid,
+      v_variant_id,
       20 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -5717,9 +5718,8 @@ begin
     ),
     79.50, null, 'EUR', 0.21, true
   )
-  on conflict (id) do update set
+  on conflict (sku) do update set
     product_id = excluded.product_id,
-    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
@@ -5727,21 +5727,22 @@ begin
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
-    updated_at = now();
+    updated_at = now()
+  returning id into v_variant_id;
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, 'd38af876-f15d-41ec-855a-4de412206249'::uuid, 0, 0)
+  values (v_warehouse_id, v_variant_id, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = 'd38af876-f15d-41ec-855a-4de412206249'::uuid;
+  where i.warehouse_id = v_warehouse_id and i.variant_id = v_variant_id;
 
   if v_available < 25 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      'd38af876-f15d-41ec-855a-4de412206249'::uuid,
+      v_variant_id,
       25 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -5826,9 +5827,8 @@ begin
     ),
     115.00, null, 'EUR', 0.21, true
   )
-  on conflict (id) do update set
+  on conflict (sku) do update set
     product_id = excluded.product_id,
-    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
@@ -5836,21 +5836,22 @@ begin
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
-    updated_at = now();
+    updated_at = now()
+  returning id into v_variant_id;
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, 'b0ddcbc3-fd05-43e1-8d63-69f95214f73d'::uuid, 0, 0)
+  values (v_warehouse_id, v_variant_id, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = 'b0ddcbc3-fd05-43e1-8d63-69f95214f73d'::uuid;
+  where i.warehouse_id = v_warehouse_id and i.variant_id = v_variant_id;
 
   if v_available < 20 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      'b0ddcbc3-fd05-43e1-8d63-69f95214f73d'::uuid,
+      v_variant_id,
       20 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -5935,9 +5936,8 @@ begin
     ),
     549.00, null, 'EUR', 0.21, true
   )
-  on conflict (id) do update set
+  on conflict (sku) do update set
     product_id = excluded.product_id,
-    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
@@ -5945,21 +5945,22 @@ begin
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
-    updated_at = now();
+    updated_at = now()
+  returning id into v_variant_id;
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, '34554a39-8dee-4e84-8384-209ebf997257'::uuid, 0, 0)
+  values (v_warehouse_id, v_variant_id, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = '34554a39-8dee-4e84-8384-209ebf997257'::uuid;
+  where i.warehouse_id = v_warehouse_id and i.variant_id = v_variant_id;
 
   if v_available < 15 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      '34554a39-8dee-4e84-8384-209ebf997257'::uuid,
+      v_variant_id,
       15 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -6044,9 +6045,8 @@ begin
     ),
     729.00, null, 'EUR', 0.21, true
   )
-  on conflict (id) do update set
+  on conflict (sku) do update set
     product_id = excluded.product_id,
-    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
@@ -6054,21 +6054,22 @@ begin
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
-    updated_at = now();
+    updated_at = now()
+  returning id into v_variant_id;
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, 'ab8a60f4-913d-4a7d-8812-f245921e0fe1'::uuid, 0, 0)
+  values (v_warehouse_id, v_variant_id, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = 'ab8a60f4-913d-4a7d-8812-f245921e0fe1'::uuid;
+  where i.warehouse_id = v_warehouse_id and i.variant_id = v_variant_id;
 
   if v_available < 10 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      'ab8a60f4-913d-4a7d-8812-f245921e0fe1'::uuid,
+      v_variant_id,
       10 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );

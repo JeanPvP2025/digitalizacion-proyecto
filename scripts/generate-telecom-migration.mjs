@@ -8,12 +8,16 @@ const migrationPath = path.resolve(__dirname, "../supabase/migrations/2026102819
 
 // Read existing variant UUIDs if migration exists
 const existingSql = fs.readFileSync(migrationPath, "utf8");
-const regex = /values\s*\(\s*'([0-9a-f-]{36})',\s*'(tel-[a-z0-9-]+|ref-storage-[a-z0-9-]+)'/g;
+const regex = /values\s*\(\s*'([0-9a-f-]{36})'::uuid,\s*'(tel-[a-z0-9-]+|ref-storage-[a-z0-9-]+)'/g;
 let m;
 const variantMap = {};
 while ((m = regex.exec(existingSql)) !== null) {
   variantMap[m[2]] = m[1];
 }
+
+// Ensure the two shared storage references retain their canonical UUIDs from the foundation catalog
+variantMap["ref-storage-snv3sm3-1t0"] = "5f701df3-2d18-4e41-8e71-fc1555b31ffa";
+variantMap["ref-storage-mz-v9p1t0bw"] = "f6567903-7def-48ed-864a-6706d2724acb";
 
 function sqlEscape(str) {
   if (str === null || str === undefined) return "null";
@@ -92,6 +96,7 @@ on conflict (code) do update set
 do $telecom_migration$
 declare
   v_warehouse_id uuid;
+  v_variant_id uuid;
   v_available integer;
 begin
   select id into v_warehouse_id from public.warehouses where code = 'NODRIA-DEMO';
@@ -156,9 +161,8 @@ for (const product of telecom.products) {
     ),
     ${product.price.toFixed(2)}, null, 'EUR', 0.21, true
   )
-  on conflict (id) do update set
+  on conflict (sku) do update set
     product_id = excluded.product_id,
-    sku = excluded.sku,
     title = excluded.title,
     attributes = excluded.attributes,
     current_price = excluded.current_price,
@@ -166,21 +170,22 @@ for (const product of telecom.products) {
     currency = excluded.currency,
     tax_rate = excluded.tax_rate,
     is_active = true,
-    updated_at = now();
+    updated_at = now()
+  returning id into v_variant_id;
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, ${sqlEscape(variantId)}::uuid, 0, 0)
+  values (v_warehouse_id, v_variant_id, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = ${sqlEscape(variantId)}::uuid;
+  where i.warehouse_id = v_warehouse_id and i.variant_id = v_variant_id;
 
   if v_available < ${product.stock ?? 10} then
     perform private.adjust_inventory(
       v_warehouse_id,
-      ${sqlEscape(variantId)}::uuid,
+      v_variant_id,
       ${product.stock ?? 10} - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
