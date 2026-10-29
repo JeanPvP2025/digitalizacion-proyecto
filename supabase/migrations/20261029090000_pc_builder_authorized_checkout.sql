@@ -48,6 +48,7 @@ declare
   v_cart public.carts%rowtype;
   v_existing public.orders%rowtype;
   v_item record;
+  v_stock record;
   v_order_id uuid;
   v_order_number text;
   v_order_item_id uuid;

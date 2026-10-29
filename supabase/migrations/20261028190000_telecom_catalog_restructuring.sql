@@ -8,7 +8,7 @@ begin;
 
 -- 1. Upsert Root Categories and Subcategories
 insert into public.categories (id, slug, name, description, sort_order, parent_id, is_active)
-values ('infraestructuras-telecomunicaciones', 'infraestructuras-telecomunicaciones', 'Infraestructuras de Telecomunicaciones', 'Armarios rack de 19", cableado estructurado Cat.6A/Cat.7, fibra óptica preconectorizada, paneles de parcheo y certificación de redes.', 10, null, true)
+values ('15cbe619-16f5-4f12-80ef-e0169c9f2ab9'::uuid, 'infraestructuras-telecomunicaciones', 'Infraestructuras de Telecomunicaciones', 'Armarios rack de 19", cableado estructurado Cat.6A/Cat.7, fibra óptica preconectorizada, paneles de parcheo y certificación de redes.', 10, null, true)
 on conflict (slug) do update set
   name = excluded.name,
   description = excluded.description,
@@ -18,7 +18,9 @@ on conflict (slug) do update set
   updated_at = now();
 
 insert into public.categories (id, slug, name, description, sort_order, parent_id, is_active)
-values ('racks-armarios', 'racks-armarios', 'Racks y armarios de comunicaciones', 'Armarios murales y de suelo para salas de servidores y telecomunicaciones.', 11, 'infraestructuras-telecomunicaciones', true)
+select 'db480e83-01e6-4d01-8d92-fb18c040c0e4'::uuid, 'racks-armarios', 'Racks y armarios de comunicaciones', 'Armarios murales y de suelo para salas de servidores y telecomunicaciones.', 11, c.id, true
+from public.categories c
+where c.slug = 'infraestructuras-telecomunicaciones'
 on conflict (slug) do update set
   name = excluded.name,
   description = excluded.description,
@@ -28,7 +30,9 @@ on conflict (slug) do update set
   updated_at = now();
 
 insert into public.categories (id, slug, name, description, sort_order, parent_id, is_active)
-values ('cableado-estructurado', 'cableado-estructurado', 'Cableado estructurado Cat.6A/Cat.7', 'Bobinas de cable de red de cobre apantallado y libre de halógenos LSZH.', 12, 'infraestructuras-telecomunicaciones', true)
+select '74c5188b-8666-4942-8fbb-6e49c004a792'::uuid, 'cableado-estructurado', 'Cableado estructurado Cat.6A/Cat.7', 'Bobinas de cable de red de cobre apantallado y libre de halógenos LSZH.', 12, c.id, true
+from public.categories c
+where c.slug = 'infraestructuras-telecomunicaciones'
 on conflict (slug) do update set
   name = excluded.name,
   description = excluded.description,
@@ -38,7 +42,9 @@ on conflict (slug) do update set
   updated_at = now();
 
 insert into public.categories (id, slug, name, description, sort_order, parent_id, is_active)
-values ('fibra-optica', 'fibra-optica', 'Fibra óptica y distribución troncal', 'Mangueras preconectorizadas, bandejas de distribución y pigtails ópticos.', 13, 'infraestructuras-telecomunicaciones', true)
+select '9c41e121-8c41-40bb-80f1-a6bc7f3767ae'::uuid, 'fibra-optica', 'Fibra óptica y distribución troncal', 'Mangueras preconectorizadas, bandejas de distribución y pigtails ópticos.', 13, c.id, true
+from public.categories c
+where c.slug = 'infraestructuras-telecomunicaciones'
 on conflict (slug) do update set
   name = excluded.name,
   description = excluded.description,
@@ -48,7 +54,9 @@ on conflict (slug) do update set
   updated_at = now();
 
 insert into public.categories (id, slug, name, description, sort_order, parent_id, is_active)
-values ('paneles-parcheo', 'paneles-parcheo', 'Paneles de parcheo y gestión de cable', 'Paneles modulares RJ45, guías de cables y pasahilos horizontales.', 14, 'infraestructuras-telecomunicaciones', true)
+select '28227571-be86-456d-8feb-bb12d3775010'::uuid, 'paneles-parcheo', 'Paneles de parcheo y gestión de cable', 'Paneles modulares RJ45, guías de cables y pasahilos horizontales.', 14, c.id, true
+from public.categories c
+where c.slug = 'infraestructuras-telecomunicaciones'
 on conflict (slug) do update set
   name = excluded.name,
   description = excluded.description,
@@ -58,7 +66,9 @@ on conflict (slug) do update set
   updated_at = now();
 
 insert into public.categories (id, slug, name, description, sort_order, parent_id, is_active)
-values ('herramientas-certificacion', 'herramientas-certificacion', 'Herramientas profesionales y certificación', 'Certificadores de redes Cat.6A/Cat.8 y fusionadoras de fibra por alineación de núcleo.', 15, 'infraestructuras-telecomunicaciones', true)
+select '1aa3c71c-fbff-448c-85d9-a98463ab3f69'::uuid, 'herramientas-certificacion', 'Herramientas profesionales y certificación', 'Certificadores de redes Cat.6A/Cat.8 y fusionadoras de fibra por alineación de núcleo.', 15, c.id, true
+from public.categories c
+where c.slug = 'infraestructuras-telecomunicaciones'
 on conflict (slug) do update set
   name = excluded.name,
   description = excluded.description,
@@ -68,7 +78,7 @@ on conflict (slug) do update set
   updated_at = now();
 
 insert into public.categories (id, slug, name, description, sort_order, parent_id, is_active)
-values ('equipos-sistemas-telecomunicaciones', 'equipos-sistemas-telecomunicaciones', 'Equipos y Sistemas de Telecomunicaciones', 'Switches gestionables L2+/L3, routers de borde, puntos de acceso Wi-Fi 6E/7, transceptores ópticos SFP+ y cabeceras de distribución.', 20, null, true)
+values ('086ece91-23e4-4cfe-8b8d-269a61b2c3b4'::uuid, 'equipos-sistemas-telecomunicaciones', 'Equipos y Sistemas de Telecomunicaciones', 'Switches gestionables L2+/L3, routers de borde, puntos de acceso Wi-Fi 6E/7, transceptores ópticos SFP+ y cabeceras de distribución.', 20, null, true)
 on conflict (slug) do update set
   name = excluded.name,
   description = excluded.description,
@@ -78,7 +88,9 @@ on conflict (slug) do update set
   updated_at = now();
 
 insert into public.categories (id, slug, name, description, sort_order, parent_id, is_active)
-values ('switches-gestionables', 'switches-gestionables', 'Switches gestionables capa 2/3 y PoE+', 'Conmutadores de alta capacidad con PoE+ y puertos de enlace 10G SFP+.', 21, 'equipos-sistemas-telecomunicaciones', true)
+select 'be6272d8-00f5-496d-8dc9-4a861b15c280'::uuid, 'switches-gestionables', 'Switches gestionables capa 2/3 y PoE+', 'Conmutadores de alta capacidad con PoE+ y puertos de enlace 10G SFP+.', 21, c.id, true
+from public.categories c
+where c.slug = 'equipos-sistemas-telecomunicaciones'
 on conflict (slug) do update set
   name = excluded.name,
   description = excluded.description,
@@ -88,7 +100,9 @@ on conflict (slug) do update set
   updated_at = now();
 
 insert into public.categories (id, slug, name, description, sort_order, parent_id, is_active)
-values ('routers-borde', 'routers-borde', 'Routers de borde y balanceo de carga', 'Pasarelas de seguridad multi-WAN y cortafuegos con inspección profunda de paquetes.', 22, 'equipos-sistemas-telecomunicaciones', true)
+select '716032c3-ed9b-45a0-8950-94b657458395'::uuid, 'routers-borde', 'Routers de borde y balanceo de carga', 'Pasarelas de seguridad multi-WAN y cortafuegos con inspección profunda de paquetes.', 22, c.id, true
+from public.categories c
+where c.slug = 'equipos-sistemas-telecomunicaciones'
 on conflict (slug) do update set
   name = excluded.name,
   description = excluded.description,
@@ -98,7 +112,9 @@ on conflict (slug) do update set
   updated_at = now();
 
 insert into public.categories (id, slug, name, description, sort_order, parent_id, is_active)
-values ('puntos-acceso-wifi', 'puntos-acceso-wifi', 'Puntos de acceso inalámbrico Wi-Fi 6E/7', 'Puntos de acceso corporativos de alta densidad y tecnología multi-banda.', 23, 'equipos-sistemas-telecomunicaciones', true)
+select '40aadbdc-fb3e-4881-8948-c38eb172a99b'::uuid, 'puntos-acceso-wifi', 'Puntos de acceso inalámbrico Wi-Fi 6E/7', 'Puntos de acceso corporativos de alta densidad y tecnología multi-banda.', 23, c.id, true
+from public.categories c
+where c.slug = 'equipos-sistemas-telecomunicaciones'
 on conflict (slug) do update set
   name = excluded.name,
   description = excluded.description,
@@ -108,7 +124,9 @@ on conflict (slug) do update set
   updated_at = now();
 
 insert into public.categories (id, slug, name, description, sort_order, parent_id, is_active)
-values ('transceptores-opticos', 'transceptores-opticos', 'Módulos transceptores ópticos SFP/SFP+', 'Transceptores 10G monomodo, multimodo y 10GBASE-T en cobre.', 24, 'equipos-sistemas-telecomunicaciones', true)
+select 'a545f214-60ba-4829-8bbc-bf4a7e3d5e7d'::uuid, 'transceptores-opticos', 'Módulos transceptores ópticos SFP/SFP+', 'Transceptores 10G monomodo, multimodo y 10GBASE-T en cobre.', 24, c.id, true
+from public.categories c
+where c.slug = 'equipos-sistemas-telecomunicaciones'
 on conflict (slug) do update set
   name = excluded.name,
   description = excluded.description,
@@ -118,7 +136,9 @@ on conflict (slug) do update set
   updated_at = now();
 
 insert into public.categories (id, slug, name, description, sort_order, parent_id, is_active)
-values ('cabeceras-rf-tv', 'cabeceras-rf-tv', 'Cabeceras de radiofrecuencia y distribución TV/SAT', 'Centrales amplificadoras programables y transmoduladores ópticos DVB.', 25, 'equipos-sistemas-telecomunicaciones', true)
+select '12fc57a9-6c2a-4126-8295-50f4c1c06992'::uuid, 'cabeceras-rf-tv', 'Cabeceras de radiofrecuencia y distribución TV/SAT', 'Centrales amplificadoras programables y transmoduladores ópticos DVB.', 25, c.id, true
+from public.categories c
+where c.slug = 'equipos-sistemas-telecomunicaciones'
 on conflict (slug) do update set
   name = excluded.name,
   description = excluded.description,
@@ -128,7 +148,7 @@ on conflict (slug) do update set
   updated_at = now();
 
 insert into public.categories (id, slug, name, description, sort_order, parent_id, is_active)
-values ('domotica-hogar-digital', 'domotica-hogar-digital', 'Domótica y Hogar Digital', 'Pasarelas multiprotocolo Zigbee 3.0/Matter, relés para carril DIN, sensores ambientales, videoporteros IP y climatización inteligente.', 30, null, true)
+values ('677fd6b6-fb71-42ca-8469-ce47dd6541b1'::uuid, 'domotica-hogar-digital', 'Domótica y Hogar Digital', 'Pasarelas multiprotocolo Zigbee 3.0/Matter, relés para carril DIN, sensores ambientales, videoporteros IP y climatización inteligente.', 30, null, true)
 on conflict (slug) do update set
   name = excluded.name,
   description = excluded.description,
@@ -138,7 +158,9 @@ on conflict (slug) do update set
   updated_at = now();
 
 insert into public.categories (id, slug, name, description, sort_order, parent_id, is_active)
-values ('pasarelas-controladores', 'pasarelas-controladores', 'Pasarelas y controladores domóticos', 'Centros de control compatibles con Matter, Zigbee 3.0, Thread y Apple Home.', 31, 'domotica-hogar-digital', true)
+select '3488fcc9-3049-436c-808e-8e79dc0e4af2'::uuid, 'pasarelas-controladores', 'Pasarelas y controladores domóticos', 'Centros de control compatibles con Matter, Zigbee 3.0, Thread y Apple Home.', 31, c.id, true
+from public.categories c
+where c.slug = 'domotica-hogar-digital'
 on conflict (slug) do update set
   name = excluded.name,
   description = excluded.description,
@@ -148,7 +170,9 @@ on conflict (slug) do update set
   updated_at = now();
 
 insert into public.categories (id, slug, name, description, sort_order, parent_id, is_active)
-values ('reles-actuadores', 'reles-actuadores', 'Micromódulos y relés inteligentes para carril DIN', 'Actuadores de control de iluminación y cargas de potencia con telemetría de energía.', 32, 'domotica-hogar-digital', true)
+select '1a9c4b69-62a2-416a-86a2-cae77d32fca7'::uuid, 'reles-actuadores', 'Micromódulos y relés inteligentes para carril DIN', 'Actuadores de control de iluminación y cargas de potencia con telemetría de energía.', 32, c.id, true
+from public.categories c
+where c.slug = 'domotica-hogar-digital'
 on conflict (slug) do update set
   name = excluded.name,
   description = excluded.description,
@@ -158,7 +182,9 @@ on conflict (slug) do update set
   updated_at = now();
 
 insert into public.categories (id, slug, name, description, sort_order, parent_id, is_active)
-values ('sensores-ambientales', 'sensores-ambientales', 'Sensores ambientales, presencia y consumo', 'Sensores de presencia por radar milimétrico mmWave y monitores de calidad de aire.', 33, 'domotica-hogar-digital', true)
+select '6d707317-2a75-46b6-8298-5b7c4ec8fce8'::uuid, 'sensores-ambientales', 'Sensores ambientales, presencia y consumo', 'Sensores de presencia por radar milimétrico mmWave y monitores de calidad de aire.', 33, c.id, true
+from public.categories c
+where c.slug = 'domotica-hogar-digital'
 on conflict (slug) do update set
   name = excluded.name,
   description = excluded.description,
@@ -168,7 +194,9 @@ on conflict (slug) do update set
   updated_at = now();
 
 insert into public.categories (id, slug, name, description, sort_order, parent_id, is_active)
-values ('videoporteros-control-acceso', 'videoporteros-control-acceso', 'Videoporteros IP y control de accesos', 'Intercomunicadores PoE con cámara 2K, lectores NFC y cerraduras inteligentes.', 34, 'domotica-hogar-digital', true)
+select 'c9cdb222-9bf2-4222-8408-24ce60e2a614'::uuid, 'videoporteros-control-acceso', 'Videoporteros IP y control de accesos', 'Intercomunicadores PoE con cámara 2K, lectores NFC y cerraduras inteligentes.', 34, c.id, true
+from public.categories c
+where c.slug = 'domotica-hogar-digital'
 on conflict (slug) do update set
   name = excluded.name,
   description = excluded.description,
@@ -178,7 +206,9 @@ on conflict (slug) do update set
   updated_at = now();
 
 insert into public.categories (id, slug, name, description, sort_order, parent_id, is_active)
-values ('climatizacion-inteligente', 'climatizacion-inteligente', 'Termostatos y gestión climática inteligente', 'Termostatos modulantes OpenTherm y cabezales termostáticos electrónicos para radiadores.', 35, 'domotica-hogar-digital', true)
+select '7f8d2cb3-89aa-4570-8a60-58bd2816d24e'::uuid, 'climatizacion-inteligente', 'Termostatos y gestión climática inteligente', 'Termostatos modulantes OpenTherm y cabezales termostáticos electrónicos para radiadores.', 35, c.id, true
+from public.categories c
+where c.slug = 'domotica-hogar-digital'
 on conflict (slug) do update set
   name = excluded.name,
   description = excluded.description,
@@ -188,7 +218,7 @@ on conflict (slug) do update set
   updated_at = now();
 
 insert into public.categories (id, slug, name, description, sort_order, parent_id, is_active)
-values ('telefonia-comunicaciones', 'telefonia-comunicaciones', 'Telefonía y Comunicaciones', 'Centralitas telefónicas IP-PBX, terminales SIP ejecutivos, teléfonos DECT, pasarelas VoIP FXS/FXO y routers celulares industriales 4G/5G.', 40, null, true)
+values ('aa1c17c2-397a-4a16-8298-5a7b4e3862c9'::uuid, 'telefonia-comunicaciones', 'Telefonía y Comunicaciones', 'Centralitas telefónicas IP-PBX, terminales SIP ejecutivos, teléfonos DECT, pasarelas VoIP FXS/FXO y routers celulares industriales 4G/5G.', 40, null, true)
 on conflict (slug) do update set
   name = excluded.name,
   description = excluded.description,
@@ -198,7 +228,9 @@ on conflict (slug) do update set
   updated_at = now();
 
 insert into public.categories (id, slug, name, description, sort_order, parent_id, is_active)
-values ('centralitas-ip-pbx', 'centralitas-ip-pbx', 'Centralitas IP-PBX y servidores SIP', 'Servidores de comunicaciones unificadas con operadora automática y salas de conferencia.', 41, 'telefonia-comunicaciones', true)
+select '6164296b-a7c8-4c8f-861a-10e883a4ac93'::uuid, 'centralitas-ip-pbx', 'Centralitas IP-PBX y servidores SIP', 'Servidores de comunicaciones unificadas con operadora automática y salas de conferencia.', 41, c.id, true
+from public.categories c
+where c.slug = 'telefonia-comunicaciones'
 on conflict (slug) do update set
   name = excluded.name,
   description = excluded.description,
@@ -208,7 +240,9 @@ on conflict (slug) do update set
   updated_at = now();
 
 insert into public.categories (id, slug, name, description, sort_order, parent_id, is_active)
-values ('telefonos-ip-dect', 'telefonos-ip-dect', 'Teléfonos IP sobremesa y terminales DECT', 'Teléfonos ejecutivos con pantalla en color, audio HD y sistemas inalámbricos multisede.', 42, 'telefonia-comunicaciones', true)
+select '29e5b4f0-85ae-4b37-89aa-115582fbdaad'::uuid, 'telefonos-ip-dect', 'Teléfonos IP sobremesa y terminales DECT', 'Teléfonos ejecutivos con pantalla en color, audio HD y sistemas inalámbricos multisede.', 42, c.id, true
+from public.categories c
+where c.slug = 'telefonia-comunicaciones'
 on conflict (slug) do update set
   name = excluded.name,
   description = excluded.description,
@@ -218,7 +252,9 @@ on conflict (slug) do update set
   updated_at = now();
 
 insert into public.categories (id, slug, name, description, sort_order, parent_id, is_active)
-values ('gateways-voip', 'gateways-voip', 'Pasarelas VoIP analógicas y digitales FXS/FXO/PRI', 'Adaptadores de líneas telefónicas tradicionales e interfaces RDSI/ISDN a SIP.', 43, 'telefonia-comunicaciones', true)
+select 'ec1516f2-2697-4161-881a-80328550ddb9'::uuid, 'gateways-voip', 'Pasarelas VoIP analógicas y digitales FXS/FXO/PRI', 'Adaptadores de líneas telefónicas tradicionales e interfaces RDSI/ISDN a SIP.', 43, c.id, true
+from public.categories c
+where c.slug = 'telefonia-comunicaciones'
 on conflict (slug) do update set
   name = excluded.name,
   description = excluded.description,
@@ -228,7 +264,9 @@ on conflict (slug) do update set
   updated_at = now();
 
 insert into public.categories (id, slug, name, description, sort_order, parent_id, is_active)
-values ('routers-celulares-4g-5g', 'routers-celulares-4g-5g', 'Routers y módems celulares industriales 4G/5G', 'Equipos de conectividad móvil crítica con doble SIM y soporte VPN avanzado.', 44, 'telefonia-comunicaciones', true)
+select 'cbfb2de3-1f5a-4924-8ffc-529fed9df334'::uuid, 'routers-celulares-4g-5g', 'Routers y módems celulares industriales 4G/5G', 'Equipos de conectividad móvil crítica con doble SIM y soporte VPN avanzado.', 44, c.id, true
+from public.categories c
+where c.slug = 'telefonia-comunicaciones'
 on conflict (slug) do update set
   name = excluded.name,
   description = excluded.description,
@@ -238,7 +276,9 @@ on conflict (slug) do update set
   updated_at = now();
 
 insert into public.categories (id, slug, name, description, sort_order, parent_id, is_active)
-values ('antenas-comunicaciones', 'antenas-comunicaciones', 'Antenas móviles M2M/IoT y amplificadores', 'Antenas de alta ganancia para exterior y sistemas de amplificación celular conformes con la Directiva RED.', 45, 'telefonia-comunicaciones', true)
+select '8d201b6f-f32f-4200-8fc7-cff38a00fbf2'::uuid, 'antenas-comunicaciones', 'Antenas móviles M2M/IoT y amplificadores', 'Antenas de alta ganancia para exterior y sistemas de amplificación celular conformes con la Directiva RED.', 45, c.id, true
+from public.categories c
+where c.slug = 'telefonia-comunicaciones'
 on conflict (slug) do update set
   name = excluded.name,
   description = excluded.description,
@@ -248,7 +288,7 @@ on conflict (slug) do update set
   updated_at = now();
 
 insert into public.categories (id, slug, name, description, sort_order, parent_id, is_active)
-values ('digitalizacion-industria-conectada', 'digitalizacion-industria-conectada', 'Digitalización e Industria Conectada', 'Gateways IoT industriales, servidores de computación Edge, almacenamiento en red NAS, sensores Modbus/RS-485 y trazabilidad con terminales de lectura.', 50, null, true)
+values ('3e380976-47d1-4b9b-89c7-1145f4b9765b'::uuid, 'digitalizacion-industria-conectada', 'Digitalización e Industria Conectada', 'Gateways IoT industriales, servidores de computación Edge, almacenamiento en red NAS, sensores Modbus/RS-485 y trazabilidad con terminales de lectura.', 50, null, true)
 on conflict (slug) do update set
   name = excluded.name,
   description = excluded.description,
@@ -258,7 +298,9 @@ on conflict (slug) do update set
   updated_at = now();
 
 insert into public.categories (id, slug, name, description, sort_order, parent_id, is_active)
-values ('gateways-iot-industriales', 'gateways-iot-industriales', 'Gateways IoT y adquisición de datos en planta', 'Pasarelas industriales con soporte Node-RED, Modbus TCP/RTU y brokers MQTT.', 51, 'digitalizacion-industria-conectada', true)
+select 'd09dc9b8-e89b-43bf-86ca-0d3223b6d046'::uuid, 'gateways-iot-industriales', 'Gateways IoT y adquisición de datos en planta', 'Pasarelas industriales con soporte Node-RED, Modbus TCP/RTU y brokers MQTT.', 51, c.id, true
+from public.categories c
+where c.slug = 'digitalizacion-industria-conectada'
 on conflict (slug) do update set
   name = excluded.name,
   description = excluded.description,
@@ -268,7 +310,9 @@ on conflict (slug) do update set
   updated_at = now();
 
 insert into public.categories (id, slug, name, description, sort_order, parent_id, is_active)
-values ('servidores-edge-computacion', 'servidores-edge-computacion', 'Servidores Edge y computación industrial', 'Equipos embebidos fanless para analítica en borde e inferencia de inteligencia artificial.', 52, 'digitalizacion-industria-conectada', true)
+select '43d3c0cf-9a0d-4194-8e2c-2742beefbfb6'::uuid, 'servidores-edge-computacion', 'Servidores Edge y computación industrial', 'Equipos embebidos fanless para analítica en borde e inferencia de inteligencia artificial.', 52, c.id, true
+from public.categories c
+where c.slug = 'digitalizacion-industria-conectada'
 on conflict (slug) do update set
   name = excluded.name,
   description = excluded.description,
@@ -278,7 +322,9 @@ on conflict (slug) do update set
   updated_at = now();
 
 insert into public.categories (id, slug, name, description, sort_order, parent_id, is_active)
-values ('almacenamiento-nas-servidores', 'almacenamiento-nas-servidores', 'Almacenamiento en red NAS y servidores', 'Sistemas de almacenamiento centralizado con copias automatizadas y unidades NVMe ultrarrápidas.', 53, 'digitalizacion-industria-conectada', true)
+select '98c5ba32-286f-4639-8a02-ee4818d6938a'::uuid, 'almacenamiento-nas-servidores', 'Almacenamiento en red NAS y servidores', 'Sistemas de almacenamiento centralizado con copias automatizadas y unidades NVMe ultrarrápidas.', 53, c.id, true
+from public.categories c
+where c.slug = 'digitalizacion-industria-conectada'
 on conflict (slug) do update set
   name = excluded.name,
   description = excluded.description,
@@ -288,7 +334,9 @@ on conflict (slug) do update set
   updated_at = now();
 
 insert into public.categories (id, slug, name, description, sort_order, parent_id, is_active)
-values ('sensores-industriales-modbus', 'sensores-industriales-modbus', 'Sensores industriales e interfaces Modbus / IO-Link', 'Transmisores de presión, temperatura e instrumentación de procesos en acero inoxidable.', 54, 'digitalizacion-industria-conectada', true)
+select '0ac60e71-9131-4669-85ae-0625878433da'::uuid, 'sensores-industriales-modbus', 'Sensores industriales e interfaces Modbus / IO-Link', 'Transmisores de presión, temperatura e instrumentación de procesos en acero inoxidable.', 54, c.id, true
+from public.categories c
+where c.slug = 'digitalizacion-industria-conectada'
 on conflict (slug) do update set
   name = excluded.name,
   description = excluded.description,
@@ -298,7 +346,9 @@ on conflict (slug) do update set
   updated_at = now();
 
 insert into public.categories (id, slug, name, description, sort_order, parent_id, is_active)
-values ('captura-datos-trazabilidad', 'captura-datos-trazabilidad', 'Terminales de captura de datos y trazabilidad logística', 'PDA industriales con escáner 2D, sellado IP68 e impresoras térmicas de etiquetas.', 55, 'digitalizacion-industria-conectada', true)
+select '927bb59e-dd8b-40c9-82da-27163a13cfc0'::uuid, 'captura-datos-trazabilidad', 'Terminales de captura de datos y trazabilidad logística', 'PDA industriales con escáner 2D, sellado IP68 e impresoras térmicas de etiquetas.', 55, c.id, true
+from public.categories c
+where c.slug = 'digitalizacion-industria-conectada'
 on conflict (slug) do update set
   name = excluded.name,
   description = excluded.description,
@@ -384,6 +434,9 @@ declare
   v_available integer;
 begin
   select id into v_warehouse_id from public.warehouses where code = 'NODRIA-DEMO';
+  if v_warehouse_id is null then
+    select id into v_warehouse_id from public.warehouses where is_active limit 1;
+  end if;
 
   -- Product: NDR-TEL-INF-001 (Rack Mural 19" 9U Profundidad 600mm Puerta de Cristal)
   insert into public.products (
@@ -412,17 +465,16 @@ begin
 
   -- Category Links
   insert into public.product_categories (product_id, category_id)
-  values ('tel-inf-001', 'infraestructuras-telecomunicaciones')
-  on conflict (product_id, category_id) do nothing;
-  insert into public.product_categories (product_id, category_id)
-  values ('tel-inf-001', 'racks-armarios')
+  select 'tel-inf-001', c.id
+  from public.categories c
+  where c.slug in ('infraestructuras-telecomunicaciones', 'racks-armarios')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
   insert into public.product_variants (
     id, product_id, sku, title, attributes, current_price, compare_at_price, currency, tax_rate, is_active
   ) values (
-    'e438de5f-f761-4631-8a66-701973245f5a', 'tel-inf-001', 'NDR-TEL-INF-001', 'Estándar',
+    'e438de5f-f761-4631-8a66-701973245f5a'::uuid, 'tel-inf-001', 'NDR-TEL-INF-001', 'Estándar',
     jsonb_build_object(
       'nodria_store', jsonb_build_object(
         'mode', 'academic_demo',
@@ -447,17 +499,17 @@ begin
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, 'e438de5f-f761-4631-8a66-701973245f5a', 0, 0)
+  values (v_warehouse_id, 'e438de5f-f761-4631-8a66-701973245f5a'::uuid, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = 'e438de5f-f761-4631-8a66-701973245f5a';
+  where i.warehouse_id = v_warehouse_id and i.variant_id = 'e438de5f-f761-4631-8a66-701973245f5a'::uuid;
 
   if v_available < 14 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      'e438de5f-f761-4631-8a66-701973245f5a',
+      'e438de5f-f761-4631-8a66-701973245f5a'::uuid,
       14 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -522,17 +574,16 @@ begin
 
   -- Category Links
   insert into public.product_categories (product_id, category_id)
-  values ('tel-inf-002', 'infraestructuras-telecomunicaciones')
-  on conflict (product_id, category_id) do nothing;
-  insert into public.product_categories (product_id, category_id)
-  values ('tel-inf-002', 'racks-armarios')
+  select 'tel-inf-002', c.id
+  from public.categories c
+  where c.slug in ('infraestructuras-telecomunicaciones', 'racks-armarios')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
   insert into public.product_variants (
     id, product_id, sku, title, attributes, current_price, compare_at_price, currency, tax_rate, is_active
   ) values (
-    '0d53ea09-49a8-434c-8a9d-528b24ed4b7d', 'tel-inf-002', 'NDR-TEL-INF-002', 'Estándar',
+    '0d53ea09-49a8-434c-8a9d-528b24ed4b7d'::uuid, 'tel-inf-002', 'NDR-TEL-INF-002', 'Estándar',
     jsonb_build_object(
       'nodria_store', jsonb_build_object(
         'mode', 'academic_demo',
@@ -557,17 +608,17 @@ begin
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, '0d53ea09-49a8-434c-8a9d-528b24ed4b7d', 0, 0)
+  values (v_warehouse_id, '0d53ea09-49a8-434c-8a9d-528b24ed4b7d'::uuid, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = '0d53ea09-49a8-434c-8a9d-528b24ed4b7d';
+  where i.warehouse_id = v_warehouse_id and i.variant_id = '0d53ea09-49a8-434c-8a9d-528b24ed4b7d'::uuid;
 
   if v_available < 8 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      '0d53ea09-49a8-434c-8a9d-528b24ed4b7d',
+      '0d53ea09-49a8-434c-8a9d-528b24ed4b7d'::uuid,
       8 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -632,17 +683,16 @@ begin
 
   -- Category Links
   insert into public.product_categories (product_id, category_id)
-  values ('tel-inf-003', 'infraestructuras-telecomunicaciones')
-  on conflict (product_id, category_id) do nothing;
-  insert into public.product_categories (product_id, category_id)
-  values ('tel-inf-003', 'cableado-estructurado')
+  select 'tel-inf-003', c.id
+  from public.categories c
+  where c.slug in ('infraestructuras-telecomunicaciones', 'cableado-estructurado')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
   insert into public.product_variants (
     id, product_id, sku, title, attributes, current_price, compare_at_price, currency, tax_rate, is_active
   ) values (
-    '82187709-26a9-4d05-832a-6a14b4a42b6d', 'tel-inf-003', 'NDR-TEL-INF-003', 'Estándar',
+    '82187709-26a9-4d05-832a-6a14b4a42b6d'::uuid, 'tel-inf-003', 'NDR-TEL-INF-003', 'Estándar',
     jsonb_build_object(
       'nodria_store', jsonb_build_object(
         'mode', 'academic_demo',
@@ -667,17 +717,17 @@ begin
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, '82187709-26a9-4d05-832a-6a14b4a42b6d', 0, 0)
+  values (v_warehouse_id, '82187709-26a9-4d05-832a-6a14b4a42b6d'::uuid, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = '82187709-26a9-4d05-832a-6a14b4a42b6d';
+  where i.warehouse_id = v_warehouse_id and i.variant_id = '82187709-26a9-4d05-832a-6a14b4a42b6d'::uuid;
 
   if v_available < 22 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      '82187709-26a9-4d05-832a-6a14b4a42b6d',
+      '82187709-26a9-4d05-832a-6a14b4a42b6d'::uuid,
       22 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -742,17 +792,16 @@ begin
 
   -- Category Links
   insert into public.product_categories (product_id, category_id)
-  values ('tel-inf-004', 'infraestructuras-telecomunicaciones')
-  on conflict (product_id, category_id) do nothing;
-  insert into public.product_categories (product_id, category_id)
-  values ('tel-inf-004', 'cableado-estructurado')
+  select 'tel-inf-004', c.id
+  from public.categories c
+  where c.slug in ('infraestructuras-telecomunicaciones', 'cableado-estructurado')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
   insert into public.product_variants (
     id, product_id, sku, title, attributes, current_price, compare_at_price, currency, tax_rate, is_active
   ) values (
-    '0836336a-0e7b-4d9c-85ae-fa3acce9fde4', 'tel-inf-004', 'NDR-TEL-INF-004', 'Estándar',
+    '0836336a-0e7b-4d9c-85ae-fa3acce9fde4'::uuid, 'tel-inf-004', 'NDR-TEL-INF-004', 'Estándar',
     jsonb_build_object(
       'nodria_store', jsonb_build_object(
         'mode', 'academic_demo',
@@ -777,17 +826,17 @@ begin
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, '0836336a-0e7b-4d9c-85ae-fa3acce9fde4', 0, 0)
+  values (v_warehouse_id, '0836336a-0e7b-4d9c-85ae-fa3acce9fde4'::uuid, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = '0836336a-0e7b-4d9c-85ae-fa3acce9fde4';
+  where i.warehouse_id = v_warehouse_id and i.variant_id = '0836336a-0e7b-4d9c-85ae-fa3acce9fde4'::uuid;
 
   if v_available < 18 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      '0836336a-0e7b-4d9c-85ae-fa3acce9fde4',
+      '0836336a-0e7b-4d9c-85ae-fa3acce9fde4'::uuid,
       18 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -852,17 +901,16 @@ begin
 
   -- Category Links
   insert into public.product_categories (product_id, category_id)
-  values ('tel-inf-005', 'infraestructuras-telecomunicaciones')
-  on conflict (product_id, category_id) do nothing;
-  insert into public.product_categories (product_id, category_id)
-  values ('tel-inf-005', 'fibra-optica')
+  select 'tel-inf-005', c.id
+  from public.categories c
+  where c.slug in ('infraestructuras-telecomunicaciones', 'fibra-optica')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
   insert into public.product_variants (
     id, product_id, sku, title, attributes, current_price, compare_at_price, currency, tax_rate, is_active
   ) values (
-    '186020a9-76e7-47db-82dd-3f63b8b28b7d', 'tel-inf-005', 'NDR-TEL-INF-005', 'Estándar',
+    '186020a9-76e7-47db-82dd-3f63b8b28b7d'::uuid, 'tel-inf-005', 'NDR-TEL-INF-005', 'Estándar',
     jsonb_build_object(
       'nodria_store', jsonb_build_object(
         'mode', 'academic_demo',
@@ -887,17 +935,17 @@ begin
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, '186020a9-76e7-47db-82dd-3f63b8b28b7d', 0, 0)
+  values (v_warehouse_id, '186020a9-76e7-47db-82dd-3f63b8b28b7d'::uuid, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = '186020a9-76e7-47db-82dd-3f63b8b28b7d';
+  where i.warehouse_id = v_warehouse_id and i.variant_id = '186020a9-76e7-47db-82dd-3f63b8b28b7d'::uuid;
 
   if v_available < 16 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      '186020a9-76e7-47db-82dd-3f63b8b28b7d',
+      '186020a9-76e7-47db-82dd-3f63b8b28b7d'::uuid,
       16 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -962,17 +1010,16 @@ begin
 
   -- Category Links
   insert into public.product_categories (product_id, category_id)
-  values ('tel-inf-006', 'infraestructuras-telecomunicaciones')
-  on conflict (product_id, category_id) do nothing;
-  insert into public.product_categories (product_id, category_id)
-  values ('tel-inf-006', 'fibra-optica')
+  select 'tel-inf-006', c.id
+  from public.categories c
+  where c.slug in ('infraestructuras-telecomunicaciones', 'fibra-optica')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
   insert into public.product_variants (
     id, product_id, sku, title, attributes, current_price, compare_at_price, currency, tax_rate, is_active
   ) values (
-    '86d6bf44-8867-4ac2-8a2d-ddbeebdd98e5', 'tel-inf-006', 'NDR-TEL-INF-006', 'Estándar',
+    '86d6bf44-8867-4ac2-8a2d-ddbeebdd98e5'::uuid, 'tel-inf-006', 'NDR-TEL-INF-006', 'Estándar',
     jsonb_build_object(
       'nodria_store', jsonb_build_object(
         'mode', 'academic_demo',
@@ -997,17 +1044,17 @@ begin
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, '86d6bf44-8867-4ac2-8a2d-ddbeebdd98e5', 0, 0)
+  values (v_warehouse_id, '86d6bf44-8867-4ac2-8a2d-ddbeebdd98e5'::uuid, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = '86d6bf44-8867-4ac2-8a2d-ddbeebdd98e5';
+  where i.warehouse_id = v_warehouse_id and i.variant_id = '86d6bf44-8867-4ac2-8a2d-ddbeebdd98e5'::uuid;
 
   if v_available < 19 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      '86d6bf44-8867-4ac2-8a2d-ddbeebdd98e5',
+      '86d6bf44-8867-4ac2-8a2d-ddbeebdd98e5'::uuid,
       19 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -1072,17 +1119,16 @@ begin
 
   -- Category Links
   insert into public.product_categories (product_id, category_id)
-  values ('tel-inf-007', 'infraestructuras-telecomunicaciones')
-  on conflict (product_id, category_id) do nothing;
-  insert into public.product_categories (product_id, category_id)
-  values ('tel-inf-007', 'paneles-parcheo')
+  select 'tel-inf-007', c.id
+  from public.categories c
+  where c.slug in ('infraestructuras-telecomunicaciones', 'paneles-parcheo')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
   insert into public.product_variants (
     id, product_id, sku, title, attributes, current_price, compare_at_price, currency, tax_rate, is_active
   ) values (
-    'ab24113e-a593-4489-8ae3-e65823b163d2', 'tel-inf-007', 'NDR-TEL-INF-007', 'Estándar',
+    'ab24113e-a593-4489-8ae3-e65823b163d2'::uuid, 'tel-inf-007', 'NDR-TEL-INF-007', 'Estándar',
     jsonb_build_object(
       'nodria_store', jsonb_build_object(
         'mode', 'academic_demo',
@@ -1107,17 +1153,17 @@ begin
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, 'ab24113e-a593-4489-8ae3-e65823b163d2', 0, 0)
+  values (v_warehouse_id, 'ab24113e-a593-4489-8ae3-e65823b163d2'::uuid, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = 'ab24113e-a593-4489-8ae3-e65823b163d2';
+  where i.warehouse_id = v_warehouse_id and i.variant_id = 'ab24113e-a593-4489-8ae3-e65823b163d2'::uuid;
 
   if v_available < 25 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      'ab24113e-a593-4489-8ae3-e65823b163d2',
+      'ab24113e-a593-4489-8ae3-e65823b163d2'::uuid,
       25 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -1182,17 +1228,16 @@ begin
 
   -- Category Links
   insert into public.product_categories (product_id, category_id)
-  values ('tel-inf-008', 'infraestructuras-telecomunicaciones')
-  on conflict (product_id, category_id) do nothing;
-  insert into public.product_categories (product_id, category_id)
-  values ('tel-inf-008', 'paneles-parcheo')
+  select 'tel-inf-008', c.id
+  from public.categories c
+  where c.slug in ('infraestructuras-telecomunicaciones', 'paneles-parcheo')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
   insert into public.product_variants (
     id, product_id, sku, title, attributes, current_price, compare_at_price, currency, tax_rate, is_active
   ) values (
-    '9a147de6-e769-4667-8a2b-95c53f5159f8', 'tel-inf-008', 'NDR-TEL-INF-008', 'Estándar',
+    '9a147de6-e769-4667-8a2b-95c53f5159f8'::uuid, 'tel-inf-008', 'NDR-TEL-INF-008', 'Estándar',
     jsonb_build_object(
       'nodria_store', jsonb_build_object(
         'mode', 'academic_demo',
@@ -1217,17 +1262,17 @@ begin
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, '9a147de6-e769-4667-8a2b-95c53f5159f8', 0, 0)
+  values (v_warehouse_id, '9a147de6-e769-4667-8a2b-95c53f5159f8'::uuid, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = '9a147de6-e769-4667-8a2b-95c53f5159f8';
+  where i.warehouse_id = v_warehouse_id and i.variant_id = '9a147de6-e769-4667-8a2b-95c53f5159f8'::uuid;
 
   if v_available < 35 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      '9a147de6-e769-4667-8a2b-95c53f5159f8',
+      '9a147de6-e769-4667-8a2b-95c53f5159f8'::uuid,
       35 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -1292,17 +1337,16 @@ begin
 
   -- Category Links
   insert into public.product_categories (product_id, category_id)
-  values ('tel-inf-009', 'infraestructuras-telecomunicaciones')
-  on conflict (product_id, category_id) do nothing;
-  insert into public.product_categories (product_id, category_id)
-  values ('tel-inf-009', 'herramientas-certificacion')
+  select 'tel-inf-009', c.id
+  from public.categories c
+  where c.slug in ('infraestructuras-telecomunicaciones', 'herramientas-certificacion')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
   insert into public.product_variants (
     id, product_id, sku, title, attributes, current_price, compare_at_price, currency, tax_rate, is_active
   ) values (
-    '4e7a9fbb-7620-4a03-8f43-36046fb4e5ae', 'tel-inf-009', 'NDR-TEL-INF-009', 'Estándar',
+    '4e7a9fbb-7620-4a03-8f43-36046fb4e5ae'::uuid, 'tel-inf-009', 'NDR-TEL-INF-009', 'Estándar',
     jsonb_build_object(
       'nodria_store', jsonb_build_object(
         'mode', 'academic_demo',
@@ -1327,17 +1371,17 @@ begin
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, '4e7a9fbb-7620-4a03-8f43-36046fb4e5ae', 0, 0)
+  values (v_warehouse_id, '4e7a9fbb-7620-4a03-8f43-36046fb4e5ae'::uuid, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = '4e7a9fbb-7620-4a03-8f43-36046fb4e5ae';
+  where i.warehouse_id = v_warehouse_id and i.variant_id = '4e7a9fbb-7620-4a03-8f43-36046fb4e5ae'::uuid;
 
   if v_available < 8 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      '4e7a9fbb-7620-4a03-8f43-36046fb4e5ae',
+      '4e7a9fbb-7620-4a03-8f43-36046fb4e5ae'::uuid,
       8 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -1402,17 +1446,16 @@ begin
 
   -- Category Links
   insert into public.product_categories (product_id, category_id)
-  values ('tel-inf-010', 'infraestructuras-telecomunicaciones')
-  on conflict (product_id, category_id) do nothing;
-  insert into public.product_categories (product_id, category_id)
-  values ('tel-inf-010', 'herramientas-certificacion')
+  select 'tel-inf-010', c.id
+  from public.categories c
+  where c.slug in ('infraestructuras-telecomunicaciones', 'herramientas-certificacion')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
   insert into public.product_variants (
     id, product_id, sku, title, attributes, current_price, compare_at_price, currency, tax_rate, is_active
   ) values (
-    'c8be0b5b-237f-4d11-8aa3-57938dd12046', 'tel-inf-010', 'NDR-TEL-INF-010', 'Estándar',
+    'c8be0b5b-237f-4d11-8aa3-57938dd12046'::uuid, 'tel-inf-010', 'NDR-TEL-INF-010', 'Estándar',
     jsonb_build_object(
       'nodria_store', jsonb_build_object(
         'mode', 'academic_demo',
@@ -1437,17 +1480,17 @@ begin
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, 'c8be0b5b-237f-4d11-8aa3-57938dd12046', 0, 0)
+  values (v_warehouse_id, 'c8be0b5b-237f-4d11-8aa3-57938dd12046'::uuid, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = 'c8be0b5b-237f-4d11-8aa3-57938dd12046';
+  where i.warehouse_id = v_warehouse_id and i.variant_id = 'c8be0b5b-237f-4d11-8aa3-57938dd12046'::uuid;
 
   if v_available < 9 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      'c8be0b5b-237f-4d11-8aa3-57938dd12046',
+      'c8be0b5b-237f-4d11-8aa3-57938dd12046'::uuid,
       9 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -1512,17 +1555,16 @@ begin
 
   -- Category Links
   insert into public.product_categories (product_id, category_id)
-  values ('tel-eqt-011', 'equipos-sistemas-telecomunicaciones')
-  on conflict (product_id, category_id) do nothing;
-  insert into public.product_categories (product_id, category_id)
-  values ('tel-eqt-011', 'switches-gestionables')
+  select 'tel-eqt-011', c.id
+  from public.categories c
+  where c.slug in ('equipos-sistemas-telecomunicaciones', 'switches-gestionables')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
   insert into public.product_variants (
     id, product_id, sku, title, attributes, current_price, compare_at_price, currency, tax_rate, is_active
   ) values (
-    '92397db0-8f52-45ec-8f2e-6bcd44806678', 'tel-eqt-011', 'NDR-TEL-EQT-011', 'Estándar',
+    '92397db0-8f52-45ec-8f2e-6bcd44806678'::uuid, 'tel-eqt-011', 'NDR-TEL-EQT-011', 'Estándar',
     jsonb_build_object(
       'nodria_store', jsonb_build_object(
         'mode', 'academic_demo',
@@ -1547,17 +1589,17 @@ begin
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, '92397db0-8f52-45ec-8f2e-6bcd44806678', 0, 0)
+  values (v_warehouse_id, '92397db0-8f52-45ec-8f2e-6bcd44806678'::uuid, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = '92397db0-8f52-45ec-8f2e-6bcd44806678';
+  where i.warehouse_id = v_warehouse_id and i.variant_id = '92397db0-8f52-45ec-8f2e-6bcd44806678'::uuid;
 
   if v_available < 15 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      '92397db0-8f52-45ec-8f2e-6bcd44806678',
+      '92397db0-8f52-45ec-8f2e-6bcd44806678'::uuid,
       15 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -1622,17 +1664,16 @@ begin
 
   -- Category Links
   insert into public.product_categories (product_id, category_id)
-  values ('tel-eqt-012', 'equipos-sistemas-telecomunicaciones')
-  on conflict (product_id, category_id) do nothing;
-  insert into public.product_categories (product_id, category_id)
-  values ('tel-eqt-012', 'switches-gestionables')
+  select 'tel-eqt-012', c.id
+  from public.categories c
+  where c.slug in ('equipos-sistemas-telecomunicaciones', 'switches-gestionables')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
   insert into public.product_variants (
     id, product_id, sku, title, attributes, current_price, compare_at_price, currency, tax_rate, is_active
   ) values (
-    '955ada8a-eff6-4c20-85ff-ff4f14e29421', 'tel-eqt-012', 'NDR-TEL-EQT-012', 'Estándar',
+    '955ada8a-eff6-4c20-85ff-ff4f14e29421'::uuid, 'tel-eqt-012', 'NDR-TEL-EQT-012', 'Estándar',
     jsonb_build_object(
       'nodria_store', jsonb_build_object(
         'mode', 'academic_demo',
@@ -1657,17 +1698,17 @@ begin
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, '955ada8a-eff6-4c20-85ff-ff4f14e29421', 0, 0)
+  values (v_warehouse_id, '955ada8a-eff6-4c20-85ff-ff4f14e29421'::uuid, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = '955ada8a-eff6-4c20-85ff-ff4f14e29421';
+  where i.warehouse_id = v_warehouse_id and i.variant_id = '955ada8a-eff6-4c20-85ff-ff4f14e29421'::uuid;
 
   if v_available < 9 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      '955ada8a-eff6-4c20-85ff-ff4f14e29421',
+      '955ada8a-eff6-4c20-85ff-ff4f14e29421'::uuid,
       9 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -1732,17 +1773,16 @@ begin
 
   -- Category Links
   insert into public.product_categories (product_id, category_id)
-  values ('tel-eqt-013', 'equipos-sistemas-telecomunicaciones')
-  on conflict (product_id, category_id) do nothing;
-  insert into public.product_categories (product_id, category_id)
-  values ('tel-eqt-013', 'routers-borde')
+  select 'tel-eqt-013', c.id
+  from public.categories c
+  where c.slug in ('equipos-sistemas-telecomunicaciones', 'routers-borde')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
   insert into public.product_variants (
     id, product_id, sku, title, attributes, current_price, compare_at_price, currency, tax_rate, is_active
   ) values (
-    'ce055f5b-9c21-45bb-82dc-abe66c462711', 'tel-eqt-013', 'NDR-TEL-EQT-013', 'Estándar',
+    'ce055f5b-9c21-45bb-82dc-abe66c462711'::uuid, 'tel-eqt-013', 'NDR-TEL-EQT-013', 'Estándar',
     jsonb_build_object(
       'nodria_store', jsonb_build_object(
         'mode', 'academic_demo',
@@ -1767,17 +1807,17 @@ begin
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, 'ce055f5b-9c21-45bb-82dc-abe66c462711', 0, 0)
+  values (v_warehouse_id, 'ce055f5b-9c21-45bb-82dc-abe66c462711'::uuid, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = 'ce055f5b-9c21-45bb-82dc-abe66c462711';
+  where i.warehouse_id = v_warehouse_id and i.variant_id = 'ce055f5b-9c21-45bb-82dc-abe66c462711'::uuid;
 
   if v_available < 12 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      'ce055f5b-9c21-45bb-82dc-abe66c462711',
+      'ce055f5b-9c21-45bb-82dc-abe66c462711'::uuid,
       12 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -1842,17 +1882,16 @@ begin
 
   -- Category Links
   insert into public.product_categories (product_id, category_id)
-  values ('tel-eqt-014', 'equipos-sistemas-telecomunicaciones')
-  on conflict (product_id, category_id) do nothing;
-  insert into public.product_categories (product_id, category_id)
-  values ('tel-eqt-014', 'routers-borde')
+  select 'tel-eqt-014', c.id
+  from public.categories c
+  where c.slug in ('equipos-sistemas-telecomunicaciones', 'routers-borde')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
   insert into public.product_variants (
     id, product_id, sku, title, attributes, current_price, compare_at_price, currency, tax_rate, is_active
   ) values (
-    '3efeb581-e2cb-47b9-8cf9-98f159c0d493', 'tel-eqt-014', 'NDR-TEL-EQT-014', 'Estándar',
+    '3efeb581-e2cb-47b9-8cf9-98f159c0d493'::uuid, 'tel-eqt-014', 'NDR-TEL-EQT-014', 'Estándar',
     jsonb_build_object(
       'nodria_store', jsonb_build_object(
         'mode', 'academic_demo',
@@ -1877,17 +1916,17 @@ begin
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, '3efeb581-e2cb-47b9-8cf9-98f159c0d493', 0, 0)
+  values (v_warehouse_id, '3efeb581-e2cb-47b9-8cf9-98f159c0d493'::uuid, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = '3efeb581-e2cb-47b9-8cf9-98f159c0d493';
+  where i.warehouse_id = v_warehouse_id and i.variant_id = '3efeb581-e2cb-47b9-8cf9-98f159c0d493'::uuid;
 
   if v_available < 20 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      '3efeb581-e2cb-47b9-8cf9-98f159c0d493',
+      '3efeb581-e2cb-47b9-8cf9-98f159c0d493'::uuid,
       20 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -1952,17 +1991,16 @@ begin
 
   -- Category Links
   insert into public.product_categories (product_id, category_id)
-  values ('tel-eqt-015', 'equipos-sistemas-telecomunicaciones')
-  on conflict (product_id, category_id) do nothing;
-  insert into public.product_categories (product_id, category_id)
-  values ('tel-eqt-015', 'puntos-acceso-wifi')
+  select 'tel-eqt-015', c.id
+  from public.categories c
+  where c.slug in ('equipos-sistemas-telecomunicaciones', 'puntos-acceso-wifi')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
   insert into public.product_variants (
     id, product_id, sku, title, attributes, current_price, compare_at_price, currency, tax_rate, is_active
   ) values (
-    '0ae6f135-40fc-4fc7-8838-01d416da0fa4', 'tel-eqt-015', 'NDR-TEL-EQT-015', 'Estándar',
+    '0ae6f135-40fc-4fc7-8838-01d416da0fa4'::uuid, 'tel-eqt-015', 'NDR-TEL-EQT-015', 'Estándar',
     jsonb_build_object(
       'nodria_store', jsonb_build_object(
         'mode', 'academic_demo',
@@ -1987,17 +2025,17 @@ begin
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, '0ae6f135-40fc-4fc7-8838-01d416da0fa4', 0, 0)
+  values (v_warehouse_id, '0ae6f135-40fc-4fc7-8838-01d416da0fa4'::uuid, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = '0ae6f135-40fc-4fc7-8838-01d416da0fa4';
+  where i.warehouse_id = v_warehouse_id and i.variant_id = '0ae6f135-40fc-4fc7-8838-01d416da0fa4'::uuid;
 
   if v_available < 24 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      '0ae6f135-40fc-4fc7-8838-01d416da0fa4',
+      '0ae6f135-40fc-4fc7-8838-01d416da0fa4'::uuid,
       24 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -2062,17 +2100,16 @@ begin
 
   -- Category Links
   insert into public.product_categories (product_id, category_id)
-  values ('tel-eqt-016', 'equipos-sistemas-telecomunicaciones')
-  on conflict (product_id, category_id) do nothing;
-  insert into public.product_categories (product_id, category_id)
-  values ('tel-eqt-016', 'puntos-acceso-wifi')
+  select 'tel-eqt-016', c.id
+  from public.categories c
+  where c.slug in ('equipos-sistemas-telecomunicaciones', 'puntos-acceso-wifi')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
   insert into public.product_variants (
     id, product_id, sku, title, attributes, current_price, compare_at_price, currency, tax_rate, is_active
   ) values (
-    'd961830e-c978-4e75-8dbd-3bc34608a861', 'tel-eqt-016', 'NDR-TEL-EQT-016', 'Estándar',
+    'd961830e-c978-4e75-8dbd-3bc34608a861'::uuid, 'tel-eqt-016', 'NDR-TEL-EQT-016', 'Estándar',
     jsonb_build_object(
       'nodria_store', jsonb_build_object(
         'mode', 'academic_demo',
@@ -2097,17 +2134,17 @@ begin
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, 'd961830e-c978-4e75-8dbd-3bc34608a861', 0, 0)
+  values (v_warehouse_id, 'd961830e-c978-4e75-8dbd-3bc34608a861'::uuid, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = 'd961830e-c978-4e75-8dbd-3bc34608a861';
+  where i.warehouse_id = v_warehouse_id and i.variant_id = 'd961830e-c978-4e75-8dbd-3bc34608a861'::uuid;
 
   if v_available < 18 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      'd961830e-c978-4e75-8dbd-3bc34608a861',
+      'd961830e-c978-4e75-8dbd-3bc34608a861'::uuid,
       18 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -2172,17 +2209,16 @@ begin
 
   -- Category Links
   insert into public.product_categories (product_id, category_id)
-  values ('tel-eqt-017', 'equipos-sistemas-telecomunicaciones')
-  on conflict (product_id, category_id) do nothing;
-  insert into public.product_categories (product_id, category_id)
-  values ('tel-eqt-017', 'transceptores-opticos')
+  select 'tel-eqt-017', c.id
+  from public.categories c
+  where c.slug in ('equipos-sistemas-telecomunicaciones', 'transceptores-opticos')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
   insert into public.product_variants (
     id, product_id, sku, title, attributes, current_price, compare_at_price, currency, tax_rate, is_active
   ) values (
-    'c46ca2d5-40f5-4dec-8751-16152fb9f326', 'tel-eqt-017', 'NDR-TEL-EQT-017', 'Estándar',
+    'c46ca2d5-40f5-4dec-8751-16152fb9f326'::uuid, 'tel-eqt-017', 'NDR-TEL-EQT-017', 'Estándar',
     jsonb_build_object(
       'nodria_store', jsonb_build_object(
         'mode', 'academic_demo',
@@ -2207,17 +2243,17 @@ begin
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, 'c46ca2d5-40f5-4dec-8751-16152fb9f326', 0, 0)
+  values (v_warehouse_id, 'c46ca2d5-40f5-4dec-8751-16152fb9f326'::uuid, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = 'c46ca2d5-40f5-4dec-8751-16152fb9f326';
+  where i.warehouse_id = v_warehouse_id and i.variant_id = 'c46ca2d5-40f5-4dec-8751-16152fb9f326'::uuid;
 
   if v_available < 25 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      'c46ca2d5-40f5-4dec-8751-16152fb9f326',
+      'c46ca2d5-40f5-4dec-8751-16152fb9f326'::uuid,
       25 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -2282,17 +2318,16 @@ begin
 
   -- Category Links
   insert into public.product_categories (product_id, category_id)
-  values ('tel-eqt-018', 'equipos-sistemas-telecomunicaciones')
-  on conflict (product_id, category_id) do nothing;
-  insert into public.product_categories (product_id, category_id)
-  values ('tel-eqt-018', 'transceptores-opticos')
+  select 'tel-eqt-018', c.id
+  from public.categories c
+  where c.slug in ('equipos-sistemas-telecomunicaciones', 'transceptores-opticos')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
   insert into public.product_variants (
     id, product_id, sku, title, attributes, current_price, compare_at_price, currency, tax_rate, is_active
   ) values (
-    '8676683e-0f5c-4038-89ca-1dedaaaa1de7', 'tel-eqt-018', 'NDR-TEL-EQT-018', 'Estándar',
+    '8676683e-0f5c-4038-89ca-1dedaaaa1de7'::uuid, 'tel-eqt-018', 'NDR-TEL-EQT-018', 'Estándar',
     jsonb_build_object(
       'nodria_store', jsonb_build_object(
         'mode', 'academic_demo',
@@ -2317,17 +2352,17 @@ begin
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, '8676683e-0f5c-4038-89ca-1dedaaaa1de7', 0, 0)
+  values (v_warehouse_id, '8676683e-0f5c-4038-89ca-1dedaaaa1de7'::uuid, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = '8676683e-0f5c-4038-89ca-1dedaaaa1de7';
+  where i.warehouse_id = v_warehouse_id and i.variant_id = '8676683e-0f5c-4038-89ca-1dedaaaa1de7'::uuid;
 
   if v_available < 22 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      '8676683e-0f5c-4038-89ca-1dedaaaa1de7',
+      '8676683e-0f5c-4038-89ca-1dedaaaa1de7'::uuid,
       22 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -2392,17 +2427,16 @@ begin
 
   -- Category Links
   insert into public.product_categories (product_id, category_id)
-  values ('tel-eqt-019', 'equipos-sistemas-telecomunicaciones')
-  on conflict (product_id, category_id) do nothing;
-  insert into public.product_categories (product_id, category_id)
-  values ('tel-eqt-019', 'cabeceras-rf-tv')
+  select 'tel-eqt-019', c.id
+  from public.categories c
+  where c.slug in ('equipos-sistemas-telecomunicaciones', 'cabeceras-rf-tv')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
   insert into public.product_variants (
     id, product_id, sku, title, attributes, current_price, compare_at_price, currency, tax_rate, is_active
   ) values (
-    '226a690d-b19e-4197-86fc-cfb05e980d1e', 'tel-eqt-019', 'NDR-TEL-EQT-019', 'Estándar',
+    '226a690d-b19e-4197-86fc-cfb05e980d1e'::uuid, 'tel-eqt-019', 'NDR-TEL-EQT-019', 'Estándar',
     jsonb_build_object(
       'nodria_store', jsonb_build_object(
         'mode', 'academic_demo',
@@ -2427,17 +2461,17 @@ begin
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, '226a690d-b19e-4197-86fc-cfb05e980d1e', 0, 0)
+  values (v_warehouse_id, '226a690d-b19e-4197-86fc-cfb05e980d1e'::uuid, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = '226a690d-b19e-4197-86fc-cfb05e980d1e';
+  where i.warehouse_id = v_warehouse_id and i.variant_id = '226a690d-b19e-4197-86fc-cfb05e980d1e'::uuid;
 
   if v_available < 14 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      '226a690d-b19e-4197-86fc-cfb05e980d1e',
+      '226a690d-b19e-4197-86fc-cfb05e980d1e'::uuid,
       14 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -2502,17 +2536,16 @@ begin
 
   -- Category Links
   insert into public.product_categories (product_id, category_id)
-  values ('tel-eqt-020', 'equipos-sistemas-telecomunicaciones')
-  on conflict (product_id, category_id) do nothing;
-  insert into public.product_categories (product_id, category_id)
-  values ('tel-eqt-020', 'cabeceras-rf-tv')
+  select 'tel-eqt-020', c.id
+  from public.categories c
+  where c.slug in ('equipos-sistemas-telecomunicaciones', 'cabeceras-rf-tv')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
   insert into public.product_variants (
     id, product_id, sku, title, attributes, current_price, compare_at_price, currency, tax_rate, is_active
   ) values (
-    '91857bc3-05a0-40fc-81f7-66212bacbbb4', 'tel-eqt-020', 'NDR-TEL-EQT-020', 'Estándar',
+    '91857bc3-05a0-40fc-81f7-66212bacbbb4'::uuid, 'tel-eqt-020', 'NDR-TEL-EQT-020', 'Estándar',
     jsonb_build_object(
       'nodria_store', jsonb_build_object(
         'mode', 'academic_demo',
@@ -2537,17 +2570,17 @@ begin
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, '91857bc3-05a0-40fc-81f7-66212bacbbb4', 0, 0)
+  values (v_warehouse_id, '91857bc3-05a0-40fc-81f7-66212bacbbb4'::uuid, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = '91857bc3-05a0-40fc-81f7-66212bacbbb4';
+  where i.warehouse_id = v_warehouse_id and i.variant_id = '91857bc3-05a0-40fc-81f7-66212bacbbb4'::uuid;
 
   if v_available < 10 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      '91857bc3-05a0-40fc-81f7-66212bacbbb4',
+      '91857bc3-05a0-40fc-81f7-66212bacbbb4'::uuid,
       10 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -2612,17 +2645,16 @@ begin
 
   -- Category Links
   insert into public.product_categories (product_id, category_id)
-  values ('tel-dom-021', 'domotica-hogar-digital')
-  on conflict (product_id, category_id) do nothing;
-  insert into public.product_categories (product_id, category_id)
-  values ('tel-dom-021', 'pasarelas-controladores')
+  select 'tel-dom-021', c.id
+  from public.categories c
+  where c.slug in ('domotica-hogar-digital', 'pasarelas-controladores')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
   insert into public.product_variants (
     id, product_id, sku, title, attributes, current_price, compare_at_price, currency, tax_rate, is_active
   ) values (
-    '8e3d3800-7e48-43bb-82f1-f72f7fdf9111', 'tel-dom-021', 'NDR-TEL-DOM-021', 'Estándar',
+    '8e3d3800-7e48-43bb-82f1-f72f7fdf9111'::uuid, 'tel-dom-021', 'NDR-TEL-DOM-021', 'Estándar',
     jsonb_build_object(
       'nodria_store', jsonb_build_object(
         'mode', 'academic_demo',
@@ -2647,17 +2679,17 @@ begin
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, '8e3d3800-7e48-43bb-82f1-f72f7fdf9111', 0, 0)
+  values (v_warehouse_id, '8e3d3800-7e48-43bb-82f1-f72f7fdf9111'::uuid, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = '8e3d3800-7e48-43bb-82f1-f72f7fdf9111';
+  where i.warehouse_id = v_warehouse_id and i.variant_id = '8e3d3800-7e48-43bb-82f1-f72f7fdf9111'::uuid;
 
   if v_available < 20 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      '8e3d3800-7e48-43bb-82f1-f72f7fdf9111',
+      '8e3d3800-7e48-43bb-82f1-f72f7fdf9111'::uuid,
       20 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -2722,17 +2754,16 @@ begin
 
   -- Category Links
   insert into public.product_categories (product_id, category_id)
-  values ('tel-dom-022', 'domotica-hogar-digital')
-  on conflict (product_id, category_id) do nothing;
-  insert into public.product_categories (product_id, category_id)
-  values ('tel-dom-022', 'pasarelas-controladores')
+  select 'tel-dom-022', c.id
+  from public.categories c
+  where c.slug in ('domotica-hogar-digital', 'pasarelas-controladores')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
   insert into public.product_variants (
     id, product_id, sku, title, attributes, current_price, compare_at_price, currency, tax_rate, is_active
   ) values (
-    '8b176bee-d03e-40f5-85fa-73a54713bf70', 'tel-dom-022', 'NDR-TEL-DOM-022', 'Estándar',
+    '8b176bee-d03e-40f5-85fa-73a54713bf70'::uuid, 'tel-dom-022', 'NDR-TEL-DOM-022', 'Estándar',
     jsonb_build_object(
       'nodria_store', jsonb_build_object(
         'mode', 'academic_demo',
@@ -2757,17 +2788,17 @@ begin
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, '8b176bee-d03e-40f5-85fa-73a54713bf70', 0, 0)
+  values (v_warehouse_id, '8b176bee-d03e-40f5-85fa-73a54713bf70'::uuid, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = '8b176bee-d03e-40f5-85fa-73a54713bf70';
+  where i.warehouse_id = v_warehouse_id and i.variant_id = '8b176bee-d03e-40f5-85fa-73a54713bf70'::uuid;
 
   if v_available < 15 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      '8b176bee-d03e-40f5-85fa-73a54713bf70',
+      '8b176bee-d03e-40f5-85fa-73a54713bf70'::uuid,
       15 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -2832,17 +2863,16 @@ begin
 
   -- Category Links
   insert into public.product_categories (product_id, category_id)
-  values ('tel-dom-023', 'domotica-hogar-digital')
-  on conflict (product_id, category_id) do nothing;
-  insert into public.product_categories (product_id, category_id)
-  values ('tel-dom-023', 'reles-actuadores')
+  select 'tel-dom-023', c.id
+  from public.categories c
+  where c.slug in ('domotica-hogar-digital', 'reles-actuadores')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
   insert into public.product_variants (
     id, product_id, sku, title, attributes, current_price, compare_at_price, currency, tax_rate, is_active
   ) values (
-    '76433e26-f2bd-4a45-87a5-e642ffda66e2', 'tel-dom-023', 'NDR-TEL-DOM-023', 'Estándar',
+    '76433e26-f2bd-4a45-87a5-e642ffda66e2'::uuid, 'tel-dom-023', 'NDR-TEL-DOM-023', 'Estándar',
     jsonb_build_object(
       'nodria_store', jsonb_build_object(
         'mode', 'academic_demo',
@@ -2867,17 +2897,17 @@ begin
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, '76433e26-f2bd-4a45-87a5-e642ffda66e2', 0, 0)
+  values (v_warehouse_id, '76433e26-f2bd-4a45-87a5-e642ffda66e2'::uuid, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = '76433e26-f2bd-4a45-87a5-e642ffda66e2';
+  where i.warehouse_id = v_warehouse_id and i.variant_id = '76433e26-f2bd-4a45-87a5-e642ffda66e2'::uuid;
 
   if v_available < 25 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      '76433e26-f2bd-4a45-87a5-e642ffda66e2',
+      '76433e26-f2bd-4a45-87a5-e642ffda66e2'::uuid,
       25 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -2942,17 +2972,16 @@ begin
 
   -- Category Links
   insert into public.product_categories (product_id, category_id)
-  values ('tel-dom-024', 'domotica-hogar-digital')
-  on conflict (product_id, category_id) do nothing;
-  insert into public.product_categories (product_id, category_id)
-  values ('tel-dom-024', 'reles-actuadores')
+  select 'tel-dom-024', c.id
+  from public.categories c
+  where c.slug in ('domotica-hogar-digital', 'reles-actuadores')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
   insert into public.product_variants (
     id, product_id, sku, title, attributes, current_price, compare_at_price, currency, tax_rate, is_active
   ) values (
-    '66f8cc84-ec8f-4353-815a-d3d89befe143', 'tel-dom-024', 'NDR-TEL-DOM-024', 'Estándar',
+    '66f8cc84-ec8f-4353-815a-d3d89befe143'::uuid, 'tel-dom-024', 'NDR-TEL-DOM-024', 'Estándar',
     jsonb_build_object(
       'nodria_store', jsonb_build_object(
         'mode', 'academic_demo',
@@ -2977,17 +3006,17 @@ begin
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, '66f8cc84-ec8f-4353-815a-d3d89befe143', 0, 0)
+  values (v_warehouse_id, '66f8cc84-ec8f-4353-815a-d3d89befe143'::uuid, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = '66f8cc84-ec8f-4353-815a-d3d89befe143';
+  where i.warehouse_id = v_warehouse_id and i.variant_id = '66f8cc84-ec8f-4353-815a-d3d89befe143'::uuid;
 
   if v_available < 30 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      '66f8cc84-ec8f-4353-815a-d3d89befe143',
+      '66f8cc84-ec8f-4353-815a-d3d89befe143'::uuid,
       30 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -3052,17 +3081,16 @@ begin
 
   -- Category Links
   insert into public.product_categories (product_id, category_id)
-  values ('tel-dom-025', 'domotica-hogar-digital')
-  on conflict (product_id, category_id) do nothing;
-  insert into public.product_categories (product_id, category_id)
-  values ('tel-dom-025', 'sensores-ambientales')
+  select 'tel-dom-025', c.id
+  from public.categories c
+  where c.slug in ('domotica-hogar-digital', 'sensores-ambientales')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
   insert into public.product_variants (
     id, product_id, sku, title, attributes, current_price, compare_at_price, currency, tax_rate, is_active
   ) values (
-    '9e8b9f3d-0322-4a8b-88f0-0fce83ab86bc', 'tel-dom-025', 'NDR-TEL-DOM-025', 'Estándar',
+    '9e8b9f3d-0322-4a8b-88f0-0fce83ab86bc'::uuid, 'tel-dom-025', 'NDR-TEL-DOM-025', 'Estándar',
     jsonb_build_object(
       'nodria_store', jsonb_build_object(
         'mode', 'academic_demo',
@@ -3087,17 +3115,17 @@ begin
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, '9e8b9f3d-0322-4a8b-88f0-0fce83ab86bc', 0, 0)
+  values (v_warehouse_id, '9e8b9f3d-0322-4a8b-88f0-0fce83ab86bc'::uuid, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = '9e8b9f3d-0322-4a8b-88f0-0fce83ab86bc';
+  where i.warehouse_id = v_warehouse_id and i.variant_id = '9e8b9f3d-0322-4a8b-88f0-0fce83ab86bc'::uuid;
 
   if v_available < 18 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      '9e8b9f3d-0322-4a8b-88f0-0fce83ab86bc',
+      '9e8b9f3d-0322-4a8b-88f0-0fce83ab86bc'::uuid,
       18 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -3162,17 +3190,16 @@ begin
 
   -- Category Links
   insert into public.product_categories (product_id, category_id)
-  values ('tel-dom-026', 'domotica-hogar-digital')
-  on conflict (product_id, category_id) do nothing;
-  insert into public.product_categories (product_id, category_id)
-  values ('tel-dom-026', 'sensores-ambientales')
+  select 'tel-dom-026', c.id
+  from public.categories c
+  where c.slug in ('domotica-hogar-digital', 'sensores-ambientales')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
   insert into public.product_variants (
     id, product_id, sku, title, attributes, current_price, compare_at_price, currency, tax_rate, is_active
   ) values (
-    'bcc7a39b-76fa-4317-89e1-3aa30aa94ef8', 'tel-dom-026', 'NDR-TEL-DOM-026', 'Estándar',
+    'bcc7a39b-76fa-4317-89e1-3aa30aa94ef8'::uuid, 'tel-dom-026', 'NDR-TEL-DOM-026', 'Estándar',
     jsonb_build_object(
       'nodria_store', jsonb_build_object(
         'mode', 'academic_demo',
@@ -3197,17 +3224,17 @@ begin
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, 'bcc7a39b-76fa-4317-89e1-3aa30aa94ef8', 0, 0)
+  values (v_warehouse_id, 'bcc7a39b-76fa-4317-89e1-3aa30aa94ef8'::uuid, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = 'bcc7a39b-76fa-4317-89e1-3aa30aa94ef8';
+  where i.warehouse_id = v_warehouse_id and i.variant_id = 'bcc7a39b-76fa-4317-89e1-3aa30aa94ef8'::uuid;
 
   if v_available < 22 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      'bcc7a39b-76fa-4317-89e1-3aa30aa94ef8',
+      'bcc7a39b-76fa-4317-89e1-3aa30aa94ef8'::uuid,
       22 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -3272,17 +3299,16 @@ begin
 
   -- Category Links
   insert into public.product_categories (product_id, category_id)
-  values ('tel-dom-027', 'domotica-hogar-digital')
-  on conflict (product_id, category_id) do nothing;
-  insert into public.product_categories (product_id, category_id)
-  values ('tel-dom-027', 'videoporteros-control-acceso')
+  select 'tel-dom-027', c.id
+  from public.categories c
+  where c.slug in ('domotica-hogar-digital', 'videoporteros-control-acceso')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
   insert into public.product_variants (
     id, product_id, sku, title, attributes, current_price, compare_at_price, currency, tax_rate, is_active
   ) values (
-    '6d1c1455-a917-473a-83f9-284d5c7713c3', 'tel-dom-027', 'NDR-TEL-DOM-027', 'Estándar',
+    '6d1c1455-a917-473a-83f9-284d5c7713c3'::uuid, 'tel-dom-027', 'NDR-TEL-DOM-027', 'Estándar',
     jsonb_build_object(
       'nodria_store', jsonb_build_object(
         'mode', 'academic_demo',
@@ -3307,17 +3333,17 @@ begin
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, '6d1c1455-a917-473a-83f9-284d5c7713c3', 0, 0)
+  values (v_warehouse_id, '6d1c1455-a917-473a-83f9-284d5c7713c3'::uuid, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = '6d1c1455-a917-473a-83f9-284d5c7713c3';
+  where i.warehouse_id = v_warehouse_id and i.variant_id = '6d1c1455-a917-473a-83f9-284d5c7713c3'::uuid;
 
   if v_available < 11 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      '6d1c1455-a917-473a-83f9-284d5c7713c3',
+      '6d1c1455-a917-473a-83f9-284d5c7713c3'::uuid,
       11 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -3382,17 +3408,16 @@ begin
 
   -- Category Links
   insert into public.product_categories (product_id, category_id)
-  values ('tel-dom-028', 'domotica-hogar-digital')
-  on conflict (product_id, category_id) do nothing;
-  insert into public.product_categories (product_id, category_id)
-  values ('tel-dom-028', 'videoporteros-control-acceso')
+  select 'tel-dom-028', c.id
+  from public.categories c
+  where c.slug in ('domotica-hogar-digital', 'videoporteros-control-acceso')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
   insert into public.product_variants (
     id, product_id, sku, title, attributes, current_price, compare_at_price, currency, tax_rate, is_active
   ) values (
-    '59251f70-0c94-44cf-8bc0-dd8e24b74fe0', 'tel-dom-028', 'NDR-TEL-DOM-028', 'Estándar',
+    '59251f70-0c94-44cf-8bc0-dd8e24b74fe0'::uuid, 'tel-dom-028', 'NDR-TEL-DOM-028', 'Estándar',
     jsonb_build_object(
       'nodria_store', jsonb_build_object(
         'mode', 'academic_demo',
@@ -3417,17 +3442,17 @@ begin
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, '59251f70-0c94-44cf-8bc0-dd8e24b74fe0', 0, 0)
+  values (v_warehouse_id, '59251f70-0c94-44cf-8bc0-dd8e24b74fe0'::uuid, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = '59251f70-0c94-44cf-8bc0-dd8e24b74fe0';
+  where i.warehouse_id = v_warehouse_id and i.variant_id = '59251f70-0c94-44cf-8bc0-dd8e24b74fe0'::uuid;
 
   if v_available < 13 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      '59251f70-0c94-44cf-8bc0-dd8e24b74fe0',
+      '59251f70-0c94-44cf-8bc0-dd8e24b74fe0'::uuid,
       13 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -3492,17 +3517,16 @@ begin
 
   -- Category Links
   insert into public.product_categories (product_id, category_id)
-  values ('tel-dom-029', 'domotica-hogar-digital')
-  on conflict (product_id, category_id) do nothing;
-  insert into public.product_categories (product_id, category_id)
-  values ('tel-dom-029', 'climatizacion-inteligente')
+  select 'tel-dom-029', c.id
+  from public.categories c
+  where c.slug in ('domotica-hogar-digital', 'climatizacion-inteligente')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
   insert into public.product_variants (
     id, product_id, sku, title, attributes, current_price, compare_at_price, currency, tax_rate, is_active
   ) values (
-    'e2c66a6a-fb68-4261-864c-a30881b5b7f0', 'tel-dom-029', 'NDR-TEL-DOM-029', 'Estándar',
+    'e2c66a6a-fb68-4261-864c-a30881b5b7f0'::uuid, 'tel-dom-029', 'NDR-TEL-DOM-029', 'Estándar',
     jsonb_build_object(
       'nodria_store', jsonb_build_object(
         'mode', 'academic_demo',
@@ -3527,17 +3551,17 @@ begin
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, 'e2c66a6a-fb68-4261-864c-a30881b5b7f0', 0, 0)
+  values (v_warehouse_id, 'e2c66a6a-fb68-4261-864c-a30881b5b7f0'::uuid, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = 'e2c66a6a-fb68-4261-864c-a30881b5b7f0';
+  where i.warehouse_id = v_warehouse_id and i.variant_id = 'e2c66a6a-fb68-4261-864c-a30881b5b7f0'::uuid;
 
   if v_available < 16 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      'e2c66a6a-fb68-4261-864c-a30881b5b7f0',
+      'e2c66a6a-fb68-4261-864c-a30881b5b7f0'::uuid,
       16 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -3602,17 +3626,16 @@ begin
 
   -- Category Links
   insert into public.product_categories (product_id, category_id)
-  values ('tel-dom-030', 'domotica-hogar-digital')
-  on conflict (product_id, category_id) do nothing;
-  insert into public.product_categories (product_id, category_id)
-  values ('tel-dom-030', 'climatizacion-inteligente')
+  select 'tel-dom-030', c.id
+  from public.categories c
+  where c.slug in ('domotica-hogar-digital', 'climatizacion-inteligente')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
   insert into public.product_variants (
     id, product_id, sku, title, attributes, current_price, compare_at_price, currency, tax_rate, is_active
   ) values (
-    '2a16dd33-f09d-42a1-8a5f-0f2a0b40fc7e', 'tel-dom-030', 'NDR-TEL-DOM-030', 'Estándar',
+    '2a16dd33-f09d-42a1-8a5f-0f2a0b40fc7e'::uuid, 'tel-dom-030', 'NDR-TEL-DOM-030', 'Estándar',
     jsonb_build_object(
       'nodria_store', jsonb_build_object(
         'mode', 'academic_demo',
@@ -3637,17 +3660,17 @@ begin
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, '2a16dd33-f09d-42a1-8a5f-0f2a0b40fc7e', 0, 0)
+  values (v_warehouse_id, '2a16dd33-f09d-42a1-8a5f-0f2a0b40fc7e'::uuid, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = '2a16dd33-f09d-42a1-8a5f-0f2a0b40fc7e';
+  where i.warehouse_id = v_warehouse_id and i.variant_id = '2a16dd33-f09d-42a1-8a5f-0f2a0b40fc7e'::uuid;
 
   if v_available < 26 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      '2a16dd33-f09d-42a1-8a5f-0f2a0b40fc7e',
+      '2a16dd33-f09d-42a1-8a5f-0f2a0b40fc7e'::uuid,
       26 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -3712,17 +3735,16 @@ begin
 
   -- Category Links
   insert into public.product_categories (product_id, category_id)
-  values ('tel-tel-031', 'telefonia-comunicaciones')
-  on conflict (product_id, category_id) do nothing;
-  insert into public.product_categories (product_id, category_id)
-  values ('tel-tel-031', 'centralitas-ip-pbx')
+  select 'tel-tel-031', c.id
+  from public.categories c
+  where c.slug in ('telefonia-comunicaciones', 'centralitas-ip-pbx')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
   insert into public.product_variants (
     id, product_id, sku, title, attributes, current_price, compare_at_price, currency, tax_rate, is_active
   ) values (
-    '29fb5b48-c6a9-4b98-8f56-51861cc4a188', 'tel-tel-031', 'NDR-TEL-TEL-031', 'Estándar',
+    '29fb5b48-c6a9-4b98-8f56-51861cc4a188'::uuid, 'tel-tel-031', 'NDR-TEL-TEL-031', 'Estándar',
     jsonb_build_object(
       'nodria_store', jsonb_build_object(
         'mode', 'academic_demo',
@@ -3747,17 +3769,17 @@ begin
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, '29fb5b48-c6a9-4b98-8f56-51861cc4a188', 0, 0)
+  values (v_warehouse_id, '29fb5b48-c6a9-4b98-8f56-51861cc4a188'::uuid, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = '29fb5b48-c6a9-4b98-8f56-51861cc4a188';
+  where i.warehouse_id = v_warehouse_id and i.variant_id = '29fb5b48-c6a9-4b98-8f56-51861cc4a188'::uuid;
 
   if v_available < 11 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      '29fb5b48-c6a9-4b98-8f56-51861cc4a188',
+      '29fb5b48-c6a9-4b98-8f56-51861cc4a188'::uuid,
       11 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -3822,17 +3844,16 @@ begin
 
   -- Category Links
   insert into public.product_categories (product_id, category_id)
-  values ('tel-tel-032', 'telefonia-comunicaciones')
-  on conflict (product_id, category_id) do nothing;
-  insert into public.product_categories (product_id, category_id)
-  values ('tel-tel-032', 'centralitas-ip-pbx')
+  select 'tel-tel-032', c.id
+  from public.categories c
+  where c.slug in ('telefonia-comunicaciones', 'centralitas-ip-pbx')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
   insert into public.product_variants (
     id, product_id, sku, title, attributes, current_price, compare_at_price, currency, tax_rate, is_active
   ) values (
-    '6570cc93-fdb9-4e53-82cc-04b00657fe7d', 'tel-tel-032', 'NDR-TEL-TEL-032', 'Estándar',
+    '6570cc93-fdb9-4e53-82cc-04b00657fe7d'::uuid, 'tel-tel-032', 'NDR-TEL-TEL-032', 'Estándar',
     jsonb_build_object(
       'nodria_store', jsonb_build_object(
         'mode', 'academic_demo',
@@ -3857,17 +3878,17 @@ begin
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, '6570cc93-fdb9-4e53-82cc-04b00657fe7d', 0, 0)
+  values (v_warehouse_id, '6570cc93-fdb9-4e53-82cc-04b00657fe7d'::uuid, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = '6570cc93-fdb9-4e53-82cc-04b00657fe7d';
+  where i.warehouse_id = v_warehouse_id and i.variant_id = '6570cc93-fdb9-4e53-82cc-04b00657fe7d'::uuid;
 
   if v_available < 13 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      '6570cc93-fdb9-4e53-82cc-04b00657fe7d',
+      '6570cc93-fdb9-4e53-82cc-04b00657fe7d'::uuid,
       13 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -3932,17 +3953,16 @@ begin
 
   -- Category Links
   insert into public.product_categories (product_id, category_id)
-  values ('tel-tel-033', 'telefonia-comunicaciones')
-  on conflict (product_id, category_id) do nothing;
-  insert into public.product_categories (product_id, category_id)
-  values ('tel-tel-033', 'telefonos-ip-dect')
+  select 'tel-tel-033', c.id
+  from public.categories c
+  where c.slug in ('telefonia-comunicaciones', 'telefonos-ip-dect')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
   insert into public.product_variants (
     id, product_id, sku, title, attributes, current_price, compare_at_price, currency, tax_rate, is_active
   ) values (
-    '2c76abd1-ee4a-409b-877e-c0ce0d36f597', 'tel-tel-033', 'NDR-TEL-TEL-033', 'Estándar',
+    '2c76abd1-ee4a-409b-877e-c0ce0d36f597'::uuid, 'tel-tel-033', 'NDR-TEL-TEL-033', 'Estándar',
     jsonb_build_object(
       'nodria_store', jsonb_build_object(
         'mode', 'academic_demo',
@@ -3967,17 +3987,17 @@ begin
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, '2c76abd1-ee4a-409b-877e-c0ce0d36f597', 0, 0)
+  values (v_warehouse_id, '2c76abd1-ee4a-409b-877e-c0ce0d36f597'::uuid, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = '2c76abd1-ee4a-409b-877e-c0ce0d36f597';
+  where i.warehouse_id = v_warehouse_id and i.variant_id = '2c76abd1-ee4a-409b-877e-c0ce0d36f597'::uuid;
 
   if v_available < 22 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      '2c76abd1-ee4a-409b-877e-c0ce0d36f597',
+      '2c76abd1-ee4a-409b-877e-c0ce0d36f597'::uuid,
       22 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -4042,17 +4062,16 @@ begin
 
   -- Category Links
   insert into public.product_categories (product_id, category_id)
-  values ('tel-tel-034', 'telefonia-comunicaciones')
-  on conflict (product_id, category_id) do nothing;
-  insert into public.product_categories (product_id, category_id)
-  values ('tel-tel-034', 'telefonos-ip-dect')
+  select 'tel-tel-034', c.id
+  from public.categories c
+  where c.slug in ('telefonia-comunicaciones', 'telefonos-ip-dect')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
   insert into public.product_variants (
     id, product_id, sku, title, attributes, current_price, compare_at_price, currency, tax_rate, is_active
   ) values (
-    'b49c51c5-e151-4fe7-8f19-6793e7e05b3e', 'tel-tel-034', 'NDR-TEL-TEL-034', 'Estándar',
+    'b49c51c5-e151-4fe7-8f19-6793e7e05b3e'::uuid, 'tel-tel-034', 'NDR-TEL-TEL-034', 'Estándar',
     jsonb_build_object(
       'nodria_store', jsonb_build_object(
         'mode', 'academic_demo',
@@ -4077,17 +4096,17 @@ begin
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, 'b49c51c5-e151-4fe7-8f19-6793e7e05b3e', 0, 0)
+  values (v_warehouse_id, 'b49c51c5-e151-4fe7-8f19-6793e7e05b3e'::uuid, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = 'b49c51c5-e151-4fe7-8f19-6793e7e05b3e';
+  where i.warehouse_id = v_warehouse_id and i.variant_id = 'b49c51c5-e151-4fe7-8f19-6793e7e05b3e'::uuid;
 
   if v_available < 24 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      'b49c51c5-e151-4fe7-8f19-6793e7e05b3e',
+      'b49c51c5-e151-4fe7-8f19-6793e7e05b3e'::uuid,
       24 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -4152,17 +4171,16 @@ begin
 
   -- Category Links
   insert into public.product_categories (product_id, category_id)
-  values ('tel-tel-035', 'telefonia-comunicaciones')
-  on conflict (product_id, category_id) do nothing;
-  insert into public.product_categories (product_id, category_id)
-  values ('tel-tel-035', 'gateways-voip')
+  select 'tel-tel-035', c.id
+  from public.categories c
+  where c.slug in ('telefonia-comunicaciones', 'gateways-voip')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
   insert into public.product_variants (
     id, product_id, sku, title, attributes, current_price, compare_at_price, currency, tax_rate, is_active
   ) values (
-    '0202a70b-b7a7-4c1c-814d-820350fe1c60', 'tel-tel-035', 'NDR-TEL-TEL-035', 'Estándar',
+    '0202a70b-b7a7-4c1c-814d-820350fe1c60'::uuid, 'tel-tel-035', 'NDR-TEL-TEL-035', 'Estándar',
     jsonb_build_object(
       'nodria_store', jsonb_build_object(
         'mode', 'academic_demo',
@@ -4187,17 +4205,17 @@ begin
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, '0202a70b-b7a7-4c1c-814d-820350fe1c60', 0, 0)
+  values (v_warehouse_id, '0202a70b-b7a7-4c1c-814d-820350fe1c60'::uuid, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = '0202a70b-b7a7-4c1c-814d-820350fe1c60';
+  where i.warehouse_id = v_warehouse_id and i.variant_id = '0202a70b-b7a7-4c1c-814d-820350fe1c60'::uuid;
 
   if v_available < 14 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      '0202a70b-b7a7-4c1c-814d-820350fe1c60',
+      '0202a70b-b7a7-4c1c-814d-820350fe1c60'::uuid,
       14 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -4262,17 +4280,16 @@ begin
 
   -- Category Links
   insert into public.product_categories (product_id, category_id)
-  values ('tel-tel-036', 'telefonia-comunicaciones')
-  on conflict (product_id, category_id) do nothing;
-  insert into public.product_categories (product_id, category_id)
-  values ('tel-tel-036', 'gateways-voip')
+  select 'tel-tel-036', c.id
+  from public.categories c
+  where c.slug in ('telefonia-comunicaciones', 'gateways-voip')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
   insert into public.product_variants (
     id, product_id, sku, title, attributes, current_price, compare_at_price, currency, tax_rate, is_active
   ) values (
-    '9cc795ce-81bc-42f8-8672-b1c0b2ab0ce7', 'tel-tel-036', 'NDR-TEL-TEL-036', 'Estándar',
+    '9cc795ce-81bc-42f8-8672-b1c0b2ab0ce7'::uuid, 'tel-tel-036', 'NDR-TEL-TEL-036', 'Estándar',
     jsonb_build_object(
       'nodria_store', jsonb_build_object(
         'mode', 'academic_demo',
@@ -4297,17 +4314,17 @@ begin
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, '9cc795ce-81bc-42f8-8672-b1c0b2ab0ce7', 0, 0)
+  values (v_warehouse_id, '9cc795ce-81bc-42f8-8672-b1c0b2ab0ce7'::uuid, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = '9cc795ce-81bc-42f8-8672-b1c0b2ab0ce7';
+  where i.warehouse_id = v_warehouse_id and i.variant_id = '9cc795ce-81bc-42f8-8672-b1c0b2ab0ce7'::uuid;
 
   if v_available < 9 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      '9cc795ce-81bc-42f8-8672-b1c0b2ab0ce7',
+      '9cc795ce-81bc-42f8-8672-b1c0b2ab0ce7'::uuid,
       9 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -4372,17 +4389,16 @@ begin
 
   -- Category Links
   insert into public.product_categories (product_id, category_id)
-  values ('tel-tel-037', 'telefonia-comunicaciones')
-  on conflict (product_id, category_id) do nothing;
-  insert into public.product_categories (product_id, category_id)
-  values ('tel-tel-037', 'routers-celulares-4g-5g')
+  select 'tel-tel-037', c.id
+  from public.categories c
+  where c.slug in ('telefonia-comunicaciones', 'routers-celulares-4g-5g')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
   insert into public.product_variants (
     id, product_id, sku, title, attributes, current_price, compare_at_price, currency, tax_rate, is_active
   ) values (
-    'd1040088-67e2-469f-8acd-9a9134702645', 'tel-tel-037', 'NDR-TEL-TEL-037', 'Estándar',
+    'd1040088-67e2-469f-8acd-9a9134702645'::uuid, 'tel-tel-037', 'NDR-TEL-TEL-037', 'Estándar',
     jsonb_build_object(
       'nodria_store', jsonb_build_object(
         'mode', 'academic_demo',
@@ -4407,17 +4423,17 @@ begin
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, 'd1040088-67e2-469f-8acd-9a9134702645', 0, 0)
+  values (v_warehouse_id, 'd1040088-67e2-469f-8acd-9a9134702645'::uuid, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = 'd1040088-67e2-469f-8acd-9a9134702645';
+  where i.warehouse_id = v_warehouse_id and i.variant_id = 'd1040088-67e2-469f-8acd-9a9134702645'::uuid;
 
   if v_available < 28 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      'd1040088-67e2-469f-8acd-9a9134702645',
+      'd1040088-67e2-469f-8acd-9a9134702645'::uuid,
       28 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -4482,17 +4498,16 @@ begin
 
   -- Category Links
   insert into public.product_categories (product_id, category_id)
-  values ('tel-tel-038', 'telefonia-comunicaciones')
-  on conflict (product_id, category_id) do nothing;
-  insert into public.product_categories (product_id, category_id)
-  values ('tel-tel-038', 'routers-celulares-4g-5g')
+  select 'tel-tel-038', c.id
+  from public.categories c
+  where c.slug in ('telefonia-comunicaciones', 'routers-celulares-4g-5g')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
   insert into public.product_variants (
     id, product_id, sku, title, attributes, current_price, compare_at_price, currency, tax_rate, is_active
   ) values (
-    '15bca67c-9a9c-41c9-8b1b-f4fa70cfa4b2', 'tel-tel-038', 'NDR-TEL-TEL-038', 'Estándar',
+    '15bca67c-9a9c-41c9-8b1b-f4fa70cfa4b2'::uuid, 'tel-tel-038', 'NDR-TEL-TEL-038', 'Estándar',
     jsonb_build_object(
       'nodria_store', jsonb_build_object(
         'mode', 'academic_demo',
@@ -4517,17 +4532,17 @@ begin
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, '15bca67c-9a9c-41c9-8b1b-f4fa70cfa4b2', 0, 0)
+  values (v_warehouse_id, '15bca67c-9a9c-41c9-8b1b-f4fa70cfa4b2'::uuid, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = '15bca67c-9a9c-41c9-8b1b-f4fa70cfa4b2';
+  where i.warehouse_id = v_warehouse_id and i.variant_id = '15bca67c-9a9c-41c9-8b1b-f4fa70cfa4b2'::uuid;
 
   if v_available < 12 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      '15bca67c-9a9c-41c9-8b1b-f4fa70cfa4b2',
+      '15bca67c-9a9c-41c9-8b1b-f4fa70cfa4b2'::uuid,
       12 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -4592,17 +4607,16 @@ begin
 
   -- Category Links
   insert into public.product_categories (product_id, category_id)
-  values ('tel-tel-039', 'telefonia-comunicaciones')
-  on conflict (product_id, category_id) do nothing;
-  insert into public.product_categories (product_id, category_id)
-  values ('tel-tel-039', 'antenas-comunicaciones')
+  select 'tel-tel-039', c.id
+  from public.categories c
+  where c.slug in ('telefonia-comunicaciones', 'antenas-comunicaciones')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
   insert into public.product_variants (
     id, product_id, sku, title, attributes, current_price, compare_at_price, currency, tax_rate, is_active
   ) values (
-    'f4c4c0ce-a5da-4187-8f43-d6b7cfea80ab', 'tel-tel-039', 'NDR-TEL-TEL-039', 'Estándar',
+    'f4c4c0ce-a5da-4187-8f43-d6b7cfea80ab'::uuid, 'tel-tel-039', 'NDR-TEL-TEL-039', 'Estándar',
     jsonb_build_object(
       'nodria_store', jsonb_build_object(
         'mode', 'academic_demo',
@@ -4627,17 +4641,17 @@ begin
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, 'f4c4c0ce-a5da-4187-8f43-d6b7cfea80ab', 0, 0)
+  values (v_warehouse_id, 'f4c4c0ce-a5da-4187-8f43-d6b7cfea80ab'::uuid, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = 'f4c4c0ce-a5da-4187-8f43-d6b7cfea80ab';
+  where i.warehouse_id = v_warehouse_id and i.variant_id = 'f4c4c0ce-a5da-4187-8f43-d6b7cfea80ab'::uuid;
 
   if v_available < 20 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      'f4c4c0ce-a5da-4187-8f43-d6b7cfea80ab',
+      'f4c4c0ce-a5da-4187-8f43-d6b7cfea80ab'::uuid,
       20 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -4702,17 +4716,16 @@ begin
 
   -- Category Links
   insert into public.product_categories (product_id, category_id)
-  values ('tel-tel-040', 'telefonia-comunicaciones')
-  on conflict (product_id, category_id) do nothing;
-  insert into public.product_categories (product_id, category_id)
-  values ('tel-tel-040', 'antenas-comunicaciones')
+  select 'tel-tel-040', c.id
+  from public.categories c
+  where c.slug in ('telefonia-comunicaciones', 'antenas-comunicaciones')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
   insert into public.product_variants (
     id, product_id, sku, title, attributes, current_price, compare_at_price, currency, tax_rate, is_active
   ) values (
-    '7e211afe-2b66-4f02-8156-4bc7f489a0c8', 'tel-tel-040', 'NDR-TEL-TEL-040', 'Estándar',
+    '7e211afe-2b66-4f02-8156-4bc7f489a0c8'::uuid, 'tel-tel-040', 'NDR-TEL-TEL-040', 'Estándar',
     jsonb_build_object(
       'nodria_store', jsonb_build_object(
         'mode', 'academic_demo',
@@ -4737,17 +4750,17 @@ begin
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, '7e211afe-2b66-4f02-8156-4bc7f489a0c8', 0, 0)
+  values (v_warehouse_id, '7e211afe-2b66-4f02-8156-4bc7f489a0c8'::uuid, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = '7e211afe-2b66-4f02-8156-4bc7f489a0c8';
+  where i.warehouse_id = v_warehouse_id and i.variant_id = '7e211afe-2b66-4f02-8156-4bc7f489a0c8'::uuid;
 
   if v_available < 8 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      '7e211afe-2b66-4f02-8156-4bc7f489a0c8',
+      '7e211afe-2b66-4f02-8156-4bc7f489a0c8'::uuid,
       8 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -4812,17 +4825,16 @@ begin
 
   -- Category Links
   insert into public.product_categories (product_id, category_id)
-  values ('tel-dig-041', 'digitalizacion-industria-conectada')
-  on conflict (product_id, category_id) do nothing;
-  insert into public.product_categories (product_id, category_id)
-  values ('tel-dig-041', 'gateways-iot-industriales')
+  select 'tel-dig-041', c.id
+  from public.categories c
+  where c.slug in ('digitalizacion-industria-conectada', 'gateways-iot-industriales')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
   insert into public.product_variants (
     id, product_id, sku, title, attributes, current_price, compare_at_price, currency, tax_rate, is_active
   ) values (
-    '402b7512-82e9-441a-8a97-72ebdbd82dbf', 'tel-dig-041', 'NDR-TEL-DIG-041', 'Estándar',
+    '402b7512-82e9-441a-8a97-72ebdbd82dbf'::uuid, 'tel-dig-041', 'NDR-TEL-DIG-041', 'Estándar',
     jsonb_build_object(
       'nodria_store', jsonb_build_object(
         'mode', 'academic_demo',
@@ -4847,17 +4859,17 @@ begin
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, '402b7512-82e9-441a-8a97-72ebdbd82dbf', 0, 0)
+  values (v_warehouse_id, '402b7512-82e9-441a-8a97-72ebdbd82dbf'::uuid, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = '402b7512-82e9-441a-8a97-72ebdbd82dbf';
+  where i.warehouse_id = v_warehouse_id and i.variant_id = '402b7512-82e9-441a-8a97-72ebdbd82dbf'::uuid;
 
   if v_available < 10 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      '402b7512-82e9-441a-8a97-72ebdbd82dbf',
+      '402b7512-82e9-441a-8a97-72ebdbd82dbf'::uuid,
       10 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -4922,17 +4934,16 @@ begin
 
   -- Category Links
   insert into public.product_categories (product_id, category_id)
-  values ('tel-dig-042', 'digitalizacion-industria-conectada')
-  on conflict (product_id, category_id) do nothing;
-  insert into public.product_categories (product_id, category_id)
-  values ('tel-dig-042', 'gateways-iot-industriales')
+  select 'tel-dig-042', c.id
+  from public.categories c
+  where c.slug in ('digitalizacion-industria-conectada', 'gateways-iot-industriales')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
   insert into public.product_variants (
     id, product_id, sku, title, attributes, current_price, compare_at_price, currency, tax_rate, is_active
   ) values (
-    'dd6941d9-a90a-4c4a-81e5-dd6006335398', 'tel-dig-042', 'NDR-TEL-DIG-042', 'Estándar',
+    'dd6941d9-a90a-4c4a-81e5-dd6006335398'::uuid, 'tel-dig-042', 'NDR-TEL-DIG-042', 'Estándar',
     jsonb_build_object(
       'nodria_store', jsonb_build_object(
         'mode', 'academic_demo',
@@ -4957,17 +4968,17 @@ begin
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, 'dd6941d9-a90a-4c4a-81e5-dd6006335398', 0, 0)
+  values (v_warehouse_id, 'dd6941d9-a90a-4c4a-81e5-dd6006335398'::uuid, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = 'dd6941d9-a90a-4c4a-81e5-dd6006335398';
+  where i.warehouse_id = v_warehouse_id and i.variant_id = 'dd6941d9-a90a-4c4a-81e5-dd6006335398'::uuid;
 
   if v_available < 18 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      'dd6941d9-a90a-4c4a-81e5-dd6006335398',
+      'dd6941d9-a90a-4c4a-81e5-dd6006335398'::uuid,
       18 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -5032,17 +5043,16 @@ begin
 
   -- Category Links
   insert into public.product_categories (product_id, category_id)
-  values ('tel-dig-043', 'digitalizacion-industria-conectada')
-  on conflict (product_id, category_id) do nothing;
-  insert into public.product_categories (product_id, category_id)
-  values ('tel-dig-043', 'servidores-edge-computacion')
+  select 'tel-dig-043', c.id
+  from public.categories c
+  where c.slug in ('digitalizacion-industria-conectada', 'servidores-edge-computacion')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
   insert into public.product_variants (
     id, product_id, sku, title, attributes, current_price, compare_at_price, currency, tax_rate, is_active
   ) values (
-    '02ace199-26e4-42e7-8a92-80c784428c87', 'tel-dig-043', 'NDR-TEL-DIG-043', 'Estándar',
+    '02ace199-26e4-42e7-8a92-80c784428c87'::uuid, 'tel-dig-043', 'NDR-TEL-DIG-043', 'Estándar',
     jsonb_build_object(
       'nodria_store', jsonb_build_object(
         'mode', 'academic_demo',
@@ -5067,17 +5077,17 @@ begin
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, '02ace199-26e4-42e7-8a92-80c784428c87', 0, 0)
+  values (v_warehouse_id, '02ace199-26e4-42e7-8a92-80c784428c87'::uuid, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = '02ace199-26e4-42e7-8a92-80c784428c87';
+  where i.warehouse_id = v_warehouse_id and i.variant_id = '02ace199-26e4-42e7-8a92-80c784428c87'::uuid;
 
   if v_available < 8 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      '02ace199-26e4-42e7-8a92-80c784428c87',
+      '02ace199-26e4-42e7-8a92-80c784428c87'::uuid,
       8 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -5142,17 +5152,16 @@ begin
 
   -- Category Links
   insert into public.product_categories (product_id, category_id)
-  values ('tel-dig-044', 'digitalizacion-industria-conectada')
-  on conflict (product_id, category_id) do nothing;
-  insert into public.product_categories (product_id, category_id)
-  values ('tel-dig-044', 'servidores-edge-computacion')
+  select 'tel-dig-044', c.id
+  from public.categories c
+  where c.slug in ('digitalizacion-industria-conectada', 'servidores-edge-computacion')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
   insert into public.product_variants (
     id, product_id, sku, title, attributes, current_price, compare_at_price, currency, tax_rate, is_active
   ) values (
-    '92654f2d-ec6d-409f-8222-263b804da89b', 'tel-dig-044', 'NDR-TEL-DIG-044', 'Estándar',
+    '92654f2d-ec6d-409f-8222-263b804da89b'::uuid, 'tel-dig-044', 'NDR-TEL-DIG-044', 'Estándar',
     jsonb_build_object(
       'nodria_store', jsonb_build_object(
         'mode', 'academic_demo',
@@ -5177,17 +5186,17 @@ begin
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, '92654f2d-ec6d-409f-8222-263b804da89b', 0, 0)
+  values (v_warehouse_id, '92654f2d-ec6d-409f-8222-263b804da89b'::uuid, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = '92654f2d-ec6d-409f-8222-263b804da89b';
+  where i.warehouse_id = v_warehouse_id and i.variant_id = '92654f2d-ec6d-409f-8222-263b804da89b'::uuid;
 
   if v_available < 11 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      '92654f2d-ec6d-409f-8222-263b804da89b',
+      '92654f2d-ec6d-409f-8222-263b804da89b'::uuid,
       11 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -5252,17 +5261,16 @@ begin
 
   -- Category Links
   insert into public.product_categories (product_id, category_id)
-  values ('tel-dig-045', 'digitalizacion-industria-conectada')
-  on conflict (product_id, category_id) do nothing;
-  insert into public.product_categories (product_id, category_id)
-  values ('tel-dig-045', 'almacenamiento-nas-servidores')
+  select 'tel-dig-045', c.id
+  from public.categories c
+  where c.slug in ('digitalizacion-industria-conectada', 'almacenamiento-nas-servidores')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
   insert into public.product_variants (
     id, product_id, sku, title, attributes, current_price, compare_at_price, currency, tax_rate, is_active
   ) values (
-    '2a8334d4-ebde-448b-8f69-345ee2e5f3c2', 'tel-dig-045', 'NDR-TEL-DIG-045', 'Estándar',
+    '2a8334d4-ebde-448b-8f69-345ee2e5f3c2'::uuid, 'tel-dig-045', 'NDR-TEL-DIG-045', 'Estándar',
     jsonb_build_object(
       'nodria_store', jsonb_build_object(
         'mode', 'academic_demo',
@@ -5287,17 +5295,17 @@ begin
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, '2a8334d4-ebde-448b-8f69-345ee2e5f3c2', 0, 0)
+  values (v_warehouse_id, '2a8334d4-ebde-448b-8f69-345ee2e5f3c2'::uuid, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = '2a8334d4-ebde-448b-8f69-345ee2e5f3c2';
+  where i.warehouse_id = v_warehouse_id and i.variant_id = '2a8334d4-ebde-448b-8f69-345ee2e5f3c2'::uuid;
 
   if v_available < 14 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      '2a8334d4-ebde-448b-8f69-345ee2e5f3c2',
+      '2a8334d4-ebde-448b-8f69-345ee2e5f3c2'::uuid,
       14 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -5362,17 +5370,16 @@ begin
 
   -- Category Links
   insert into public.product_categories (product_id, category_id)
-  values ('tel-dig-046', 'digitalizacion-industria-conectada')
-  on conflict (product_id, category_id) do nothing;
-  insert into public.product_categories (product_id, category_id)
-  values ('tel-dig-046', 'almacenamiento-nas-servidores')
+  select 'tel-dig-046', c.id
+  from public.categories c
+  where c.slug in ('digitalizacion-industria-conectada', 'almacenamiento-nas-servidores')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
   insert into public.product_variants (
     id, product_id, sku, title, attributes, current_price, compare_at_price, currency, tax_rate, is_active
   ) values (
-    'af0f219a-7cc1-4f58-8e11-4ce469057f71', 'tel-dig-046', 'NDR-TEL-DIG-046', 'Estándar',
+    'af0f219a-7cc1-4f58-8e11-4ce469057f71'::uuid, 'tel-dig-046', 'NDR-TEL-DIG-046', 'Estándar',
     jsonb_build_object(
       'nodria_store', jsonb_build_object(
         'mode', 'academic_demo',
@@ -5397,17 +5404,17 @@ begin
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, 'af0f219a-7cc1-4f58-8e11-4ce469057f71', 0, 0)
+  values (v_warehouse_id, 'af0f219a-7cc1-4f58-8e11-4ce469057f71'::uuid, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = 'af0f219a-7cc1-4f58-8e11-4ce469057f71';
+  where i.warehouse_id = v_warehouse_id and i.variant_id = 'af0f219a-7cc1-4f58-8e11-4ce469057f71'::uuid;
 
   if v_available < 9 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      'af0f219a-7cc1-4f58-8e11-4ce469057f71',
+      'af0f219a-7cc1-4f58-8e11-4ce469057f71'::uuid,
       9 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -5472,17 +5479,16 @@ begin
 
   -- Category Links
   insert into public.product_categories (product_id, category_id)
-  values ('ref-storage-snv3sm3-1t0', 'digitalizacion-industria-conectada')
-  on conflict (product_id, category_id) do nothing;
-  insert into public.product_categories (product_id, category_id)
-  values ('ref-storage-snv3sm3-1t0', 'almacenamiento-nas-servidores')
+  select 'ref-storage-snv3sm3-1t0', c.id
+  from public.categories c
+  where c.slug in ('digitalizacion-industria-conectada', 'almacenamiento-nas-servidores')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
   insert into public.product_variants (
     id, product_id, sku, title, attributes, current_price, compare_at_price, currency, tax_rate, is_active
   ) values (
-    '00000000-0000-4000-8000-000000000008', 'ref-storage-snv3sm3-1t0', 'REF-SNV3SM31T0-0ETE5', 'Estándar',
+    '00000000-0000-4000-8000-000000000008'::uuid, 'ref-storage-snv3sm3-1t0', 'REF-SNV3SM31T0-0ETE5', 'Estándar',
     jsonb_build_object(
       'nodria_store', jsonb_build_object(
         'mode', 'academic_demo',
@@ -5507,17 +5513,17 @@ begin
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, '00000000-0000-4000-8000-000000000008', 0, 0)
+  values (v_warehouse_id, '00000000-0000-4000-8000-000000000008'::uuid, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = '00000000-0000-4000-8000-000000000008';
+  where i.warehouse_id = v_warehouse_id and i.variant_id = '00000000-0000-4000-8000-000000000008'::uuid;
 
   if v_available < 25 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      '00000000-0000-4000-8000-000000000008',
+      '00000000-0000-4000-8000-000000000008'::uuid,
       25 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -5582,17 +5588,16 @@ begin
 
   -- Category Links
   insert into public.product_categories (product_id, category_id)
-  values ('ref-storage-mz-v9p1t0bw', 'digitalizacion-industria-conectada')
-  on conflict (product_id, category_id) do nothing;
-  insert into public.product_categories (product_id, category_id)
-  values ('ref-storage-mz-v9p1t0bw', 'almacenamiento-nas-servidores')
+  select 'ref-storage-mz-v9p1t0bw', c.id
+  from public.categories c
+  where c.slug in ('digitalizacion-industria-conectada', 'almacenamiento-nas-servidores')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
   insert into public.product_variants (
     id, product_id, sku, title, attributes, current_price, compare_at_price, currency, tax_rate, is_active
   ) values (
-    '00000000-0000-4000-8000-000000000009', 'ref-storage-mz-v9p1t0bw', 'REF-MZV9P1T0BW-1VOPO', 'Estándar',
+    '00000000-0000-4000-8000-000000000009'::uuid, 'ref-storage-mz-v9p1t0bw', 'REF-MZV9P1T0BW-1VOPO', 'Estándar',
     jsonb_build_object(
       'nodria_store', jsonb_build_object(
         'mode', 'academic_demo',
@@ -5617,17 +5622,17 @@ begin
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, '00000000-0000-4000-8000-000000000009', 0, 0)
+  values (v_warehouse_id, '00000000-0000-4000-8000-000000000009'::uuid, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = '00000000-0000-4000-8000-000000000009';
+  where i.warehouse_id = v_warehouse_id and i.variant_id = '00000000-0000-4000-8000-000000000009'::uuid;
 
   if v_available < 20 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      '00000000-0000-4000-8000-000000000009',
+      '00000000-0000-4000-8000-000000000009'::uuid,
       20 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -5692,17 +5697,16 @@ begin
 
   -- Category Links
   insert into public.product_categories (product_id, category_id)
-  values ('tel-dig-047', 'digitalizacion-industria-conectada')
-  on conflict (product_id, category_id) do nothing;
-  insert into public.product_categories (product_id, category_id)
-  values ('tel-dig-047', 'sensores-industriales-modbus')
+  select 'tel-dig-047', c.id
+  from public.categories c
+  where c.slug in ('digitalizacion-industria-conectada', 'sensores-industriales-modbus')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
   insert into public.product_variants (
     id, product_id, sku, title, attributes, current_price, compare_at_price, currency, tax_rate, is_active
   ) values (
-    'd38af876-f15d-41ec-855a-4de412206249', 'tel-dig-047', 'NDR-TEL-DIG-047', 'Estándar',
+    'd38af876-f15d-41ec-855a-4de412206249'::uuid, 'tel-dig-047', 'NDR-TEL-DIG-047', 'Estándar',
     jsonb_build_object(
       'nodria_store', jsonb_build_object(
         'mode', 'academic_demo',
@@ -5727,17 +5731,17 @@ begin
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, 'd38af876-f15d-41ec-855a-4de412206249', 0, 0)
+  values (v_warehouse_id, 'd38af876-f15d-41ec-855a-4de412206249'::uuid, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = 'd38af876-f15d-41ec-855a-4de412206249';
+  where i.warehouse_id = v_warehouse_id and i.variant_id = 'd38af876-f15d-41ec-855a-4de412206249'::uuid;
 
   if v_available < 25 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      'd38af876-f15d-41ec-855a-4de412206249',
+      'd38af876-f15d-41ec-855a-4de412206249'::uuid,
       25 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -5802,17 +5806,16 @@ begin
 
   -- Category Links
   insert into public.product_categories (product_id, category_id)
-  values ('tel-dig-048', 'digitalizacion-industria-conectada')
-  on conflict (product_id, category_id) do nothing;
-  insert into public.product_categories (product_id, category_id)
-  values ('tel-dig-048', 'sensores-industriales-modbus')
+  select 'tel-dig-048', c.id
+  from public.categories c
+  where c.slug in ('digitalizacion-industria-conectada', 'sensores-industriales-modbus')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
   insert into public.product_variants (
     id, product_id, sku, title, attributes, current_price, compare_at_price, currency, tax_rate, is_active
   ) values (
-    'b0ddcbc3-fd05-43e1-8d63-69f95214f73d', 'tel-dig-048', 'NDR-TEL-DIG-048', 'Estándar',
+    'b0ddcbc3-fd05-43e1-8d63-69f95214f73d'::uuid, 'tel-dig-048', 'NDR-TEL-DIG-048', 'Estándar',
     jsonb_build_object(
       'nodria_store', jsonb_build_object(
         'mode', 'academic_demo',
@@ -5837,17 +5840,17 @@ begin
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, 'b0ddcbc3-fd05-43e1-8d63-69f95214f73d', 0, 0)
+  values (v_warehouse_id, 'b0ddcbc3-fd05-43e1-8d63-69f95214f73d'::uuid, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = 'b0ddcbc3-fd05-43e1-8d63-69f95214f73d';
+  where i.warehouse_id = v_warehouse_id and i.variant_id = 'b0ddcbc3-fd05-43e1-8d63-69f95214f73d'::uuid;
 
   if v_available < 20 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      'b0ddcbc3-fd05-43e1-8d63-69f95214f73d',
+      'b0ddcbc3-fd05-43e1-8d63-69f95214f73d'::uuid,
       20 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -5912,17 +5915,16 @@ begin
 
   -- Category Links
   insert into public.product_categories (product_id, category_id)
-  values ('tel-dig-049', 'digitalizacion-industria-conectada')
-  on conflict (product_id, category_id) do nothing;
-  insert into public.product_categories (product_id, category_id)
-  values ('tel-dig-049', 'captura-datos-trazabilidad')
+  select 'tel-dig-049', c.id
+  from public.categories c
+  where c.slug in ('digitalizacion-industria-conectada', 'captura-datos-trazabilidad')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
   insert into public.product_variants (
     id, product_id, sku, title, attributes, current_price, compare_at_price, currency, tax_rate, is_active
   ) values (
-    '34554a39-8dee-4e84-8384-209ebf997257', 'tel-dig-049', 'NDR-TEL-DIG-049', 'Estándar',
+    '34554a39-8dee-4e84-8384-209ebf997257'::uuid, 'tel-dig-049', 'NDR-TEL-DIG-049', 'Estándar',
     jsonb_build_object(
       'nodria_store', jsonb_build_object(
         'mode', 'academic_demo',
@@ -5947,17 +5949,17 @@ begin
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, '34554a39-8dee-4e84-8384-209ebf997257', 0, 0)
+  values (v_warehouse_id, '34554a39-8dee-4e84-8384-209ebf997257'::uuid, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = '34554a39-8dee-4e84-8384-209ebf997257';
+  where i.warehouse_id = v_warehouse_id and i.variant_id = '34554a39-8dee-4e84-8384-209ebf997257'::uuid;
 
   if v_available < 15 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      '34554a39-8dee-4e84-8384-209ebf997257',
+      '34554a39-8dee-4e84-8384-209ebf997257'::uuid,
       15 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );
@@ -6022,17 +6024,16 @@ begin
 
   -- Category Links
   insert into public.product_categories (product_id, category_id)
-  values ('tel-dig-050', 'digitalizacion-industria-conectada')
-  on conflict (product_id, category_id) do nothing;
-  insert into public.product_categories (product_id, category_id)
-  values ('tel-dig-050', 'captura-datos-trazabilidad')
+  select 'tel-dig-050', c.id
+  from public.categories c
+  where c.slug in ('digitalizacion-industria-conectada', 'captura-datos-trazabilidad')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
   insert into public.product_variants (
     id, product_id, sku, title, attributes, current_price, compare_at_price, currency, tax_rate, is_active
   ) values (
-    'ab8a60f4-913d-4a7d-8812-f245921e0fe1', 'tel-dig-050', 'NDR-TEL-DIG-050', 'Estándar',
+    'ab8a60f4-913d-4a7d-8812-f245921e0fe1'::uuid, 'tel-dig-050', 'NDR-TEL-DIG-050', 'Estándar',
     jsonb_build_object(
       'nodria_store', jsonb_build_object(
         'mode', 'academic_demo',
@@ -6057,17 +6058,17 @@ begin
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, 'ab8a60f4-913d-4a7d-8812-f245921e0fe1', 0, 0)
+  values (v_warehouse_id, 'ab8a60f4-913d-4a7d-8812-f245921e0fe1'::uuid, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = 'ab8a60f4-913d-4a7d-8812-f245921e0fe1';
+  where i.warehouse_id = v_warehouse_id and i.variant_id = 'ab8a60f4-913d-4a7d-8812-f245921e0fe1'::uuid;
 
   if v_available < 10 then
     perform private.adjust_inventory(
       v_warehouse_id,
-      'ab8a60f4-913d-4a7d-8812-f245921e0fe1',
+      'ab8a60f4-913d-4a7d-8812-f245921e0fe1'::uuid,
       10 - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );

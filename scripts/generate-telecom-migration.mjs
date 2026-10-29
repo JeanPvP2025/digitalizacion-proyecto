@@ -20,6 +20,14 @@ function sqlEscape(str) {
   return `'${String(str).replace(/'/g, "''")}'`;
 }
 
+const idToSlug = new Map();
+for (const cat of telecom.categories) {
+  idToSlug.set(cat.id, cat.slug);
+  for (const sub of cat.subcategories) {
+    idToSlug.set(sub.id, sub.slug);
+  }
+}
+
 let sql = `-- NODRIA — Telecom & Industrial Restructuring Migration
 -- Upserts the 5 specialized telecom categories and 25 subcategories.
 -- Upserts the 52 commercial telecommunications products, variants, specifications, and initial demo inventory.
@@ -33,7 +41,7 @@ begin;
 
 for (const cat of telecom.categories) {
   sql += `insert into public.categories (id, slug, name, description, sort_order, parent_id, is_active)
-values (${sqlEscape(cat.id)}, ${sqlEscape(cat.slug)}, ${sqlEscape(cat.name)}, ${sqlEscape(cat.description)}, ${cat.sortOrder}, null, true)
+values (${sqlEscape(cat.id)}::uuid, ${sqlEscape(cat.slug)}, ${sqlEscape(cat.name)}, ${sqlEscape(cat.description)}, ${cat.sortOrder}, null, true)
 on conflict (slug) do update set
   name = excluded.name,
   description = excluded.description,
@@ -46,7 +54,9 @@ on conflict (slug) do update set
 
   for (const sub of cat.subcategories) {
     sql += `insert into public.categories (id, slug, name, description, sort_order, parent_id, is_active)
-values (${sqlEscape(sub.id)}, ${sqlEscape(sub.slug)}, ${sqlEscape(sub.name)}, ${sqlEscape(sub.description)}, ${sub.sortOrder}, ${sqlEscape(cat.id)}, true)
+select ${sqlEscape(sub.id)}::uuid, ${sqlEscape(sub.slug)}, ${sqlEscape(sub.name)}, ${sqlEscape(sub.description)}, ${sub.sortOrder}, c.id, true
+from public.categories c
+where c.slug = ${sqlEscape(cat.slug)}
 on conflict (slug) do update set
   name = excluded.name,
   description = excluded.description,
@@ -85,6 +95,9 @@ declare
   v_available integer;
 begin
   select id into v_warehouse_id from public.warehouses where code = 'NODRIA-DEMO';
+  if v_warehouse_id is null then
+    select id into v_warehouse_id from public.warehouses where is_active limit 1;
+  end if;
 
 `;
 
@@ -93,6 +106,8 @@ for (const product of telecom.products) {
   if (!variantId) {
     throw new Error(`Missing variant UUID for ${product.id}`);
   }
+
+  const slugs = product.categoryIds.map((id) => idToSlug.get(id)).filter(Boolean);
 
   sql += `  -- Product: ${product.sku} (${product.name})
   insert into public.products (
@@ -120,21 +135,17 @@ for (const product of telecom.products) {
     updated_at = now();
 
   -- Category Links
-`;
-
-  for (const catId of product.categoryIds) {
-    sql += `  insert into public.product_categories (product_id, category_id)
-  values (${sqlEscape(product.id)}, ${sqlEscape(catId)})
+  insert into public.product_categories (product_id, category_id)
+  select ${sqlEscape(product.id)}, c.id
+  from public.categories c
+  where c.slug in (${slugs.map(sqlEscape).join(", ")})
   on conflict (product_id, category_id) do nothing;
-`;
-  }
 
-  sql += `
   -- Variant
   insert into public.product_variants (
     id, product_id, sku, title, attributes, current_price, compare_at_price, currency, tax_rate, is_active
   ) values (
-    ${sqlEscape(variantId)}, ${sqlEscape(product.id)}, ${sqlEscape(product.sku)}, 'Estándar',
+    ${sqlEscape(variantId)}::uuid, ${sqlEscape(product.id)}, ${sqlEscape(product.sku)}, 'Estándar',
     jsonb_build_object(
       'nodria_store', jsonb_build_object(
         'mode', 'academic_demo',
@@ -159,17 +170,17 @@ for (const product of telecom.products) {
 
   -- Initial Stock
   insert into public.inventory (warehouse_id, variant_id, on_hand, reserved)
-  values (v_warehouse_id, ${sqlEscape(variantId)}, 0, 0)
+  values (v_warehouse_id, ${sqlEscape(variantId)}::uuid, 0, 0)
   on conflict (warehouse_id, variant_id) do nothing;
 
   select greatest(0, i.on_hand - i.reserved) into v_available
   from public.inventory i
-  where i.warehouse_id = v_warehouse_id and i.variant_id = ${sqlEscape(variantId)};
+  where i.warehouse_id = v_warehouse_id and i.variant_id = ${sqlEscape(variantId)}::uuid;
 
   if v_available < ${product.stock ?? 10} then
     perform private.adjust_inventory(
       v_warehouse_id,
-      ${sqlEscape(variantId)},
+      ${sqlEscape(variantId)}::uuid,
       ${product.stock ?? 10} - v_available,
       'Alta inicial de existencias catálogo telecomunicaciones NODRIA'
     );

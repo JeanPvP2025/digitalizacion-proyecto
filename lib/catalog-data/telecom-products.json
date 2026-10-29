@@ -1,7 +1,7 @@
 {
   "categories": [
     {
-      "id": "infraestructuras-telecomunicaciones",
+      "id": "15cbe619-16f5-4f12-80ef-e0169c9f2ab9",
       "slug": "infraestructuras-telecomunicaciones",
       "name": "Infraestructuras de Telecomunicaciones",
       "description": "Armarios rack de 19\", cableado estructurado Cat.6A/Cat.7, fibra óptica preconectorizada, paneles de parcheo y certificación de redes.",
@@ -9,49 +9,49 @@
       "parentId": null,
       "subcategories": [
         {
-          "id": "racks-armarios",
+          "id": "db480e83-01e6-4d01-8d92-fb18c040c0e4",
           "slug": "racks-armarios",
           "name": "Racks y armarios de comunicaciones",
           "description": "Armarios murales y de suelo para salas de servidores y telecomunicaciones.",
           "sortOrder": 11,
-          "parentId": "infraestructuras-telecomunicaciones"
+          "parentId": "15cbe619-16f5-4f12-80ef-e0169c9f2ab9"
         },
         {
-          "id": "cableado-estructurado",
+          "id": "74c5188b-8666-4942-8fbb-6e49c004a792",
           "slug": "cableado-estructurado",
           "name": "Cableado estructurado Cat.6A/Cat.7",
           "description": "Bobinas de cable de red de cobre apantallado y libre de halógenos LSZH.",
           "sortOrder": 12,
-          "parentId": "infraestructuras-telecomunicaciones"
+          "parentId": "15cbe619-16f5-4f12-80ef-e0169c9f2ab9"
         },
         {
-          "id": "fibra-optica",
+          "id": "9c41e121-8c41-40bb-80f1-a6bc7f3767ae",
           "slug": "fibra-optica",
           "name": "Fibra óptica y distribución troncal",
           "description": "Mangueras preconectorizadas, bandejas de distribución y pigtails ópticos.",
           "sortOrder": 13,
-          "parentId": "infraestructuras-telecomunicaciones"
+          "parentId": "15cbe619-16f5-4f12-80ef-e0169c9f2ab9"
         },
         {
-          "id": "paneles-parcheo",
+          "id": "28227571-be86-456d-8feb-bb12d3775010",
           "slug": "paneles-parcheo",
           "name": "Paneles de parcheo y gestión de cable",
           "description": "Paneles modulares RJ45, guías de cables y pasahilos horizontales.",
           "sortOrder": 14,
-          "parentId": "infraestructuras-telecomunicaciones"
+          "parentId": "15cbe619-16f5-4f12-80ef-e0169c9f2ab9"
         },
         {
-          "id": "herramientas-certificacion",
+          "id": "1aa3c71c-fbff-448c-85d9-a98463ab3f69",
           "slug": "herramientas-certificacion",
           "name": "Herramientas profesionales y certificación",
           "description": "Certificadores de redes Cat.6A/Cat.8 y fusionadoras de fibra por alineación de núcleo.",
           "sortOrder": 15,
-          "parentId": "infraestructuras-telecomunicaciones"
+          "parentId": "15cbe619-16f5-4f12-80ef-e0169c9f2ab9"
         }
       ]
     },
     {
-      "id": "equipos-sistemas-telecomunicaciones",
+      "id": "086ece91-23e4-4cfe-8b8d-269a61b2c3b4",
       "slug": "equipos-sistemas-telecomunicaciones",
       "name": "Equipos y Sistemas de Telecomunicaciones",
       "description": "Switches gestionables L2+/L3, routers de borde, puntos de acceso Wi-Fi 6E/7, transceptores ópticos SFP+ y cabeceras de distribución.",
@@ -59,49 +59,49 @@
       "parentId": null,
       "subcategories": [
         {
-          "id": "switches-gestionables",
+          "id": "be6272d8-00f5-496d-8dc9-4a861b15c280",
           "slug": "switches-gestionables",
           "name": "Switches gestionables capa 2/3 y PoE+",
           "description": "Conmutadores de alta capacidad con PoE+ y puertos de enlace 10G SFP+.",
           "sortOrder": 21,
-          "parentId": "equipos-sistemas-telecomunicaciones"
+          "parentId": "086ece91-23e4-4cfe-8b8d-269a61b2c3b4"
         },
         {
-          "id": "routers-borde",
+          "id": "716032c3-ed9b-45a0-8950-94b657458395",
           "slug": "routers-borde",
           "name": "Routers de borde y balanceo de carga",
           "description": "Pasarelas de seguridad multi-WAN y cortafuegos con inspección profunda de paquetes.",
           "sortOrder": 22,
-          "parentId": "equipos-sistemas-telecomunicaciones"
+          "parentId": "086ece91-23e4-4cfe-8b8d-269a61b2c3b4"
         },
         {
-          "id": "puntos-acceso-wifi",
+          "id": "40aadbdc-fb3e-4881-8948-c38eb172a99b",
           "slug": "puntos-acceso-wifi",
           "name": "Puntos de acceso inalámbrico Wi-Fi 6E/7",
           "description": "Puntos de acceso corporativos de alta densidad y tecnología multi-banda.",
           "sortOrder": 23,
-          "parentId": "equipos-sistemas-telecomunicaciones"
+          "parentId": "086ece91-23e4-4cfe-8b8d-269a61b2c3b4"
         },
         {
-          "id": "transceptores-opticos",
+          "id": "a545f214-60ba-4829-8bbc-bf4a7e3d5e7d",
           "slug": "transceptores-opticos",
           "name": "Módulos transceptores ópticos SFP/SFP+",
           "description": "Transceptores 10G monomodo, multimodo y 10GBASE-T en cobre.",
           "sortOrder": 24,
-          "parentId": "equipos-sistemas-telecomunicaciones"
+          "parentId": "086ece91-23e4-4cfe-8b8d-269a61b2c3b4"
         },
         {
-          "id": "cabeceras-rf-tv",
+          "id": "12fc57a9-6c2a-4126-8295-50f4c1c06992",
           "slug": "cabeceras-rf-tv",
           "name": "Cabeceras de radiofrecuencia y distribución TV/SAT",
           "description": "Centrales amplificadoras programables y transmoduladores ópticos DVB.",
           "sortOrder": 25,
-          "parentId": "equipos-sistemas-telecomunicaciones"
+          "parentId": "086ece91-23e4-4cfe-8b8d-269a61b2c3b4"
         }
       ]
     },
     {
-      "id": "domotica-hogar-digital",
+      "id": "677fd6b6-fb71-42ca-8469-ce47dd6541b1",
       "slug": "domotica-hogar-digital",
       "name": "Domótica y Hogar Digital",
       "description": "Pasarelas multiprotocolo Zigbee 3.0/Matter, relés para carril DIN, sensores ambientales, videoporteros IP y climatización inteligente.",
@@ -109,49 +109,49 @@
       "parentId": null,
       "subcategories": [
         {
-          "id": "pasarelas-controladores",
+          "id": "3488fcc9-3049-436c-808e-8e79dc0e4af2",
           "slug": "pasarelas-controladores",
           "name": "Pasarelas y controladores domóticos",
           "description": "Centros de control compatibles con Matter, Zigbee 3.0, Thread y Apple Home.",
           "sortOrder": 31,
-          "parentId": "domotica-hogar-digital"
+          "parentId": "677fd6b6-fb71-42ca-8469-ce47dd6541b1"
         },
         {
-          "id": "reles-actuadores",
+          "id": "1a9c4b69-62a2-416a-86a2-cae77d32fca7",
           "slug": "reles-actuadores",
           "name": "Micromódulos y relés inteligentes para carril DIN",
           "description": "Actuadores de control de iluminación y cargas de potencia con telemetría de energía.",
           "sortOrder": 32,
-          "parentId": "domotica-hogar-digital"
+          "parentId": "677fd6b6-fb71-42ca-8469-ce47dd6541b1"
         },
         {
-          "id": "sensores-ambientales",
+          "id": "6d707317-2a75-46b6-8298-5b7c4ec8fce8",
           "slug": "sensores-ambientales",
           "name": "Sensores ambientales, presencia y consumo",
           "description": "Sensores de presencia por radar milimétrico mmWave y monitores de calidad de aire.",
           "sortOrder": 33,
-          "parentId": "domotica-hogar-digital"
+          "parentId": "677fd6b6-fb71-42ca-8469-ce47dd6541b1"
         },
         {
-          "id": "videoporteros-control-acceso",
+          "id": "c9cdb222-9bf2-4222-8408-24ce60e2a614",
           "slug": "videoporteros-control-acceso",
           "name": "Videoporteros IP y control de accesos",
           "description": "Intercomunicadores PoE con cámara 2K, lectores NFC y cerraduras inteligentes.",
           "sortOrder": 34,
-          "parentId": "domotica-hogar-digital"
+          "parentId": "677fd6b6-fb71-42ca-8469-ce47dd6541b1"
         },
         {
-          "id": "climatizacion-inteligente",
+          "id": "7f8d2cb3-89aa-4570-8a60-58bd2816d24e",
           "slug": "climatizacion-inteligente",
           "name": "Termostatos y gestión climática inteligente",
           "description": "Termostatos modulantes OpenTherm y cabezales termostáticos electrónicos para radiadores.",
           "sortOrder": 35,
-          "parentId": "domotica-hogar-digital"
+          "parentId": "677fd6b6-fb71-42ca-8469-ce47dd6541b1"
         }
       ]
     },
     {
-      "id": "telefonia-comunicaciones",
+      "id": "aa1c17c2-397a-4a16-8298-5a7b4e3862c9",
       "slug": "telefonia-comunicaciones",
       "name": "Telefonía y Comunicaciones",
       "description": "Centralitas telefónicas IP-PBX, terminales SIP ejecutivos, teléfonos DECT, pasarelas VoIP FXS/FXO y routers celulares industriales 4G/5G.",
@@ -159,49 +159,49 @@
       "parentId": null,
       "subcategories": [
         {
-          "id": "centralitas-ip-pbx",
+          "id": "6164296b-a7c8-4c8f-861a-10e883a4ac93",
           "slug": "centralitas-ip-pbx",
           "name": "Centralitas IP-PBX y servidores SIP",
           "description": "Servidores de comunicaciones unificadas con operadora automática y salas de conferencia.",
           "sortOrder": 41,
-          "parentId": "telefonia-comunicaciones"
+          "parentId": "aa1c17c2-397a-4a16-8298-5a7b4e3862c9"
         },
         {
-          "id": "telefonos-ip-dect",
+          "id": "29e5b4f0-85ae-4b37-89aa-115582fbdaad",
           "slug": "telefonos-ip-dect",
           "name": "Teléfonos IP sobremesa y terminales DECT",
           "description": "Teléfonos ejecutivos con pantalla en color, audio HD y sistemas inalámbricos multisede.",
           "sortOrder": 42,
-          "parentId": "telefonia-comunicaciones"
+          "parentId": "aa1c17c2-397a-4a16-8298-5a7b4e3862c9"
         },
         {
-          "id": "gateways-voip",
+          "id": "ec1516f2-2697-4161-881a-80328550ddb9",
           "slug": "gateways-voip",
           "name": "Pasarelas VoIP analógicas y digitales FXS/FXO/PRI",
           "description": "Adaptadores de líneas telefónicas tradicionales e interfaces RDSI/ISDN a SIP.",
           "sortOrder": 43,
-          "parentId": "telefonia-comunicaciones"
+          "parentId": "aa1c17c2-397a-4a16-8298-5a7b4e3862c9"
         },
         {
-          "id": "routers-celulares-4g-5g",
+          "id": "cbfb2de3-1f5a-4924-8ffc-529fed9df334",
           "slug": "routers-celulares-4g-5g",
           "name": "Routers y módems celulares industriales 4G/5G",
           "description": "Equipos de conectividad móvil crítica con doble SIM y soporte VPN avanzado.",
           "sortOrder": 44,
-          "parentId": "telefonia-comunicaciones"
+          "parentId": "aa1c17c2-397a-4a16-8298-5a7b4e3862c9"
         },
         {
-          "id": "antenas-comunicaciones",
+          "id": "8d201b6f-f32f-4200-8fc7-cff38a00fbf2",
           "slug": "antenas-comunicaciones",
           "name": "Antenas móviles M2M/IoT y amplificadores",
           "description": "Antenas de alta ganancia para exterior y sistemas de amplificación celular conformes con la Directiva RED.",
           "sortOrder": 45,
-          "parentId": "telefonia-comunicaciones"
+          "parentId": "aa1c17c2-397a-4a16-8298-5a7b4e3862c9"
         }
       ]
     },
     {
-      "id": "digitalizacion-industria-conectada",
+      "id": "3e380976-47d1-4b9b-89c7-1145f4b9765b",
       "slug": "digitalizacion-industria-conectada",
       "name": "Digitalización e Industria Conectada",
       "description": "Gateways IoT industriales, servidores de computación Edge, almacenamiento en red NAS, sensores Modbus/RS-485 y trazabilidad con terminales de lectura.",
@@ -209,44 +209,44 @@
       "parentId": null,
       "subcategories": [
         {
-          "id": "gateways-iot-industriales",
+          "id": "d09dc9b8-e89b-43bf-86ca-0d3223b6d046",
           "slug": "gateways-iot-industriales",
           "name": "Gateways IoT y adquisición de datos en planta",
           "description": "Pasarelas industriales con soporte Node-RED, Modbus TCP/RTU y brokers MQTT.",
           "sortOrder": 51,
-          "parentId": "digitalizacion-industria-conectada"
+          "parentId": "3e380976-47d1-4b9b-89c7-1145f4b9765b"
         },
         {
-          "id": "servidores-edge-computacion",
+          "id": "43d3c0cf-9a0d-4194-8e2c-2742beefbfb6",
           "slug": "servidores-edge-computacion",
           "name": "Servidores Edge y computación industrial",
           "description": "Equipos embebidos fanless para analítica en borde e inferencia de inteligencia artificial.",
           "sortOrder": 52,
-          "parentId": "digitalizacion-industria-conectada"
+          "parentId": "3e380976-47d1-4b9b-89c7-1145f4b9765b"
         },
         {
-          "id": "almacenamiento-nas-servidores",
+          "id": "98c5ba32-286f-4639-8a02-ee4818d6938a",
           "slug": "almacenamiento-nas-servidores",
           "name": "Almacenamiento en red NAS y servidores",
           "description": "Sistemas de almacenamiento centralizado con copias automatizadas y unidades NVMe ultrarrápidas.",
           "sortOrder": 53,
-          "parentId": "digitalizacion-industria-conectada"
+          "parentId": "3e380976-47d1-4b9b-89c7-1145f4b9765b"
         },
         {
-          "id": "sensores-industriales-modbus",
+          "id": "0ac60e71-9131-4669-85ae-0625878433da",
           "slug": "sensores-industriales-modbus",
           "name": "Sensores industriales e interfaces Modbus / IO-Link",
           "description": "Transmisores de presión, temperatura e instrumentación de procesos en acero inoxidable.",
           "sortOrder": 54,
-          "parentId": "digitalizacion-industria-conectada"
+          "parentId": "3e380976-47d1-4b9b-89c7-1145f4b9765b"
         },
         {
-          "id": "captura-datos-trazabilidad",
+          "id": "927bb59e-dd8b-40c9-82da-27163a13cfc0",
           "slug": "captura-datos-trazabilidad",
           "name": "Terminales de captura de datos y trazabilidad logística",
           "description": "PDA industriales con escáner 2D, sellado IP68 e impresoras térmicas de etiquetas.",
           "sortOrder": 55,
-          "parentId": "digitalizacion-industria-conectada"
+          "parentId": "3e380976-47d1-4b9b-89c7-1145f4b9765b"
         }
       ]
     }
@@ -259,8 +259,8 @@
       "name": "Rack Mural 19\" 9U Profundidad 600mm Puerta de Cristal",
       "category": "Infraestructuras de Telecomunicaciones",
       "categoryIds": [
-        "infraestructuras-telecomunicaciones",
-        "racks-armarios"
+        "15cbe619-16f5-4f12-80ef-e0169c9f2ab9",
+        "db480e83-01e6-4d01-8d92-fb18c040c0e4"
       ],
       "brand": "Legrand",
       "modelNumber": "446209",
@@ -306,8 +306,8 @@
       "name": "Armario Rack de Suelo 19\" 42U 800x1000mm con Guías de Gestión",
       "category": "Infraestructuras de Telecomunicaciones",
       "categoryIds": [
-        "infraestructuras-telecomunicaciones",
-        "racks-armarios"
+        "15cbe619-16f5-4f12-80ef-e0169c9f2ab9",
+        "db480e83-01e6-4d01-8d92-fb18c040c0e4"
       ],
       "brand": "Schneider Electric",
       "modelNumber": "NSYVD24U84P",
@@ -353,8 +353,8 @@
       "name": "Bobina Cable de Red U/FTP Cat.6A LSZH 500m 500MHz Libre de Halógenos",
       "category": "Infraestructuras de Telecomunicaciones",
       "categoryIds": [
-        "infraestructuras-telecomunicaciones",
-        "cableado-estructurado"
+        "15cbe619-16f5-4f12-80ef-e0169c9f2ab9",
+        "74c5188b-8666-4942-8fbb-6e49c004a792"
       ],
       "brand": "Televes",
       "modelNumber": "219901",
@@ -400,8 +400,8 @@
       "name": "Bobina Cable de Red S/FTP Cat.7 PIMF 1000MHz 305m Apantallado",
       "category": "Infraestructuras de Telecomunicaciones",
       "categoryIds": [
-        "infraestructuras-telecomunicaciones",
-        "cableado-estructurado"
+        "15cbe619-16f5-4f12-80ef-e0169c9f2ab9",
+        "74c5188b-8666-4942-8fbb-6e49c004a792"
       ],
       "brand": "Televes",
       "modelNumber": "219910",
@@ -447,8 +447,8 @@
       "name": "Manguera Fibra Óptica Preconectorizada Monomodo OS2 12 Fibras LC-LC 50m",
       "category": "Infraestructuras de Telecomunicaciones",
       "categoryIds": [
-        "infraestructuras-telecomunicaciones",
-        "fibra-optica"
+        "15cbe619-16f5-4f12-80ef-e0169c9f2ab9",
+        "9c41e121-8c41-40bb-80f1-a6bc7f3767ae"
       ],
       "brand": "Legrand",
       "modelNumber": "032585",
@@ -494,8 +494,8 @@
       "name": "Bandeja Distribuidora de Fibra Óptica 19\" 1U 24 Puertos SC/APC con Pigtails",
       "category": "Infraestructuras de Telecomunicaciones",
       "categoryIds": [
-        "infraestructuras-telecomunicaciones",
-        "fibra-optica"
+        "15cbe619-16f5-4f12-80ef-e0169c9f2ab9",
+        "9c41e121-8c41-40bb-80f1-a6bc7f3767ae"
       ],
       "brand": "Televes",
       "modelNumber": "233003",
@@ -541,8 +541,8 @@
       "name": "Panel de Parcheo 19\" 24 Puertos Cat.6A FTP 1U con Guía Trasera",
       "category": "Infraestructuras de Telecomunicaciones",
       "categoryIds": [
-        "infraestructuras-telecomunicaciones",
-        "paneles-parcheo"
+        "15cbe619-16f5-4f12-80ef-e0169c9f2ab9",
+        "28227571-be86-456d-8feb-bb12d3775010"
       ],
       "brand": "Schneider Electric",
       "modelNumber": "VDIB17726B12",
@@ -588,8 +588,8 @@
       "name": "Organizador de Cables Horizontal 19\" 1U con Tapa Frontal y 5 Anillas",
       "category": "Infraestructuras de Telecomunicaciones",
       "categoryIds": [
-        "infraestructuras-telecomunicaciones",
-        "paneles-parcheo"
+        "15cbe619-16f5-4f12-80ef-e0169c9f2ab9",
+        "28227571-be86-456d-8feb-bb12d3775010"
       ],
       "brand": "Legrand",
       "modelNumber": "646520",
@@ -635,8 +635,8 @@
       "name": "Certificador de Redes de Cobre Cat.6A Fluke DSX-602 INTL",
       "category": "Infraestructuras de Telecomunicaciones",
       "categoryIds": [
-        "infraestructuras-telecomunicaciones",
-        "herramientas-certificacion"
+        "15cbe619-16f5-4f12-80ef-e0169c9f2ab9",
+        "1aa3c71c-fbff-448c-85d9-a98463ab3f69"
       ],
       "brand": "Fluke Networks",
       "modelNumber": "DSX-602-INTL",
@@ -682,8 +682,8 @@
       "name": "Fusionadora de Fibra Óptica por Alineación de Núcleo 6 Motores",
       "category": "Infraestructuras de Telecomunicaciones",
       "categoryIds": [
-        "infraestructuras-telecomunicaciones",
-        "herramientas-certificacion"
+        "15cbe619-16f5-4f12-80ef-e0169c9f2ab9",
+        "1aa3c71c-fbff-448c-85d9-a98463ab3f69"
       ],
       "brand": "Televes",
       "modelNumber": "232103",
@@ -729,8 +729,8 @@
       "name": "Switch Gestionable L3 24 Puertos Gigabit PoE+/PoE++ y 2 SFP+ 10G UniFi Pro",
       "category": "Equipos y Sistemas de Telecomunicaciones",
       "categoryIds": [
-        "equipos-sistemas-telecomunicaciones",
-        "switches-gestionables"
+        "086ece91-23e4-4cfe-8b8d-269a61b2c3b4",
+        "be6272d8-00f5-496d-8dc9-4a861b15c280"
       ],
       "brand": "Ubiquiti",
       "modelNumber": "USW-Pro-24-POE",
@@ -776,8 +776,8 @@
       "name": "Switch Gestionable 48 Puertos Gigabit PoE+ y 4 SFP+ Cisco Catalyst 1000",
       "category": "Equipos y Sistemas de Telecomunicaciones",
       "categoryIds": [
-        "equipos-sistemas-telecomunicaciones",
-        "switches-gestionables"
+        "086ece91-23e4-4cfe-8b8d-269a61b2c3b4",
+        "be6272d8-00f5-496d-8dc9-4a861b15c280"
       ],
       "brand": "Cisco",
       "modelNumber": "C1000-48P-4X-L",
@@ -823,8 +823,8 @@
       "name": "Router de Agregación de Borde y Firewall UniFi Dream Machine SE",
       "category": "Equipos y Sistemas de Telecomunicaciones",
       "categoryIds": [
-        "equipos-sistemas-telecomunicaciones",
-        "routers-borde"
+        "086ece91-23e4-4cfe-8b8d-269a61b2c3b4",
+        "716032c3-ed9b-45a0-8950-94b657458395"
       ],
       "brand": "Ubiquiti",
       "modelNumber": "UDM-SE",
@@ -870,8 +870,8 @@
       "name": "Router de Borde Multi-WAN Gigabit RouterBOARD RB5009UG+S+IN",
       "category": "Equipos y Sistemas de Telecomunicaciones",
       "categoryIds": [
-        "equipos-sistemas-telecomunicaciones",
-        "routers-borde"
+        "086ece91-23e4-4cfe-8b8d-269a61b2c3b4",
+        "716032c3-ed9b-45a0-8950-94b657458395"
       ],
       "brand": "MikroTik",
       "modelNumber": "RB5009UG+S+IN",
@@ -917,8 +917,8 @@
       "name": "Punto de Acceso Wi-Fi 7 Tri-Banda Empresarial UniFi U7 Pro",
       "category": "Equipos y Sistemas de Telecomunicaciones",
       "categoryIds": [
-        "equipos-sistemas-telecomunicaciones",
-        "puntos-acceso-wifi"
+        "086ece91-23e4-4cfe-8b8d-269a61b2c3b4",
+        "40aadbdc-fb3e-4881-8948-c38eb172a99b"
       ],
       "brand": "Ubiquiti",
       "modelNumber": "U7-Pro",
@@ -964,8 +964,8 @@
       "name": "Punto de Acceso Wi-Fi 6 AX3000 de Techo para Alta Densidad cAP AX",
       "category": "Equipos y Sistemas de Telecomunicaciones",
       "categoryIds": [
-        "equipos-sistemas-telecomunicaciones",
-        "puntos-acceso-wifi"
+        "086ece91-23e4-4cfe-8b8d-269a61b2c3b4",
+        "40aadbdc-fb3e-4881-8948-c38eb172a99b"
       ],
       "brand": "MikroTik",
       "modelNumber": "cAPGi-5HaxD2HaxD",
@@ -1011,8 +1011,8 @@
       "name": "Transceptor Óptico SFP+ 10G LR Monomodo 1310nm 10km DDM",
       "category": "Equipos y Sistemas de Telecomunicaciones",
       "categoryIds": [
-        "equipos-sistemas-telecomunicaciones",
-        "transceptores-opticos"
+        "086ece91-23e4-4cfe-8b8d-269a61b2c3b4",
+        "a545f214-60ba-4829-8bbc-bf4a7e3d5e7d"
       ],
       "brand": "Ubiquiti",
       "modelNumber": "UACC-OM-SM-10G-D-2",
@@ -1058,8 +1058,8 @@
       "name": "Módulo Transceptor SFP+ 10GBASE-T RJ45 Cobre hasta 30m",
       "category": "Equipos y Sistemas de Telecomunicaciones",
       "categoryIds": [
-        "equipos-sistemas-telecomunicaciones",
-        "transceptores-opticos"
+        "086ece91-23e4-4cfe-8b8d-269a61b2c3b4",
+        "a545f214-60ba-4829-8bbc-bf4a7e3d5e7d"
       ],
       "brand": "MikroTik",
       "modelNumber": "S+RJ10",
@@ -1105,8 +1105,8 @@
       "name": "Central Amplificadora Programable de Cabecera Avant X Pro UHF/VHF/FM",
       "category": "Equipos y Sistemas de Telecomunicaciones",
       "categoryIds": [
-        "equipos-sistemas-telecomunicaciones",
-        "cabeceras-rf-tv"
+        "086ece91-23e4-4cfe-8b8d-269a61b2c3b4",
+        "12fc57a9-6c2a-4126-8295-50f4c1c06992"
       ],
       "brand": "Televes",
       "modelNumber": "532121",
@@ -1152,8 +1152,8 @@
       "name": "Transmodulador Óptico de Cabecera DVB-S2 a DVB-T/C con Ranura CI",
       "category": "Equipos y Sistemas de Telecomunicaciones",
       "categoryIds": [
-        "equipos-sistemas-telecomunicaciones",
-        "cabeceras-rf-tv"
+        "086ece91-23e4-4cfe-8b8d-269a61b2c3b4",
+        "12fc57a9-6c2a-4126-8295-50f4c1c06992"
       ],
       "brand": "Televes",
       "modelNumber": "565101",
@@ -1199,8 +1199,8 @@
       "name": "Hub Domótico Multiprotocolo Zigbee 3.0, Matter y Thread Aqara Hub M3",
       "category": "Domótica y Hogar Digital",
       "categoryIds": [
-        "domotica-hogar-digital",
-        "pasarelas-controladores"
+        "677fd6b6-fb71-42ca-8469-ce47dd6541b1",
+        "3488fcc9-3049-436c-808e-8e79dc0e4af2"
       ],
       "brand": "Aqara",
       "modelNumber": "HM-G01E",
@@ -1246,8 +1246,8 @@
       "name": "Controlador Domótico Z-Wave Plus Home Center 3 Lite",
       "category": "Domótica y Hogar Digital",
       "categoryIds": [
-        "domotica-hogar-digital",
-        "pasarelas-controladores"
+        "677fd6b6-fb71-42ca-8469-ce47dd6541b1",
+        "3488fcc9-3049-436c-808e-8e79dc0e4af2"
       ],
       "brand": "Fibaro",
       "modelNumber": "FGHC3L-001",
@@ -1293,8 +1293,8 @@
       "name": "Relé Inteligente 4 Canales para Carril DIN con Medición de Potencia Shelly Pro 4PM",
       "category": "Domótica y Hogar Digital",
       "categoryIds": [
-        "domotica-hogar-digital",
-        "reles-actuadores"
+        "677fd6b6-fb71-42ca-8469-ce47dd6541b1",
+        "1a9c4b69-62a2-416a-86a2-cae77d32fca7"
       ],
       "brand": "Shelly",
       "modelNumber": "SHELLY-PRO-4PM",
@@ -1340,8 +1340,8 @@
       "name": "Micromódulo Interruptor Empotrable Wi-Fi con Medición de Potencia Shelly 1PM Gen3",
       "category": "Domótica y Hogar Digital",
       "categoryIds": [
-        "domotica-hogar-digital",
-        "reles-actuadores"
+        "677fd6b6-fb71-42ca-8469-ce47dd6541b1",
+        "1a9c4b69-62a2-416a-86a2-cae77d32fca7"
       ],
       "brand": "Shelly",
       "modelNumber": "SHELLY-1PM-G3",
@@ -1387,8 +1387,8 @@
       "name": "Sensor de Presencia Humana por Radar Milimétrico mmWave FP2 Aqara",
       "category": "Domótica y Hogar Digital",
       "categoryIds": [
-        "domotica-hogar-digital",
-        "sensores-ambientales"
+        "677fd6b6-fb71-42ca-8469-ce47dd6541b1",
+        "6d707317-2a75-46b6-8298-5b7c4ec8fce8"
       ],
       "brand": "Aqara",
       "modelNumber": "PS-S02D",
@@ -1434,8 +1434,8 @@
       "name": "Sensor Ambiental de Calidad de Aire Temperatura y Humedad TVOC Zigbee",
       "category": "Domótica y Hogar Digital",
       "categoryIds": [
-        "domotica-hogar-digital",
-        "sensores-ambientales"
+        "677fd6b6-fb71-42ca-8469-ce47dd6541b1",
+        "6d707317-2a75-46b6-8298-5b7c4ec8fce8"
       ],
       "brand": "Aqara",
       "modelNumber": "AAQS-S01",
@@ -1481,8 +1481,8 @@
       "name": "Videoportero IP PoE con Cámara 2K y Lector NFC UniFi G4 Doorbell Pro PoE",
       "category": "Domótica y Hogar Digital",
       "categoryIds": [
-        "domotica-hogar-digital",
-        "videoporteros-control-acceso"
+        "677fd6b6-fb71-42ca-8469-ce47dd6541b1",
+        "c9cdb222-9bf2-4222-8408-24ce60e2a614"
       ],
       "brand": "Ubiquiti",
       "modelNumber": "UVC-G4-Doorbell-Pro-PoE",
@@ -1528,8 +1528,8 @@
       "name": "Cerradura Electrónica Inteligente Matter sobre Thread con Teclado Táctil y Biometría Aqara U200",
       "category": "Domótica y Hogar Digital",
       "categoryIds": [
-        "domotica-hogar-digital",
-        "videoporteros-control-acceso"
+        "677fd6b6-fb71-42ca-8469-ce47dd6541b1",
+        "c9cdb222-9bf2-4222-8408-24ce60e2a614"
       ],
       "brand": "Aqara",
       "modelNumber": "EL-D02D",
@@ -1575,8 +1575,8 @@
       "name": "Termostato Inteligente Modulante OpenTherm y Relé para Caldera/Bomba de Calor",
       "category": "Domótica y Hogar Digital",
       "categoryIds": [
-        "domotica-hogar-digital",
-        "climatizacion-inteligente"
+        "677fd6b6-fb71-42ca-8469-ce47dd6541b1",
+        "7f8d2cb3-89aa-4570-8a60-58bd2816d24e"
       ],
       "brand": "Schneider Electric",
       "modelNumber": "CCTFR6700",
@@ -1622,8 +1622,8 @@
       "name": "Cabezal Termostático Inteligente para Radiador Wi-Fi con Pantalla LED Shelly TRV",
       "category": "Domótica y Hogar Digital",
       "categoryIds": [
-        "domotica-hogar-digital",
-        "climatizacion-inteligente"
+        "677fd6b6-fb71-42ca-8469-ce47dd6541b1",
+        "7f8d2cb3-89aa-4570-8a60-58bd2816d24e"
       ],
       "brand": "Shelly",
       "modelNumber": "SHELLY-TRV",
@@ -1669,8 +1669,8 @@
       "name": "Centralita Telefónica IP-PBX Grandstream UCM6302 hasta 1000 Usuarios y 150 Llamadas",
       "category": "Telefonía y Comunicaciones",
       "categoryIds": [
-        "telefonia-comunicaciones",
-        "centralitas-ip-pbx"
+        "aa1c17c2-397a-4a16-8298-5a7b4e3862c9",
+        "6164296b-a7c8-4c8f-861a-10e883a4ac93"
       ],
       "brand": "Grandstream",
       "modelNumber": "UCM6302",
@@ -1716,8 +1716,8 @@
       "name": "Centralita Telefónica IP Compacta Grandstream UCM6204 con 4 Puertos FXO",
       "category": "Telefonía y Comunicaciones",
       "categoryIds": [
-        "telefonia-comunicaciones",
-        "centralitas-ip-pbx"
+        "aa1c17c2-397a-4a16-8298-5a7b4e3862c9",
+        "6164296b-a7c8-4c8f-861a-10e883a4ac93"
       ],
       "brand": "Grandstream",
       "modelNumber": "UCM6204",
@@ -1763,8 +1763,8 @@
       "name": "Teléfono IP Ejecutivo Yealink SIP-T54W con Pantalla Color 4.3\" y Wi-Fi/Bluetooth",
       "category": "Telefonía y Comunicaciones",
       "categoryIds": [
-        "telefonia-comunicaciones",
-        "telefonos-ip-dect"
+        "aa1c17c2-397a-4a16-8298-5a7b4e3862c9",
+        "29e5b4f0-85ae-4b37-89aa-115582fbdaad"
       ],
       "brand": "Yealink",
       "modelNumber": "SIP-T54W",
@@ -1810,8 +1810,8 @@
       "name": "Sistema Telefónico Inalámbrico DECT IP Yealink W73P Base + Terminal",
       "category": "Telefonía y Comunicaciones",
       "categoryIds": [
-        "telefonia-comunicaciones",
-        "telefonos-ip-dect"
+        "aa1c17c2-397a-4a16-8298-5a7b4e3862c9",
+        "29e5b4f0-85ae-4b37-89aa-115582fbdaad"
       ],
       "brand": "Yealink",
       "modelNumber": "W73P",
@@ -1857,8 +1857,8 @@
       "name": "Pasarela VoIP FXS 16 Puertos Grandstream GXW4216 para Extensiones Analógicas",
       "category": "Telefonía y Comunicaciones",
       "categoryIds": [
-        "telefonia-comunicaciones",
-        "gateways-voip"
+        "aa1c17c2-397a-4a16-8298-5a7b4e3862c9",
+        "ec1516f2-2697-4161-881a-80328550ddb9"
       ],
       "brand": "Grandstream",
       "modelNumber": "GXW4216",
@@ -1904,8 +1904,8 @@
       "name": "Gateway VoIP Digital ISDN BRI 2 Puertos Patton SmartNode SN4120",
       "category": "Telefonía y Comunicaciones",
       "categoryIds": [
-        "telefonia-comunicaciones",
-        "gateways-voip"
+        "aa1c17c2-397a-4a16-8298-5a7b4e3862c9",
+        "ec1516f2-2697-4161-881a-80328550ddb9"
       ],
       "brand": "Patton",
       "modelNumber": "SN4120/2BIS4V",
@@ -1951,8 +1951,8 @@
       "name": "Router Celular Industrial 4G LTE Cat 4 Teltonika RUT241",
       "category": "Telefonía y Comunicaciones",
       "categoryIds": [
-        "telefonia-comunicaciones",
-        "routers-celulares-4g-5g"
+        "aa1c17c2-397a-4a16-8298-5a7b4e3862c9",
+        "cbfb2de3-1f5a-4924-8ffc-529fed9df334"
       ],
       "brand": "Teltonika",
       "modelNumber": "RUT241",
@@ -1998,8 +1998,8 @@
       "name": "Router Celular Industrial 5G y Wi-Fi 6 Dual SIM Teltonika RUTX50",
       "category": "Telefonía y Comunicaciones",
       "categoryIds": [
-        "telefonia-comunicaciones",
-        "routers-celulares-4g-5g"
+        "aa1c17c2-397a-4a16-8298-5a7b4e3862c9",
+        "cbfb2de3-1f5a-4924-8ffc-529fed9df334"
       ],
       "brand": "Teltonika",
       "modelNumber": "RUTX50",
@@ -2045,8 +2045,8 @@
       "name": "Antena Exterior Omnidireccional 4G/5G MIMO 698-3800 MHz 6 dBi Teltonika PR1KMO40",
       "category": "Telefonía y Comunicaciones",
       "categoryIds": [
-        "telefonia-comunicaciones",
-        "antenas-comunicaciones"
+        "aa1c17c2-397a-4a16-8298-5a7b4e3862c9",
+        "8d201b6f-f32f-4200-8fc7-cff38a00fbf2"
       ],
       "brand": "Teltonika",
       "modelNumber": "PR1KMO40",
@@ -2092,8 +2092,8 @@
       "name": "Amplificador de Señal Móvil 4G/5G Multibanda para Interiores StellaHome",
       "category": "Telefonía y Comunicaciones",
       "categoryIds": [
-        "telefonia-comunicaciones",
-        "antenas-comunicaciones"
+        "aa1c17c2-397a-4a16-8298-5a7b4e3862c9",
+        "8d201b6f-f32f-4200-8fc7-cff38a00fbf2"
       ],
       "brand": "Televes",
       "modelNumber": "403001",
@@ -2139,8 +2139,8 @@
       "name": "Gateway IoT Industrial Edge Advantech UNO-2271G-V2 con Modbus y MQTT",
       "category": "Digitalización e Industria Conectada",
       "categoryIds": [
-        "digitalizacion-industria-conectada",
-        "gateways-iot-industriales"
+        "3e380976-47d1-4b9b-89c7-1145f4b9765b",
+        "d09dc9b8-e89b-43bf-86ca-0d3223b6d046"
       ],
       "brand": "Advantech",
       "modelNumber": "UNO-2271G-V2",
@@ -2186,8 +2186,8 @@
       "name": "Módulo de E/S Remotas Modbus TCP Ethernet Phoenix Contact Axioline Smart Elements",
       "category": "Digitalización e Industria Conectada",
       "categoryIds": [
-        "digitalizacion-industria-conectada",
-        "gateways-iot-industriales"
+        "3e380976-47d1-4b9b-89c7-1145f4b9765b",
+        "d09dc9b8-e89b-43bf-86ca-0d3223b6d046"
       ],
       "brand": "Phoenix Contact",
       "modelNumber": "AXL-SE-SC-A",
@@ -2233,8 +2233,8 @@
       "name": "Servidor Edge Fanless Industrial Advantech ARK-1220L para Inferencia IA",
       "category": "Digitalización e Industria Conectada",
       "categoryIds": [
-        "digitalizacion-industria-conectada",
-        "servidores-edge-computacion"
+        "3e380976-47d1-4b9b-89c7-1145f4b9765b",
+        "43d3c0cf-9a0d-4194-8e2c-2742beefbfb6"
       ],
       "brand": "Advantech",
       "modelNumber": "ARK-1220L-S6A1E",
@@ -2280,8 +2280,8 @@
       "name": "Micro Servidor Edge Fanless con Doble 2.5GbE y 4 Puertos Serie Moxa V2201",
       "category": "Digitalización e Industria Conectada",
       "categoryIds": [
-        "digitalizacion-industria-conectada",
-        "servidores-edge-computacion"
+        "3e380976-47d1-4b9b-89c7-1145f4b9765b",
+        "43d3c0cf-9a0d-4194-8e2c-2742beefbfb6"
       ],
       "brand": "Moxa",
       "modelNumber": "V2201-E4-W-T",
@@ -2327,8 +2327,8 @@
       "name": "Servidor de Almacenamiento en Red NAS 4 Bahías Synology DiskStation DS923+",
       "category": "Digitalización e Industria Conectada",
       "categoryIds": [
-        "digitalizacion-industria-conectada",
-        "almacenamiento-nas-servidores"
+        "3e380976-47d1-4b9b-89c7-1145f4b9765b",
+        "98c5ba32-286f-4639-8a02-ee4818d6938a"
       ],
       "brand": "Synology",
       "modelNumber": "DS923+",
@@ -2374,8 +2374,8 @@
       "name": "Servidor de Almacenamiento NAS en Rack 19\" 1U 4 Bahías Synology RackStation RS822+",
       "category": "Digitalización e Industria Conectada",
       "categoryIds": [
-        "digitalizacion-industria-conectada",
-        "almacenamiento-nas-servidores"
+        "3e380976-47d1-4b9b-89c7-1145f4b9765b",
+        "98c5ba32-286f-4639-8a02-ee4818d6938a"
       ],
       "brand": "Synology",
       "modelNumber": "RS822+",
@@ -2421,8 +2421,8 @@
       "name": "SSD Kingston NV3 1TB M.2 2230 PCIe 4.0 NVMe 6000MB/s 3D NAND Gaming",
       "category": "Digitalización e Industria Conectada",
       "categoryIds": [
-        "digitalizacion-industria-conectada",
-        "almacenamiento-nas-servidores"
+        "3e380976-47d1-4b9b-89c7-1145f4b9765b",
+        "98c5ba32-286f-4639-8a02-ee4818d6938a"
       ],
       "brand": "Kingston",
       "modelNumber": "SNV3SM3/1T0",
@@ -2468,8 +2468,8 @@
       "name": "Samsung 990 Pro 1TB Disco SSD 7450MB/S NVMe PCIe 4.0 M.2 Gen4",
       "category": "Digitalización e Industria Conectada",
       "categoryIds": [
-        "digitalizacion-industria-conectada",
-        "almacenamiento-nas-servidores"
+        "3e380976-47d1-4b9b-89c7-1145f4b9765b",
+        "98c5ba32-286f-4639-8a02-ee4818d6938a"
       ],
       "brand": "Samsung",
       "modelNumber": "MZ-V9P1T0BW",
@@ -2515,8 +2515,8 @@
       "name": "Sensor Industrial de Temperatura y Humedad Modbus RTU RS-485 IP65",
       "category": "Digitalización e Industria Conectada",
       "categoryIds": [
-        "digitalizacion-industria-conectada",
-        "sensores-industriales-modbus"
+        "3e380976-47d1-4b9b-89c7-1145f4b9765b",
+        "0ac60e71-9131-4669-85ae-0625878433da"
       ],
       "brand": "Schneider Electric",
       "modelNumber": "METSETH01",
@@ -2562,8 +2562,8 @@
       "name": "Transmisor de Presión Industrial 4-20mA y Modbus RTU 0-10 Bar Acero Inoxidable",
       "category": "Digitalización e Industria Conectada",
       "categoryIds": [
-        "digitalizacion-industria-conectada",
-        "sensores-industriales-modbus"
+        "3e380976-47d1-4b9b-89c7-1145f4b9765b",
+        "0ac60e71-9131-4669-85ae-0625878433da"
       ],
       "brand": "Schneider Electric",
       "modelNumber": "XMLP010BC71F",
@@ -2609,8 +2609,8 @@
       "name": "Terminal Portátil PDA Móvil Industrial con Lector 2D Zebra TC22",
       "category": "Digitalización e Industria Conectada",
       "categoryIds": [
-        "digitalizacion-industria-conectada",
-        "captura-datos-trazabilidad"
+        "3e380976-47d1-4b9b-89c7-1145f4b9765b",
+        "927bb59e-dd8b-40c9-82da-27163a13cfc0"
       ],
       "brand": "Zebra",
       "modelNumber": "TC220K-01B112-A6",
@@ -2656,8 +2656,8 @@
       "name": "Impresora Industrial de Etiquetas y Códigos de Barras Térmica Zebra ZT231",
       "category": "Digitalización e Industria Conectada",
       "categoryIds": [
-        "digitalizacion-industria-conectada",
-        "captura-datos-trazabilidad"
+        "3e380976-47d1-4b9b-89c7-1145f4b9765b",
+        "927bb59e-dd8b-40c9-82da-27163a13cfc0"
       ],
       "brand": "Zebra",
       "modelNumber": "ZT23142-T0E000FZ",
