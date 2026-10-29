@@ -14,6 +14,7 @@
   4. Corrección de recursión infinita RLS (`42P17`) entre `products` y `product_variants` mediante funciones `SECURITY DEFINER` (`private.product_has_pc_builder` y `private.product_is_published`).
 - La persona propietaria confirmó la ejecución manual en Supabase SQL Editor de las migraciones, respondiendo `Success. No rows returned`.
 - Se configuró la clave de entorno pública anónima en Vercel y se verificó el despliegue en vivo en producción: `https://nodria-academico.vercel.app/catalogo` responde HTTP 200 sirviendo las 52 referencias comerciales de telecomunicaciones y su disponibilidad de stock.
+- Se sustituyeron todas las ilustraciones vectoriales SVG del catálogo por 52 fotografías comerciales reales de producto (.jpg, .png, .webp) en `public/images/products/`, con tomas de estudio profesionales de alta resolución sobre fondo neutro y sombras de contacto reales. Se actualizó el dataset `telecom-products.json` y se generó la migración SQL `20261029143000_update_telecom_real_product_images.sql` para sincronizar `image_url` e `image_alt` en Supabase. Se verificó el despliegue en producción en Vercel respondiendo HTTP 200 en todos los assets de imagen.
 
 ### Archivos principales
 

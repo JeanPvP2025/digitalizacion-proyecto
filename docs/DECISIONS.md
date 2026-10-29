@@ -363,3 +363,12 @@ Las decisiones de alcance heredadas de la misión se marcan **Confirmada**. Las 
 - **Contexto:** Al consultar `/catalogo` desde Vercel con la clave anónima pública, PostgreSQL devolvía error `42P17: infinite recursion detected in policy for relation "products"`. Esto ocurría porque la política SELECT de `products` realizaba una subconsulta sobre `product_variants`, mientras que la política SELECT de `product_variants` realizaba simultáneamente una subconsulta sobre `products`.
 - **Decisión:** Encapsular las consultas de verificación cruzada (`product_has_pc_builder` y `product_is_published`) en funciones auxiliares bajo el esquema `private` con flag `SECURITY DEFINER`, `search_path = ''` y permisos explícitos de ejecución a `anon, authenticated, service_role`.
 - **Consecuencias:** Al ejecutarse con privilegios del propietario de la función, las verificaciones en PostgreSQL no disparan el motor de RLS sobre la tabla adyacente, eliminando la recursión circular de raíz y permitiendo lecturas concurrentes seguras y de alto rendimiento.
+
+## D-039 — Sustitución integral de ilustraciones vectoriales por fotografías comerciales reales de producto
+
+- **Fecha:** 2026-10-29
+- **Estado:** Implementado en `public/images/products/*`, `lib/catalog-data/telecom-products.json` y desplegado en Vercel.
+- **Contexto:** El catálogo utilizaba anteriormente ilustraciones vectoriales SVG locales. Aunque eran esquemáticamente correctas, transmitían una apariencia de prototipo o maqueta académica y no la de una tienda tecnológica profesional orientada a venta real B2B/B2C.
+- **Decisión:** Sustituir las 52 referencias por fotografías reales comerciales (formatos JPG, PNG y WebP) en alta resolución con iluminación de estudio, fondo limpio blanco o neutro, hardware auténtico y sombras de contacto. Alojar todos los recursos en `public/images/products/` para servicio estático ultrarrápido y seguro vía Next.js Turbopack sin depender de CDNs externas bloqueadas por Cloudflare ni rate limits. Generar la migración SQL `20261029143000_update_telecom_real_product_images.sql` para actualizar las URLs y textos alternativos accesibles en Supabase.
+- **Consecuencias:** Experiencia 100% comercial y fidedigna a un ecommerce real de telecomunicaciones. Eliminación completa de gráficos abstractos o bocetos.
+

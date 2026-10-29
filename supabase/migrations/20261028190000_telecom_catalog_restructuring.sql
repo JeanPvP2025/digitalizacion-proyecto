@@ -446,7 +446,7 @@ begin
   ) values (
     'tel-inf-001', 'rack-mural-19-9u-profundidad-600mm-puerta-cristal-legrand', 'NDR-TEL-INF-001', 'Rack Mural 19" 9U Profundidad 600mm Puerta de Cristal', 'Legrand',
     'Legrand · modelo 446209. Armario mural de 19 pulgadas para salas técnicas e instalaciones de cableado estructurado secundario.', 'Legrand · modelo 446209. Armario mural de 19 pulgadas para salas técnicas e instalaciones de cableado estructurado secundario.',
-    '/images/products/tel-inf-001.svg', 'Ilustración técnica vectorial: Rack Mural 19" 9U Profundidad 600mm Puerta de Cristal (Legrand 446209)', null,
+    '/images/products/tel-inf-001.jpg', 'Fotografía comercial: Rack Mural 19" 9U Profundidad 600mm Puerta de Cristal (Legrand 446209)', null,
     4.8, 16, false, true, now()
   )
   on conflict (id) do update set
@@ -555,7 +555,7 @@ begin
   ) values (
     'tel-inf-002', 'armario-rack-suelo-19-42u-800x1000mm-schneider-electric', 'NDR-TEL-INF-002', 'Armario Rack de Suelo 19" 42U 800x1000mm con Guías de Gestión', 'Schneider Electric',
     'Schneider Electric · modelo NSYVD24U84P. Bastidor de alta capacidad para distribución troncal y centros de procesamiento de datos.', 'Schneider Electric · modelo NSYVD24U84P. Bastidor de alta capacidad para distribución troncal y centros de procesamiento de datos.',
-    '/images/products/tel-inf-002.svg', 'Ilustración técnica vectorial: Armario Rack de Suelo 19" 42U 800x1000mm con Guías de Gestión (Schneider Electric NSYVD24U84P)', null,
+    '/images/products/tel-inf-002.jpg', 'Fotografía comercial: Armario Rack de Suelo 19" 42U 800x1000mm con Guías de Gestión (Schneider Electric NSYVD24U84P)', null,
     4.9, 9, true, true, now()
   )
   on conflict (id) do update set
@@ -664,7 +664,7 @@ begin
   ) values (
     'tel-inf-003', 'bobina-cable-red-u-ftp-cat6a-lszh-500m-televes', 'NDR-TEL-INF-003', 'Bobina Cable de Red U/FTP Cat.6A LSZH 500m 500MHz Libre de Halógenos', 'Televes',
     'Televes · modelo 219901. Conductor de cobre puro de 23 AWG para enlaces 10 Gigabit Ethernet con clasificación europea CPR Dca.', 'Televes · modelo 219901. Conductor de cobre puro de 23 AWG para enlaces 10 Gigabit Ethernet con clasificación europea CPR Dca.',
-    '/images/products/tel-inf-003.svg', 'Ilustración técnica vectorial: Bobina Cable de Red U/FTP Cat.6A LSZH 500m 500MHz Libre de Halógenos (Televes 219901)', null,
+    '/images/products/tel-inf-003.png', 'Fotografía comercial: Bobina Cable de Red U/FTP Cat.6A LSZH 500m 500MHz Libre de Halógenos (Televes 219901)', null,
     4.9, 31, false, true, now()
   )
   on conflict (id) do update set
@@ -773,7 +773,7 @@ begin
   ) values (
     'tel-inf-004', 'bobina-cable-red-s-ftp-cat7-pimf-1000mhz-305m-televes', 'NDR-TEL-INF-004', 'Bobina Cable de Red S/FTP Cat.7 PIMF 1000MHz 305m Apantallado', 'Televes',
     'Televes · modelo 219910. Doble blindaje para instalaciones con alta inmunidad a perturbaciones electromagnéticas y entornos industriales.', 'Televes · modelo 219910. Doble blindaje para instalaciones con alta inmunidad a perturbaciones electromagnéticas y entornos industriales.',
-    '/images/products/tel-inf-004.svg', 'Ilustración técnica vectorial: Bobina Cable de Red S/FTP Cat.7 PIMF 1000MHz 305m Apantallado (Televes 219910)', null,
+    '/images/products/tel-inf-004.jpg', 'Fotografía comercial: Bobina Cable de Red S/FTP Cat.7 PIMF 1000MHz 305m Apantallado (Televes 219910)', null,
     4.7, 19, false, true, now()
   )
   on conflict (id) do update set
@@ -882,7 +882,7 @@ begin
   ) values (
     'tel-inf-005', 'manguera-fibra-optica-preconectorizada-monomodo-os2-12-fibras-lc-50m-legrand', 'NDR-TEL-INF-005', 'Manguera Fibra Óptica Preconectorizada Monomodo OS2 12 Fibras LC-LC 50m', 'Legrand',
     'Legrand · modelo 032585. Enlace troncal preconectorizado con funda de tracción de protección para despliegue rápido entre repartidores.', 'Legrand · modelo 032585. Enlace troncal preconectorizado con funda de tracción de protección para despliegue rápido entre repartidores.',
-    '/images/products/tel-inf-005.svg', 'Ilustración técnica vectorial: Manguera Fibra Óptica Preconectorizada Monomodo OS2 12 Fibras LC-LC 50m (Legrand 032585)', null,
+    '/images/products/tel-inf-005.jpg', 'Fotografía comercial: Manguera Fibra Óptica Preconectorizada Monomodo OS2 12 Fibras LC-LC 50m (Legrand 032585)', null,
     4.8, 12, false, true, now()
   )
   on conflict (id) do update set
@@ -991,7 +991,7 @@ begin
   ) values (
     'tel-inf-006', 'bandeja-distribuidora-fibra-optica-19-1u-24-puertos-sc-apc-televes', 'NDR-TEL-INF-006', 'Bandeja Distribuidora de Fibra Óptica 19" 1U 24 Puertos SC/APC con Pigtails', 'Televes',
     'Televes · modelo 233003. Panel repartidor óptico telescópico con organizador de fusiones y pigtails monomodo montados de fábrica.', 'Televes · modelo 233003. Panel repartidor óptico telescópico con organizador de fusiones y pigtails monomodo montados de fábrica.',
-    '/images/products/tel-inf-006.svg', 'Ilustración técnica vectorial: Bandeja Distribuidora de Fibra Óptica 19" 1U 24 Puertos SC/APC con Pigtails (Televes 233003)', null,
+    '/images/products/tel-inf-006.jpg', 'Fotografía comercial: Bandeja Distribuidora de Fibra Óptica 19" 1U 24 Puertos SC/APC con Pigtails (Televes 233003)', null,
     4.9, 23, false, true, now()
   )
   on conflict (id) do update set
@@ -1100,7 +1100,7 @@ begin
   ) values (
     'tel-inf-007', 'panel-parcheo-19-24-puertos-cat6a-ftp-1u-schneider-electric', 'NDR-TEL-INF-007', 'Panel de Parcheo 19" 24 Puertos Cat.6A FTP 1U con Guía Trasera', 'Schneider Electric',
     'Schneider Electric · modelo VDIB17726B12. Panel de terminación metálico con tomas Keystone blindadas y barra de alivio de tensión mecánica.', 'Schneider Electric · modelo VDIB17726B12. Panel de terminación metálico con tomas Keystone blindadas y barra de alivio de tensión mecánica.',
-    '/images/products/tel-inf-007.svg', 'Ilustración técnica vectorial: Panel de Parcheo 19" 24 Puertos Cat.6A FTP 1U con Guía Trasera (Schneider Electric VDIB17726B12)', null,
+    '/images/products/tel-inf-007.jpg', 'Fotografía comercial: Panel de Parcheo 19" 24 Puertos Cat.6A FTP 1U con Guía Trasera (Schneider Electric VDIB17726B12)', null,
     4.8, 35, false, true, now()
   )
   on conflict (id) do update set
@@ -1209,7 +1209,7 @@ begin
   ) values (
     'tel-inf-008', 'organizador-cables-horizontal-19-1u-legrand', 'NDR-TEL-INF-008', 'Organizador de Cables Horizontal 19" 1U con Tapa Frontal y 5 Anillas', 'Legrand',
     'Legrand · modelo 646520. Accesorio de ordenación de latiguillos en armarios rack de comunicaciones con paso ranurado trasero.', 'Legrand · modelo 646520. Accesorio de ordenación de latiguillos en armarios rack de comunicaciones con paso ranurado trasero.',
-    '/images/products/tel-inf-008.svg', 'Ilustración técnica vectorial: Organizador de Cables Horizontal 19" 1U con Tapa Frontal y 5 Anillas (Legrand 646520)', null,
+    '/images/products/tel-inf-008.jpg', 'Fotografía comercial: Organizador de Cables Horizontal 19" 1U con Tapa Frontal y 5 Anillas (Legrand 646520)', null,
     4.6, 42, false, true, now()
   )
   on conflict (id) do update set
@@ -1318,7 +1318,7 @@ begin
   ) values (
     'tel-inf-009', 'certificador-redes-cobre-cat6a-fluke-dsx-602-intl', 'NDR-TEL-INF-009', 'Certificador de Redes de Cobre Cat.6A Fluke DSX-602 INTL', 'Fluke Networks',
     'Fluke Networks · modelo DSX-602-INTL. Equipo de certificación profesional para la comprobación y certificación de enlaces Clase EA / Cat.6A hasta 500 MHz conforme a ISO/IEC 11801 y TIA-568.', 'Fluke Networks · modelo DSX-602-INTL. Equipo de certificación profesional para la comprobación y certificación de enlaces Clase EA / Cat.6A hasta 500 MHz conforme a ISO/IEC 11801 y TIA-568.',
-    '/images/products/tel-inf-009.svg', 'Ilustración técnica vectorial: Certificador de Redes de Cobre Cat.6A Fluke DSX-602 INTL (Fluke Networks DSX-602-INTL)', null,
+    '/images/products/tel-inf-009.jpg', 'Fotografía comercial: Certificador de Redes de Cobre Cat.6A Fluke DSX-602 INTL (Fluke Networks DSX-602-INTL)', null,
     5, 7, false, true, now()
   )
   on conflict (id) do update set
@@ -1427,7 +1427,7 @@ begin
   ) values (
     'tel-inf-010', 'fusionadora-fibra-optica-alineacion-nucleo-6-motores-televes', 'NDR-TEL-INF-010', 'Fusionadora de Fibra Óptica por Alineación de Núcleo 6 Motores', 'Televes',
     'Televes · modelo 232103. Equipo de empalme por arco voltaico con detección automática de tipo de fibra y horno de retracción ultrarrápido.', 'Televes · modelo 232103. Equipo de empalme por arco voltaico con detección automática de tipo de fibra y horno de retracción ultrarrápido.',
-    '/images/products/tel-inf-010.svg', 'Ilustración técnica vectorial: Fusionadora de Fibra Óptica por Alineación de Núcleo 6 Motores (Televes 232103)', null,
+    '/images/products/tel-inf-010.jpg', 'Fotografía comercial: Fusionadora de Fibra Óptica por Alineación de Núcleo 6 Motores (Televes 232103)', null,
     4.9, 11, false, true, now()
   )
   on conflict (id) do update set
@@ -1536,7 +1536,7 @@ begin
   ) values (
     'tel-eqt-011', 'switch-gestionable-l3-24-puertos-gigabit-poe-2-sfp-10g-unifi-pro-ubiquiti', 'NDR-TEL-EQT-011', 'Switch Gestionable L3 24 Puertos Gigabit PoE+/PoE++ y 2 SFP+ 10G UniFi Pro', 'Ubiquiti',
     'Ubiquiti · modelo USW-Pro-24-POE. Conmutador empresarial de capa 3 con 16 puertos PoE+, 8 puertos PoE++, 400W de entrega total y 2 enlaces 10G SFP+.', 'Ubiquiti · modelo USW-Pro-24-POE. Conmutador empresarial de capa 3 con 16 puertos PoE+, 8 puertos PoE++, 400W de entrega total y 2 enlaces 10G SFP+.',
-    '/images/products/tel-eqt-011.svg', 'Ilustración técnica vectorial: Switch Gestionable L3 24 Puertos Gigabit PoE+/PoE++ y 2 SFP+ 10G UniFi Pro (Ubiquiti USW-Pro-24-POE)', null,
+    '/images/products/tel-eqt-011.jpg', 'Fotografía comercial: Switch Gestionable L3 24 Puertos Gigabit PoE+/PoE++ y 2 SFP+ 10G UniFi Pro (Ubiquiti USW-Pro-24-POE)', null,
     4.9, 38, true, true, now()
   )
   on conflict (id) do update set
@@ -1645,7 +1645,7 @@ begin
   ) values (
     'tel-eqt-012', 'switch-gestionable-48-puertos-gigabit-poe-4-sfp-cisco-catalyst-1000', 'NDR-TEL-EQT-012', 'Switch Gestionable 48 Puertos Gigabit PoE+ y 4 SFP+ Cisco Catalyst 1000', 'Cisco',
     'Cisco · modelo C1000-48P-4X-L. Rendimiento fiable y seguro bajo Cisco IOS para infraestructura corporativa de alta densidad.', 'Cisco · modelo C1000-48P-4X-L. Rendimiento fiable y seguro bajo Cisco IOS para infraestructura corporativa de alta densidad.',
-    '/images/products/tel-eqt-012.svg', 'Ilustración técnica vectorial: Switch Gestionable 48 Puertos Gigabit PoE+ y 4 SFP+ Cisco Catalyst 1000 (Cisco C1000-48P-4X-L)', null,
+    '/images/products/tel-eqt-012.jpg', 'Fotografía comercial: Switch Gestionable 48 Puertos Gigabit PoE+ y 4 SFP+ Cisco Catalyst 1000 (Cisco C1000-48P-4X-L)', null,
     4.9, 14, false, true, now()
   )
   on conflict (id) do update set
@@ -1754,7 +1754,7 @@ begin
   ) values (
     'tel-eqt-013', 'router-agregacion-borde-firewall-unifi-dream-machine-se-ubiquiti', 'NDR-TEL-EQT-013', 'Router de Agregación de Borde y Firewall UniFi Dream Machine SE', 'Ubiquiti',
     'Ubiquiti · modelo UDM-SE. Pasarela de seguridad integral para empresas con puerto WAN 2.5 GbE, conmutador PoE de 8 puertos y motor IDS/IPS.', 'Ubiquiti · modelo UDM-SE. Pasarela de seguridad integral para empresas con puerto WAN 2.5 GbE, conmutador PoE de 8 puertos y motor IDS/IPS.',
-    '/images/products/tel-eqt-013.svg', 'Ilustración técnica vectorial: Router de Agregación de Borde y Firewall UniFi Dream Machine SE (Ubiquiti UDM-SE)', null,
+    '/images/products/tel-eqt-013.jpg', 'Fotografía comercial: Router de Agregación de Borde y Firewall UniFi Dream Machine SE (Ubiquiti UDM-SE)', null,
     4.9, 47, false, true, now()
   )
   on conflict (id) do update set
@@ -1863,7 +1863,7 @@ begin
   ) values (
     'tel-eqt-014', 'router-borde-multi-wan-gigabit-routerboard-rb5009ug-s-in-mikrotik', 'NDR-TEL-EQT-014', 'Router de Borde Multi-WAN Gigabit RouterBOARD RB5009UG+S+IN', 'MikroTik',
     'MikroTik · modelo RB5009UG+S+IN. Router ultra compacto para proveedores y empresas con puerto 2.5G, puerto 10G SFP+ y potente procesador ARM.', 'MikroTik · modelo RB5009UG+S+IN. Router ultra compacto para proveedores y empresas con puerto 2.5G, puerto 10G SFP+ y potente procesador ARM.',
-    '/images/products/tel-eqt-014.svg', 'Ilustración técnica vectorial: Router de Borde Multi-WAN Gigabit RouterBOARD RB5009UG+S+IN (MikroTik RB5009UG+S+IN)', null,
+    '/images/products/tel-eqt-014.jpg', 'Fotografía comercial: Router de Borde Multi-WAN Gigabit RouterBOARD RB5009UG+S+IN (MikroTik RB5009UG+S+IN)', null,
     4.8, 29, false, true, now()
   )
   on conflict (id) do update set
@@ -1972,7 +1972,7 @@ begin
   ) values (
     'tel-eqt-015', 'punto-acceso-wifi-7-tri-banda-empresarial-unifi-u7-pro-ubiquiti', 'NDR-TEL-EQT-015', 'Punto de Acceso Wi-Fi 7 Tri-Banda Empresarial UniFi U7 Pro', 'Ubiquiti',
     'Ubiquiti · modelo U7-Pro. Conectividad inalámbrica de próxima generación en la banda de 6 GHz con ancho de canal de 320 MHz y uplink 2.5G.', 'Ubiquiti · modelo U7-Pro. Conectividad inalámbrica de próxima generación en la banda de 6 GHz con ancho de canal de 320 MHz y uplink 2.5G.',
-    '/images/products/tel-eqt-015.svg', 'Ilustración técnica vectorial: Punto de Acceso Wi-Fi 7 Tri-Banda Empresarial UniFi U7 Pro (Ubiquiti U7-Pro)', null,
+    '/images/products/tel-eqt-015.png', 'Fotografía comercial: Punto de Acceso Wi-Fi 7 Tri-Banda Empresarial UniFi U7 Pro (Ubiquiti U7-Pro)', null,
     4.9, 33, false, true, now()
   )
   on conflict (id) do update set
@@ -2081,7 +2081,7 @@ begin
   ) values (
     'tel-eqt-016', 'punto-acceso-wifi-6-ax3000-techo-alta-densidad-cap-ax-mikrotik', 'NDR-TEL-EQT-016', 'Punto de Acceso Wi-Fi 6 AX3000 de Techo para Alta Densidad cAP AX', 'MikroTik',
     'MikroTik · modelo cAPGi-5HaxD2HaxD. Solución de techo para oficinas con soporte CAPsMAN centralizado y puerto PoE-Out secundario.', 'MikroTik · modelo cAPGi-5HaxD2HaxD. Solución de techo para oficinas con soporte CAPsMAN centralizado y puerto PoE-Out secundario.',
-    '/images/products/tel-eqt-016.svg', 'Ilustración técnica vectorial: Punto de Acceso Wi-Fi 6 AX3000 de Techo para Alta Densidad cAP AX (MikroTik cAPGi-5HaxD2HaxD)', null,
+    '/images/products/tel-eqt-016.webp', 'Fotografía comercial: Punto de Acceso Wi-Fi 6 AX3000 de Techo para Alta Densidad cAP AX (MikroTik cAPGi-5HaxD2HaxD)', null,
     4.7, 17, false, true, now()
   )
   on conflict (id) do update set
@@ -2190,7 +2190,7 @@ begin
   ) values (
     'tel-eqt-017', 'transceptor-optico-sfp-10g-lr-monomodo-1310nm-10km-ubiquiti', 'NDR-TEL-EQT-017', 'Transceptor Óptico SFP+ 10G LR Monomodo 1310nm 10km DDM', 'Ubiquiti',
     'Ubiquiti · modelo UACC-OM-SM-10G-D-2. Transceptor óptico de largo alcance para interconexión de conmutadores mediante fibra monomodo.', 'Ubiquiti · modelo UACC-OM-SM-10G-D-2. Transceptor óptico de largo alcance para interconexión de conmutadores mediante fibra monomodo.',
-    '/images/products/tel-eqt-017.svg', 'Ilustración técnica vectorial: Transceptor Óptico SFP+ 10G LR Monomodo 1310nm 10km DDM (Ubiquiti UACC-OM-SM-10G-D-2)', null,
+    '/images/products/tel-eqt-017.png', 'Fotografía comercial: Transceptor Óptico SFP+ 10G LR Monomodo 1310nm 10km DDM (Ubiquiti UACC-OM-SM-10G-D-2)', null,
     4.8, 21, false, true, now()
   )
   on conflict (id) do update set
@@ -2299,7 +2299,7 @@ begin
   ) values (
     'tel-eqt-018', 'modulo-transceptor-sfp-10gbase-t-rj45-cobre-mikrotik', 'NDR-TEL-EQT-018', 'Módulo Transceptor SFP+ 10GBASE-T RJ45 Cobre hasta 30m', 'MikroTik',
     'MikroTik · modelo S+RJ10. Permite conectar latiguillos de cobre RJ45 Cat.6A en ranuras ópticas SFP+ a velocidades multi-gigabit.', 'MikroTik · modelo S+RJ10. Permite conectar latiguillos de cobre RJ45 Cat.6A en ranuras ópticas SFP+ a velocidades multi-gigabit.',
-    '/images/products/tel-eqt-018.svg', 'Ilustración técnica vectorial: Módulo Transceptor SFP+ 10GBASE-T RJ45 Cobre hasta 30m (MikroTik S+RJ10)', null,
+    '/images/products/tel-eqt-018.webp', 'Fotografía comercial: Módulo Transceptor SFP+ 10GBASE-T RJ45 Cobre hasta 30m (MikroTik S+RJ10)', null,
     4.7, 27, false, true, now()
   )
   on conflict (id) do update set
@@ -2408,7 +2408,7 @@ begin
   ) values (
     'tel-eqt-019', 'central-amplificadora-programable-cabecera-avant-x-pro-televes', 'NDR-TEL-EQT-019', 'Central Amplificadora Programable de Cabecera Avant X Pro UHF/VHF/FM', 'Televes',
     'Televes · modelo 532121. Cabecera digital de amplificación para edificios de viviendas y comunidades con filtrado automático 5G LTE700.', 'Televes · modelo 532121. Cabecera digital de amplificación para edificios de viviendas y comunidades con filtrado automático 5G LTE700.',
-    '/images/products/tel-eqt-019.svg', 'Ilustración técnica vectorial: Central Amplificadora Programable de Cabecera Avant X Pro UHF/VHF/FM (Televes 532121)', null,
+    '/images/products/tel-eqt-019.png', 'Fotografía comercial: Central Amplificadora Programable de Cabecera Avant X Pro UHF/VHF/FM (Televes 532121)', null,
     4.9, 18, false, true, now()
   )
   on conflict (id) do update set
@@ -2517,7 +2517,7 @@ begin
   ) values (
     'tel-eqt-020', 'transmodulador-optico-cabecera-dvb-s2-a-dvb-t-televes', 'NDR-TEL-EQT-020', 'Transmodulador Óptico de Cabecera DVB-S2 a DVB-T/C con Ranura CI', 'Televes',
     'Televes · modelo 565101. Módulo de cabecera profesional para convertir canales de satélite a multiplex TDT distribuidos sobre cable coaxial.', 'Televes · modelo 565101. Módulo de cabecera profesional para convertir canales de satélite a multiplex TDT distribuidos sobre cable coaxial.',
-    '/images/products/tel-eqt-020.svg', 'Ilustración técnica vectorial: Transmodulador Óptico de Cabecera DVB-S2 a DVB-T/C con Ranura CI (Televes 565101)', null,
+    '/images/products/tel-eqt-020.jpg', 'Fotografía comercial: Transmodulador Óptico de Cabecera DVB-S2 a DVB-T/C con Ranura CI (Televes 565101)', null,
     4.8, 8, false, true, now()
   )
   on conflict (id) do update set
@@ -2626,7 +2626,7 @@ begin
   ) values (
     'tel-dom-021', 'hub-domotico-multiprotocolo-zigbee-matter-thread-aqara-m3', 'NDR-TEL-DOM-021', 'Hub Domótico Multiprotocolo Zigbee 3.0, Matter y Thread Aqara Hub M3', 'Aqara',
     'Aqara · modelo HM-G01E. Pasarela central de automatización con compatibilidad total con Apple Home, Google Home y ejecución de escenas en local.', 'Aqara · modelo HM-G01E. Pasarela central de automatización con compatibilidad total con Apple Home, Google Home y ejecución de escenas en local.',
-    '/images/products/tel-dom-021.svg', 'Ilustración técnica vectorial: Hub Domótico Multiprotocolo Zigbee 3.0, Matter y Thread Aqara Hub M3 (Aqara HM-G01E)', null,
+    '/images/products/tel-dom-021.jpg', 'Fotografía comercial: Hub Domótico Multiprotocolo Zigbee 3.0, Matter y Thread Aqara Hub M3 (Aqara HM-G01E)', null,
     4.9, 41, true, true, now()
   )
   on conflict (id) do update set
@@ -2735,7 +2735,7 @@ begin
   ) values (
     'tel-dom-022', 'controlador-domotico-z-wave-plus-home-center-3-lite-fibaro', 'NDR-TEL-DOM-022', 'Controlador Domótico Z-Wave Plus Home Center 3 Lite', 'Fibaro',
     'Fibaro · modelo FGHC3L-001. Sistema de control Z-Wave Plus Serie 700 para instalaciones residenciales con escenas programables en bloques y lenguaje LUA.', 'Fibaro · modelo FGHC3L-001. Sistema de control Z-Wave Plus Serie 700 para instalaciones residenciales con escenas programables en bloques y lenguaje LUA.',
-    '/images/products/tel-dom-022.svg', 'Ilustración técnica vectorial: Controlador Domótico Z-Wave Plus Home Center 3 Lite (Fibaro FGHC3L-001)', null,
+    '/images/products/tel-dom-022.jpg', 'Fotografía comercial: Controlador Domótico Z-Wave Plus Home Center 3 Lite (Fibaro FGHC3L-001)', null,
     4.7, 15, false, true, now()
   )
   on conflict (id) do update set
@@ -2844,7 +2844,7 @@ begin
   ) values (
     'tel-dom-023', 'rele-inteligente-4-canales-carril-din-medicion-shelly-pro-4pm', 'NDR-TEL-DOM-023', 'Relé Inteligente 4 Canales para Carril DIN con Medición de Potencia Shelly Pro 4PM', 'Shelly',
     'Shelly · modelo SHELLY-PRO-4PM. Actuador profesional de 4 circuitos independientes de 16 A con pantalla a color y telemetría de energía.', 'Shelly · modelo SHELLY-PRO-4PM. Actuador profesional de 4 circuitos independientes de 16 A con pantalla a color y telemetría de energía.',
-    '/images/products/tel-dom-023.svg', 'Ilustración técnica vectorial: Relé Inteligente 4 Canales para Carril DIN con Medición de Potencia Shelly Pro 4PM (Shelly SHELLY-PRO-4PM)', null,
+    '/images/products/tel-dom-023.jpg', 'Fotografía comercial: Relé Inteligente 4 Canales para Carril DIN con Medición de Potencia Shelly Pro 4PM (Shelly SHELLY-PRO-4PM)', null,
     4.9, 39, false, true, now()
   )
   on conflict (id) do update set
@@ -2953,7 +2953,7 @@ begin
   ) values (
     'tel-dom-024', 'micromodulo-interruptor-empotrable-wifi-medicion-shelly-1pm-gen3', 'NDR-TEL-DOM-024', 'Micromódulo Interruptor Empotrable Wi-Fi con Medición de Potencia Shelly 1PM Gen3', 'Shelly',
     'Shelly · modelo SHELLY-1PM-G3. Relé compacto Wi-Fi y Bluetooth para instalar tras interruptores y enchufes con telemetría de energía y soporte Matter.', 'Shelly · modelo SHELLY-1PM-G3. Relé compacto Wi-Fi y Bluetooth para instalar tras interruptores y enchufes con telemetría de energía y soporte Matter.',
-    '/images/products/tel-dom-024.svg', 'Ilustración técnica vectorial: Micromódulo Interruptor Empotrable Wi-Fi con Medición de Potencia Shelly 1PM Gen3 (Shelly SHELLY-1PM-G3)', null,
+    '/images/products/tel-dom-024.jpg', 'Fotografía comercial: Micromódulo Interruptor Empotrable Wi-Fi con Medición de Potencia Shelly 1PM Gen3 (Shelly SHELLY-1PM-G3)', null,
     4.8, 54, false, true, now()
   )
   on conflict (id) do update set
@@ -3062,7 +3062,7 @@ begin
   ) values (
     'tel-dom-025', 'sensor-presencia-humana-radar-milimetrico-mmwave-fp2-aqara', 'NDR-TEL-DOM-025', 'Sensor de Presencia Humana por Radar Milimétrico mmWave FP2 Aqara', 'Aqara',
     'Aqara · modelo PS-S02D. Detección continua de personas incluso en reposo absoluto mediante radar de ondas milimétricas de 60 GHz.', 'Aqara · modelo PS-S02D. Detección continua de personas incluso en reposo absoluto mediante radar de ondas milimétricas de 60 GHz.',
-    '/images/products/tel-dom-025.svg', 'Ilustración técnica vectorial: Sensor de Presencia Humana por Radar Milimétrico mmWave FP2 Aqara (Aqara PS-S02D)', null,
+    '/images/products/tel-dom-025.png', 'Fotografía comercial: Sensor de Presencia Humana por Radar Milimétrico mmWave FP2 Aqara (Aqara PS-S02D)', null,
     4.9, 26, false, true, now()
   )
   on conflict (id) do update set
@@ -3171,7 +3171,7 @@ begin
   ) values (
     'tel-dom-026', 'sensor-ambiental-calidad-aire-temperatura-humedad-tvoc-aqara', 'NDR-TEL-DOM-026', 'Sensor Ambiental de Calidad de Aire Temperatura y Humedad TVOC Zigbee', 'Aqara',
     'Aqara · modelo AAQS-S01. Pantalla de tinta electrónica para monitorizar contaminantes volátiles, confort térmico y humedad ambiental.', 'Aqara · modelo AAQS-S01. Pantalla de tinta electrónica para monitorizar contaminantes volátiles, confort térmico y humedad ambiental.',
-    '/images/products/tel-dom-026.svg', 'Ilustración técnica vectorial: Sensor Ambiental de Calidad de Aire Temperatura y Humedad TVOC Zigbee (Aqara AAQS-S01)', null,
+    '/images/products/tel-dom-026.png', 'Fotografía comercial: Sensor Ambiental de Calidad de Aire Temperatura y Humedad TVOC Zigbee (Aqara AAQS-S01)', null,
     4.7, 18, false, true, now()
   )
   on conflict (id) do update set
@@ -3280,7 +3280,7 @@ begin
   ) values (
     'tel-dom-027', 'videoportero-ip-poe-camara-2k-lector-nfc-unifi-g4-doorbell-pro-ubiquiti', 'NDR-TEL-DOM-027', 'Videoportero IP PoE con Cámara 2K y Lector NFC UniFi G4 Doorbell Pro PoE', 'Ubiquiti',
     'Ubiquiti · modelo UVC-G4-Doorbell-Pro-PoE. Intercomunicador IP de seguridad con doble cámara, lector de tarjetas y pantalla programable.', 'Ubiquiti · modelo UVC-G4-Doorbell-Pro-PoE. Intercomunicador IP de seguridad con doble cámara, lector de tarjetas y pantalla programable.',
-    '/images/products/tel-dom-027.svg', 'Ilustración técnica vectorial: Videoportero IP PoE con Cámara 2K y Lector NFC UniFi G4 Doorbell Pro PoE (Ubiquiti UVC-G4-Doorbell-Pro-PoE)', null,
+    '/images/products/tel-dom-027.png', 'Fotografía comercial: Videoportero IP PoE con Cámara 2K y Lector NFC UniFi G4 Doorbell Pro PoE (Ubiquiti UVC-G4-Doorbell-Pro-PoE)', null,
     4.9, 22, false, true, now()
   )
   on conflict (id) do update set
@@ -3389,7 +3389,7 @@ begin
   ) values (
     'tel-dom-028', 'cerradura-electronica-inteligente-matter-thread-teclado-aqara-u200', 'NDR-TEL-DOM-028', 'Cerradura Electrónica Inteligente Matter sobre Thread con Teclado Táctil y Biometría Aqara U200', 'Aqara',
     'Aqara · modelo EL-D02D. Cerradura motorizada sobre bombín europeo compatible con Matter sobre Thread, Apple Home Key y teclado exterior con huella.', 'Aqara · modelo EL-D02D. Cerradura motorizada sobre bombín europeo compatible con Matter sobre Thread, Apple Home Key y teclado exterior con huella.',
-    '/images/products/tel-dom-028.svg', 'Ilustración técnica vectorial: Cerradura Electrónica Inteligente Matter sobre Thread con Teclado Táctil y Biometría Aqara U200 (Aqara EL-D02D)', null,
+    '/images/products/tel-dom-028.jpg', 'Fotografía comercial: Cerradura Electrónica Inteligente Matter sobre Thread con Teclado Táctil y Biometría Aqara U200 (Aqara EL-D02D)', null,
     4.8, 16, false, true, now()
   )
   on conflict (id) do update set
@@ -3498,7 +3498,7 @@ begin
   ) values (
     'tel-dom-029', 'termostato-inteligente-modulante-opentherm-wiser-schneider-electric', 'NDR-TEL-DOM-029', 'Termostato Inteligente Modulante OpenTherm y Relé para Caldera/Bomba de Calor', 'Schneider Electric',
     'Schneider Electric · modelo CCTFR6700. Control eficiente de calefacción y aerotermia mediante regulación continua y algoritmos predictivos.', 'Schneider Electric · modelo CCTFR6700. Control eficiente de calefacción y aerotermia mediante regulación continua y algoritmos predictivos.',
-    '/images/products/tel-dom-029.svg', 'Ilustración técnica vectorial: Termostato Inteligente Modulante OpenTherm y Relé para Caldera/Bomba de Calor (Schneider Electric CCTFR6700)', null,
+    '/images/products/tel-dom-029.jpg', 'Fotografía comercial: Termostato Inteligente Modulante OpenTherm y Relé para Caldera/Bomba de Calor (Schneider Electric CCTFR6700)', null,
     4.8, 20, false, true, now()
   )
   on conflict (id) do update set
@@ -3607,7 +3607,7 @@ begin
   ) values (
     'tel-dom-030', 'cabezal-termostatico-inteligente-radiador-wifi-shelly-trv', 'NDR-TEL-DOM-030', 'Cabezal Termostático Inteligente para Radiador Wi-Fi con Pantalla LED Shelly TRV', 'Shelly',
     'Shelly · modelo SHELLY-TRV. Regulación individual de temperatura estancia por estancia con batería recargable Panasonic de 6500 mAh y conexión Wi-Fi directa.', 'Shelly · modelo SHELLY-TRV. Regulación individual de temperatura estancia por estancia con batería recargable Panasonic de 6500 mAh y conexión Wi-Fi directa.',
-    '/images/products/tel-dom-030.svg', 'Ilustración técnica vectorial: Cabezal Termostático Inteligente para Radiador Wi-Fi con Pantalla LED Shelly TRV (Shelly SHELLY-TRV)', null,
+    '/images/products/tel-dom-030.jpg', 'Fotografía comercial: Cabezal Termostático Inteligente para Radiador Wi-Fi con Pantalla LED Shelly TRV (Shelly SHELLY-TRV)', null,
     4.7, 37, false, true, now()
   )
   on conflict (id) do update set
@@ -3716,7 +3716,7 @@ begin
   ) values (
     'tel-tel-031', 'centralita-telefonica-ip-pbx-grandstream-ucm6302-1000-usuarios', 'NDR-TEL-TEL-031', 'Centralita Telefónica IP-PBX Grandstream UCM6302 hasta 1000 Usuarios y 150 Llamadas', 'Grandstream',
     'Grandstream · modelo UCM6302. Plataforma de comunicaciones unificadas con aprovisionamiento automático y servidor de conferencias.', 'Grandstream · modelo UCM6302. Plataforma de comunicaciones unificadas con aprovisionamiento automático y servidor de conferencias.',
-    '/images/products/tel-tel-031.svg', 'Ilustración técnica vectorial: Centralita Telefónica IP-PBX Grandstream UCM6302 hasta 1000 Usuarios y 150 Llamadas (Grandstream UCM6302)', null,
+    '/images/products/tel-tel-031.jpg', 'Fotografía comercial: Centralita Telefónica IP-PBX Grandstream UCM6302 hasta 1000 Usuarios y 150 Llamadas (Grandstream UCM6302)', null,
     4.9, 19, true, true, now()
   )
   on conflict (id) do update set
@@ -3825,7 +3825,7 @@ begin
   ) values (
     'tel-tel-032', 'centralita-telefonica-ip-compacta-grandstream-ucm6204-4-fxo', 'NDR-TEL-TEL-032', 'Centralita Telefónica IP Compacta Grandstream UCM6204 con 4 Puertos FXO', 'Grandstream',
     'Grandstream · modelo UCM6204. Servidor IP PBX para pequeñas y medianas empresas con operadora automática multinivel y buzón de voz a email.', 'Grandstream · modelo UCM6204. Servidor IP PBX para pequeñas y medianas empresas con operadora automática multinivel y buzón de voz a email.',
-    '/images/products/tel-tel-032.svg', 'Ilustración técnica vectorial: Centralita Telefónica IP Compacta Grandstream UCM6204 con 4 Puertos FXO (Grandstream UCM6204)', null,
+    '/images/products/tel-tel-032.jpg', 'Fotografía comercial: Centralita Telefónica IP Compacta Grandstream UCM6204 con 4 Puertos FXO (Grandstream UCM6204)', null,
     4.8, 24, false, true, now()
   )
   on conflict (id) do update set
@@ -3934,7 +3934,7 @@ begin
   ) values (
     'tel-tel-033', 'telefono-ip-ejecutivo-yealink-sip-t54w-pantalla-color-wifi-bluetooth', 'NDR-TEL-TEL-033', 'Teléfono IP Ejecutivo Yealink SIP-T54W con Pantalla Color 4.3" y Wi-Fi/Bluetooth', 'Yealink',
     'Yealink · modelo SIP-T54W. Terminal corporativo con pantalla a color ajustable, sonido de alta definición y conectividad Wi-Fi integrada.', 'Yealink · modelo SIP-T54W. Terminal corporativo con pantalla a color ajustable, sonido de alta definición y conectividad Wi-Fi integrada.',
-    '/images/products/tel-tel-033.svg', 'Ilustración técnica vectorial: Teléfono IP Ejecutivo Yealink SIP-T54W con Pantalla Color 4.3" y Wi-Fi/Bluetooth (Yealink SIP-T54W)', null,
+    '/images/products/tel-tel-033.jpg', 'Fotografía comercial: Teléfono IP Ejecutivo Yealink SIP-T54W con Pantalla Color 4.3" y Wi-Fi/Bluetooth (Yealink SIP-T54W)', null,
     4.9, 45, false, true, now()
   )
   on conflict (id) do update set
@@ -4043,7 +4043,7 @@ begin
   ) values (
     'tel-tel-034', 'sistema-telefonico-inalambrico-dect-ip-yealink-w73p-base-terminal', 'NDR-TEL-TEL-034', 'Sistema Telefónico Inalámbrico DECT IP Yealink W73P Base + Terminal', 'Yealink',
     'Yealink · modelo W73P. Movilidad profesional en almacenes y oficinas con hasta 35 horas de conversación y cobertura ampliada.', 'Yealink · modelo W73P. Movilidad profesional en almacenes y oficinas con hasta 35 horas de conversación y cobertura ampliada.',
-    '/images/products/tel-tel-034.svg', 'Ilustración técnica vectorial: Sistema Telefónico Inalámbrico DECT IP Yealink W73P Base + Terminal (Yealink W73P)', null,
+    '/images/products/tel-tel-034.jpg', 'Fotografía comercial: Sistema Telefónico Inalámbrico DECT IP Yealink W73P Base + Terminal (Yealink W73P)', null,
     4.8, 31, false, true, now()
   )
   on conflict (id) do update set
@@ -4152,7 +4152,7 @@ begin
   ) values (
     'tel-tel-035', 'pasarela-voip-fxs-16-puertos-grandstream-gxw4216', 'NDR-TEL-TEL-035', 'Pasarela VoIP FXS 16 Puertos Grandstream GXW4216 para Extensiones Analógicas', 'Grandstream',
     'Grandstream · modelo GXW4216. Integración de teléfonos analógicos, timbres de planta y faxes convencionales en redes telefónicas IP corporativas.', 'Grandstream · modelo GXW4216. Integración de teléfonos analógicos, timbres de planta y faxes convencionales en redes telefónicas IP corporativas.',
-    '/images/products/tel-tel-035.svg', 'Ilustración técnica vectorial: Pasarela VoIP FXS 16 Puertos Grandstream GXW4216 para Extensiones Analógicas (Grandstream GXW4216)', null,
+    '/images/products/tel-tel-035.jpg', 'Fotografía comercial: Pasarela VoIP FXS 16 Puertos Grandstream GXW4216 para Extensiones Analógicas (Grandstream GXW4216)', null,
     4.8, 13, false, true, now()
   )
   on conflict (id) do update set
@@ -4261,7 +4261,7 @@ begin
   ) values (
     'tel-tel-036', 'gateway-voip-digital-isdn-bri-2-puertos-patton-smartnode-4120', 'NDR-TEL-TEL-036', 'Gateway VoIP Digital ISDN BRI 2 Puertos Patton SmartNode SN4120', 'Patton',
     'Patton · modelo SN4120/2BIS4V. Conversión fiable de líneas digitales RDSI/ISDN a enlaces SIP troncales con cancelación de eco de nivel operador.', 'Patton · modelo SN4120/2BIS4V. Conversión fiable de líneas digitales RDSI/ISDN a enlaces SIP troncales con cancelación de eco de nivel operador.',
-    '/images/products/tel-tel-036.svg', 'Ilustración técnica vectorial: Gateway VoIP Digital ISDN BRI 2 Puertos Patton SmartNode SN4120 (Patton SN4120/2BIS4V)', null,
+    '/images/products/tel-tel-036.jpg', 'Fotografía comercial: Gateway VoIP Digital ISDN BRI 2 Puertos Patton SmartNode SN4120 (Patton SN4120/2BIS4V)', null,
     4.9, 8, false, true, now()
   )
   on conflict (id) do update set
@@ -4370,7 +4370,7 @@ begin
   ) values (
     'tel-tel-037', 'router-celular-industrial-4g-lte-cat-4-teltonika-rut241', 'NDR-TEL-TEL-037', 'Router Celular Industrial 4G LTE Cat 4 Teltonika RUT241', 'Teltonika',
     'Teltonika · modelo RUT241. Router 4G LTE Cat 4 compacto con 2 puertos Ethernet, Wi-Fi 802.11b/g/n, túneles VPN y rango térmico extendido de -40°C a +75°C.', 'Teltonika · modelo RUT241. Router 4G LTE Cat 4 compacto con 2 puertos Ethernet, Wi-Fi 802.11b/g/n, túneles VPN y rango térmico extendido de -40°C a +75°C.',
-    '/images/products/tel-tel-037.svg', 'Ilustración técnica vectorial: Router Celular Industrial 4G LTE Cat 4 Teltonika RUT241 (Teltonika RUT241)', null,
+    '/images/products/tel-tel-037.png', 'Fotografía comercial: Router Celular Industrial 4G LTE Cat 4 Teltonika RUT241 (Teltonika RUT241)', null,
     4.8, 51, false, true, now()
   )
   on conflict (id) do update set
@@ -4479,7 +4479,7 @@ begin
   ) values (
     'tel-tel-038', 'router-celular-industrial-5g-wifi6-dual-sim-teltonika-rutx50', 'NDR-TEL-TEL-038', 'Router Celular Industrial 5G y Wi-Fi 6 Dual SIM Teltonika RUTX50', 'Teltonika',
     'Televes · modelo 403001. Sistema repetidor celular con marcado CE y certificación conforme a directiva RED 2014/53/UE para eliminar zonas sin cobertura en interiores.', 'Televes · modelo 403001. Sistema repetidor celular con marcado CE y certificación conforme a directiva RED 2014/53/UE para eliminar zonas sin cobertura en interiores.',
-    '/images/products/tel-tel-038.svg', 'Ilustración técnica vectorial: Router Celular Industrial 5G y Wi-Fi 6 Dual SIM Teltonika RUTX50 (Teltonika RUTX50)', null,
+    '/images/products/tel-tel-038.png', 'Fotografía comercial: Router Celular Industrial 5G y Wi-Fi 6 Dual SIM Teltonika RUTX50 (Teltonika RUTX50)', null,
     4.9, 16, false, true, now()
   )
   on conflict (id) do update set
@@ -4588,7 +4588,7 @@ begin
   ) values (
     'tel-tel-039', 'antena-exterior-omnidireccional-4g-5g-mimo-teltonika-pr1kmo40', 'NDR-TEL-TEL-039', 'Antena Exterior Omnidireccional 4G/5G MIMO 698-3800 MHz 6 dBi Teltonika PR1KMO40', 'Teltonika',
     'Teltonika · modelo PR1KMO40. Antena exterior estanqueidad IP66 para mástil o pared con cobertura multi-banda 4G/5G, 2x2 MIMO y 2 tiradas de cable coaxial SMA.', 'Teltonika · modelo PR1KMO40. Antena exterior estanqueidad IP66 para mástil o pared con cobertura multi-banda 4G/5G, 2x2 MIMO y 2 tiradas de cable coaxial SMA.',
-    '/images/products/tel-tel-039.svg', 'Ilustración técnica vectorial: Antena Exterior Omnidireccional 4G/5G MIMO 698-3800 MHz 6 dBi Teltonika PR1KMO40 (Teltonika PR1KMO40)', null,
+    '/images/products/tel-tel-039.jpg', 'Fotografía comercial: Antena Exterior Omnidireccional 4G/5G MIMO 698-3800 MHz 6 dBi Teltonika PR1KMO40 (Teltonika PR1KMO40)', null,
     4.7, 23, false, true, now()
   )
   on conflict (id) do update set
@@ -4697,7 +4697,7 @@ begin
   ) values (
     'tel-tel-040', 'amplificador-senal-movil-4g-5g-multibanda-televes', 'NDR-TEL-TEL-040', 'Amplificador de Señal Móvil 4G/5G Multibanda para Interiores StellaHome', 'Televes',
     'Televes · modelo 403001. Sistema repetidor celular con marcado CE y directiva RED 2014/53/UE para eliminar zonas sin cobertura en sótanos, naves y oficinas aisladas.', 'Televes · modelo 403001. Sistema repetidor celular con marcado CE y directiva RED 2014/53/UE para eliminar zonas sin cobertura en sótanos, naves y oficinas aisladas.',
-    '/images/products/tel-tel-040.svg', 'Ilustración técnica vectorial: Amplificador de Señal Móvil 4G/5G Multibanda para Interiores StellaHome (Televes 403001)', null,
+    '/images/products/tel-tel-040.jpg', 'Fotografía comercial: Amplificador de Señal Móvil 4G/5G Multibanda para Interiores StellaHome (Televes 403001)', null,
     4.9, 10, false, true, now()
   )
   on conflict (id) do update set
@@ -4806,7 +4806,7 @@ begin
   ) values (
     'tel-dig-041', 'gateway-iot-industrial-edge-advantech-uno-2271g-v2-modbus-mqtt', 'NDR-TEL-DIG-041', 'Gateway IoT Industrial Edge Advantech UNO-2271G-V2 con Modbus y MQTT', 'Advantech',
     'Advantech · modelo UNO-2271G-V2. Pasarela compacta sin ventilador para digitalización de líneas productivas, captura OPC UA y telemetría MQTT.', 'Advantech · modelo UNO-2271G-V2. Pasarela compacta sin ventilador para digitalización de líneas productivas, captura OPC UA y telemetría MQTT.',
-    '/images/products/tel-dig-041.svg', 'Ilustración técnica vectorial: Gateway IoT Industrial Edge Advantech UNO-2271G-V2 con Modbus y MQTT (Advantech UNO-2271G-V2)', null,
+    '/images/products/tel-dig-041.jpg', 'Fotografía comercial: Gateway IoT Industrial Edge Advantech UNO-2271G-V2 con Modbus y MQTT (Advantech UNO-2271G-V2)', null,
     4.9, 15, true, true, now()
   )
   on conflict (id) do update set
@@ -4915,7 +4915,7 @@ begin
   ) values (
     'tel-dig-042', 'modulo-entradas-salidas-remotas-modbus-tcp-phoenix-contact', 'NDR-TEL-DIG-042', 'Módulo de E/S Remotas Modbus TCP Ethernet Phoenix Contact Axioline Smart Elements', 'Phoenix Contact',
     'Phoenix Contact · modelo AXL-SE-SC-A. Estación de adquisición distribuida para lectura de sensores de fábrica mediante bus industrial Ethernet.', 'Phoenix Contact · modelo AXL-SE-SC-A. Estación de adquisición distribuida para lectura de sensores de fábrica mediante bus industrial Ethernet.',
-    '/images/products/tel-dig-042.svg', 'Ilustración técnica vectorial: Módulo de E/S Remotas Modbus TCP Ethernet Phoenix Contact Axioline Smart Elements (Phoenix Contact AXL-SE-SC-A)', null,
+    '/images/products/tel-dig-042.jpg', 'Fotografía comercial: Módulo de E/S Remotas Modbus TCP Ethernet Phoenix Contact Axioline Smart Elements (Phoenix Contact AXL-SE-SC-A)', null,
     4.8, 12, false, true, now()
   )
   on conflict (id) do update set
@@ -5024,7 +5024,7 @@ begin
   ) values (
     'tel-dig-043', 'servidor-edge-fanless-industrial-advantech-ark-1220l', 'NDR-TEL-DIG-043', 'Servidor Edge Fanless Industrial Advantech ARK-1220L para Inferencia IA', 'Advantech',
     'Advantech · modelo ARK-1220L-S6A1E. Nodo de computación en borde para visión artificial, gemelos digitales y procesamiento local de datos.', 'Advantech · modelo ARK-1220L-S6A1E. Nodo de computación en borde para visión artificial, gemelos digitales y procesamiento local de datos.',
-    '/images/products/tel-dig-043.svg', 'Ilustración técnica vectorial: Servidor Edge Fanless Industrial Advantech ARK-1220L para Inferencia IA (Advantech ARK-1220L-S6A1E)', null,
+    '/images/products/tel-dig-043.jpg', 'Fotografía comercial: Servidor Edge Fanless Industrial Advantech ARK-1220L para Inferencia IA (Advantech ARK-1220L-S6A1E)', null,
     4.9, 11, false, true, now()
   )
   on conflict (id) do update set
@@ -5133,7 +5133,7 @@ begin
   ) values (
     'tel-dig-044', 'micro-servidor-edge-fanless-2-5gbe-puertos-serie-moxa-v2201', 'NDR-TEL-DIG-044', 'Micro Servidor Edge Fanless con Doble 2.5GbE y 4 Puertos Serie Moxa V2201', 'Moxa',
     'Moxa · modelo V2201-E4-W-T. Controlador de comunicaciones críticas con certificación para transporte e infraestructura energética.', 'Moxa · modelo V2201-E4-W-T. Controlador de comunicaciones críticas con certificación para transporte e infraestructura energética.',
-    '/images/products/tel-dig-044.svg', 'Ilustración técnica vectorial: Micro Servidor Edge Fanless con Doble 2.5GbE y 4 Puertos Serie Moxa V2201 (Moxa V2201-E4-W-T)', null,
+    '/images/products/tel-dig-044.jpg', 'Fotografía comercial: Micro Servidor Edge Fanless con Doble 2.5GbE y 4 Puertos Serie Moxa V2201 (Moxa V2201-E4-W-T)', null,
     4.8, 14, false, true, now()
   )
   on conflict (id) do update set
@@ -5242,7 +5242,7 @@ begin
   ) values (
     'tel-dig-045', 'servidor-almacenamiento-nas-4-bahias-synology-ds923-plus', 'NDR-TEL-DIG-045', 'Servidor de Almacenamiento en Red NAS 4 Bahías Synology DiskStation DS923+', 'Synology',
     'Synology · modelo DS923+. Centro de almacenamiento seguro para copias empresariales, contenedores Docker y centralización de datos de fábrica.', 'Synology · modelo DS923+. Centro de almacenamiento seguro para copias empresariales, contenedores Docker y centralización de datos de fábrica.',
-    '/images/products/tel-dig-045.svg', 'Ilustración técnica vectorial: Servidor de Almacenamiento en Red NAS 4 Bahías Synology DiskStation DS923+ (Synology DS923+)', null,
+    '/images/products/tel-dig-045.jpg', 'Fotografía comercial: Servidor de Almacenamiento en Red NAS 4 Bahías Synology DiskStation DS923+ (Synology DS923+)', null,
     4.9, 62, false, true, now()
   )
   on conflict (id) do update set
@@ -5351,7 +5351,7 @@ begin
   ) values (
     'tel-dig-046', 'servidor-almacenamiento-nas-rack-19-1u-synology-rs822-plus', 'NDR-TEL-DIG-046', 'Servidor de Almacenamiento NAS en Rack 19" 1U 4 Bahías Synology RackStation RS822+', 'Synology',
     'Synology · modelo RS822+. Servidor NAS para montaje en armario rack de profundidad reducida con 4 interfaces de red integradas.', 'Synology · modelo RS822+. Servidor NAS para montaje en armario rack de profundidad reducida con 4 interfaces de red integradas.',
-    '/images/products/tel-dig-046.svg', 'Ilustración técnica vectorial: Servidor de Almacenamiento NAS en Rack 19" 1U 4 Bahías Synology RackStation RS822+ (Synology RS822+)', null,
+    '/images/products/tel-dig-046.jpg', 'Fotografía comercial: Servidor de Almacenamiento NAS en Rack 19" 1U 4 Bahías Synology RackStation RS822+ (Synology RS822+)', null,
     4.9, 15, false, true, now()
   )
   on conflict (id) do update set
@@ -5460,7 +5460,7 @@ begin
   ) values (
     'ref-storage-snv3sm3-1t0', 'ssd-kingston-nv3-1tb-m-2-2230-pcie-4-0-nvme-6000mb-s-3d-nand-gaming-0ete5', 'REF-SNV3SM31T0-0ETE5', 'SSD Kingston NV3 1TB M.2 2230 PCIe 4.0 NVMe 6000MB/s 3D NAND Gaming', 'Kingston',
     'Kingston · modelo SNV3SM3/1T0. Unidad de estado sólido M.2 PCIe 4.0 para aceleración de lectura de bases de datos y servidores NAS.', 'Kingston · modelo SNV3SM3/1T0. Unidad de estado sólido M.2 PCIe 4.0 para aceleración de lectura de bases de datos y servidores NAS.',
-    '/images/products/ref-storage-snv3sm3-1t0.svg', 'Ilustración técnica vectorial: SSD Kingston NV3 1TB M.2 2230 PCIe 4.0 NVMe 6000MB/s 3D NAND Gaming (Kingston SNV3SM3/1T0)', null,
+    '/images/products/ref-storage-snv3sm3-1t0.jpg', 'Fotografía comercial: SSD Kingston NV3 1TB M.2 2230 PCIe 4.0 NVMe 6000MB/s 3D NAND Gaming (Kingston SNV3SM3/1T0)', null,
     4.8, 48, false, true, now()
   )
   on conflict (id) do update set
@@ -5569,7 +5569,7 @@ begin
   ) values (
     'ref-storage-mz-v9p1t0bw', 'samsung-990-pro-1tb-disco-ssd-7450mb-s-nvme-pcie-4-0-m-2-gen4-1vopo', 'REF-MZV9P1T0BW-1VOPO', 'Samsung 990 Pro 1TB Disco SSD 7450MB/S NVMe PCIe 4.0 M.2 Gen4', 'Samsung',
     'Samsung · modelo MZ-V9P1T0BW. Rendimiento máximo en lectura y escritura para caché de almacenamiento en red corporativo y servidores Edge.', 'Samsung · modelo MZ-V9P1T0BW. Rendimiento máximo en lectura y escritura para caché de almacenamiento en red corporativo y servidores Edge.',
-    '/images/products/ref-storage-mz-v9p1t0bw.svg', 'Ilustración técnica vectorial: Samsung 990 Pro 1TB Disco SSD 7450MB/S NVMe PCIe 4.0 M.2 Gen4 (Samsung MZ-V9P1T0BW)', null,
+    '/images/products/ref-storage-mz-v9p1t0bw.jpg', 'Fotografía comercial: Samsung 990 Pro 1TB Disco SSD 7450MB/S NVMe PCIe 4.0 M.2 Gen4 (Samsung MZ-V9P1T0BW)', null,
     4.9, 65, false, true, now()
   )
   on conflict (id) do update set
@@ -5678,7 +5678,7 @@ begin
   ) values (
     'tel-dig-047', 'sensor-industrial-temperatura-humedad-modbus-rtu-rs485-schneider-electric', 'NDR-TEL-DIG-047', 'Sensor Industrial de Temperatura y Humedad Modbus RTU RS-485 IP65', 'Schneider Electric',
     'Schneider Electric · modelo METSETH01. Transmisor con bus serie RS-485 para supervisión ambiental de CPD, salas eléctricas y silos de producción.', 'Schneider Electric · modelo METSETH01. Transmisor con bus serie RS-485 para supervisión ambiental de CPD, salas eléctricas y silos de producción.',
-    '/images/products/tel-dig-047.svg', 'Ilustración técnica vectorial: Sensor Industrial de Temperatura y Humedad Modbus RTU RS-485 IP65 (Schneider Electric METSETH01)', null,
+    '/images/products/tel-dig-047.jpg', 'Fotografía comercial: Sensor Industrial de Temperatura y Humedad Modbus RTU RS-485 IP65 (Schneider Electric METSETH01)', null,
     4.8, 18, false, true, now()
   )
   on conflict (id) do update set
@@ -5787,7 +5787,7 @@ begin
   ) values (
     'tel-dig-048', 'transmisor-presion-industrial-4-20ma-modbus-0-10-bar-schneider-electric', 'NDR-TEL-DIG-048', 'Transmisor de Presión Industrial 4-20mA y Modbus RTU 0-10 Bar Acero Inoxidable', 'Schneider Electric',
     'Schneider Electric · modelo XMLP010BC71F. Sensor de presión relativa para circuitos de refrigeración, aire comprimido y fluidos industriales.', 'Schneider Electric · modelo XMLP010BC71F. Sensor de presión relativa para circuitos de refrigeración, aire comprimido y fluidos industriales.',
-    '/images/products/tel-dig-048.svg', 'Ilustración técnica vectorial: Transmisor de Presión Industrial 4-20mA y Modbus RTU 0-10 Bar Acero Inoxidable (Schneider Electric XMLP010BC71F)', null,
+    '/images/products/tel-dig-048.jpg', 'Fotografía comercial: Transmisor de Presión Industrial 4-20mA y Modbus RTU 0-10 Bar Acero Inoxidable (Schneider Electric XMLP010BC71F)', null,
     4.9, 14, false, true, now()
   )
   on conflict (id) do update set
@@ -5896,7 +5896,7 @@ begin
   ) values (
     'tel-dig-049', 'terminal-portatil-pda-movil-industrial-lector-2d-zebra-tc22', 'NDR-TEL-DIG-049', 'Terminal Portátil PDA Móvil Industrial con Lector 2D Zebra TC22', 'Zebra',
     'Zebra · modelo TC220K-01B112-A6. Terminal móvil ergonómico para gestión de almacenes, control de inventario y trazabilidad logística en planta.', 'Zebra · modelo TC220K-01B112-A6. Terminal móvil ergonómico para gestión de almacenes, control de inventario y trazabilidad logística en planta.',
-    '/images/products/tel-dig-049.svg', 'Ilustración técnica vectorial: Terminal Portátil PDA Móvil Industrial con Lector 2D Zebra TC22 (Zebra TC220K-01B112-A6)', null,
+    '/images/products/tel-dig-049.jpg', 'Fotografía comercial: Terminal Portátil PDA Móvil Industrial con Lector 2D Zebra TC22 (Zebra TC220K-01B112-A6)', null,
     4.9, 27, false, true, now()
   )
   on conflict (id) do update set
@@ -6005,7 +6005,7 @@ begin
   ) values (
     'tel-dig-050', 'impresora-industrial-etiquetas-codigos-barras-termica-zebra-zt231', 'NDR-TEL-DIG-050', 'Impresora Industrial de Etiquetas y Códigos de Barras Térmica Zebra ZT231', 'Zebra',
     'Zebra · modelo ZT23142-T0E000FZ. Impresora robusta con chasis metálico para etiquetado de palés, embalajes logísticos y trazabilidad.', 'Zebra · modelo ZT23142-T0E000FZ. Impresora robusta con chasis metálico para etiquetado de palés, embalajes logísticos y trazabilidad.',
-    '/images/products/tel-dig-050.svg', 'Ilustración técnica vectorial: Impresora Industrial de Etiquetas y Códigos de Barras Térmica Zebra ZT231 (Zebra ZT23142-T0E000FZ)', null,
+    '/images/products/tel-dig-050.jpg', 'Fotografía comercial: Impresora Industrial de Etiquetas y Códigos de Barras Térmica Zebra ZT231 (Zebra ZT23142-T0E000FZ)', null,
     4.8, 21, false, true, now()
   )
   on conflict (id) do update set

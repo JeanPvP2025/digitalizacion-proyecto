@@ -11,6 +11,7 @@
   - https://nodria-academico.vercel.app/catalogo responde HTTP 200 con 52 referencias activas y disponibilidad en tiempo real.
   - RPC remota get_public_catalog_availability() responde HTTP 200 con disponibilidad para los 52 productos.
   - Consulta PostgREST directa a products?is_published=eq.true responde HTTP 200 con las 52 referencias de telecomunicaciones.
+- ✅ **Fotografías Reales de Producto:** Se reemplazaron todas las ilustraciones vectoriales SVG por 52 fotografías comerciales reales (.jpg, .png, .webp) con tomas de estudio profesionales sobre fondo blanco/neutro en public/images/products/. Desplegadas y respondiendo HTTP 200 en Vercel.
 - ✅ **PC Builder:** Montajes configurados conservan la capacidad de compra en checkout (attributes.pc_builder) sin invadir el catálogo general de telecomunicaciones.
 - ✅ **Gates Locales:** TypeScript estricto, ESLint, 332 tests unitarios/integración superados y build de producción validada.
 
