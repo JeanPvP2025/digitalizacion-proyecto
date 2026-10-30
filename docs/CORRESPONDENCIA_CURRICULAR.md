@@ -14,11 +14,11 @@ El catálogo técnico ha sido diseñado para dar cobertura completa y equilibrad
 
 | Módulo Profesional (Currículo Oficial) | Categoría Comercial en NODRIA | Código / Slug del Sistema |
 | :--- | :--- | :--- |
-| **1. Técnicas y procesos en infraestructuras de telecomunicaciones** | **Infraestructuras de Telecomunicaciones** | `infraestructuras-telecomunicaciones` |
-| **2. Elementos de sistemas de telecomunicaciones** | **Equipos y Sistemas de Telecomunicaciones** | `equipos-sistemas-telecomunicaciones` |
-| **3. Sistemas integrados y hogar digital** | **Domótica y Hogar Digital** | `domotica-hogar-digital` |
-| **4. Sistemas de telefonía fija y móvil** | **Telefonía y Comunicaciones** | `telefonia-comunicaciones` |
-| **5. Digitalización aplicada a los sectores productivos** | **Digitalización e Industria Conectada** | `digitalizacion-industria-conectada` |
+| **1. Técnicas y procesos en infraestructuras de telecomunicaciones** | **Técnicas y procesos en infraestructuras de telecomunicaciones** | `tecnicas-procesos-infraestructuras-telecomunicaciones` |
+| **2. Elementos de sistemas de telecomunicaciones** | **Elementos de sistemas de telecomunicaciones** | `elementos-sistemas-telecomunicaciones` |
+| **3. Sistemas integrados y hogar digital** | **Sistemas integrados y hogar digital** | `sistemas-integrados-hogar-digital` |
+| **4. Sistemas de telefonía fija y móvil** | **Sistemas de telefonía fija y móvil** | `sistemas-telefonia-fija-movil` |
+| **5. Digitalización aplicada a los sectores productivos** | **Digitalización aplicada a los sectores productivos** | `digitalizacion-aplicada-sectores-productivos` |
 
 ---
 
@@ -26,7 +26,7 @@ El catálogo técnico ha sido diseñado para dar cobertura completa y equilibrad
 
 ### Módulo 1: Técnicas y procesos en infraestructuras de telecomunicaciones
 - **Código y Denominación:** Módulo Profesional 0363 — *Técnicas y procesos en infraestructuras de telecomunicaciones*.
-- **Categoría Pública:** `Infraestructuras de Telecomunicaciones`.
+- **Categoría Pública:** `Técnicas y procesos en infraestructuras de telecomunicaciones` (`tecnicas-procesos-infraestructuras-telecomunicaciones`).
 - **Objetivos de Aprendizaje y Competencias:**
   - Montaje y configuración de envolventes, armarios rack y cuadros de distribución de telecomunicaciones (RIT / RITI / RITS).
   - Despliegue, guiado y conexionado de cableado estructurado en cobre de altas prestaciones (Cat.6A / Cat.7) y fibra óptica (OS2 / OM4).
@@ -57,7 +57,7 @@ El catálogo técnico ha sido diseñado para dar cobertura completa y equilibrad
 
 ### Módulo 2: Elementos de sistemas de telecomunicaciones
 - **Código y Denominación:** Módulo Profesional 0364 — *Elementos de sistemas de telecomunicaciones*.
-- **Categoría Pública:** `Equipos y Sistemas de Telecomunicaciones`.
+- **Categoría Pública:** `Elementos de sistemas de telecomunicaciones` (`elementos-sistemas-telecomunicaciones`).
 - **Objetivos de Aprendizaje y Competencias:**
   - Configuración y puesta en servicio de equipos de conmutación de nivel 2 y nivel 3 (VLAN 802.1Q, agregación de enlaces LACP, Spanning Tree).
   - Implementación de pasarelas de red y enrutadores multi-WAN con inspección de tráfico y cortafuegos perimetral.
@@ -88,7 +88,7 @@ El catálogo técnico ha sido diseñado para dar cobertura completa y equilibrad
 
 ### Módulo 3: Sistemas integrados y hogar digital
 - **Código y Denominación:** Módulo Profesional 0367 — *Sistemas integrados y hogar digital*.
-- **Categoría Pública:** `Domótica y Hogar Digital`.
+- **Categoría Pública:** `Sistemas integrados y hogar digital` (`sistemas-integrados-hogar-digital`).
 - **Objetivos de Aprendizaje y Competencias:**
   - Integración de pasarelas y controladores domóticos basados en estándares abiertos interoperables (Matter, Zigbee 3.0, Thread, Z-Wave Plus).
   - Implementación de actuadores para cuadro eléctrico (carril DIN) y micromódulos empotrables para control de iluminación, fuerza y monitorización energética.
@@ -119,7 +119,7 @@ El catálogo técnico ha sido diseñado para dar cobertura completa y equilibrad
 
 ### Módulo 4: Sistemas de telefonía fija y móvil
 - **Código y Denominación:** Módulo Profesional 0368 — *Sistemas de telefonía fija y móvil*.
-- **Categoría Pública:** `Telefonía y Comunicaciones`.
+- **Categoría Pública:** `Sistemas de telefonía fija y móvil` (`sistemas-telefonia-fija-movil`).
 - **Objetivos de Aprendizaje y Competencias:**
   - Diseño, dimensionamiento y configuración de centralitas telefónicas IP-PBX bajo protocolo SIP (Session Initiation Protocol).
   - Gestión de interfaces analógicas y digitales tradicionales mediante pasarelas FXS, FXO e ISDN/RDSI BRI para migración escalonada.
@@ -150,7 +150,7 @@ El catálogo técnico ha sido diseñado para dar cobertura completa y equilibrad
 
 ### Módulo 5: Digitalización aplicada a los sectores productivos
 - **Código y Denominación:** Módulo Profesional — *Digitalización aplicada a los sectores productivos*.
-- **Categoría Pública:** `Digitalización e Industria Conectada`.
+- **Categoría Pública:** `Digitalización aplicada a los sectores productivos` (`digitalizacion-aplicada-sectores-productivos`).
 - **Objetivos de Aprendizaje y Competencias:**
   - Adquisición masiva de datos en planta y convergencia de redes operacionales (OT) con redes corporativas (IT).
   - Implementación de protocolos industriales abiertos (Modbus TCP/RTU, OPC Unified Architecture y telemetría MQTT).
@@ -198,7 +198,7 @@ flowchart TD
 ```
 
 1. **Grupo A (Aprovechables directamente):**
-   - Las unidades de estado sólido SSD NVMe (Samsung 990 Pro, Kingston NV3, Adata Legend, Crucial T500, etc.) se reclasifican funcionalmente en la categoría `digitalizacion-industria-conectada` bajo la subcategoría `almacenamiento-nas-servidores`. En un entorno real de telecomunicaciones e industria digital, estas unidades actúan como discos de arranque para servidores de comunicaciones, almacenamiento de series temporales en pasarelas IoT y caché de lectura/escritura en cabinas NAS.
+   - Las unidades de estado sólido SSD NVMe (Samsung 990 Pro, Kingston NV3, Adata Legend, Crucial T500, etc.) se reclasifican funcionalmente en la categoría `digitalizacion-aplicada-sectores-productivos` bajo la subcategoría `almacenamiento-nas-servidores`. En un entorno real de telecomunicaciones e industria digital, estas unidades actúan como discos de arranque para servidores de comunicaciones, almacenamiento de series temporales en pasarelas IoT y caché de lectura/escritura en cabinas NAS.
 
 2. **Grupo B (Parcialmente relacionados):**
    - Placas base con doble interfaz Ethernet 2.5GbE y conectividad Wi-Fi 6E/7, así como procesadores multihilo con gráficos integrados y bajo consumo TDP. Se preservan en el motor del **PC Builder** para el dimensionamiento y ensamblaje de estaciones de diseño técnico y servidores locales de comunicaciones.

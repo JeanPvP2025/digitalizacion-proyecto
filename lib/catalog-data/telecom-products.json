@@ -2,8 +2,8 @@
   "categories": [
     {
       "id": "15cbe619-16f5-4f12-80ef-e0169c9f2ab9",
-      "slug": "infraestructuras-telecomunicaciones",
-      "name": "Infraestructuras de Telecomunicaciones",
+      "slug": "tecnicas-procesos-infraestructuras-telecomunicaciones",
+      "name": "Técnicas y procesos en infraestructuras de telecomunicaciones",
       "description": "Armarios rack de 19\", cableado estructurado Cat.6A/Cat.7, fibra óptica preconectorizada, paneles de parcheo y certificación de redes.",
       "sortOrder": 10,
       "parentId": null,
@@ -52,8 +52,8 @@
     },
     {
       "id": "086ece91-23e4-4cfe-8b8d-269a61b2c3b4",
-      "slug": "equipos-sistemas-telecomunicaciones",
-      "name": "Equipos y Sistemas de Telecomunicaciones",
+      "slug": "elementos-sistemas-telecomunicaciones",
+      "name": "Elementos de sistemas de telecomunicaciones",
       "description": "Switches gestionables L2+/L3, routers de borde, puntos de acceso Wi-Fi 6E/7, transceptores ópticos SFP+ y cabeceras de distribución.",
       "sortOrder": 20,
       "parentId": null,
@@ -102,8 +102,8 @@
     },
     {
       "id": "677fd6b6-fb71-42ca-8469-ce47dd6541b1",
-      "slug": "domotica-hogar-digital",
-      "name": "Domótica y Hogar Digital",
+      "slug": "sistemas-integrados-hogar-digital",
+      "name": "Sistemas integrados y hogar digital",
       "description": "Pasarelas multiprotocolo Zigbee 3.0/Matter, relés para carril DIN, sensores ambientales, videoporteros IP y climatización inteligente.",
       "sortOrder": 30,
       "parentId": null,
@@ -152,8 +152,8 @@
     },
     {
       "id": "aa1c17c2-397a-4a16-8298-5a7b4e3862c9",
-      "slug": "telefonia-comunicaciones",
-      "name": "Telefonía y Comunicaciones",
+      "slug": "sistemas-telefonia-fija-movil",
+      "name": "Sistemas de telefonía fija y móvil",
       "description": "Centralitas telefónicas IP-PBX, terminales SIP ejecutivos, teléfonos DECT, pasarelas VoIP FXS/FXO y routers celulares industriales 4G/5G.",
       "sortOrder": 40,
       "parentId": null,
@@ -202,8 +202,8 @@
     },
     {
       "id": "3e380976-47d1-4b9b-89c7-1145f4b9765b",
-      "slug": "digitalizacion-industria-conectada",
-      "name": "Digitalización e Industria Conectada",
+      "slug": "digitalizacion-aplicada-sectores-productivos",
+      "name": "Digitalización aplicada a los sectores productivos",
       "description": "Gateways IoT industriales, servidores de computación Edge, almacenamiento en red NAS, sensores Modbus/RS-485 y trazabilidad con terminales de lectura.",
       "sortOrder": 50,
       "parentId": null,
@@ -257,7 +257,7 @@
       "slug": "rack-mural-19-9u-profundidad-600mm-puerta-cristal-legrand",
       "sku": "NDR-TEL-INF-001",
       "name": "Rack Mural 19\" 9U Profundidad 600mm Puerta de Cristal",
-      "category": "Infraestructuras de Telecomunicaciones",
+      "category": "Técnicas y procesos en infraestructuras de telecomunicaciones",
       "categoryIds": [
         "15cbe619-16f5-4f12-80ef-e0169c9f2ab9",
         "db480e83-01e6-4d01-8d92-fb18c040c0e4"
@@ -304,7 +304,7 @@
       "slug": "armario-rack-suelo-19-42u-800x1000mm-schneider-electric",
       "sku": "NDR-TEL-INF-002",
       "name": "Armario Rack de Suelo 19\" 42U 800x1000mm con Guías de Gestión",
-      "category": "Infraestructuras de Telecomunicaciones",
+      "category": "Técnicas y procesos en infraestructuras de telecomunicaciones",
       "categoryIds": [
         "15cbe619-16f5-4f12-80ef-e0169c9f2ab9",
         "db480e83-01e6-4d01-8d92-fb18c040c0e4"
@@ -351,7 +351,7 @@
       "slug": "bobina-cable-red-u-ftp-cat6a-lszh-500m-televes",
       "sku": "NDR-TEL-INF-003",
       "name": "Bobina Cable de Red U/FTP Cat.6A LSZH 500m 500MHz Libre de Halógenos",
-      "category": "Infraestructuras de Telecomunicaciones",
+      "category": "Técnicas y procesos en infraestructuras de telecomunicaciones",
       "categoryIds": [
         "15cbe619-16f5-4f12-80ef-e0169c9f2ab9",
         "74c5188b-8666-4942-8fbb-6e49c004a792"
@@ -398,7 +398,7 @@
       "slug": "bobina-cable-red-s-ftp-cat7-pimf-1000mhz-305m-televes",
       "sku": "NDR-TEL-INF-004",
       "name": "Bobina Cable de Red S/FTP Cat.7 PIMF 1000MHz 305m Apantallado",
-      "category": "Infraestructuras de Telecomunicaciones",
+      "category": "Técnicas y procesos en infraestructuras de telecomunicaciones",
       "categoryIds": [
         "15cbe619-16f5-4f12-80ef-e0169c9f2ab9",
         "74c5188b-8666-4942-8fbb-6e49c004a792"
@@ -445,7 +445,7 @@
       "slug": "manguera-fibra-optica-preconectorizada-monomodo-os2-12-fibras-lc-50m-legrand",
       "sku": "NDR-TEL-INF-005",
       "name": "Manguera Fibra Óptica Preconectorizada Monomodo OS2 12 Fibras LC-LC 50m",
-      "category": "Infraestructuras de Telecomunicaciones",
+      "category": "Técnicas y procesos en infraestructuras de telecomunicaciones",
       "categoryIds": [
         "15cbe619-16f5-4f12-80ef-e0169c9f2ab9",
         "9c41e121-8c41-40bb-80f1-a6bc7f3767ae"
@@ -492,7 +492,7 @@
       "slug": "bandeja-distribuidora-fibra-optica-19-1u-24-puertos-sc-apc-televes",
       "sku": "NDR-TEL-INF-006",
       "name": "Bandeja Distribuidora de Fibra Óptica 19\" 1U 24 Puertos SC/APC con Pigtails",
-      "category": "Infraestructuras de Telecomunicaciones",
+      "category": "Técnicas y procesos en infraestructuras de telecomunicaciones",
       "categoryIds": [
         "15cbe619-16f5-4f12-80ef-e0169c9f2ab9",
         "9c41e121-8c41-40bb-80f1-a6bc7f3767ae"
@@ -539,7 +539,7 @@
       "slug": "panel-parcheo-19-24-puertos-cat6a-ftp-1u-schneider-electric",
       "sku": "NDR-TEL-INF-007",
       "name": "Panel de Parcheo 19\" 24 Puertos Cat.6A FTP 1U con Guía Trasera",
-      "category": "Infraestructuras de Telecomunicaciones",
+      "category": "Técnicas y procesos en infraestructuras de telecomunicaciones",
       "categoryIds": [
         "15cbe619-16f5-4f12-80ef-e0169c9f2ab9",
         "28227571-be86-456d-8feb-bb12d3775010"
@@ -586,7 +586,7 @@
       "slug": "organizador-cables-horizontal-19-1u-legrand",
       "sku": "NDR-TEL-INF-008",
       "name": "Organizador de Cables Horizontal 19\" 1U con Tapa Frontal y 5 Anillas",
-      "category": "Infraestructuras de Telecomunicaciones",
+      "category": "Técnicas y procesos en infraestructuras de telecomunicaciones",
       "categoryIds": [
         "15cbe619-16f5-4f12-80ef-e0169c9f2ab9",
         "28227571-be86-456d-8feb-bb12d3775010"
@@ -633,7 +633,7 @@
       "slug": "certificador-redes-cobre-cat6a-fluke-dsx-602-intl",
       "sku": "NDR-TEL-INF-009",
       "name": "Certificador de Redes de Cobre Cat.6A Fluke DSX-602 INTL",
-      "category": "Infraestructuras de Telecomunicaciones",
+      "category": "Técnicas y procesos en infraestructuras de telecomunicaciones",
       "categoryIds": [
         "15cbe619-16f5-4f12-80ef-e0169c9f2ab9",
         "1aa3c71c-fbff-448c-85d9-a98463ab3f69"
@@ -680,7 +680,7 @@
       "slug": "fusionadora-fibra-optica-alineacion-nucleo-6-motores-televes",
       "sku": "NDR-TEL-INF-010",
       "name": "Fusionadora de Fibra Óptica por Alineación de Núcleo 6 Motores",
-      "category": "Infraestructuras de Telecomunicaciones",
+      "category": "Técnicas y procesos en infraestructuras de telecomunicaciones",
       "categoryIds": [
         "15cbe619-16f5-4f12-80ef-e0169c9f2ab9",
         "1aa3c71c-fbff-448c-85d9-a98463ab3f69"
@@ -727,7 +727,7 @@
       "slug": "switch-gestionable-l3-24-puertos-gigabit-poe-2-sfp-10g-unifi-pro-ubiquiti",
       "sku": "NDR-TEL-EQT-011",
       "name": "Switch Gestionable L3 24 Puertos Gigabit PoE+/PoE++ y 2 SFP+ 10G UniFi Pro",
-      "category": "Equipos y Sistemas de Telecomunicaciones",
+      "category": "Elementos de sistemas de telecomunicaciones",
       "categoryIds": [
         "086ece91-23e4-4cfe-8b8d-269a61b2c3b4",
         "be6272d8-00f5-496d-8dc9-4a861b15c280"
@@ -774,7 +774,7 @@
       "slug": "switch-gestionable-48-puertos-gigabit-poe-4-sfp-cisco-catalyst-1000",
       "sku": "NDR-TEL-EQT-012",
       "name": "Switch Gestionable 48 Puertos Gigabit PoE+ y 4 SFP+ Cisco Catalyst 1000",
-      "category": "Equipos y Sistemas de Telecomunicaciones",
+      "category": "Elementos de sistemas de telecomunicaciones",
       "categoryIds": [
         "086ece91-23e4-4cfe-8b8d-269a61b2c3b4",
         "be6272d8-00f5-496d-8dc9-4a861b15c280"
@@ -821,7 +821,7 @@
       "slug": "router-agregacion-borde-firewall-unifi-dream-machine-se-ubiquiti",
       "sku": "NDR-TEL-EQT-013",
       "name": "Router de Agregación de Borde y Firewall UniFi Dream Machine SE",
-      "category": "Equipos y Sistemas de Telecomunicaciones",
+      "category": "Elementos de sistemas de telecomunicaciones",
       "categoryIds": [
         "086ece91-23e4-4cfe-8b8d-269a61b2c3b4",
         "716032c3-ed9b-45a0-8950-94b657458395"
@@ -868,7 +868,7 @@
       "slug": "router-borde-multi-wan-gigabit-routerboard-rb5009ug-s-in-mikrotik",
       "sku": "NDR-TEL-EQT-014",
       "name": "Router de Borde Multi-WAN Gigabit RouterBOARD RB5009UG+S+IN",
-      "category": "Equipos y Sistemas de Telecomunicaciones",
+      "category": "Elementos de sistemas de telecomunicaciones",
       "categoryIds": [
         "086ece91-23e4-4cfe-8b8d-269a61b2c3b4",
         "716032c3-ed9b-45a0-8950-94b657458395"
@@ -915,7 +915,7 @@
       "slug": "punto-acceso-wifi-7-tri-banda-empresarial-unifi-u7-pro-ubiquiti",
       "sku": "NDR-TEL-EQT-015",
       "name": "Punto de Acceso Wi-Fi 7 Tri-Banda Empresarial UniFi U7 Pro",
-      "category": "Equipos y Sistemas de Telecomunicaciones",
+      "category": "Elementos de sistemas de telecomunicaciones",
       "categoryIds": [
         "086ece91-23e4-4cfe-8b8d-269a61b2c3b4",
         "40aadbdc-fb3e-4881-8948-c38eb172a99b"
@@ -962,7 +962,7 @@
       "slug": "punto-acceso-wifi-6-ax3000-techo-alta-densidad-cap-ax-mikrotik",
       "sku": "NDR-TEL-EQT-016",
       "name": "Punto de Acceso Wi-Fi 6 AX3000 de Techo para Alta Densidad cAP AX",
-      "category": "Equipos y Sistemas de Telecomunicaciones",
+      "category": "Elementos de sistemas de telecomunicaciones",
       "categoryIds": [
         "086ece91-23e4-4cfe-8b8d-269a61b2c3b4",
         "40aadbdc-fb3e-4881-8948-c38eb172a99b"
@@ -1009,7 +1009,7 @@
       "slug": "transceptor-optico-sfp-10g-lr-monomodo-1310nm-10km-ubiquiti",
       "sku": "NDR-TEL-EQT-017",
       "name": "Transceptor Óptico SFP+ 10G LR Monomodo 1310nm 10km DDM",
-      "category": "Equipos y Sistemas de Telecomunicaciones",
+      "category": "Elementos de sistemas de telecomunicaciones",
       "categoryIds": [
         "086ece91-23e4-4cfe-8b8d-269a61b2c3b4",
         "a545f214-60ba-4829-8bbc-bf4a7e3d5e7d"
@@ -1056,7 +1056,7 @@
       "slug": "modulo-transceptor-sfp-10gbase-t-rj45-cobre-mikrotik",
       "sku": "NDR-TEL-EQT-018",
       "name": "Módulo Transceptor SFP+ 10GBASE-T RJ45 Cobre hasta 30m",
-      "category": "Equipos y Sistemas de Telecomunicaciones",
+      "category": "Elementos de sistemas de telecomunicaciones",
       "categoryIds": [
         "086ece91-23e4-4cfe-8b8d-269a61b2c3b4",
         "a545f214-60ba-4829-8bbc-bf4a7e3d5e7d"
@@ -1103,7 +1103,7 @@
       "slug": "central-amplificadora-programable-cabecera-avant-x-pro-televes",
       "sku": "NDR-TEL-EQT-019",
       "name": "Central Amplificadora Programable de Cabecera Avant X Pro UHF/VHF/FM",
-      "category": "Equipos y Sistemas de Telecomunicaciones",
+      "category": "Elementos de sistemas de telecomunicaciones",
       "categoryIds": [
         "086ece91-23e4-4cfe-8b8d-269a61b2c3b4",
         "12fc57a9-6c2a-4126-8295-50f4c1c06992"
@@ -1150,7 +1150,7 @@
       "slug": "transmodulador-optico-cabecera-dvb-s2-a-dvb-t-televes",
       "sku": "NDR-TEL-EQT-020",
       "name": "Transmodulador Óptico de Cabecera DVB-S2 a DVB-T/C con Ranura CI",
-      "category": "Equipos y Sistemas de Telecomunicaciones",
+      "category": "Elementos de sistemas de telecomunicaciones",
       "categoryIds": [
         "086ece91-23e4-4cfe-8b8d-269a61b2c3b4",
         "12fc57a9-6c2a-4126-8295-50f4c1c06992"
@@ -1197,7 +1197,7 @@
       "slug": "hub-domotico-multiprotocolo-zigbee-matter-thread-aqara-m3",
       "sku": "NDR-TEL-DOM-021",
       "name": "Hub Domótico Multiprotocolo Zigbee 3.0, Matter y Thread Aqara Hub M3",
-      "category": "Domótica y Hogar Digital",
+      "category": "Sistemas integrados y hogar digital",
       "categoryIds": [
         "677fd6b6-fb71-42ca-8469-ce47dd6541b1",
         "3488fcc9-3049-436c-808e-8e79dc0e4af2"
@@ -1244,7 +1244,7 @@
       "slug": "controlador-domotico-z-wave-plus-home-center-3-lite-fibaro",
       "sku": "NDR-TEL-DOM-022",
       "name": "Controlador Domótico Z-Wave Plus Home Center 3 Lite",
-      "category": "Domótica y Hogar Digital",
+      "category": "Sistemas integrados y hogar digital",
       "categoryIds": [
         "677fd6b6-fb71-42ca-8469-ce47dd6541b1",
         "3488fcc9-3049-436c-808e-8e79dc0e4af2"
@@ -1291,7 +1291,7 @@
       "slug": "rele-inteligente-4-canales-carril-din-medicion-shelly-pro-4pm",
       "sku": "NDR-TEL-DOM-023",
       "name": "Relé Inteligente 4 Canales para Carril DIN con Medición de Potencia Shelly Pro 4PM",
-      "category": "Domótica y Hogar Digital",
+      "category": "Sistemas integrados y hogar digital",
       "categoryIds": [
         "677fd6b6-fb71-42ca-8469-ce47dd6541b1",
         "1a9c4b69-62a2-416a-86a2-cae77d32fca7"
@@ -1338,7 +1338,7 @@
       "slug": "micromodulo-interruptor-empotrable-wifi-medicion-shelly-1pm-gen3",
       "sku": "NDR-TEL-DOM-024",
       "name": "Micromódulo Interruptor Empotrable Wi-Fi con Medición de Potencia Shelly 1PM Gen3",
-      "category": "Domótica y Hogar Digital",
+      "category": "Sistemas integrados y hogar digital",
       "categoryIds": [
         "677fd6b6-fb71-42ca-8469-ce47dd6541b1",
         "1a9c4b69-62a2-416a-86a2-cae77d32fca7"
@@ -1385,7 +1385,7 @@
       "slug": "sensor-presencia-humana-radar-milimetrico-mmwave-fp2-aqara",
       "sku": "NDR-TEL-DOM-025",
       "name": "Sensor de Presencia Humana por Radar Milimétrico mmWave FP2 Aqara",
-      "category": "Domótica y Hogar Digital",
+      "category": "Sistemas integrados y hogar digital",
       "categoryIds": [
         "677fd6b6-fb71-42ca-8469-ce47dd6541b1",
         "6d707317-2a75-46b6-8298-5b7c4ec8fce8"
@@ -1432,7 +1432,7 @@
       "slug": "sensor-ambiental-calidad-aire-temperatura-humedad-tvoc-aqara",
       "sku": "NDR-TEL-DOM-026",
       "name": "Sensor Ambiental de Calidad de Aire Temperatura y Humedad TVOC Zigbee",
-      "category": "Domótica y Hogar Digital",
+      "category": "Sistemas integrados y hogar digital",
       "categoryIds": [
         "677fd6b6-fb71-42ca-8469-ce47dd6541b1",
         "6d707317-2a75-46b6-8298-5b7c4ec8fce8"
@@ -1479,7 +1479,7 @@
       "slug": "videoportero-ip-poe-camara-2k-lector-nfc-unifi-g4-doorbell-pro-ubiquiti",
       "sku": "NDR-TEL-DOM-027",
       "name": "Videoportero IP PoE con Cámara 2K y Lector NFC UniFi G4 Doorbell Pro PoE",
-      "category": "Domótica y Hogar Digital",
+      "category": "Sistemas integrados y hogar digital",
       "categoryIds": [
         "677fd6b6-fb71-42ca-8469-ce47dd6541b1",
         "c9cdb222-9bf2-4222-8408-24ce60e2a614"
@@ -1526,7 +1526,7 @@
       "slug": "cerradura-electronica-inteligente-matter-thread-teclado-aqara-u200",
       "sku": "NDR-TEL-DOM-028",
       "name": "Cerradura Electrónica Inteligente Matter sobre Thread con Teclado Táctil y Biometría Aqara U200",
-      "category": "Domótica y Hogar Digital",
+      "category": "Sistemas integrados y hogar digital",
       "categoryIds": [
         "677fd6b6-fb71-42ca-8469-ce47dd6541b1",
         "c9cdb222-9bf2-4222-8408-24ce60e2a614"
@@ -1573,7 +1573,7 @@
       "slug": "termostato-inteligente-modulante-opentherm-wiser-schneider-electric",
       "sku": "NDR-TEL-DOM-029",
       "name": "Termostato Inteligente Modulante OpenTherm y Relé para Caldera/Bomba de Calor",
-      "category": "Domótica y Hogar Digital",
+      "category": "Sistemas integrados y hogar digital",
       "categoryIds": [
         "677fd6b6-fb71-42ca-8469-ce47dd6541b1",
         "7f8d2cb3-89aa-4570-8a60-58bd2816d24e"
@@ -1620,7 +1620,7 @@
       "slug": "cabezal-termostatico-inteligente-radiador-wifi-shelly-trv",
       "sku": "NDR-TEL-DOM-030",
       "name": "Cabezal Termostático Inteligente para Radiador Wi-Fi con Pantalla LED Shelly TRV",
-      "category": "Domótica y Hogar Digital",
+      "category": "Sistemas integrados y hogar digital",
       "categoryIds": [
         "677fd6b6-fb71-42ca-8469-ce47dd6541b1",
         "7f8d2cb3-89aa-4570-8a60-58bd2816d24e"
@@ -1667,7 +1667,7 @@
       "slug": "centralita-telefonica-ip-pbx-grandstream-ucm6302-1000-usuarios",
       "sku": "NDR-TEL-TEL-031",
       "name": "Centralita Telefónica IP-PBX Grandstream UCM6302 hasta 1000 Usuarios y 150 Llamadas",
-      "category": "Telefonía y Comunicaciones",
+      "category": "Sistemas de telefonía fija y móvil",
       "categoryIds": [
         "aa1c17c2-397a-4a16-8298-5a7b4e3862c9",
         "6164296b-a7c8-4c8f-861a-10e883a4ac93"
@@ -1714,7 +1714,7 @@
       "slug": "centralita-telefonica-ip-compacta-grandstream-ucm6204-4-fxo",
       "sku": "NDR-TEL-TEL-032",
       "name": "Centralita Telefónica IP Compacta Grandstream UCM6204 con 4 Puertos FXO",
-      "category": "Telefonía y Comunicaciones",
+      "category": "Sistemas de telefonía fija y móvil",
       "categoryIds": [
         "aa1c17c2-397a-4a16-8298-5a7b4e3862c9",
         "6164296b-a7c8-4c8f-861a-10e883a4ac93"
@@ -1761,7 +1761,7 @@
       "slug": "telefono-ip-ejecutivo-yealink-sip-t54w-pantalla-color-wifi-bluetooth",
       "sku": "NDR-TEL-TEL-033",
       "name": "Teléfono IP Ejecutivo Yealink SIP-T54W con Pantalla Color 4.3\" y Wi-Fi/Bluetooth",
-      "category": "Telefonía y Comunicaciones",
+      "category": "Sistemas de telefonía fija y móvil",
       "categoryIds": [
         "aa1c17c2-397a-4a16-8298-5a7b4e3862c9",
         "29e5b4f0-85ae-4b37-89aa-115582fbdaad"
@@ -1808,7 +1808,7 @@
       "slug": "sistema-telefonico-inalambrico-dect-ip-yealink-w73p-base-terminal",
       "sku": "NDR-TEL-TEL-034",
       "name": "Sistema Telefónico Inalámbrico DECT IP Yealink W73P Base + Terminal",
-      "category": "Telefonía y Comunicaciones",
+      "category": "Sistemas de telefonía fija y móvil",
       "categoryIds": [
         "aa1c17c2-397a-4a16-8298-5a7b4e3862c9",
         "29e5b4f0-85ae-4b37-89aa-115582fbdaad"
@@ -1855,7 +1855,7 @@
       "slug": "pasarela-voip-fxs-16-puertos-grandstream-gxw4216",
       "sku": "NDR-TEL-TEL-035",
       "name": "Pasarela VoIP FXS 16 Puertos Grandstream GXW4216 para Extensiones Analógicas",
-      "category": "Telefonía y Comunicaciones",
+      "category": "Sistemas de telefonía fija y móvil",
       "categoryIds": [
         "aa1c17c2-397a-4a16-8298-5a7b4e3862c9",
         "ec1516f2-2697-4161-881a-80328550ddb9"
@@ -1902,7 +1902,7 @@
       "slug": "gateway-voip-digital-isdn-bri-2-puertos-patton-smartnode-4120",
       "sku": "NDR-TEL-TEL-036",
       "name": "Gateway VoIP Digital ISDN BRI 2 Puertos Patton SmartNode SN4120",
-      "category": "Telefonía y Comunicaciones",
+      "category": "Sistemas de telefonía fija y móvil",
       "categoryIds": [
         "aa1c17c2-397a-4a16-8298-5a7b4e3862c9",
         "ec1516f2-2697-4161-881a-80328550ddb9"
@@ -1949,7 +1949,7 @@
       "slug": "router-celular-industrial-4g-lte-cat-4-teltonika-rut241",
       "sku": "NDR-TEL-TEL-037",
       "name": "Router Celular Industrial 4G LTE Cat 4 Teltonika RUT241",
-      "category": "Telefonía y Comunicaciones",
+      "category": "Sistemas de telefonía fija y móvil",
       "categoryIds": [
         "aa1c17c2-397a-4a16-8298-5a7b4e3862c9",
         "cbfb2de3-1f5a-4924-8ffc-529fed9df334"
@@ -1996,7 +1996,7 @@
       "slug": "router-celular-industrial-5g-wifi6-dual-sim-teltonika-rutx50",
       "sku": "NDR-TEL-TEL-038",
       "name": "Router Celular Industrial 5G y Wi-Fi 6 Dual SIM Teltonika RUTX50",
-      "category": "Telefonía y Comunicaciones",
+      "category": "Sistemas de telefonía fija y móvil",
       "categoryIds": [
         "aa1c17c2-397a-4a16-8298-5a7b4e3862c9",
         "cbfb2de3-1f5a-4924-8ffc-529fed9df334"
@@ -2043,7 +2043,7 @@
       "slug": "antena-exterior-omnidireccional-4g-5g-mimo-teltonika-pr1kmo40",
       "sku": "NDR-TEL-TEL-039",
       "name": "Antena Exterior Omnidireccional 4G/5G MIMO 698-3800 MHz 6 dBi Teltonika PR1KMO40",
-      "category": "Telefonía y Comunicaciones",
+      "category": "Sistemas de telefonía fija y móvil",
       "categoryIds": [
         "aa1c17c2-397a-4a16-8298-5a7b4e3862c9",
         "8d201b6f-f32f-4200-8fc7-cff38a00fbf2"
@@ -2090,7 +2090,7 @@
       "slug": "amplificador-senal-movil-4g-5g-multibanda-televes",
       "sku": "NDR-TEL-TEL-040",
       "name": "Amplificador de Señal Móvil 4G/5G Multibanda para Interiores StellaHome",
-      "category": "Telefonía y Comunicaciones",
+      "category": "Sistemas de telefonía fija y móvil",
       "categoryIds": [
         "aa1c17c2-397a-4a16-8298-5a7b4e3862c9",
         "8d201b6f-f32f-4200-8fc7-cff38a00fbf2"
@@ -2137,7 +2137,7 @@
       "slug": "gateway-iot-industrial-edge-advantech-uno-2271g-v2-modbus-mqtt",
       "sku": "NDR-TEL-DIG-041",
       "name": "Gateway IoT Industrial Edge Advantech UNO-2271G-V2 con Modbus y MQTT",
-      "category": "Digitalización e Industria Conectada",
+      "category": "Digitalización aplicada a los sectores productivos",
       "categoryIds": [
         "3e380976-47d1-4b9b-89c7-1145f4b9765b",
         "d09dc9b8-e89b-43bf-86ca-0d3223b6d046"
@@ -2184,7 +2184,7 @@
       "slug": "modulo-entradas-salidas-remotas-modbus-tcp-phoenix-contact",
       "sku": "NDR-TEL-DIG-042",
       "name": "Módulo de E/S Remotas Modbus TCP Ethernet Phoenix Contact Axioline Smart Elements",
-      "category": "Digitalización e Industria Conectada",
+      "category": "Digitalización aplicada a los sectores productivos",
       "categoryIds": [
         "3e380976-47d1-4b9b-89c7-1145f4b9765b",
         "d09dc9b8-e89b-43bf-86ca-0d3223b6d046"
@@ -2231,7 +2231,7 @@
       "slug": "servidor-edge-fanless-industrial-advantech-ark-1220l",
       "sku": "NDR-TEL-DIG-043",
       "name": "Servidor Edge Fanless Industrial Advantech ARK-1220L para Inferencia IA",
-      "category": "Digitalización e Industria Conectada",
+      "category": "Digitalización aplicada a los sectores productivos",
       "categoryIds": [
         "3e380976-47d1-4b9b-89c7-1145f4b9765b",
         "43d3c0cf-9a0d-4194-8e2c-2742beefbfb6"
@@ -2278,7 +2278,7 @@
       "slug": "micro-servidor-edge-fanless-2-5gbe-puertos-serie-moxa-v2201",
       "sku": "NDR-TEL-DIG-044",
       "name": "Micro Servidor Edge Fanless con Doble 2.5GbE y 4 Puertos Serie Moxa V2201",
-      "category": "Digitalización e Industria Conectada",
+      "category": "Digitalización aplicada a los sectores productivos",
       "categoryIds": [
         "3e380976-47d1-4b9b-89c7-1145f4b9765b",
         "43d3c0cf-9a0d-4194-8e2c-2742beefbfb6"
@@ -2325,7 +2325,7 @@
       "slug": "servidor-almacenamiento-nas-4-bahias-synology-ds923-plus",
       "sku": "NDR-TEL-DIG-045",
       "name": "Servidor de Almacenamiento en Red NAS 4 Bahías Synology DiskStation DS923+",
-      "category": "Digitalización e Industria Conectada",
+      "category": "Digitalización aplicada a los sectores productivos",
       "categoryIds": [
         "3e380976-47d1-4b9b-89c7-1145f4b9765b",
         "98c5ba32-286f-4639-8a02-ee4818d6938a"
@@ -2372,7 +2372,7 @@
       "slug": "servidor-almacenamiento-nas-rack-19-1u-synology-rs822-plus",
       "sku": "NDR-TEL-DIG-046",
       "name": "Servidor de Almacenamiento NAS en Rack 19\" 1U 4 Bahías Synology RackStation RS822+",
-      "category": "Digitalización e Industria Conectada",
+      "category": "Digitalización aplicada a los sectores productivos",
       "categoryIds": [
         "3e380976-47d1-4b9b-89c7-1145f4b9765b",
         "98c5ba32-286f-4639-8a02-ee4818d6938a"
@@ -2419,7 +2419,7 @@
       "slug": "ssd-kingston-nv3-1tb-m-2-2230-pcie-4-0-nvme-6000mb-s-3d-nand-gaming-0ete5",
       "sku": "REF-SNV3SM31T0-0ETE5",
       "name": "SSD Kingston NV3 1TB M.2 2230 PCIe 4.0 NVMe 6000MB/s 3D NAND Gaming",
-      "category": "Digitalización e Industria Conectada",
+      "category": "Digitalización aplicada a los sectores productivos",
       "categoryIds": [
         "3e380976-47d1-4b9b-89c7-1145f4b9765b",
         "98c5ba32-286f-4639-8a02-ee4818d6938a"
@@ -2466,7 +2466,7 @@
       "slug": "samsung-990-pro-1tb-disco-ssd-7450mb-s-nvme-pcie-4-0-m-2-gen4-1vopo",
       "sku": "REF-MZV9P1T0BW-1VOPO",
       "name": "Samsung 990 Pro 1TB Disco SSD 7450MB/S NVMe PCIe 4.0 M.2 Gen4",
-      "category": "Digitalización e Industria Conectada",
+      "category": "Digitalización aplicada a los sectores productivos",
       "categoryIds": [
         "3e380976-47d1-4b9b-89c7-1145f4b9765b",
         "98c5ba32-286f-4639-8a02-ee4818d6938a"
@@ -2513,7 +2513,7 @@
       "slug": "sensor-industrial-temperatura-humedad-modbus-rtu-rs485-schneider-electric",
       "sku": "NDR-TEL-DIG-047",
       "name": "Sensor Industrial de Temperatura y Humedad Modbus RTU RS-485 IP65",
-      "category": "Digitalización e Industria Conectada",
+      "category": "Digitalización aplicada a los sectores productivos",
       "categoryIds": [
         "3e380976-47d1-4b9b-89c7-1145f4b9765b",
         "0ac60e71-9131-4669-85ae-0625878433da"
@@ -2560,7 +2560,7 @@
       "slug": "transmisor-presion-industrial-4-20ma-modbus-0-10-bar-schneider-electric",
       "sku": "NDR-TEL-DIG-048",
       "name": "Transmisor de Presión Industrial 4-20mA y Modbus RTU 0-10 Bar Acero Inoxidable",
-      "category": "Digitalización e Industria Conectada",
+      "category": "Digitalización aplicada a los sectores productivos",
       "categoryIds": [
         "3e380976-47d1-4b9b-89c7-1145f4b9765b",
         "0ac60e71-9131-4669-85ae-0625878433da"
@@ -2607,7 +2607,7 @@
       "slug": "terminal-portatil-pda-movil-industrial-lector-2d-zebra-tc22",
       "sku": "NDR-TEL-DIG-049",
       "name": "Terminal Portátil PDA Móvil Industrial con Lector 2D Zebra TC22",
-      "category": "Digitalización e Industria Conectada",
+      "category": "Digitalización aplicada a los sectores productivos",
       "categoryIds": [
         "3e380976-47d1-4b9b-89c7-1145f4b9765b",
         "927bb59e-dd8b-40c9-82da-27163a13cfc0"
@@ -2654,7 +2654,7 @@
       "slug": "impresora-industrial-etiquetas-codigos-barras-termica-zebra-zt231",
       "sku": "NDR-TEL-DIG-050",
       "name": "Impresora Industrial de Etiquetas y Códigos de Barras Térmica Zebra ZT231",
-      "category": "Digitalización e Industria Conectada",
+      "category": "Digitalización aplicada a los sectores productivos",
       "categoryIds": [
         "3e380976-47d1-4b9b-89c7-1145f4b9765b",
         "927bb59e-dd8b-40c9-82da-27163a13cfc0"

@@ -21,6 +21,11 @@ export type HomepageMerchandising = {
 
 const byName = new Intl.Collator("es", { sensitivity: "base", numeric: true });
 const workspaceCategories = [
+  "Elementos de sistemas de telecomunicaciones",
+  "Técnicas y procesos en infraestructuras de telecomunicaciones",
+  "Sistemas integrados y hogar digital",
+  "Sistemas de telefonía fija y móvil",
+  "Digitalización aplicada a los sectores productivos",
   "Equipos y Sistemas de Telecomunicaciones",
   "Infraestructuras de Telecomunicaciones",
   "Domótica y Hogar Digital",

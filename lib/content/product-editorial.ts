@@ -24,6 +24,46 @@ export function groupSpecifications(specifications: readonly ProductSpecificatio
 }
 
 const guides: Partial<Record<ProductCategory, { title: string; checks: string[] }>> = {
+  "Técnicas y procesos en infraestructuras de telecomunicaciones": {
+    title: "Planificación de armarios rack y cableado estructurado",
+    checks: [
+      "Calcula las unidades de altura (U) y la profundidad útil considerando radios de curvatura y espacio para pasahilos.",
+      "Verifica la categoría requerida (Cat.6A o Cat.7) y la clasificación europea de reacción al fuego CPR (mínimo Dca/LSZH).",
+      "Asegura la continuidad de la toma de tierra en paneles de parcheo apantallados y distribuidores de fibra óptica.",
+    ],
+  },
+  "Elementos de sistemas de telecomunicaciones": {
+    title: "Selección de conmutación, enrutamiento y fibra óptica",
+    checks: [
+      "Calcula el presupuesto PoE total (W) sumando los consumos máximos de puntos de acceso, telefonía y cámaras.",
+      "Comprueba la longitud de onda y el tipo de fibra (1310 nm monomodo vs 850 nm multimodo) al elegir transceptores SFP+.",
+      "Revisa la capacidad de conmutación sin bloqueos y el soporte de enrutamiento estático o dinámico entre VLAN.",
+    ],
+  },
+  "Sistemas integrados y hogar digital": {
+    title: "Diseño de instalaciones domóticas y hogar digital",
+    checks: [
+      "Prioriza pasarelas multiprotocolo compatibles con estándares abiertos (Zigbee 3.0, Matter y Thread).",
+      "Comprueba la intensidad máxima por circuito en relés de carril DIN y la necesidad de neutro en micromódulos empotrables.",
+      "Instala los sensores de presencia por ondas milimétricas (mmWave) alejados de fuentes de vibración o ventiladores directos.",
+    ],
+  },
+  "Sistemas de telefonía fija y móvil": {
+    title: "Implantación de telefonía IP y comunicaciones móviles",
+    checks: [
+      "Dimensiona la concurrencia de llamadas (aprox. 100 kbps por llamada simultánea utilizando códec G.711 sin compresión).",
+      "Verifica la compatibilidad de paso de fax (protocolo T.38) y el suministro de tensión de línea en gateways analógicos.",
+      "Comprueba la cobertura de los operadores locales e instala antenas directivas exteriores MIMO para enlaces celulares 4G/5G.",
+    ],
+  },
+  "Digitalización aplicada a los sectores productivos": {
+    title: "Integración de sensórica Modbus, Edge Computing y NAS",
+    checks: [
+      "Comprueba el soporte de buses de campo industriales (Modbus RTU/TCP, OPC UA y MQTT) y el aislamiento galvánico de puertos serie.",
+      "Verifica el rango de temperatura admisible (-20°C a +60°C) y la alimentación continua (9-30V CC) para montaje en armario eléctrico.",
+      "Configura volúmenes RAID tolerantes a fallos (RAID 5/6) y caché SSD NVMe en servidores NAS para garantizar alta disponibilidad.",
+    ],
+  },
   "Infraestructuras de Telecomunicaciones": {
     title: "Planificación de armarios rack y cableado estructurado",
     checks: [

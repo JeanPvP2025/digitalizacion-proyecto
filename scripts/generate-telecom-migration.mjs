@@ -46,7 +46,8 @@ begin;
 for (const cat of telecom.categories) {
   sql += `insert into public.categories (id, slug, name, description, sort_order, parent_id, is_active)
 values (${sqlEscape(cat.id)}::uuid, ${sqlEscape(cat.slug)}, ${sqlEscape(cat.name)}, ${sqlEscape(cat.description)}, ${cat.sortOrder}, null, true)
-on conflict (slug) do update set
+on conflict (id) do update set
+  slug = excluded.slug,
   name = excluded.name,
   description = excluded.description,
   sort_order = excluded.sort_order,
@@ -60,8 +61,9 @@ on conflict (slug) do update set
     sql += `insert into public.categories (id, slug, name, description, sort_order, parent_id, is_active)
 select ${sqlEscape(sub.id)}::uuid, ${sqlEscape(sub.slug)}, ${sqlEscape(sub.name)}, ${sqlEscape(sub.description)}, ${sub.sortOrder}, c.id, true
 from public.categories c
-where c.slug = ${sqlEscape(cat.slug)}
-on conflict (slug) do update set
+where c.id = ${sqlEscape(cat.id)}::uuid
+on conflict (id) do update set
+  slug = excluded.slug,
   name = excluded.name,
   description = excluded.description,
   sort_order = excluded.sort_order,

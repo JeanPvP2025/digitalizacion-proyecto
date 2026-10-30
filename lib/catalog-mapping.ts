@@ -77,6 +77,11 @@ export type CatalogData =
 
 export const CATALOG_READ_ERROR = "No se pudo cargar el catálogo. Inténtalo de nuevo más tarde.";
 const productCategories = new Set<ProductCategory>([
+  "Técnicas y procesos en infraestructuras de telecomunicaciones",
+  "Elementos de sistemas de telecomunicaciones",
+  "Sistemas integrados y hogar digital",
+  "Sistemas de telefonía fija y móvil",
+  "Digitalización aplicada a los sectores productivos",
   "Infraestructuras de Telecomunicaciones",
   "Equipos y Sistemas de Telecomunicaciones",
   "Domótica y Hogar Digital",

@@ -14,7 +14,7 @@ test("editorial guides and articles lead to real product and category routes", a
   await expect(page).toHaveURL(/\/guias\/preparar-configuracion-pc$/);
   await expect(page.getByRole("heading", { name: "Prepara tu configuración de PC antes de añadir piezas." })).toBeVisible();
   await expect(page.getByRole("link", { name: reference.name }).first()).toHaveAttribute("href", `/producto/${reference.slug}`);
-  await expect(page.locator("main article").getByRole("link", { name: "Digitalización e Industria Conectada" })).toHaveAttribute("href", /\/catalogo\?categoria=digitalizacion-industria-conectada/);
+  await expect(page.locator("main article").getByRole("link", { name: "Digitalización aplicada a los sectores productivos" })).toHaveAttribute("href", /\/catalogo\?categoria=digitalizacion-aplicada-sectores-productivos/);
 
   await page.goto("/blog");
   await expect(page.getByRole("heading", { name: "Ideas para decidir mejor." })).toBeVisible();

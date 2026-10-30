@@ -8,8 +8,9 @@ begin;
 
 -- 1. Upsert Root Categories and Subcategories
 insert into public.categories (id, slug, name, description, sort_order, parent_id, is_active)
-values ('15cbe619-16f5-4f12-80ef-e0169c9f2ab9'::uuid, 'infraestructuras-telecomunicaciones', 'Infraestructuras de Telecomunicaciones', 'Armarios rack de 19", cableado estructurado Cat.6A/Cat.7, fibra óptica preconectorizada, paneles de parcheo y certificación de redes.', 10, null, true)
-on conflict (slug) do update set
+values ('15cbe619-16f5-4f12-80ef-e0169c9f2ab9'::uuid, 'tecnicas-procesos-infraestructuras-telecomunicaciones', 'Técnicas y procesos en infraestructuras de telecomunicaciones', 'Armarios rack de 19", cableado estructurado Cat.6A/Cat.7, fibra óptica preconectorizada, paneles de parcheo y certificación de redes.', 10, null, true)
+on conflict (id) do update set
+  slug = excluded.slug,
   name = excluded.name,
   description = excluded.description,
   sort_order = excluded.sort_order,
@@ -20,8 +21,9 @@ on conflict (slug) do update set
 insert into public.categories (id, slug, name, description, sort_order, parent_id, is_active)
 select 'db480e83-01e6-4d01-8d92-fb18c040c0e4'::uuid, 'racks-armarios', 'Racks y armarios de comunicaciones', 'Armarios murales y de suelo para salas de servidores y telecomunicaciones.', 11, c.id, true
 from public.categories c
-where c.slug = 'infraestructuras-telecomunicaciones'
-on conflict (slug) do update set
+where c.id = '15cbe619-16f5-4f12-80ef-e0169c9f2ab9'::uuid
+on conflict (id) do update set
+  slug = excluded.slug,
   name = excluded.name,
   description = excluded.description,
   sort_order = excluded.sort_order,
@@ -32,8 +34,9 @@ on conflict (slug) do update set
 insert into public.categories (id, slug, name, description, sort_order, parent_id, is_active)
 select '74c5188b-8666-4942-8fbb-6e49c004a792'::uuid, 'cableado-estructurado', 'Cableado estructurado Cat.6A/Cat.7', 'Bobinas de cable de red de cobre apantallado y libre de halógenos LSZH.', 12, c.id, true
 from public.categories c
-where c.slug = 'infraestructuras-telecomunicaciones'
-on conflict (slug) do update set
+where c.id = '15cbe619-16f5-4f12-80ef-e0169c9f2ab9'::uuid
+on conflict (id) do update set
+  slug = excluded.slug,
   name = excluded.name,
   description = excluded.description,
   sort_order = excluded.sort_order,
@@ -44,8 +47,9 @@ on conflict (slug) do update set
 insert into public.categories (id, slug, name, description, sort_order, parent_id, is_active)
 select '9c41e121-8c41-40bb-80f1-a6bc7f3767ae'::uuid, 'fibra-optica', 'Fibra óptica y distribución troncal', 'Mangueras preconectorizadas, bandejas de distribución y pigtails ópticos.', 13, c.id, true
 from public.categories c
-where c.slug = 'infraestructuras-telecomunicaciones'
-on conflict (slug) do update set
+where c.id = '15cbe619-16f5-4f12-80ef-e0169c9f2ab9'::uuid
+on conflict (id) do update set
+  slug = excluded.slug,
   name = excluded.name,
   description = excluded.description,
   sort_order = excluded.sort_order,
@@ -56,8 +60,9 @@ on conflict (slug) do update set
 insert into public.categories (id, slug, name, description, sort_order, parent_id, is_active)
 select '28227571-be86-456d-8feb-bb12d3775010'::uuid, 'paneles-parcheo', 'Paneles de parcheo y gestión de cable', 'Paneles modulares RJ45, guías de cables y pasahilos horizontales.', 14, c.id, true
 from public.categories c
-where c.slug = 'infraestructuras-telecomunicaciones'
-on conflict (slug) do update set
+where c.id = '15cbe619-16f5-4f12-80ef-e0169c9f2ab9'::uuid
+on conflict (id) do update set
+  slug = excluded.slug,
   name = excluded.name,
   description = excluded.description,
   sort_order = excluded.sort_order,
@@ -68,8 +73,9 @@ on conflict (slug) do update set
 insert into public.categories (id, slug, name, description, sort_order, parent_id, is_active)
 select '1aa3c71c-fbff-448c-85d9-a98463ab3f69'::uuid, 'herramientas-certificacion', 'Herramientas profesionales y certificación', 'Certificadores de redes Cat.6A/Cat.8 y fusionadoras de fibra por alineación de núcleo.', 15, c.id, true
 from public.categories c
-where c.slug = 'infraestructuras-telecomunicaciones'
-on conflict (slug) do update set
+where c.id = '15cbe619-16f5-4f12-80ef-e0169c9f2ab9'::uuid
+on conflict (id) do update set
+  slug = excluded.slug,
   name = excluded.name,
   description = excluded.description,
   sort_order = excluded.sort_order,
@@ -78,8 +84,9 @@ on conflict (slug) do update set
   updated_at = now();
 
 insert into public.categories (id, slug, name, description, sort_order, parent_id, is_active)
-values ('086ece91-23e4-4cfe-8b8d-269a61b2c3b4'::uuid, 'equipos-sistemas-telecomunicaciones', 'Equipos y Sistemas de Telecomunicaciones', 'Switches gestionables L2+/L3, routers de borde, puntos de acceso Wi-Fi 6E/7, transceptores ópticos SFP+ y cabeceras de distribución.', 20, null, true)
-on conflict (slug) do update set
+values ('086ece91-23e4-4cfe-8b8d-269a61b2c3b4'::uuid, 'elementos-sistemas-telecomunicaciones', 'Elementos de sistemas de telecomunicaciones', 'Switches gestionables L2+/L3, routers de borde, puntos de acceso Wi-Fi 6E/7, transceptores ópticos SFP+ y cabeceras de distribución.', 20, null, true)
+on conflict (id) do update set
+  slug = excluded.slug,
   name = excluded.name,
   description = excluded.description,
   sort_order = excluded.sort_order,
@@ -90,8 +97,9 @@ on conflict (slug) do update set
 insert into public.categories (id, slug, name, description, sort_order, parent_id, is_active)
 select 'be6272d8-00f5-496d-8dc9-4a861b15c280'::uuid, 'switches-gestionables', 'Switches gestionables capa 2/3 y PoE+', 'Conmutadores de alta capacidad con PoE+ y puertos de enlace 10G SFP+.', 21, c.id, true
 from public.categories c
-where c.slug = 'equipos-sistemas-telecomunicaciones'
-on conflict (slug) do update set
+where c.id = '086ece91-23e4-4cfe-8b8d-269a61b2c3b4'::uuid
+on conflict (id) do update set
+  slug = excluded.slug,
   name = excluded.name,
   description = excluded.description,
   sort_order = excluded.sort_order,
@@ -102,8 +110,9 @@ on conflict (slug) do update set
 insert into public.categories (id, slug, name, description, sort_order, parent_id, is_active)
 select '716032c3-ed9b-45a0-8950-94b657458395'::uuid, 'routers-borde', 'Routers de borde y balanceo de carga', 'Pasarelas de seguridad multi-WAN y cortafuegos con inspección profunda de paquetes.', 22, c.id, true
 from public.categories c
-where c.slug = 'equipos-sistemas-telecomunicaciones'
-on conflict (slug) do update set
+where c.id = '086ece91-23e4-4cfe-8b8d-269a61b2c3b4'::uuid
+on conflict (id) do update set
+  slug = excluded.slug,
   name = excluded.name,
   description = excluded.description,
   sort_order = excluded.sort_order,
@@ -114,8 +123,9 @@ on conflict (slug) do update set
 insert into public.categories (id, slug, name, description, sort_order, parent_id, is_active)
 select '40aadbdc-fb3e-4881-8948-c38eb172a99b'::uuid, 'puntos-acceso-wifi', 'Puntos de acceso inalámbrico Wi-Fi 6E/7', 'Puntos de acceso corporativos de alta densidad y tecnología multi-banda.', 23, c.id, true
 from public.categories c
-where c.slug = 'equipos-sistemas-telecomunicaciones'
-on conflict (slug) do update set
+where c.id = '086ece91-23e4-4cfe-8b8d-269a61b2c3b4'::uuid
+on conflict (id) do update set
+  slug = excluded.slug,
   name = excluded.name,
   description = excluded.description,
   sort_order = excluded.sort_order,
@@ -126,8 +136,9 @@ on conflict (slug) do update set
 insert into public.categories (id, slug, name, description, sort_order, parent_id, is_active)
 select 'a545f214-60ba-4829-8bbc-bf4a7e3d5e7d'::uuid, 'transceptores-opticos', 'Módulos transceptores ópticos SFP/SFP+', 'Transceptores 10G monomodo, multimodo y 10GBASE-T en cobre.', 24, c.id, true
 from public.categories c
-where c.slug = 'equipos-sistemas-telecomunicaciones'
-on conflict (slug) do update set
+where c.id = '086ece91-23e4-4cfe-8b8d-269a61b2c3b4'::uuid
+on conflict (id) do update set
+  slug = excluded.slug,
   name = excluded.name,
   description = excluded.description,
   sort_order = excluded.sort_order,
@@ -138,8 +149,9 @@ on conflict (slug) do update set
 insert into public.categories (id, slug, name, description, sort_order, parent_id, is_active)
 select '12fc57a9-6c2a-4126-8295-50f4c1c06992'::uuid, 'cabeceras-rf-tv', 'Cabeceras de radiofrecuencia y distribución TV/SAT', 'Centrales amplificadoras programables y transmoduladores ópticos DVB.', 25, c.id, true
 from public.categories c
-where c.slug = 'equipos-sistemas-telecomunicaciones'
-on conflict (slug) do update set
+where c.id = '086ece91-23e4-4cfe-8b8d-269a61b2c3b4'::uuid
+on conflict (id) do update set
+  slug = excluded.slug,
   name = excluded.name,
   description = excluded.description,
   sort_order = excluded.sort_order,
@@ -148,8 +160,9 @@ on conflict (slug) do update set
   updated_at = now();
 
 insert into public.categories (id, slug, name, description, sort_order, parent_id, is_active)
-values ('677fd6b6-fb71-42ca-8469-ce47dd6541b1'::uuid, 'domotica-hogar-digital', 'Domótica y Hogar Digital', 'Pasarelas multiprotocolo Zigbee 3.0/Matter, relés para carril DIN, sensores ambientales, videoporteros IP y climatización inteligente.', 30, null, true)
-on conflict (slug) do update set
+values ('677fd6b6-fb71-42ca-8469-ce47dd6541b1'::uuid, 'sistemas-integrados-hogar-digital', 'Sistemas integrados y hogar digital', 'Pasarelas multiprotocolo Zigbee 3.0/Matter, relés para carril DIN, sensores ambientales, videoporteros IP y climatización inteligente.', 30, null, true)
+on conflict (id) do update set
+  slug = excluded.slug,
   name = excluded.name,
   description = excluded.description,
   sort_order = excluded.sort_order,
@@ -160,8 +173,9 @@ on conflict (slug) do update set
 insert into public.categories (id, slug, name, description, sort_order, parent_id, is_active)
 select '3488fcc9-3049-436c-808e-8e79dc0e4af2'::uuid, 'pasarelas-controladores', 'Pasarelas y controladores domóticos', 'Centros de control compatibles con Matter, Zigbee 3.0, Thread y Apple Home.', 31, c.id, true
 from public.categories c
-where c.slug = 'domotica-hogar-digital'
-on conflict (slug) do update set
+where c.id = '677fd6b6-fb71-42ca-8469-ce47dd6541b1'::uuid
+on conflict (id) do update set
+  slug = excluded.slug,
   name = excluded.name,
   description = excluded.description,
   sort_order = excluded.sort_order,
@@ -172,8 +186,9 @@ on conflict (slug) do update set
 insert into public.categories (id, slug, name, description, sort_order, parent_id, is_active)
 select '1a9c4b69-62a2-416a-86a2-cae77d32fca7'::uuid, 'reles-actuadores', 'Micromódulos y relés inteligentes para carril DIN', 'Actuadores de control de iluminación y cargas de potencia con telemetría de energía.', 32, c.id, true
 from public.categories c
-where c.slug = 'domotica-hogar-digital'
-on conflict (slug) do update set
+where c.id = '677fd6b6-fb71-42ca-8469-ce47dd6541b1'::uuid
+on conflict (id) do update set
+  slug = excluded.slug,
   name = excluded.name,
   description = excluded.description,
   sort_order = excluded.sort_order,
@@ -184,8 +199,9 @@ on conflict (slug) do update set
 insert into public.categories (id, slug, name, description, sort_order, parent_id, is_active)
 select '6d707317-2a75-46b6-8298-5b7c4ec8fce8'::uuid, 'sensores-ambientales', 'Sensores ambientales, presencia y consumo', 'Sensores de presencia por radar milimétrico mmWave y monitores de calidad de aire.', 33, c.id, true
 from public.categories c
-where c.slug = 'domotica-hogar-digital'
-on conflict (slug) do update set
+where c.id = '677fd6b6-fb71-42ca-8469-ce47dd6541b1'::uuid
+on conflict (id) do update set
+  slug = excluded.slug,
   name = excluded.name,
   description = excluded.description,
   sort_order = excluded.sort_order,
@@ -196,8 +212,9 @@ on conflict (slug) do update set
 insert into public.categories (id, slug, name, description, sort_order, parent_id, is_active)
 select 'c9cdb222-9bf2-4222-8408-24ce60e2a614'::uuid, 'videoporteros-control-acceso', 'Videoporteros IP y control de accesos', 'Intercomunicadores PoE con cámara 2K, lectores NFC y cerraduras inteligentes.', 34, c.id, true
 from public.categories c
-where c.slug = 'domotica-hogar-digital'
-on conflict (slug) do update set
+where c.id = '677fd6b6-fb71-42ca-8469-ce47dd6541b1'::uuid
+on conflict (id) do update set
+  slug = excluded.slug,
   name = excluded.name,
   description = excluded.description,
   sort_order = excluded.sort_order,
@@ -208,8 +225,9 @@ on conflict (slug) do update set
 insert into public.categories (id, slug, name, description, sort_order, parent_id, is_active)
 select '7f8d2cb3-89aa-4570-8a60-58bd2816d24e'::uuid, 'climatizacion-inteligente', 'Termostatos y gestión climática inteligente', 'Termostatos modulantes OpenTherm y cabezales termostáticos electrónicos para radiadores.', 35, c.id, true
 from public.categories c
-where c.slug = 'domotica-hogar-digital'
-on conflict (slug) do update set
+where c.id = '677fd6b6-fb71-42ca-8469-ce47dd6541b1'::uuid
+on conflict (id) do update set
+  slug = excluded.slug,
   name = excluded.name,
   description = excluded.description,
   sort_order = excluded.sort_order,
@@ -218,8 +236,9 @@ on conflict (slug) do update set
   updated_at = now();
 
 insert into public.categories (id, slug, name, description, sort_order, parent_id, is_active)
-values ('aa1c17c2-397a-4a16-8298-5a7b4e3862c9'::uuid, 'telefonia-comunicaciones', 'Telefonía y Comunicaciones', 'Centralitas telefónicas IP-PBX, terminales SIP ejecutivos, teléfonos DECT, pasarelas VoIP FXS/FXO y routers celulares industriales 4G/5G.', 40, null, true)
-on conflict (slug) do update set
+values ('aa1c17c2-397a-4a16-8298-5a7b4e3862c9'::uuid, 'sistemas-telefonia-fija-movil', 'Sistemas de telefonía fija y móvil', 'Centralitas telefónicas IP-PBX, terminales SIP ejecutivos, teléfonos DECT, pasarelas VoIP FXS/FXO y routers celulares industriales 4G/5G.', 40, null, true)
+on conflict (id) do update set
+  slug = excluded.slug,
   name = excluded.name,
   description = excluded.description,
   sort_order = excluded.sort_order,
@@ -230,8 +249,9 @@ on conflict (slug) do update set
 insert into public.categories (id, slug, name, description, sort_order, parent_id, is_active)
 select '6164296b-a7c8-4c8f-861a-10e883a4ac93'::uuid, 'centralitas-ip-pbx', 'Centralitas IP-PBX y servidores SIP', 'Servidores de comunicaciones unificadas con operadora automática y salas de conferencia.', 41, c.id, true
 from public.categories c
-where c.slug = 'telefonia-comunicaciones'
-on conflict (slug) do update set
+where c.id = 'aa1c17c2-397a-4a16-8298-5a7b4e3862c9'::uuid
+on conflict (id) do update set
+  slug = excluded.slug,
   name = excluded.name,
   description = excluded.description,
   sort_order = excluded.sort_order,
@@ -242,8 +262,9 @@ on conflict (slug) do update set
 insert into public.categories (id, slug, name, description, sort_order, parent_id, is_active)
 select '29e5b4f0-85ae-4b37-89aa-115582fbdaad'::uuid, 'telefonos-ip-dect', 'Teléfonos IP sobremesa y terminales DECT', 'Teléfonos ejecutivos con pantalla en color, audio HD y sistemas inalámbricos multisede.', 42, c.id, true
 from public.categories c
-where c.slug = 'telefonia-comunicaciones'
-on conflict (slug) do update set
+where c.id = 'aa1c17c2-397a-4a16-8298-5a7b4e3862c9'::uuid
+on conflict (id) do update set
+  slug = excluded.slug,
   name = excluded.name,
   description = excluded.description,
   sort_order = excluded.sort_order,
@@ -254,8 +275,9 @@ on conflict (slug) do update set
 insert into public.categories (id, slug, name, description, sort_order, parent_id, is_active)
 select 'ec1516f2-2697-4161-881a-80328550ddb9'::uuid, 'gateways-voip', 'Pasarelas VoIP analógicas y digitales FXS/FXO/PRI', 'Adaptadores de líneas telefónicas tradicionales e interfaces RDSI/ISDN a SIP.', 43, c.id, true
 from public.categories c
-where c.slug = 'telefonia-comunicaciones'
-on conflict (slug) do update set
+where c.id = 'aa1c17c2-397a-4a16-8298-5a7b4e3862c9'::uuid
+on conflict (id) do update set
+  slug = excluded.slug,
   name = excluded.name,
   description = excluded.description,
   sort_order = excluded.sort_order,
@@ -266,8 +288,9 @@ on conflict (slug) do update set
 insert into public.categories (id, slug, name, description, sort_order, parent_id, is_active)
 select 'cbfb2de3-1f5a-4924-8ffc-529fed9df334'::uuid, 'routers-celulares-4g-5g', 'Routers y módems celulares industriales 4G/5G', 'Equipos de conectividad móvil crítica con doble SIM y soporte VPN avanzado.', 44, c.id, true
 from public.categories c
-where c.slug = 'telefonia-comunicaciones'
-on conflict (slug) do update set
+where c.id = 'aa1c17c2-397a-4a16-8298-5a7b4e3862c9'::uuid
+on conflict (id) do update set
+  slug = excluded.slug,
   name = excluded.name,
   description = excluded.description,
   sort_order = excluded.sort_order,
@@ -278,8 +301,9 @@ on conflict (slug) do update set
 insert into public.categories (id, slug, name, description, sort_order, parent_id, is_active)
 select '8d201b6f-f32f-4200-8fc7-cff38a00fbf2'::uuid, 'antenas-comunicaciones', 'Antenas móviles M2M/IoT y amplificadores', 'Antenas de alta ganancia para exterior y sistemas de amplificación celular conformes con la Directiva RED.', 45, c.id, true
 from public.categories c
-where c.slug = 'telefonia-comunicaciones'
-on conflict (slug) do update set
+where c.id = 'aa1c17c2-397a-4a16-8298-5a7b4e3862c9'::uuid
+on conflict (id) do update set
+  slug = excluded.slug,
   name = excluded.name,
   description = excluded.description,
   sort_order = excluded.sort_order,
@@ -288,8 +312,9 @@ on conflict (slug) do update set
   updated_at = now();
 
 insert into public.categories (id, slug, name, description, sort_order, parent_id, is_active)
-values ('3e380976-47d1-4b9b-89c7-1145f4b9765b'::uuid, 'digitalizacion-industria-conectada', 'Digitalización e Industria Conectada', 'Gateways IoT industriales, servidores de computación Edge, almacenamiento en red NAS, sensores Modbus/RS-485 y trazabilidad con terminales de lectura.', 50, null, true)
-on conflict (slug) do update set
+values ('3e380976-47d1-4b9b-89c7-1145f4b9765b'::uuid, 'digitalizacion-aplicada-sectores-productivos', 'Digitalización aplicada a los sectores productivos', 'Gateways IoT industriales, servidores de computación Edge, almacenamiento en red NAS, sensores Modbus/RS-485 y trazabilidad con terminales de lectura.', 50, null, true)
+on conflict (id) do update set
+  slug = excluded.slug,
   name = excluded.name,
   description = excluded.description,
   sort_order = excluded.sort_order,
@@ -300,8 +325,9 @@ on conflict (slug) do update set
 insert into public.categories (id, slug, name, description, sort_order, parent_id, is_active)
 select 'd09dc9b8-e89b-43bf-86ca-0d3223b6d046'::uuid, 'gateways-iot-industriales', 'Gateways IoT y adquisición de datos en planta', 'Pasarelas industriales con soporte Node-RED, Modbus TCP/RTU y brokers MQTT.', 51, c.id, true
 from public.categories c
-where c.slug = 'digitalizacion-industria-conectada'
-on conflict (slug) do update set
+where c.id = '3e380976-47d1-4b9b-89c7-1145f4b9765b'::uuid
+on conflict (id) do update set
+  slug = excluded.slug,
   name = excluded.name,
   description = excluded.description,
   sort_order = excluded.sort_order,
@@ -312,8 +338,9 @@ on conflict (slug) do update set
 insert into public.categories (id, slug, name, description, sort_order, parent_id, is_active)
 select '43d3c0cf-9a0d-4194-8e2c-2742beefbfb6'::uuid, 'servidores-edge-computacion', 'Servidores Edge y computación industrial', 'Equipos embebidos fanless para analítica en borde e inferencia de inteligencia artificial.', 52, c.id, true
 from public.categories c
-where c.slug = 'digitalizacion-industria-conectada'
-on conflict (slug) do update set
+where c.id = '3e380976-47d1-4b9b-89c7-1145f4b9765b'::uuid
+on conflict (id) do update set
+  slug = excluded.slug,
   name = excluded.name,
   description = excluded.description,
   sort_order = excluded.sort_order,
@@ -324,8 +351,9 @@ on conflict (slug) do update set
 insert into public.categories (id, slug, name, description, sort_order, parent_id, is_active)
 select '98c5ba32-286f-4639-8a02-ee4818d6938a'::uuid, 'almacenamiento-nas-servidores', 'Almacenamiento en red NAS y servidores', 'Sistemas de almacenamiento centralizado con copias automatizadas y unidades NVMe ultrarrápidas.', 53, c.id, true
 from public.categories c
-where c.slug = 'digitalizacion-industria-conectada'
-on conflict (slug) do update set
+where c.id = '3e380976-47d1-4b9b-89c7-1145f4b9765b'::uuid
+on conflict (id) do update set
+  slug = excluded.slug,
   name = excluded.name,
   description = excluded.description,
   sort_order = excluded.sort_order,
@@ -336,8 +364,9 @@ on conflict (slug) do update set
 insert into public.categories (id, slug, name, description, sort_order, parent_id, is_active)
 select '0ac60e71-9131-4669-85ae-0625878433da'::uuid, 'sensores-industriales-modbus', 'Sensores industriales e interfaces Modbus / IO-Link', 'Transmisores de presión, temperatura e instrumentación de procesos en acero inoxidable.', 54, c.id, true
 from public.categories c
-where c.slug = 'digitalizacion-industria-conectada'
-on conflict (slug) do update set
+where c.id = '3e380976-47d1-4b9b-89c7-1145f4b9765b'::uuid
+on conflict (id) do update set
+  slug = excluded.slug,
   name = excluded.name,
   description = excluded.description,
   sort_order = excluded.sort_order,
@@ -348,8 +377,9 @@ on conflict (slug) do update set
 insert into public.categories (id, slug, name, description, sort_order, parent_id, is_active)
 select '927bb59e-dd8b-40c9-82da-27163a13cfc0'::uuid, 'captura-datos-trazabilidad', 'Terminales de captura de datos y trazabilidad logística', 'PDA industriales con escáner 2D, sellado IP68 e impresoras térmicas de etiquetas.', 55, c.id, true
 from public.categories c
-where c.slug = 'digitalizacion-industria-conectada'
-on conflict (slug) do update set
+where c.id = '3e380976-47d1-4b9b-89c7-1145f4b9765b'::uuid
+on conflict (id) do update set
+  slug = excluded.slug,
   name = excluded.name,
   description = excluded.description,
   sort_order = excluded.sort_order,
@@ -468,7 +498,7 @@ begin
   insert into public.product_categories (product_id, category_id)
   select 'tel-inf-001', c.id
   from public.categories c
-  where c.slug in ('infraestructuras-telecomunicaciones', 'racks-armarios')
+  where c.slug in ('tecnicas-procesos-infraestructuras-telecomunicaciones', 'racks-armarios')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
@@ -577,7 +607,7 @@ begin
   insert into public.product_categories (product_id, category_id)
   select 'tel-inf-002', c.id
   from public.categories c
-  where c.slug in ('infraestructuras-telecomunicaciones', 'racks-armarios')
+  where c.slug in ('tecnicas-procesos-infraestructuras-telecomunicaciones', 'racks-armarios')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
@@ -686,7 +716,7 @@ begin
   insert into public.product_categories (product_id, category_id)
   select 'tel-inf-003', c.id
   from public.categories c
-  where c.slug in ('infraestructuras-telecomunicaciones', 'cableado-estructurado')
+  where c.slug in ('tecnicas-procesos-infraestructuras-telecomunicaciones', 'cableado-estructurado')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
@@ -795,7 +825,7 @@ begin
   insert into public.product_categories (product_id, category_id)
   select 'tel-inf-004', c.id
   from public.categories c
-  where c.slug in ('infraestructuras-telecomunicaciones', 'cableado-estructurado')
+  where c.slug in ('tecnicas-procesos-infraestructuras-telecomunicaciones', 'cableado-estructurado')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
@@ -904,7 +934,7 @@ begin
   insert into public.product_categories (product_id, category_id)
   select 'tel-inf-005', c.id
   from public.categories c
-  where c.slug in ('infraestructuras-telecomunicaciones', 'fibra-optica')
+  where c.slug in ('tecnicas-procesos-infraestructuras-telecomunicaciones', 'fibra-optica')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
@@ -1013,7 +1043,7 @@ begin
   insert into public.product_categories (product_id, category_id)
   select 'tel-inf-006', c.id
   from public.categories c
-  where c.slug in ('infraestructuras-telecomunicaciones', 'fibra-optica')
+  where c.slug in ('tecnicas-procesos-infraestructuras-telecomunicaciones', 'fibra-optica')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
@@ -1122,7 +1152,7 @@ begin
   insert into public.product_categories (product_id, category_id)
   select 'tel-inf-007', c.id
   from public.categories c
-  where c.slug in ('infraestructuras-telecomunicaciones', 'paneles-parcheo')
+  where c.slug in ('tecnicas-procesos-infraestructuras-telecomunicaciones', 'paneles-parcheo')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
@@ -1231,7 +1261,7 @@ begin
   insert into public.product_categories (product_id, category_id)
   select 'tel-inf-008', c.id
   from public.categories c
-  where c.slug in ('infraestructuras-telecomunicaciones', 'paneles-parcheo')
+  where c.slug in ('tecnicas-procesos-infraestructuras-telecomunicaciones', 'paneles-parcheo')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
@@ -1340,7 +1370,7 @@ begin
   insert into public.product_categories (product_id, category_id)
   select 'tel-inf-009', c.id
   from public.categories c
-  where c.slug in ('infraestructuras-telecomunicaciones', 'herramientas-certificacion')
+  where c.slug in ('tecnicas-procesos-infraestructuras-telecomunicaciones', 'herramientas-certificacion')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
@@ -1449,7 +1479,7 @@ begin
   insert into public.product_categories (product_id, category_id)
   select 'tel-inf-010', c.id
   from public.categories c
-  where c.slug in ('infraestructuras-telecomunicaciones', 'herramientas-certificacion')
+  where c.slug in ('tecnicas-procesos-infraestructuras-telecomunicaciones', 'herramientas-certificacion')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
@@ -1558,7 +1588,7 @@ begin
   insert into public.product_categories (product_id, category_id)
   select 'tel-eqt-011', c.id
   from public.categories c
-  where c.slug in ('equipos-sistemas-telecomunicaciones', 'switches-gestionables')
+  where c.slug in ('elementos-sistemas-telecomunicaciones', 'switches-gestionables')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
@@ -1667,7 +1697,7 @@ begin
   insert into public.product_categories (product_id, category_id)
   select 'tel-eqt-012', c.id
   from public.categories c
-  where c.slug in ('equipos-sistemas-telecomunicaciones', 'switches-gestionables')
+  where c.slug in ('elementos-sistemas-telecomunicaciones', 'switches-gestionables')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
@@ -1776,7 +1806,7 @@ begin
   insert into public.product_categories (product_id, category_id)
   select 'tel-eqt-013', c.id
   from public.categories c
-  where c.slug in ('equipos-sistemas-telecomunicaciones', 'routers-borde')
+  where c.slug in ('elementos-sistemas-telecomunicaciones', 'routers-borde')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
@@ -1885,7 +1915,7 @@ begin
   insert into public.product_categories (product_id, category_id)
   select 'tel-eqt-014', c.id
   from public.categories c
-  where c.slug in ('equipos-sistemas-telecomunicaciones', 'routers-borde')
+  where c.slug in ('elementos-sistemas-telecomunicaciones', 'routers-borde')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
@@ -1994,7 +2024,7 @@ begin
   insert into public.product_categories (product_id, category_id)
   select 'tel-eqt-015', c.id
   from public.categories c
-  where c.slug in ('equipos-sistemas-telecomunicaciones', 'puntos-acceso-wifi')
+  where c.slug in ('elementos-sistemas-telecomunicaciones', 'puntos-acceso-wifi')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
@@ -2103,7 +2133,7 @@ begin
   insert into public.product_categories (product_id, category_id)
   select 'tel-eqt-016', c.id
   from public.categories c
-  where c.slug in ('equipos-sistemas-telecomunicaciones', 'puntos-acceso-wifi')
+  where c.slug in ('elementos-sistemas-telecomunicaciones', 'puntos-acceso-wifi')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
@@ -2212,7 +2242,7 @@ begin
   insert into public.product_categories (product_id, category_id)
   select 'tel-eqt-017', c.id
   from public.categories c
-  where c.slug in ('equipos-sistemas-telecomunicaciones', 'transceptores-opticos')
+  where c.slug in ('elementos-sistemas-telecomunicaciones', 'transceptores-opticos')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
@@ -2321,7 +2351,7 @@ begin
   insert into public.product_categories (product_id, category_id)
   select 'tel-eqt-018', c.id
   from public.categories c
-  where c.slug in ('equipos-sistemas-telecomunicaciones', 'transceptores-opticos')
+  where c.slug in ('elementos-sistemas-telecomunicaciones', 'transceptores-opticos')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
@@ -2430,7 +2460,7 @@ begin
   insert into public.product_categories (product_id, category_id)
   select 'tel-eqt-019', c.id
   from public.categories c
-  where c.slug in ('equipos-sistemas-telecomunicaciones', 'cabeceras-rf-tv')
+  where c.slug in ('elementos-sistemas-telecomunicaciones', 'cabeceras-rf-tv')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
@@ -2539,7 +2569,7 @@ begin
   insert into public.product_categories (product_id, category_id)
   select 'tel-eqt-020', c.id
   from public.categories c
-  where c.slug in ('equipos-sistemas-telecomunicaciones', 'cabeceras-rf-tv')
+  where c.slug in ('elementos-sistemas-telecomunicaciones', 'cabeceras-rf-tv')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
@@ -2648,7 +2678,7 @@ begin
   insert into public.product_categories (product_id, category_id)
   select 'tel-dom-021', c.id
   from public.categories c
-  where c.slug in ('domotica-hogar-digital', 'pasarelas-controladores')
+  where c.slug in ('sistemas-integrados-hogar-digital', 'pasarelas-controladores')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
@@ -2757,7 +2787,7 @@ begin
   insert into public.product_categories (product_id, category_id)
   select 'tel-dom-022', c.id
   from public.categories c
-  where c.slug in ('domotica-hogar-digital', 'pasarelas-controladores')
+  where c.slug in ('sistemas-integrados-hogar-digital', 'pasarelas-controladores')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
@@ -2866,7 +2896,7 @@ begin
   insert into public.product_categories (product_id, category_id)
   select 'tel-dom-023', c.id
   from public.categories c
-  where c.slug in ('domotica-hogar-digital', 'reles-actuadores')
+  where c.slug in ('sistemas-integrados-hogar-digital', 'reles-actuadores')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
@@ -2975,7 +3005,7 @@ begin
   insert into public.product_categories (product_id, category_id)
   select 'tel-dom-024', c.id
   from public.categories c
-  where c.slug in ('domotica-hogar-digital', 'reles-actuadores')
+  where c.slug in ('sistemas-integrados-hogar-digital', 'reles-actuadores')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
@@ -3084,7 +3114,7 @@ begin
   insert into public.product_categories (product_id, category_id)
   select 'tel-dom-025', c.id
   from public.categories c
-  where c.slug in ('domotica-hogar-digital', 'sensores-ambientales')
+  where c.slug in ('sistemas-integrados-hogar-digital', 'sensores-ambientales')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
@@ -3193,7 +3223,7 @@ begin
   insert into public.product_categories (product_id, category_id)
   select 'tel-dom-026', c.id
   from public.categories c
-  where c.slug in ('domotica-hogar-digital', 'sensores-ambientales')
+  where c.slug in ('sistemas-integrados-hogar-digital', 'sensores-ambientales')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
@@ -3302,7 +3332,7 @@ begin
   insert into public.product_categories (product_id, category_id)
   select 'tel-dom-027', c.id
   from public.categories c
-  where c.slug in ('domotica-hogar-digital', 'videoporteros-control-acceso')
+  where c.slug in ('sistemas-integrados-hogar-digital', 'videoporteros-control-acceso')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
@@ -3411,7 +3441,7 @@ begin
   insert into public.product_categories (product_id, category_id)
   select 'tel-dom-028', c.id
   from public.categories c
-  where c.slug in ('domotica-hogar-digital', 'videoporteros-control-acceso')
+  where c.slug in ('sistemas-integrados-hogar-digital', 'videoporteros-control-acceso')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
@@ -3520,7 +3550,7 @@ begin
   insert into public.product_categories (product_id, category_id)
   select 'tel-dom-029', c.id
   from public.categories c
-  where c.slug in ('domotica-hogar-digital', 'climatizacion-inteligente')
+  where c.slug in ('sistemas-integrados-hogar-digital', 'climatizacion-inteligente')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
@@ -3629,7 +3659,7 @@ begin
   insert into public.product_categories (product_id, category_id)
   select 'tel-dom-030', c.id
   from public.categories c
-  where c.slug in ('domotica-hogar-digital', 'climatizacion-inteligente')
+  where c.slug in ('sistemas-integrados-hogar-digital', 'climatizacion-inteligente')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
@@ -3738,7 +3768,7 @@ begin
   insert into public.product_categories (product_id, category_id)
   select 'tel-tel-031', c.id
   from public.categories c
-  where c.slug in ('telefonia-comunicaciones', 'centralitas-ip-pbx')
+  where c.slug in ('sistemas-telefonia-fija-movil', 'centralitas-ip-pbx')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
@@ -3847,7 +3877,7 @@ begin
   insert into public.product_categories (product_id, category_id)
   select 'tel-tel-032', c.id
   from public.categories c
-  where c.slug in ('telefonia-comunicaciones', 'centralitas-ip-pbx')
+  where c.slug in ('sistemas-telefonia-fija-movil', 'centralitas-ip-pbx')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
@@ -3956,7 +3986,7 @@ begin
   insert into public.product_categories (product_id, category_id)
   select 'tel-tel-033', c.id
   from public.categories c
-  where c.slug in ('telefonia-comunicaciones', 'telefonos-ip-dect')
+  where c.slug in ('sistemas-telefonia-fija-movil', 'telefonos-ip-dect')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
@@ -4065,7 +4095,7 @@ begin
   insert into public.product_categories (product_id, category_id)
   select 'tel-tel-034', c.id
   from public.categories c
-  where c.slug in ('telefonia-comunicaciones', 'telefonos-ip-dect')
+  where c.slug in ('sistemas-telefonia-fija-movil', 'telefonos-ip-dect')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
@@ -4174,7 +4204,7 @@ begin
   insert into public.product_categories (product_id, category_id)
   select 'tel-tel-035', c.id
   from public.categories c
-  where c.slug in ('telefonia-comunicaciones', 'gateways-voip')
+  where c.slug in ('sistemas-telefonia-fija-movil', 'gateways-voip')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
@@ -4283,7 +4313,7 @@ begin
   insert into public.product_categories (product_id, category_id)
   select 'tel-tel-036', c.id
   from public.categories c
-  where c.slug in ('telefonia-comunicaciones', 'gateways-voip')
+  where c.slug in ('sistemas-telefonia-fija-movil', 'gateways-voip')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
@@ -4392,7 +4422,7 @@ begin
   insert into public.product_categories (product_id, category_id)
   select 'tel-tel-037', c.id
   from public.categories c
-  where c.slug in ('telefonia-comunicaciones', 'routers-celulares-4g-5g')
+  where c.slug in ('sistemas-telefonia-fija-movil', 'routers-celulares-4g-5g')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
@@ -4501,7 +4531,7 @@ begin
   insert into public.product_categories (product_id, category_id)
   select 'tel-tel-038', c.id
   from public.categories c
-  where c.slug in ('telefonia-comunicaciones', 'routers-celulares-4g-5g')
+  where c.slug in ('sistemas-telefonia-fija-movil', 'routers-celulares-4g-5g')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
@@ -4610,7 +4640,7 @@ begin
   insert into public.product_categories (product_id, category_id)
   select 'tel-tel-039', c.id
   from public.categories c
-  where c.slug in ('telefonia-comunicaciones', 'antenas-comunicaciones')
+  where c.slug in ('sistemas-telefonia-fija-movil', 'antenas-comunicaciones')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
@@ -4719,7 +4749,7 @@ begin
   insert into public.product_categories (product_id, category_id)
   select 'tel-tel-040', c.id
   from public.categories c
-  where c.slug in ('telefonia-comunicaciones', 'antenas-comunicaciones')
+  where c.slug in ('sistemas-telefonia-fija-movil', 'antenas-comunicaciones')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
@@ -4828,7 +4858,7 @@ begin
   insert into public.product_categories (product_id, category_id)
   select 'tel-dig-041', c.id
   from public.categories c
-  where c.slug in ('digitalizacion-industria-conectada', 'gateways-iot-industriales')
+  where c.slug in ('digitalizacion-aplicada-sectores-productivos', 'gateways-iot-industriales')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
@@ -4937,7 +4967,7 @@ begin
   insert into public.product_categories (product_id, category_id)
   select 'tel-dig-042', c.id
   from public.categories c
-  where c.slug in ('digitalizacion-industria-conectada', 'gateways-iot-industriales')
+  where c.slug in ('digitalizacion-aplicada-sectores-productivos', 'gateways-iot-industriales')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
@@ -5046,7 +5076,7 @@ begin
   insert into public.product_categories (product_id, category_id)
   select 'tel-dig-043', c.id
   from public.categories c
-  where c.slug in ('digitalizacion-industria-conectada', 'servidores-edge-computacion')
+  where c.slug in ('digitalizacion-aplicada-sectores-productivos', 'servidores-edge-computacion')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
@@ -5155,7 +5185,7 @@ begin
   insert into public.product_categories (product_id, category_id)
   select 'tel-dig-044', c.id
   from public.categories c
-  where c.slug in ('digitalizacion-industria-conectada', 'servidores-edge-computacion')
+  where c.slug in ('digitalizacion-aplicada-sectores-productivos', 'servidores-edge-computacion')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
@@ -5264,7 +5294,7 @@ begin
   insert into public.product_categories (product_id, category_id)
   select 'tel-dig-045', c.id
   from public.categories c
-  where c.slug in ('digitalizacion-industria-conectada', 'almacenamiento-nas-servidores')
+  where c.slug in ('digitalizacion-aplicada-sectores-productivos', 'almacenamiento-nas-servidores')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
@@ -5373,7 +5403,7 @@ begin
   insert into public.product_categories (product_id, category_id)
   select 'tel-dig-046', c.id
   from public.categories c
-  where c.slug in ('digitalizacion-industria-conectada', 'almacenamiento-nas-servidores')
+  where c.slug in ('digitalizacion-aplicada-sectores-productivos', 'almacenamiento-nas-servidores')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
@@ -5482,7 +5512,7 @@ begin
   insert into public.product_categories (product_id, category_id)
   select 'ref-storage-snv3sm3-1t0', c.id
   from public.categories c
-  where c.slug in ('digitalizacion-industria-conectada', 'almacenamiento-nas-servidores')
+  where c.slug in ('digitalizacion-aplicada-sectores-productivos', 'almacenamiento-nas-servidores')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
@@ -5591,7 +5621,7 @@ begin
   insert into public.product_categories (product_id, category_id)
   select 'ref-storage-mz-v9p1t0bw', c.id
   from public.categories c
-  where c.slug in ('digitalizacion-industria-conectada', 'almacenamiento-nas-servidores')
+  where c.slug in ('digitalizacion-aplicada-sectores-productivos', 'almacenamiento-nas-servidores')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
@@ -5700,7 +5730,7 @@ begin
   insert into public.product_categories (product_id, category_id)
   select 'tel-dig-047', c.id
   from public.categories c
-  where c.slug in ('digitalizacion-industria-conectada', 'sensores-industriales-modbus')
+  where c.slug in ('digitalizacion-aplicada-sectores-productivos', 'sensores-industriales-modbus')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
@@ -5809,7 +5839,7 @@ begin
   insert into public.product_categories (product_id, category_id)
   select 'tel-dig-048', c.id
   from public.categories c
-  where c.slug in ('digitalizacion-industria-conectada', 'sensores-industriales-modbus')
+  where c.slug in ('digitalizacion-aplicada-sectores-productivos', 'sensores-industriales-modbus')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
@@ -5918,7 +5948,7 @@ begin
   insert into public.product_categories (product_id, category_id)
   select 'tel-dig-049', c.id
   from public.categories c
-  where c.slug in ('digitalizacion-industria-conectada', 'captura-datos-trazabilidad')
+  where c.slug in ('digitalizacion-aplicada-sectores-productivos', 'captura-datos-trazabilidad')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant
@@ -6027,7 +6057,7 @@ begin
   insert into public.product_categories (product_id, category_id)
   select 'tel-dig-050', c.id
   from public.categories c
-  where c.slug in ('digitalizacion-industria-conectada', 'captura-datos-trazabilidad')
+  where c.slug in ('digitalizacion-aplicada-sectores-productivos', 'captura-datos-trazabilidad')
   on conflict (product_id, category_id) do nothing;
 
   -- Variant

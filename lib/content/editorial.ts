@@ -95,7 +95,7 @@ export const editorialArticles: readonly EditorialArticle[] = [
     category: "Componentes", author: "Redacción NODRIA · equipo ficticio",
     publishedAt: "2026-10-03", updatedAt: "2026-10-08",
     takeaway: "Una configuración requiere revisar el conjunto y sus variantes; una comprobación parcial no certifica un montaje real.",
-    productSlugs: ["ssd-kingston-nv3-1tb-m-2-2230-pcie-4-0-nvme-6000mb-s-3d-nand-gaming-0ete5", "samsung-990-pro-1tb-disco-ssd-7450mb-s-nvme-pcie-4-0-m-2-gen4-1vopo"], categorySlugs: ["digitalizacion-industria-conectada"],
+    productSlugs: ["ssd-kingston-nv3-1tb-m-2-2230-pcie-4-0-nvme-6000mb-s-3d-nand-gaming-0ete5", "samsung-990-pro-1tb-disco-ssd-7450mb-s-nvme-pcie-4-0-m-2-gen4-1vopo"], categorySlugs: ["digitalizacion-aplicada-sectores-productivos", "digitalizacion-industria-conectada"],
     related: ["portatil-o-sobremesa", "elegir-monitor-escritorio"],
     sections: [
       { id: "objetivo", title: "1. Define el objetivo y lo que ya tienes", paragraphs: [
@@ -143,7 +143,7 @@ export const editorialArticles: readonly EditorialArticle[] = [
     category: "Conectividad", author: "Redacción NODRIA · equipo ficticio",
     publishedAt: "2026-10-05", updatedAt: "2026-10-08",
     takeaway: "Describe el problema y las condiciones de uso antes de asumir que un nuevo dispositivo lo resolverá.",
-    productSlugs: ["ubiquiti-dream-machine-special-edition-udm-se", "mikrotik-routerboard-rb5009ug-s-in"], categorySlugs: ["equipos-sistemas-telecomunicaciones"],
+    productSlugs: ["ubiquiti-dream-machine-special-edition-udm-se", "mikrotik-routerboard-rb5009ug-s-in"], categorySlugs: ["elementos-sistemas-telecomunicaciones", "equipos-sistemas-telecomunicaciones"],
     related: ["renovar-equipos-oficina", "elegir-portatil-trabajo-estudio"],
     sections: [
       { id: "mapa", title: "Empieza por un mapa y un síntoma concreto", paragraphs: [
@@ -167,7 +167,7 @@ export const editorialArticles: readonly EditorialArticle[] = [
     category: "Empresas", author: "Redacción NODRIA · equipo ficticio",
     publishedAt: "2026-10-06", updatedAt: "2026-10-08",
     takeaway: "Una solicitud útil describe puestos y restricciones; una lista de unidades por sí sola deja demasiadas decisiones abiertas.",
-    productSlugs: ["cisco-catalyst-1000-48-puertos-gigabit-poe-plus", "grandstream-ucm6302-centralita-ip-pbx"], categorySlugs: ["telefonia-comunicaciones", "equipos-sistemas-telecomunicaciones"],
+    productSlugs: ["cisco-catalyst-1000-48-puertos-gigabit-poe-plus", "grandstream-ucm6302-centralita-ip-pbx"], categorySlugs: ["sistemas-telefonia-fija-movil", "elementos-sistemas-telecomunicaciones", "telefonia-comunicaciones", "equipos-sistemas-telecomunicaciones"],
     related: ["elegir-monitor-escritorio", "planificar-red-hogar"],
     sections: [
       { id: "perfiles", title: "Agrupa puestos por tareas verificables", paragraphs: [

@@ -17,6 +17,11 @@ export const metadata: Metadata = {
 };
 
 const categoryIcons: Record<string, typeof Network> = {
+  "Técnicas y procesos en infraestructuras de telecomunicaciones": Server,
+  "Elementos de sistemas de telecomunicaciones": Network,
+  "Sistemas integrados y hogar digital": Radio,
+  "Sistemas de telefonía fija y móvil": Smartphone,
+  "Digitalización aplicada a los sectores productivos": Cpu,
   "Infraestructuras de Telecomunicaciones": Server,
   "Equipos y Sistemas de Telecomunicaciones": Network,
   "Domótica y Hogar Digital": Radio,

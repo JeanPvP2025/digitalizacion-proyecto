@@ -9,7 +9,7 @@ const primaryRoutes = [
   "/catalogo",
   "/catalogo?q=nvme",
   "/categorias",
-  "/categorias/infraestructuras-telecomunicaciones",
+  "/categorias/tecnicas-procesos-infraestructuras-telecomunicaciones",
   "/marcas",
   "/marcas/televes",
   "/campanas",

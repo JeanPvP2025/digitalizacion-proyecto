@@ -40,11 +40,11 @@ export function StoreHeader() {
         <div className="header-subnav">
           <span className="subnav-label">EXPLORA</span>
           <Link className="mobile-nav-link" href="/catalogo">Catálogo</Link>
-          <Link href="/catalogo?categoria=infraestructuras-telecomunicaciones">Infraestructuras</Link>
-          <Link href="/catalogo?categoria=equipos-sistemas-telecomunicaciones">Equipos y Redes</Link>
-          <Link href="/catalogo?categoria=domotica-hogar-digital">Hogar Digital</Link>
-          <Link href="/catalogo?categoria=telefonia-comunicaciones">Telefonía</Link>
-          <Link href="/catalogo?categoria=digitalizacion-industria-conectada">Industria 4.0</Link>
+          <Link href="/catalogo?categoria=tecnicas-procesos-infraestructuras-telecomunicaciones">Técnicas e Infraestructuras</Link>
+          <Link href="/catalogo?categoria=elementos-sistemas-telecomunicaciones">Elementos de Sistemas</Link>
+          <Link href="/catalogo?categoria=sistemas-integrados-hogar-digital">Sistemas Integrados y Hogar Digital</Link>
+          <Link href="/catalogo?categoria=sistemas-telefonia-fija-movil">Telefonía Fija y Móvil</Link>
+          <Link href="/catalogo?categoria=digitalizacion-aplicada-sectores-productivos">Digitalización Productiva</Link>
           <Link className="mobile-nav-link" href="/configurador">PC Builder</Link>
           <Link href="/marcas">Marcas</Link>
           <Link className="mobile-nav-link" href="/empresas">Empresas</Link>
