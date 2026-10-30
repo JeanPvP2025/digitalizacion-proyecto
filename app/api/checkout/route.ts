@@ -47,10 +47,11 @@ const variantRowsSchema = z.array(z.object({
   id: z.uuid(),
   product_id: z.string().min(1),
   is_active: z.boolean(),
+  attributes: z.unknown().optional(),
   products: z.object({ is_published: z.boolean() }).strict(),
 }).strict());
 const cartIdSchema = z.uuid();
-const checkoutVariantSelect = "id,product_id,is_active,products!inner(is_published)";
+const checkoutVariantSelect = "id,product_id,is_active,attributes,products!inner(is_published)";
 
 const MAX_ATTEMPTS_PER_MINUTE = 6;
 type DemoRequestWithRequest = { data: CheckoutRequest; request: Request };
@@ -110,11 +111,29 @@ async function loadSellableCheckoutVariants(
   const variantIds = [...new Set(items.flatMap((item) => "variantId" in item ? [item.variantId] : []))];
   const sellableVariants = new Map<string, CheckoutVariantRow>();
 
-  const appendSellableVariants = async (column: "id" | "product_id", values: string[]) => {
-    if (values.length === 0) return;
+  // Explicit variant references from PC Builder PRO are sellable when active and having pc_builder attributes,
+  // even if their product is unpublished from the commercial catalog. ProductId references strictly require is_published.
+  if (variantIds.length > 0) {
     const { data, error } = await supabase.from("product_variants")
       .select(checkoutVariantSelect)
-      .in(column, values)
+      .in("id", variantIds)
+      .eq("is_active", true);
+    if (error) throw error;
+
+    const parsed = variantRowsSchema.safeParse(data);
+    if (!parsed.success) throw new Error("Supabase returned an invalid product variant response.");
+    for (const row of parsed.data) {
+      const hasPcBuilder = typeof row.attributes === "object" && row.attributes !== null && "pc_builder" in row.attributes;
+      if (row.is_active && (row.products.is_published || hasPcBuilder)) {
+        sellableVariants.set(row.id, { id: row.id, product_id: row.product_id });
+      }
+    }
+  }
+
+  if (productIds.length > 0) {
+    const { data, error } = await supabase.from("product_variants")
+      .select(checkoutVariantSelect)
+      .in("product_id", productIds)
       .eq("is_active", true)
       .eq("products.is_published", true);
     if (error) throw error;
@@ -126,12 +145,7 @@ async function loadSellableCheckoutVariants(
         sellableVariants.set(row.id, { id: row.id, product_id: row.product_id });
       }
     }
-  };
-
-  // These reads use the authenticated user's publishable-key client. The query
-  // filters validate sellability while RLS remains the authorization boundary.
-  await appendSellableVariants("id", variantIds);
-  await appendSellableVariants("product_id", productIds);
+  }
   return [...sellableVariants.values()];
 }
 

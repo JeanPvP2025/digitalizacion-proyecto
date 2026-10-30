@@ -19,7 +19,7 @@ const attributesByCategory: Record<PcBuilderCategory, Record<string, unknown>> =
   cooler: { category: "cooler", supported_sockets: ["AM5"], estimated_power_w: 12 },
 };
 
-function catalogRows(categories: readonly PcBuilderCategory[] = pcBuilderCategories): PcBuilderCatalogRows {
+function catalogRows(categories: readonly PcBuilderCategory[] = pcBuilderCategories): Required<PcBuilderCatalogRows> {
   return {
     products: categories.map((_, index) => ({
       id: productId(index + 1), slug: `component-${index + 1}`, name: `Pieza ${index + 1}`,
@@ -79,7 +79,7 @@ describe("PC Builder catalogue contract and compatibility", () => {
     expect(missingEstimate.components[0]).not.toHaveProperty("estimatedPowerW");
   });
 
-  it("requires an eligible active product category before exposing a variant", () => {
+  it("requires an eligible active product category before exposing a variant in storefront mode", () => {
     const rows = catalogRows(["cpu"]);
     rows.categories[0].slug = "ordenadores";
     expect(mapPcBuilderRows(rows)).toEqual({ components: [], omittedVariants: 0 });
@@ -87,6 +87,18 @@ describe("PC Builder catalogue contract and compatibility", () => {
     rows.categories[0].slug = "componentes";
     rows.categories[0].is_active = false;
     expect(mapPcBuilderRows(rows)).toEqual({ components: [], omittedVariants: 0 });
+  });
+
+  it("maps authorized PC Builder components without requiring storefront categories or published status in specialized mode", () => {
+    const rows = catalogRows();
+    const specializedRows: PcBuilderCatalogRows = {
+      products: rows.products.map((p) => ({ ...p, is_published: false })),
+      variants: rows.variants,
+    };
+    const result = mapPcBuilderRows(specializedRows);
+    expect(result.components).toHaveLength(pcBuilderCategories.length);
+    expect(result.omittedVariants).toBe(0);
+    expect(result.components[0]).toMatchObject({ id: variantId(1), category: "cpu" });
   });
 
   it("checks compatibility using selected variant attributes", () => {

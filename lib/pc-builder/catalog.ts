@@ -3,7 +3,7 @@ import "server-only";
 import { createClient } from "@supabase/supabase-js";
 import { getServerDataMode } from "@/lib/server/data-mode";
 import { getSupabaseCredentials } from "@/lib/supabase/config";
-import { mapPcBuilderRows, type PcBuilderCatalogRows } from "./catalog-mapping";
+import { mapPcBuilderRows, type PcBuilderCatalogRows, type PcBuilderVariantRow } from "./catalog-mapping";
 import { getVerifiedReferenceBuilderCatalog } from "./reference-catalog";
 import type { PcBuilderCatalog } from "./types";
 
@@ -14,43 +14,60 @@ async function readPcBuilderCatalog(): Promise<PcBuilderCatalog> {
   if (!credentials) return { source: "error", components: [], omittedVariants: 0, message: CATALOG_ERROR };
 
   try {
-    // Public catalogue data is read with the publishable key under public RLS.
+    // Authorized PC Builder components are read with the publishable key under public RLS.
     const client = createClient(credentials.url, credentials.key, {
       auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
     });
-    const [productsResult, categoriesResult] = await Promise.all([
+
+    // 1. Fetch active variants that possess the pc_builder configuration contract
+    const variantsResult = await client
+      .from("product_variants")
+      .select("id,product_id,sku,title,attributes,current_price,currency,is_active")
+      .not("attributes->pc_builder", "is", null)
+      .eq("is_active", true);
+
+    if (variantsResult.error) throw variantsResult.error;
+
+    const variants = (variantsResult.data ?? []) as PcBuilderVariantRow[];
+    if (variants.length === 0) return { source: "supabase", components: [], omittedVariants: 0 };
+
+    const productIds = [...new Set(variants.map(({ product_id }) => product_id))];
+    const variantIds = variants.map(({ id }) => id);
+
+    // 2. Query matching products and live inventory in parallel
+    const [productsResult, inventoryResult] = await Promise.all([
       client.from("products")
         .select("id,slug,name,brand,summary,image_url,image_alt,is_published")
-        .eq("is_published", true)
+        .in("id", productIds)
         .order("name"),
-      client.from("categories")
-        .select("id,slug,is_active")
-        .eq("is_active", true),
+      client.from("inventory")
+        .select("variant_id,on_hand,reserved")
+        .in("variant_id", variantIds),
     ]);
-    if (productsResult.error || categoriesResult.error) throw productsResult.error ?? categoriesResult.error;
+
+    if (productsResult.error) throw productsResult.error;
+
+    const inventory = (inventoryResult.data ?? []) as Array<{ variant_id: string; on_hand: number; reserved: number }>;
+    const stockByVariantId = new Map<string, number>();
+    for (const item of inventory) {
+      const current = stockByVariantId.get(item.variant_id) ?? 0;
+      stockByVariantId.set(item.variant_id, current + Math.max(0, (item.on_hand ?? 0) - (item.reserved ?? 0)));
+    }
+
+    const variantsWithStock: PcBuilderVariantRow[] = variants.map((variant) => {
+      const liveStock = stockByVariantId.get(variant.id);
+      return liveStock !== undefined
+        ? { ...variant, stock: liveStock }
+        : variant;
+    });
 
     const products = (productsResult.data ?? []) as PcBuilderCatalogRows["products"];
-    const categories = (categoriesResult.data ?? []) as PcBuilderCatalogRows["categories"];
-    if (products.length === 0) return { source: "supabase", components: [], omittedVariants: 0 };
-
-    const productIds = products.map(({ id }) => id);
-    const [linksResult, variantsResult] = await Promise.all([
-      client.from("product_categories")
-        .select("product_id,category_id")
-        .in("product_id", productIds),
-      client.from("product_variants")
-        .select("id,product_id,sku,title,attributes,current_price,currency,is_active")
-        .in("product_id", productIds)
-        .eq("is_active", true),
-    ]);
-    if (linksResult.error || variantsResult.error) throw linksResult.error ?? variantsResult.error;
 
     const mapped = mapPcBuilderRows({
       products,
-      categories,
-      productCategories: (linksResult.data ?? []) as PcBuilderCatalogRows["productCategories"],
-      variants: (variantsResult.data ?? []) as PcBuilderCatalogRows["variants"],
+      variants: variantsWithStock,
     });
+
     return { source: "supabase", ...mapped };
   } catch {
     return { source: "error", components: [], omittedVariants: 0, message: CATALOG_ERROR };
@@ -68,4 +85,3 @@ export async function getPcBuilderCatalog(): Promise<PcBuilderCatalog> {
   }
   return readPcBuilderCatalog();
 }
-

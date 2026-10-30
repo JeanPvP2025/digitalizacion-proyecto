@@ -48,8 +48,8 @@ export type PcBuilderVariantRow = {
 
 export type PcBuilderCatalogRows = {
   products: PcBuilderProductRow[];
-  categories: PcBuilderCategoryRow[];
-  productCategories: PcBuilderProductCategoryRow[];
+  categories?: PcBuilderCategoryRow[];
+  productCategories?: PcBuilderProductCategoryRow[];
   variants: PcBuilderVariantRow[];
 };
 
@@ -193,20 +193,28 @@ function parseVariantComponent(
 }
 
 /**
- * Only published products in the active Componentes or Almacenamiento
- * categories with the store's `attributes.pc_builder` contract become
- * selectable. Display specifications are not compatibility rules.
+ * Maps components for PC Builder PRO.
+ * In storefront mode (when categories and productCategories are supplied),
+ * requires published products in eligible active categories ("componentes", "almacenamiento").
+ * In specialized PC Builder mode (when categories/links are omitted), maps authorized
+ * components whose variants possess the valid attributes.pc_builder contract.
  */
 export function mapPcBuilderRows(rows: PcBuilderCatalogRows) {
-  const activeCategoryIds = new Set(rows.categories
-    .filter((category) => category.is_active && ["componentes", "almacenamiento"].includes(category.slug))
-    .map((category) => category.id));
-  const productsWithEligibleCategory = new Set(rows.productCategories
-    .filter((link) => activeCategoryIds.has(link.category_id))
-    .map((link) => link.product_id));
-  const products = new Map(rows.products
-    .filter((product) => product.is_published && productsWithEligibleCategory.has(product.id))
-    .map((product) => [product.id, product]));
+  let products: Map<string, PcBuilderProductRow>;
+
+  if (rows.categories && rows.categories.length > 0 && rows.productCategories && rows.productCategories.length > 0) {
+    const activeCategoryIds = new Set(rows.categories
+      .filter((category) => category.is_active && ["componentes", "almacenamiento"].includes(category.slug))
+      .map((category) => category.id));
+    const productsWithEligibleCategory = new Set(rows.productCategories
+      .filter((link) => activeCategoryIds.has(link.category_id))
+      .map((link) => link.product_id));
+    products = new Map(rows.products
+      .filter((product) => product.is_published && productsWithEligibleCategory.has(product.id))
+      .map((product) => [product.id, product]));
+  } else {
+    products = new Map(rows.products.map((product) => [product.id, product]));
+  }
 
   const components: PcBuilderCatalogComponent[] = [];
   let omittedVariants = 0;

@@ -20,6 +20,7 @@ function mockClient(results: Record<string, ReturnType<typeof queryResult>>) {
         eq: vi.fn(() => query),
         order: vi.fn(() => query),
         in: vi.fn(() => query),
+        not: vi.fn(() => query),
         then: (resolve: (value: unknown) => unknown, reject: (reason: unknown) => unknown) => Promise.resolve(result).then(resolve, reject),
       };
       return query;
@@ -58,6 +59,7 @@ function catalogueResults() {
       },
       current_price: reference.price.toFixed(2), currency: "EUR", is_active: true,
     }]),
+    inventory: queryResult([{ variant_id: "00000000-0000-4000-8000-000000000001", on_hand: 10, reserved: 0 }]),
   };
 }
 
@@ -100,11 +102,43 @@ describe("PC Builder catalogue loading boundary", () => {
     expect(supabaseMock.createClient).toHaveBeenCalledWith("http://127.0.0.1:56201", "test-publishable-key", expect.any(Object));
   });
 
+  it("loads authorized PC Builder components even when their product has is_published = false", async () => {
+    setSupabaseMode();
+    const reference = demoProducts[0]!;
+    supabaseMock.createClient.mockReturnValue(mockClient({
+      product_variants: queryResult([{
+        id: "00000000-0000-4000-8000-000000000001", product_id: reference.id, sku: reference.sku, title: "Estándar",
+        attributes: {
+          pc_builder: { category: "cpu", socket: "AM5", memory_generations: ["DDR5"], estimated_power_w: 65, integrated_graphics: true },
+          nodria_store: { mode: "academic_demo", model_number: reference.modelNumber },
+        },
+        current_price: reference.price.toFixed(2), currency: "EUR", is_active: true,
+      }]),
+      products: queryResult([{
+        id: reference.id, slug: reference.slug, name: reference.name, brand: reference.brand,
+        summary: reference.summary, image_url: reference.image, image_alt: reference.imageAlt, is_published: false,
+      }]),
+      inventory: queryResult([{ variant_id: "00000000-0000-4000-8000-000000000001", on_hand: 5, reserved: 0 }]),
+    }));
+    const { getPcBuilderCatalog } = await import("@/lib/pc-builder/catalog");
+    const result = await getPcBuilderCatalog();
+    expect(result.source).toBe("supabase");
+    if (result.source !== "supabase") throw new Error("Expected the connected catalogue.");
+    expect(result.components).toHaveLength(1);
+    expect(result.components[0]).toMatchObject({
+      variantId: "00000000-0000-4000-8000-000000000001",
+      productId: reference.id,
+      stock: 5,
+    });
+  });
+
   it("returns an explicit error instead of substituting demo fixtures when the connected catalogue fails", async () => {
     setSupabaseMode();
-    supabaseMock.createClient.mockReturnValue(mockClient({ products: queryResult(null, { message: "database unavailable" }) }));
+    supabaseMock.createClient.mockReturnValue(mockClient({
+      product_variants: queryResult(null, { message: "database unavailable" }),
+      products: queryResult(null, { message: "database unavailable" }),
+    }));
     const { getPcBuilderCatalog } = await import("@/lib/pc-builder/catalog");
     await expect(getPcBuilderCatalog()).resolves.toMatchObject({ source: "error", components: [] });
   });
 });
-

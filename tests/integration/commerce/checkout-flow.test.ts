@@ -60,6 +60,7 @@ type MockVariantRow = {
   id: string;
   product_id: string;
   is_active: boolean;
+  attributes?: Record<string, unknown>;
   products: { is_published: boolean };
 };
 
@@ -243,14 +244,14 @@ describe("connected Supabase checkout", () => {
     expect(response.status).toBe(201);
     expect(body.total).toBe(629);
     expect(clients.placeOrderArgs[0].p_items).toEqual([{ variant_id: variantId, quantity: 2 }]);
-    expect(clients.variantSelects).toEqual(["id,product_id,is_active,products!inner(is_published)"]);
+    expect(clients.variantSelects).toEqual(["id,product_id,is_active,attributes,products!inner(is_published)"]);
     expect(JSON.stringify(clients.placeOrderArgs[0].p_items)).not.toMatch(/price|stock/i);
   });
 
   it.each([
     ["does not exist", []],
     ["is inactive", [{ id: variantId, product_id: "pr_loom27", is_active: false, products: { is_published: true } }]],
-    ["belongs to an unpublished product", [{ id: variantId, product_id: "pr_loom27", is_active: true, products: { is_published: false } }]],
+    ["belongs to an unpublished product without pc_builder attributes", [{ id: variantId, product_id: "pr_loom27", is_active: true, products: { is_published: false } }]],
   ] as const)("rejects an explicitly selected variant that %s", async (_description, variants) => {
     const clients = makeConnectedClients({ variants: [...variants] });
     checkoutMocks.createUserClient.mockResolvedValue(clients.userClient);
@@ -261,6 +262,25 @@ describe("connected Supabase checkout", () => {
     expect(response.status).toBe(409);
     expect((await response.json()).error).toContain("variante seleccionada");
     expect(clients.placeOrderArgs).toHaveLength(0);
+  });
+
+  it("accepts an authorized PC Builder component variant when its product is unpublished", async () => {
+    const pcBuilderVariantId = "33333333-3333-4333-8333-333333333333";
+    const clients = makeConnectedClients({
+      variants: [{
+        id: pcBuilderVariantId,
+        product_id: "ref-cpu-test",
+        is_active: true,
+        attributes: { pc_builder: { category: "cpu", socket: "AM5" } },
+        products: { is_published: false },
+      }],
+    });
+    checkoutMocks.createUserClient.mockResolvedValue(clients.userClient);
+    checkoutMocks.createPaymentAdminClient.mockReturnValue(clients.paymentAdmin);
+
+    const response = await request(makeBody({ items: [{ variantId: pcBuilderVariantId, quantity: 1 }] }));
+    expect(response.status).toBe(201);
+    expect(clients.placeOrderArgs[0].p_items).toEqual([{ variant_id: pcBuilderVariantId, quantity: 1 }]);
   });
 
   it("keeps the legacy productId input only when it resolves to one sellable variant", async () => {
