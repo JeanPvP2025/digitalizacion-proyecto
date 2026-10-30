@@ -29,7 +29,8 @@ export function ChatbotWidget() {
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const chatBodyRef = useRef<HTMLDivElement>(null);
+  const chatWindowRef = useRef<HTMLElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleResetConversation = useCallback(() => {
@@ -47,12 +48,24 @@ export function ChatbotWidget() {
     setInputValue("");
   }, [pathname]);
 
-  // Auto-scroll to bottom of conversation
+  // Auto-scroll to bottom of conversation inside chatBody (never scrolls parent window or chatWindow)
+  const scrollToBottom = useCallback((smooth = true) => {
+    if (chatBodyRef.current) {
+      chatBodyRef.current.scrollTo({
+        top: chatBodyRef.current.scrollHeight,
+        behavior: smooth ? "smooth" : "auto",
+      });
+    }
+    if (chatWindowRef.current) {
+      chatWindowRef.current.scrollTop = 0;
+    }
+  }, []);
+
   useEffect(() => {
     if (isOpen) {
-      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+      scrollToBottom(true);
     }
-  }, [messages, isLoading, isOpen]);
+  }, [messages, isLoading, isOpen, scrollToBottom]);
 
   // Focus input when opened
   useEffect(() => {
@@ -153,6 +166,7 @@ export function ChatbotWidget() {
     <div className={styles.floatingLauncherWrapper}>
       {isOpen && (
         <aside
+          ref={chatWindowRef}
           className={styles.chatWindow}
           role="dialog"
           aria-label="Asistente NODRIA"
@@ -205,7 +219,7 @@ export function ChatbotWidget() {
           </header>
 
           {/* Messages Body */}
-          <div className={styles.chatBody} role="log" aria-live="polite">
+          <div ref={chatBodyRef} className={styles.chatBody} role="log" aria-live="polite">
             {messages.map((msg) => (
               <ChatbotMessage
                 key={msg.id}
@@ -226,8 +240,6 @@ export function ChatbotWidget() {
                 </div>
               </div>
             )}
-
-            <div ref={messagesEndRef} />
           </div>
 
           {/* Footer Input */}

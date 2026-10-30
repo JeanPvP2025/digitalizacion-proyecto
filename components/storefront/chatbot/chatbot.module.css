@@ -108,6 +108,7 @@
    CHAT HEADER
    -------------------------------------------------------------------------- */
 .chatHeader {
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -199,7 +200,11 @@
    CHAT MESSAGES BODY
    -------------------------------------------------------------------------- */
 .chatBody {
-  flex: 1 1 auto;
+  flex: 1 1 0px;
+  min-height: 0;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
   overflow-y: auto;
   padding: 16px;
   display: flex;
@@ -752,6 +757,7 @@
    CHAT INPUT FOOTER
    -------------------------------------------------------------------------- */
 .chatFooter {
+  flex-shrink: 0;
   padding: 12px 14px;
   background-color: #ffffff;
   border-top: 1px solid var(--line, #e2e7df);
@@ -845,7 +851,9 @@
     width: 100vw;
     max-width: 100vw;
     height: 85vh;
+    height: 85dvh;
     max-height: 85vh;
+    max-height: 85dvh;
     border-radius: 16px 16px 0 0;
     margin-bottom: 0;
     position: fixed;
