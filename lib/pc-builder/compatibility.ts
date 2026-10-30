@@ -22,8 +22,8 @@ export const pcBuilderCategories: readonly PcBuilderCategory[] = [
 export const requiredPcBuilderCategories: readonly PcBuilderCategory[] = pcBuilderCategories.slice(0, 5);
 export const optionalPcBuilderCategories: readonly PcBuilderCategory[] = pcBuilderCategories.slice(5);
 
-const HEADROOM_MULTIPLIER = 1.2;
-const PSU_RECOMMENDATION_STEP_W = 50;
+export const HEADROOM_MULTIPLIER = 1.2;
+export const PSU_RECOMMENDATION_STEP_W = 50;
 
 const displayCategory: Record<PcBuilderCategory, string> = {
   cpu: "el procesador",

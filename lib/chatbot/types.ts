@@ -83,6 +83,8 @@ export type ChatbotConversationContext = {
   poeRequired?: boolean;
   /** Brand preference */
   preferredBrand?: string;
+  /** Sorting preference (cheapest, expensive, best_rated) */
+  sortPreference?: "cheapest" | "expensive" | "best_rated";
   /** Ongoing guided flow */
   flow?: {
     type: GuidedFlowType;
@@ -133,6 +135,9 @@ export type IntentMatchResult = {
     wifiStandard?: string;
     productSlugs?: string[];
     technicalTopic?: string;
+    sortPreference?: "cheapest" | "expensive" | "best_rated";
+    ordinalCount?: number;
+    targetIndex?: number;
     rawQuery?: string;
   };
 };

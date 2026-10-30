@@ -219,6 +219,9 @@ export type ExtractedEntities = {
   wifiStandard?: string;
   categorySlug?: string;
   productType?: string;
+  sortPreference?: "cheapest" | "expensive" | "best_rated";
+  ordinalCount?: number;
+  targetIndex?: number;
   tokens: string[];
 };
 
@@ -229,15 +232,33 @@ export function extractEntities(rawText: string): ExtractedEntities {
     tokens: [],
   };
 
-  // 1. Budget extraction: e.g. "200 euros", "200€", "presupuesto de 150", "hasta 300", "menos de 500"
+  // 1. Budget extraction: e.g. "200 euros", "200€", "presupuesto de 150", "aumento el presupuesto a 250", "subo a 250", "hasta 300", "menos de 500"
   const budgetMatch =
-    normalized.match(/(?:presupuesto(?:\s+de)?|hasta|menos\s+de|maximo\s+de|por|tengo)\s+(\d{2,5})\s*(?:€|euros?|eur)?/) ??
+    normalized.match(/(?:presupuesto(?:\s+(?:de|a))?|aument(?:o|ar|ando)?(?:\s+el\s+presupuesto)?(?:\s+a)?|sub(?:o|ir)?(?:\s+(?:el\s+presupuesto\s+)?a)?|ampli(?:o|ar)?(?:\s+(?:el\s+presupuesto\s+)?a)?|hasta|menos\s+de|maximo\s+de|por|tengo|con)\s+(\d{2,5})\s*(?:€|euros?|eur)?/) ??
     normalized.match(/(\d{2,5})\s*(?:€|euros?|eur)\b/);
   if (budgetMatch && budgetMatch[1]) {
     const val = parseInt(budgetMatch[1], 10);
     if (!Number.isNaN(val) && val > 0 && val <= 50000) {
       entities.budgetEur = val;
     }
+  }
+
+  // 2. Sorting preferences: "más barato", "más económico", "el más potente", etc.
+  if (/\b(?:mas\s+barat[oa]|mas\s+economic[oa]|menor\s+precio|mas\s+asequible|el\s+barato|la\s+barata)\b/.test(normalized)) {
+    entities.sortPreference = "cheapest";
+  } else if (/\b(?:mas\s+car[oa]|mayor\s+precio|gama\s+alta|mas\s+potente|el\s+mejor|la\s+mejor)\b/.test(normalized)) {
+    entities.sortPreference = "expensive";
+  }
+
+  // 3. Ordinal reference: "los dos primeros", "el primero", "la segunda opcion"
+  if (/\b(?:los\s+dos\s+primeros|los\s+2\s+primeros|los\s+dos|ambos|ambas)\b/.test(normalized)) {
+    entities.ordinalCount = 2;
+  } else if (/\b(?:el\s+primer[o]?|la\s+primer[a]?|primera\s+opcion|opcion\s+1)\b/.test(normalized)) {
+    entities.targetIndex = 0;
+  } else if (/\b(?:el\s+segund[o]?|la\s+segund[a]?|segunda\s+opcion|opcion\s+2)\b/.test(normalized)) {
+    entities.targetIndex = 1;
+  } else if (/\b(?:el\s+tercer[o]?|la\s+tercer[a]?|tercera\s+opcion|opcion\s+3)\b/.test(normalized)) {
+    entities.targetIndex = 2;
   }
 
   // 2. Port count extraction: e.g. "24 puertos", "24p", "switch de 8", "16 bocas"
@@ -282,7 +303,7 @@ export function extractEntities(rawText: string): ExtractedEntities {
 
     // Map to primary product types if not set yet
     if (!entities.productType) {
-      if (["switch", "router", "access_point", "sfp", "fibra", "cable", "rack", "panel_parcheo", "domotica", "zigbee", "matter", "rele", "sensor", "videoportero", "centralita", "telefono_ip", "nas", "edge_server", "modbus", "cpu", "gpu", "ram", "motherboard", "psu", "case", "cooler", "storage"].includes(canonical)) {
+      if (["switch", "router", "access_point", "wifi", "sfp", "fibra", "cable", "rack", "panel_parcheo", "domotica", "zigbee", "matter", "rele", "sensor", "videoportero", "centralita", "telefono_ip", "nas", "edge_server", "modbus", "cpu", "gpu", "ram", "motherboard", "psu", "case", "cooler", "storage"].includes(canonical)) {
         entities.productType = canonical;
       }
     }

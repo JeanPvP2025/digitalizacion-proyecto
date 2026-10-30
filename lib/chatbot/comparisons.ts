@@ -1,15 +1,55 @@
 import type { Product } from "@/lib/catalog";
 import type { ChatbotComparisonItem, ChatbotComparisonTable, ChatbotQuickReply } from "./types";
 import { formatPrice } from "@/lib/catalog";
-import { normalizeText } from "./normalizer";
+import { normalizeText, BRANDS } from "./normalizer";
+import { matchesProductType } from "./recommendations";
 
 /**
  * Searches and finds candidate products mentioned in a comparison query.
  */
-export function findComparisonCandidates(query: string, catalog: Product[]): Product[] {
+export function findComparisonCandidates(
+  query: string,
+  catalog: Product[],
+  activeTopic?: string
+): Product[] {
   const normalizedQuery = normalizeText(query);
   const matched: Product[] = [];
 
+  // 1. Detect if specific brands are being compared (e.g. "compara unifi con mikrotik")
+  const mentionedBrands: string[] = [];
+  const normalizedWithAliases = normalizedQuery.replace(/\bunifi\b/g, "ubiquiti");
+
+  for (const brand of BRANDS) {
+    if (new RegExp(`\\b${brand}\\b`).test(normalizedWithAliases)) {
+      if (!mentionedBrands.includes(brand)) {
+        mentionedBrands.push(brand);
+      }
+    }
+  }
+
+  // If at least 2 brands are mentioned, find the best matching product for each brand
+  if (mentionedBrands.length >= 2) {
+    for (const b of mentionedBrands.slice(0, 3)) {
+      let brandProducts = catalog.filter((p) => p.brand.toLowerCase().includes(b));
+      if (activeTopic) {
+        const topicFiltered = brandProducts.filter((p) =>
+          matchesProductType(p, activeTopic) ||
+          normalizeText(`${p.name} ${p.category} ${p.summary}`).includes(normalizeText(activeTopic))
+        );
+        if (topicFiltered.length > 0) {
+          brandProducts = topicFiltered;
+        }
+      }
+      if (brandProducts.length > 0 && !matched.some((p) => p.id === brandProducts[0].id)) {
+        matched.push(brandProducts[0]);
+      }
+    }
+    if (matched.length >= 2) {
+      return matched;
+    }
+  }
+
+  // 2. Specific product name, model or SKU matching
   for (const product of catalog) {
     const normName = normalizeText(product.name);
     const normBrand = normalizeText(product.brand);
@@ -29,7 +69,8 @@ export function findComparisonCandidates(query: string, catalog: Product[]): Pro
       (normModel && normalizedQuery.includes(normModel)) ||
       (normSku && normalizedQuery.includes(normSku)) ||
       matchCount >= 2 ||
-      (normalizedQuery.includes(normBrand) && matchCount >= 1)
+      (normalizedQuery.includes(normBrand) && matchCount >= 1) ||
+      (normalizedQuery.includes("unifi") && normName.includes("unifi"))
     ) {
       if (!matched.some((p) => p.id === product.id)) {
         matched.push(product);

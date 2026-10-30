@@ -1,5 +1,6 @@
 import type { ChatbotQuickReply } from "./types";
 import { normalizeText } from "./normalizer";
+import { HEADROOM_MULTIPLIER, PSU_RECOMMENDATION_STEP_W } from "@/lib/pc-builder/compatibility";
 
 export type PcBuilderAdvice = {
   title: string;
@@ -108,11 +109,12 @@ export function getPcBuilderAdvice(query: string): PcBuilderAdvice {
     return {
       title: "Cálculo de Potencia de Fuente de Alimentación",
       explanation:
-        "En **PC Builder PRO**, calculamos la fuente de alimentación recomendada con un margen preventivo del 20%:\n\n" +
-        "• **Cálculo:** `(TDP Procesador + TDP Tarjeta Gráfica + 50W base) × 1.20`\n" +
+        `En **PC Builder PRO**, calculamos la fuente de alimentación recomendada utilizando las reglas oficiales de compatibilidad:\n\n` +
+        `• **Fórmula:** \`(Consumo total componentes) × ${HEADROOM_MULTIPLIER.toFixed(2)}\` (margen preventivo del ${Math.round((HEADROOM_MULTIPLIER - 1) * 100)}%), redondeado al escalón superior de ${PSU_RECOMMENDATION_STEP_W} W.\n` +
+        "• **Cálculo de referencia:** `(TDP Procesador + TDP Gráfica + 50W base) × 1.20`\n" +
         "• Por ejemplo, para un procesador de 105W y una gráfica de 220W:\n" +
-        "  `105 + 220 + 50 = 375 W × 1.20 = 450 W mínimos` → Recomendamos **550 W o 650 W 80 PLUS**.\n\n" +
-        "Este margen garantiza que la fuente trabaje en su curva de máxima eficiencia (alrededor del 50-60% de carga) con menor temperatura y ruido.",
+        "  `105 + 220 + 50 = 375 W × 1.20 = 450 W mínimos` → Se recomienda una fuente de al menos **550 W o 650 W 80 PLUS**.\n\n" +
+        "Este margen garantiza que la fuente trabaje en su curva de máxima eficiencia energética (50-60% de carga) con menor temperatura y ruido.",
       quickReplies: [
         { label: "Ir al configurador", payload: "Abrir PC Builder PRO" },
         { label: "¿Qué procesador elegir?", payload: "¿Qué socket elegir?" },

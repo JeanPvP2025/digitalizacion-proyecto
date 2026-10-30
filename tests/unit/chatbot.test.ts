@@ -134,17 +134,17 @@ describe("Chatbot Technical Knowledge Base", () => {
     expect(entry?.content).toContain("IPv6");
   });
 
-  it("confirms NO AI statement in identity entry", () => {
+  it("confirms automated virtual assistant statement in identity entry", () => {
     const entry = KNOWLEDGE_BASE.find((e) => e.id === "identity_who_are_you");
     expect(entry).toBeDefined();
-    expect(entry?.content).toContain("No utilizo inteligencia artificial generativa");
-    expect(entry?.content).toContain("motor determinista");
+    expect(entry?.content).toContain("asistente virtual automatizado");
+    expect(entry?.content).toContain("catálogo oficial");
   });
 });
 
 describe("Chatbot Product Recommendations", () => {
   it("extracts ports and PoE from real catalog products", () => {
-    const switch24 = demoProducts.find((p) => p.name.includes("24"));
+    const switch24 = demoProducts.find((p) => p.name.toLowerCase().includes("switch") && p.name.includes("24"));
     if (switch24) {
       const ports = extractProductPorts(switch24);
       expect(ports).toBe(24);
@@ -249,6 +249,47 @@ describe("Dialogue Manager & Multi-Turn State", () => {
     expect(turn2.contextUpdate?.unrecognizedCount).toBe(2);
     expect(turn2.text).toContain("Soporte Técnico");
     expect(turn2.quickReplies?.some((qr) => qr.payload.includes("soporte"))).toBe(true);
+  });
+
+  it("executes the realistic 6-turn conversation flawlessly", () => {
+    // Turn 1: "Hola, necesito mejorar el wifi de casa"
+    const t1 = handleDialogueTurn("Hola, necesito mejorar el wifi de casa", {}, demoProducts);
+    expect(t1.products).toBeDefined();
+    expect(t1.products!.length).toBeGreaterThan(0);
+    expect(t1.contextUpdate?.activeTopic).toBe("wifi");
+
+    // Turn 2: "Tengo 150 euros"
+    const t2 = handleDialogueTurn("Tengo 150 euros", t1.contextUpdate, demoProducts);
+    expect(t2.contextUpdate?.budgetEur).toBe(150);
+    expect(t2.contextUpdate?.activeTopic).toBe("wifi");
+    expect(t2.products).toBeDefined();
+    // MikroTik cAP AX (139 €) fits within 150 €
+    expect(t2.products![0].product.price).toBeLessThanOrEqual(150);
+
+    // Turn 3: "Prefiero Ubiquiti"
+    const t3 = handleDialogueTurn("Prefiero Ubiquiti", t2.contextUpdate, demoProducts);
+    expect(t3.contextUpdate?.preferredBrand).toBe("ubiquiti");
+    expect(t3.products?.every((p) => p.product.brand.toLowerCase().includes("ubiquiti"))).toBe(true);
+    expect(t3.products![0].product.name).toContain("UniFi U7 Pro");
+
+    // Turn 4: "¿Y si aumento el presupuesto a 250?"
+    const t4 = handleDialogueTurn("¿Y si aumento el presupuesto a 250?", t3.contextUpdate, demoProducts);
+    expect(t4.contextUpdate?.budgetEur).toBe(250);
+    expect(t4.products?.length).toBeGreaterThanOrEqual(1);
+    expect(t4.text).toContain("250");
+
+    // Turn 5: "Compara UniFi con MikroTik"
+    const t5 = handleDialogueTurn("Compara UniFi con MikroTik", t4.contextUpdate, demoProducts);
+    expect(t5.comparison).toBeDefined();
+    expect(t5.comparison!.products.length).toBe(2);
+    expect(t5.comparison!.verdict).toBeDefined();
+
+    // Turn 6: "Enséñame el más barato"
+    const t6 = handleDialogueTurn("Enséñame el más barato", t5.contextUpdate, demoProducts);
+    expect(t6.products).toBeDefined();
+    expect(t6.products!.length).toBe(1);
+    // MikroTik cAP AX (139 €) is cheaper than UniFi U7 Pro (198 €)
+    expect(t6.products![0].product.price).toBe(139);
   });
 
   it("resets conversation on clear_conversation intent", () => {

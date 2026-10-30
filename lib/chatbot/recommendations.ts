@@ -10,6 +10,7 @@ export type RecommendationCriteria = {
   poeRequired?: boolean;
   wifiStandard?: string;
   brand?: string;
+  sortPreference?: "cheapest" | "expensive" | "best_rated";
   useCase?: string;
   query?: string;
 };
@@ -55,7 +56,11 @@ export function matchesProductType(product: Product, type: string): boolean {
       return /\brouter|enrutador|gateway\b/.test(text) && !/\bswitch\b/.test(text);
     case "access_point":
     case "wifi":
-      return /\baccess point|punto de acceso|ap|wifi|wi-fi\b/.test(text);
+      return (
+        !/\b(?:rele|micromodulo|enchufe|sensor|interruptor)\b/.test(text) &&
+        !product.category.toLowerCase().includes("hogar digital") &&
+        /\b(?:access point|punto de acceso|ap|wifi|wi-fi|inalambric|u6|u7)\b/.test(text)
+      );
     case "sfp":
       return /\bsfp|transceptor\b/.test(text);
     case "fibra":
@@ -229,8 +234,15 @@ export function recommendProducts(
     return { product: prod, score, matchReasons: reasons };
   });
 
-  // Sort descending by score
-  scored.sort((a, b) => b.score - a.score);
+  // Sort according to preference:
+  if (criteria.sortPreference === "cheapest") {
+    scored.sort((a, b) => a.product.price - b.product.price);
+  } else if (criteria.sortPreference === "expensive") {
+    scored.sort((a, b) => b.product.price - a.product.price);
+  } else {
+    // Default sort descending by score
+    scored.sort((a, b) => b.score - a.score);
+  }
 
   // Take top 1 to 3
   const topScored = scored.slice(0, 3);
@@ -257,6 +269,13 @@ export function recommendProducts(
   let summaryText = "";
   if (productRecommendations.length === 0) {
     summaryText = "No he encontrado ningún producto que cumpla exactamente todos los filtros especificados. Te recomiendo ampliar el presupuesto o revisar los criterios de búsqueda.";
+  } else if (criteria.sortPreference === "cheapest" && productRecommendations.length > 0) {
+    const cheapest = productRecommendations[0].product;
+    summaryText = `La opción más económica disponible es **${cheapest.name}** por **${formatPrice(cheapest.price)}**:`;
+  } else if (criteria.budgetEur && candidates.length > 0 && candidates.every((c) => c.price > criteria.budgetEur!)) {
+    const minCandidate = candidates.reduce((min, c) => (c.price < min.price ? c : min), candidates[0]);
+    const diff = formatPrice(minCandidate.price - criteria.budgetEur);
+    summaryText = `Para los criterios indicados, los equipos disponibles parten de ${formatPrice(minCandidate.price)} (+${diff} sobre tu presupuesto de ${formatPrice(criteria.budgetEur)}). Te muestro la alternativa más accesible:`;
   } else if (productRecommendations.length === 1) {
     summaryText = `He seleccionado la mejor opción para tus requisitos:\n\n**${productRecommendations[0].product.name}** de ${productRecommendations[0].product.brand}.`;
   } else {

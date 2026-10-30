@@ -284,15 +284,6 @@
   font-weight: 600;
 }
 
-.ruleBadge {
-  font-size: 9px;
-  padding: 1px 5px;
-  border-radius: 4px;
-  background-color: #e2e8f0;
-  color: #475569;
-  font-family: var(--font-mono, monospace);
-}
-
 .messageBubble {
   padding: 10px 14px;
   border-radius: 12px;
@@ -861,5 +852,14 @@
     bottom: 0;
     left: 0;
     right: 0;
+    z-index: 10000;
+  }
+
+  .inputField {
+    font-size: 16px; /* Prevents iOS Safari auto-zoom on input focus */
+  }
+
+  .chatFooter {
+    padding-bottom: max(12px, env(safe-area-inset-bottom));
   }
 }

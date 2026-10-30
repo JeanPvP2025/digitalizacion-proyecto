@@ -78,7 +78,8 @@ const RULES: PatternRule[] = [
     intent: "compare_request",
     weight: 92,
     patterns: [
-      /\b(?:compara|comparar|comparativa|diferencia entre|diferencias entre|cual es mejor entre|frente a|vs)\b/,
+      /\b(?:compara|comparame|comparar|comparativa|comparalos|compararles|diferencia entre|diferencias entre|cual es mejor entre|frente a|vs)\b/,
+      /\b(?:compara.*(?:dos|ambos|primeros|opciones)|comparame.*(?:dos|ambos|primeros|opciones))\b/,
     ],
   },
   // 7. Product Recommendation
@@ -87,8 +88,8 @@ const RULES: PatternRule[] = [
     weight: 88,
     patterns: [
       /\b(?:recomienda|recomiendame|recomendar|cual me recomiendas|que me recomiendas|cual comprar|asesor|sugerencia|consejo)\b/,
-      /\b(?:necesito mejorar|para mi oficina|para mi casa|tengo \d+ euros|presupuesto de \d+)\b/,
-      /\b(?:cual es el mejor|los mejores|que equipo me viene mejor)\b/,
+      /\b(?:necesito mejorar|para mi oficina|para mi casa|tengo \d+|presupuesto (?:de|a) \d+|aumento el presupuesto|subo (?:el presupuesto )?a \d+|amplio a \d+|con \d+ euros?)\b/,
+      /\b(?:cual es el mejor|los mejores|que equipo me viene mejor|opciones para)\b/,
     ],
   },
   // 8. Order Status & Shopping Help
@@ -172,8 +173,9 @@ const RULES: PatternRule[] = [
     intent: "search_product",
     weight: 75,
     patterns: [
-      /\b(?:busco|necesito|quiero|comprar|teneis|tienen|muestrame|ver|ensename|precio de|stock de)\b/,
-      /\b(?:router|switch|cable|fibra|rack|panel|ap|punto de acceso|camara|videoportero|rele|sensor|centralita|telefono|dect|nas|servidor|modbus|zebra|sfp)\b/,
+      /\b(?:busco|necesito|quiero|comprar|teneis|tienen|muestrame|ver|ensename|precio de|stock de|prefiero|mejor de)\b/,
+      /\b(?:mas barat[oa]|mas economic[oa]|menor precio|mas asequible|el barat[oa])\b/,
+      /\b(?:router|switch|cable|fibra|rack|panel|ap|punto de acceso|camara|videoportero|rele|sensor|centralita|telefono|dect|nas|servidor|modbus|zebra|sfp|wifi|wi fi)\b/,
       /\b(?:legrand|schneider|televes|fluke|ubiquiti|cisco|mikrotik|aqara|fibaro|shelly|grandstream|yealink|patton|teltonika|synology|kingston|samsung)\b/,
     ],
   },
@@ -209,9 +211,9 @@ export function classifyIntent(queryText: string): IntentMatchResult {
     }
   }
 
-  // If a clear product type or brand was extracted and no specific intent was triggered,
+  // If a clear product type, brand, budget, or sort preference was extracted and no specific intent was triggered,
   // classify as search_product with high confidence
-  if (bestIntent === "unknown" && (entities.productType || entities.brand || entities.budgetEur)) {
+  if (bestIntent === "unknown" && (entities.productType || entities.brand || entities.budgetEur || entities.sortPreference)) {
     bestIntent = "search_product";
     highestScore = 75;
   }

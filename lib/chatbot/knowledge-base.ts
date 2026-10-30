@@ -32,10 +32,8 @@ export const KNOWLEDGE_BASE: KnowledgeEntry[] = [
       /\b(?:eres inteligencia artificial|usas ia|de que estas hecho)\b/,
     ],
     content:
-      "Soy el **Asistente NODRIA**, el asistente virtual automatizado de la tienda tecnológica NODRIA.\n\n" +
-      "**Nota de transparencia:** No utilizo inteligencia artificial generativa ni modelos de lenguaje externos. " +
-      "Funciono mediante un motor determinista de reglas técnicas, árboles de decisión y consultas directas a nuestro catálogo oficial de telecomunicaciones y PC Builder PRO. " +
-      "Estoy programado para ayudarte a elegir equipamiento, verificar compatibilidades, guiarte en tu compra y resolver dudas técnicas con total precisión.",
+      "Soy el **Asistente NODRIA**, el asistente virtual automatizado de nuestra tienda tecnológica.\n\n" +
+      "Estoy programado para ayudarte a elegir equipamiento técnico, verificar compatibilidades en PC Builder PRO, orientarte en tu proceso de compra y resolver dudas sobre las especificaciones de nuestro catálogo oficial.",
     quickReplies: [
       { label: "Ver categorías", payload: "¿Qué categorías tenéis?" },
       { label: "Recomendar equipo", payload: "Recomiéndame un equipo" },
@@ -330,7 +328,7 @@ export const KNOWLEDGE_BASE: KnowledgeEntry[] = [
       "Por estricto cumplimiento de privacidad y seguridad, este asistente conversacional **no expone información sensible ni listas de pedidos en el chat público**.\n\n" +
       "Para consultar el estado de tu pedido:\n" +
       "1. Inicia sesión en tu cuenta de cliente de NODRIA.\n" +
-      "2. Accede a la sección **[Mi Cuenta / Pedidos](/cuenta)**.\n" +
+      "2. Accede a la sección **[Mi Cuenta / Pedidos](/mi-cuenta)**.\n" +
       "3. Podrás comprobar si tu orden está en preparación, enviada o completada con su respectivo código de seguimiento de mensajería.",
     quickReplies: [
       { label: "Ir a Mi Cuenta", payload: "Ir a mi cuenta" },

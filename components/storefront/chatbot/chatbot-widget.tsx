@@ -169,7 +169,7 @@ export function ChatbotWidget() {
                   <span>Asistente NODRIA</span>
                   <span className={styles.statusIndicator} title="Asistente en línea" />
                 </h3>
-                <p className={styles.headerSubtitle}>Asesor técnico determinista · Sin IA</p>
+                <p className={styles.headerSubtitle}>Atención al cliente y asesoría técnica</p>
               </div>
             </div>
 
@@ -263,7 +263,7 @@ export function ChatbotWidget() {
 
             <div className={styles.footerDisclaimer}>
               <span className={styles.disclaimerText}>
-                Asistente automatizado con catálogo oficial · 0% IA
+                Asistente virtual de NODRIA · Catálogo oficial
               </span>
               <span>{inputValue.length}/500</span>
             </div>

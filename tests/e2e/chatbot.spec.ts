@@ -14,9 +14,9 @@ test.describe("NODRIA Chatbot Assistant E2E", () => {
     const dialog = page.getByRole("dialog", { name: "Asistente NODRIA" });
     await expect(dialog).toBeVisible();
 
-    // 4. Initial welcome message contains transparent identity
+    // 4. Initial welcome message contains clean professional header
     await expect(page.getByText("Asistente NODRIA").first()).toBeVisible();
-    await expect(page.getByText("Sin IA · Reglas Deterministas").first()).toBeVisible();
+    await expect(page.getByText("Atención al cliente y asesoría técnica").first()).toBeVisible();
 
     // 5. Ask for PoE standards
     const input = page.getByRole("textbox", { name: /Escribe tu consulta/i });

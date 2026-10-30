@@ -127,7 +127,6 @@ export function ChatbotMessage({ message, onSelectQuickReply }: ChatbotMessagePr
       <div className={styles.messageBubbleWrapper}>
         <div className={styles.messageBubbleHeader}>
           <span className={styles.senderName}>{isUser ? "Tú" : "Asistente NODRIA"}</span>
-          {!isUser && <span className={styles.ruleBadge}>Sin IA · Reglas Deterministas</span>}
         </div>
 
         <div className={`${styles.messageBubble} ${isUser ? styles.messageBubbleUser : styles.messageBubbleAssistant}`}>

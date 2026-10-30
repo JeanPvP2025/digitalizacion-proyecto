@@ -1,6 +1,7 @@
 import type { Product } from "@/lib/catalog";
 import type {
   ChatbotConversationContext,
+  ChatbotProductRecommendation,
   ChatbotQuickReply,
   ChatbotResponsePayload,
 } from "./types";
@@ -101,6 +102,7 @@ export function handleDialogueTurn(
   if (entities.poeRequired !== undefined) nextContext.poeRequired = entities.poeRequired;
   if (entities.brand) nextContext.preferredBrand = entities.brand;
   if (entities.productType) nextContext.activeTopic = entities.productType;
+  if (entities.sortPreference) nextContext.sortPreference = entities.sortPreference;
 
   // 1. CLEAR / RESET CONVERSATION
   if (intent === "clear_conversation") {
@@ -170,7 +172,7 @@ export function handleDialogueTurn(
   if (intent === "identity_inquiry") {
     const entry = KNOWLEDGE_BASE.find((k) => k.id === "identity_who_are_you");
     return {
-      text: entry?.content ?? "Soy el **Asistente NODRIA**, asistente virtual determinista sin inteligencia artificial.",
+      text: entry?.content ?? "Soy el **Asistente NODRIA**, el asistente virtual automatizado de nuestra tienda tecnológica.",
       quickReplies: entry?.quickReplies,
       contextUpdate: nextContext,
     };
@@ -213,7 +215,8 @@ export function handleDialogueTurn(
       const result = recommendProducts(catalog, criteria);
       nextContext.flow = undefined; // flow completed
       if (result.products.length > 0) {
-        nextContext.recentProductSlugs = result.products.map((p) => p.product.slug);
+        const newSlugs = result.products.map((p) => p.product.slug);
+        nextContext.recentProductSlugs = Array.from(new Set([...newSlugs, ...(nextContext.recentProductSlugs ?? [])])).slice(0, 5);
       }
 
       return {
@@ -237,7 +240,7 @@ export function handleDialogueTurn(
 
   // 7. PRODUCT COMPARISON REQUEST
   if (intent === "compare_request") {
-    let candidateProducts = findComparisonCandidates(userQuery, catalog);
+    let candidateProducts = findComparisonCandidates(userQuery, catalog, nextContext.activeTopic);
 
     // If query didn't explicitly name 2 products, use recent products from context
     if (candidateProducts.length < 2 && nextContext.recentProductSlugs && nextContext.recentProductSlugs.length >= 2) {
@@ -245,12 +248,14 @@ export function handleDialogueTurn(
         .map((slug) => catalog.find((p) => p.slug === slug))
         .filter((p): p is Product => Boolean(p));
       if (recent.length >= 2) {
-        candidateProducts = recent.slice(0, 2);
+        const count = entities.ordinalCount ?? 2;
+        candidateProducts = recent.slice(0, count);
       }
     }
 
     if (candidateProducts.length >= 2) {
       const comparison = buildProductComparison(candidateProducts);
+      nextContext.recentProductSlugs = candidateProducts.map((p) => p.slug);
       return {
         text: comparison.summary,
         comparison: comparison.table,
@@ -274,6 +279,47 @@ export function handleDialogueTurn(
 
   // 8. PRODUCT RECOMMENDATION OR SEARCH
   if (intent === "recommend_request" || intent === "search_product") {
+    // Check if user specifically requested the cheapest among recent candidates
+    if (entities.sortPreference === "cheapest" && nextContext.recentProductSlugs && nextContext.recentProductSlugs.length > 1) {
+      const recent = nextContext.recentProductSlugs
+        .map((slug) => catalog.find((p) => p.slug === slug))
+        .filter((p): p is Product => Boolean(p));
+      if (recent.length >= 2) {
+        recent.sort((a, b) => a.price - b.price);
+        const cheapest = recent[0];
+        const nextPrice = recent[1].price;
+        const diff = new Intl.NumberFormat("es-ES", { style: "currency", currency: "EUR" }).format(nextPrice - cheapest.price);
+        const recItem: ChatbotProductRecommendation = {
+          product: {
+            id: cheapest.id,
+            slug: cheapest.slug,
+            sku: cheapest.sku,
+            name: cheapest.name,
+            brand: cheapest.brand,
+            price: cheapest.price,
+            stock: cheapest.stock,
+            image: cheapest.image,
+            imageAlt: cheapest.imageAlt,
+            summary: cheapest.summary,
+            category: cheapest.category,
+            keySpecs: cheapest.specifications.slice(0, 3),
+          },
+          reason: `Opción más accesible (ahorras ${diff} frente a la alternativa de ${new Intl.NumberFormat("es-ES", { style: "currency", currency: "EUR" }).format(nextPrice)}).`,
+        };
+        nextContext.recentProductSlugs = [cheapest.slug];
+        return {
+          text: `Dentro de las opciones que estábamos revisando, la más económica es **${cheapest.name}** de ${cheapest.brand} por **${new Intl.NumberFormat("es-ES", { style: "currency", currency: "EUR" }).format(cheapest.price)}**:`,
+          products: [recItem],
+          quickReplies: [
+            { label: "Ver carrito", payload: "Quiero ver mi carrito" },
+            { label: "Volver a comparar", payload: "Comparar productos" },
+            { label: "Recomendar otro", payload: "Recomiéndame otro equipo" },
+          ],
+          contextUpdate: nextContext,
+        };
+      }
+    }
+
     // If user says "recomiéndame un switch" without specs, initiate a guided mini-flow
     if (entities.productType === "switch" && !entities.portCount && !entities.budgetEur && entities.poeRequired === undefined) {
       nextContext.flow = {
@@ -297,6 +343,12 @@ export function handleDialogueTurn(
       };
     }
 
+    const budgetWasIncreased = Boolean(
+      context.budgetEur &&
+      entities.budgetEur &&
+      entities.budgetEur > context.budgetEur
+    );
+
     // Execute recommendation / search
     const criteria: RecommendationCriteria = {
       productType: entities.productType ?? nextContext.activeTopic,
@@ -304,16 +356,24 @@ export function handleDialogueTurn(
       portCount: entities.portCount ?? nextContext.portCount,
       poeRequired: entities.poeRequired ?? nextContext.poeRequired,
       brand: entities.brand ?? nextContext.preferredBrand,
+      sortPreference: entities.sortPreference ?? nextContext.sortPreference,
       query: userQuery,
     };
 
     const recResult = recommendProducts(catalog, criteria);
     if (recResult.products.length > 0) {
-      nextContext.recentProductSlugs = recResult.products.map((p) => p.product.slug);
+      const newSlugs = recResult.products.map((p) => p.product.slug);
+      nextContext.recentProductSlugs = Array.from(new Set([...newSlugs, ...(nextContext.recentProductSlugs ?? [])])).slice(0, 5);
+    }
+
+    let responseText = recResult.summary;
+    if (budgetWasIncreased && entities.budgetEur) {
+      const budgetFormatted = new Intl.NumberFormat("es-ES", { style: "currency", currency: "EUR" }).format(entities.budgetEur);
+      responseText = `¡Excelente! Al ampliar tu presupuesto a **${budgetFormatted}**, he actualizado las opciones disponibles:\n\n${recResult.summary}`;
     }
 
     return {
-      text: recResult.summary,
+      text: responseText,
       products: recResult.products,
       quickReplies: recResult.quickReplies,
       contextUpdate: nextContext,
@@ -358,8 +418,8 @@ export function handleDialogueTurn(
     return {
       text:
         "Disculpa, no he conseguido interpretar tu consulta con total certeza.\n\n" +
-        "Como **asistente automatizado con reglas fijas y sin inteligencia artificial**, mi capacidad se concentra en búsquedas de catálogo, especificaciones técnicas de telecomunicaciones, cálculo de PC Builder PRO y políticas comerciales.\n\n" +
-        "Para consultas técnicas complejas, presupuestos a medida o incidencias particulares, te invito a abrir una consulta con nuestro equipo en **[Soporte Técnico](/soporte)**.",
+        "Como **asistente virtual automatizado**, estoy especializado en búsquedas de catálogo, especificaciones técnicas de telecomunicaciones, compatibilidad en PC Builder PRO y condiciones comerciales de la tienda.\n\n" +
+        "Para consultas técnicas avanzadas, presupuestos a medida o incidencias particulares, te invito a contactar con nuestro equipo en **[Soporte Técnico](/soporte)**.",
       quickReplies: [
         { label: "Abrir Soporte Técnico", payload: "Quiero ir a soporte" },
         { label: "Ver categorías", payload: "Ver categorías de la tienda" },
