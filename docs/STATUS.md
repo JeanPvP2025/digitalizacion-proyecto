@@ -1,5 +1,15 @@
 # Estado del proyecto
 
+## Iteración: Asistente NODRIA Comercial Inteligente sin IA — 2026-10-30
+
+- ✅ **Asistente Virtual Deterministico Implementado:** Motor conversacional propio en lib/chatbot/ sin ninguna dependencia de IA generativa, OpenAI, Claude, Gemini, embeddings ni bases de datos vectoriales.
+- ✅ **Pipeline Lingüístico:** Normalización de texto (NFKD, limpieza diacrítica), corrección de erratas por Levenshtein, diccionarios de sinónimos técnicos y extracción estructurada de slots (presupuesto, puertos, PoE, Wi-Fi, marcas).
+- ✅ **Integración con Catálogo y PC Builder:** Recomendaciones basadas en los 52 productos oficiales de telecomunicaciones y asesoría técnica de PC Builder PRO (sockets, compatibilidad de RAM, cálculo de fuente de alimentación con margen del 20%).
+- ✅ **Interacción de Comercio:** Tarjetas interactivas de producto con fotografía real, especificaciones clave, enlace interno y botón de añadir al carrito que actualiza en tiempo real el badge del carrito en el storefront.
+- ✅ **Comparador Técnico:** Tablas comparativas estructuradas para contrastar 2 o 3 productos con veredicto técnico justificado.
+- ✅ **Widget Front-end:** Componente flotante accesible (WCAG, navegación por teclado, responsive móvil/escritorio) montado globalmente en pp/(store)/layout.tsx.
+- ✅ **Endpoint Seguro:** POST /api/chatbot con rate-limiting (30 req/min por IP), validación Zod y protección contra sobrecarga.
+- ✅ **Verificación Integral:** 342 pruebas Vitest superadas (incluyendo 35 pruebas unitarias/integración de chatbot), 19 pruebas Playwright E2E superadas, ESLint limpio y Next.js build de producción validada.
 ## Iteración actual: Catálogo de Telecomunicaciones y Storefront B2B/B2C en Producción — 2026-10-29
 
 - ✅ **Despliegue en Producción Vercel:** Commit 7c397d6 desplegado en https://nodria-academico.vercel.app/.

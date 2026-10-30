@@ -1,5 +1,12 @@
 # Registro de decisiones
 
+## D-037 — Asistente Virtual Comercial NODRIA sin Inteligencia Artificial
+
+- **Fecha:** 2026-10-30
+- **Estado:** Confirmada e implementada.
+- **Contexto:** Se requiere un asistente conversacional comercial y técnico avanzado dentro del storefront de NODRIA, con la restricción fundamental de no utilizar modelos de lenguaje (LLMs), APIs de IA generativa (OpenAI, Gemini, Claude) ni bases de datos vectoriales.
+- **Decisión:** Implementar un motor conversacional determinista propio basado en normalización de texto (NFKD, eliminación de diacríticos, limpieza de puntuación), corrección ortográfica por distancia de Levenshtein, diccionario de sinónimos canónicos, extracción de entidades y slots (presupuesto, puertos, PoE, Wi-Fi, marcas), clasificador de intenciones ponderado por reglas, base de conocimiento técnico/comercial estructurada y máquina de estados para diálogos multitiurno.
+- **Consecuencias:** Se garantiza una latencia de respuesta submilimétrica (< 10 ms), coste operativo cero en APIs externas, total previsibilidad técnica sin riesgo de alucinaciones, transparencia absoluta con el usuario declarando su naturaleza determinista sin IA, e integración directa con el catálogo de telecomunicaciones y PC Builder PRO. Añadir al carrito desde las tarjetas de producto actualiza el estado global de forma reactiva.
 ## D-036 — Tienda NODRIA con pago ficticio de aprobación automática
 
 - **Fecha:** 2026-10-13
